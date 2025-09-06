@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initCart();
   initProductInteractions();
   initRegistration();
+  initLogin();
   
   console.log('Tema Level-Up Gamer cargado correctamente');
 });
@@ -423,8 +424,298 @@ function checkExistingUser() {
   if (userData) {
     const user = JSON.parse(userData);
     updateUserInterface(user);
+    updateLoginInterface(user);
   }
 }
 
 // Llamar al verificar usuario existente
 document.addEventListener('DOMContentLoaded', checkExistingUser);
+
+// ===================== SISTEMA DE LOGIN =====================
+function initLogin() {
+  const loginButton = document.getElementById('login-button');
+  const modal = document.getElementById('login-modal');
+  const closeButton = modal.querySelector('.modal-close');
+  const cancelButton = document.getElementById('cancel-login');
+  const form = document.getElementById('login-form');
+  const switchToRegister = document.getElementById('switch-to-register');
+  
+  // Abrir modal de login
+  loginButton.addEventListener('click', () => {
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('login-email').focus();
+  });
+  
+  // Cerrar modal
+  function closeLoginModal() {
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    form.reset();
+    clearLoginErrors();
+    hideUserPreview();
+  }
+  
+  closeButton.addEventListener('click', closeLoginModal);
+  cancelButton.addEventListener('click', closeLoginModal);
+  
+  // Cerrar con ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+      closeLoginModal();
+    }
+  });
+  
+  // Cerrar al hacer click fuera del modal
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closeLoginModal();
+    }
+  });
+  
+  // Cambiar a registro
+  switchToRegister.addEventListener('click', (e) => {
+    e.preventDefault();
+    closeLoginModal();
+    document.getElementById('register-button').click();
+  });
+  
+  // Validación en tiempo real
+  const emailInput = document.getElementById('login-email');
+  emailInput.addEventListener('input', checkUserExists);
+  
+  // Submit del formulario
+  form.addEventListener('submit', handleLogin);
+}
+
+function checkUserExists() {
+  const emailInput = document.getElementById('login-email');
+  const email = emailInput.value.toLowerCase().trim();
+  const userPreview = document.getElementById('user-preview');
+  
+  if (email.length > 3) {
+    // Simular verificación de usuario existente
+    const existingUser = localStorage.getItem('levelup_user');
+    if (existingUser) {
+      const userData = JSON.parse(existingUser);
+      if (userData.email.toLowerCase() === email) {
+        showUserPreview(userData);
+        return;
+      }
+    }
+  }
+  hideUserPreview();
+}
+
+function showUserPreview(userData) {
+  const userPreview = document.getElementById('user-preview');
+  const userName = userPreview.querySelector('.user-name');
+  const userBenefits = userPreview.querySelector('.user-benefits');
+  
+  userName.textContent = userData.name;
+  userBenefits.textContent = userData.isDuocUser 
+    ? '🎉 Usuario Duoc UC - 20% descuento'
+    : '🎮 Usuario Level-Up Gamer';
+  
+  userPreview.style.display = 'block';
+}
+
+function hideUserPreview() {
+  const userPreview = document.getElementById('user-preview');
+  userPreview.style.display = 'none';
+}
+
+function validateLoginForm() {
+  let isValid = true;
+  clearLoginErrors();
+  
+  // Validar email
+  const email = document.getElementById('login-email').value.trim();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email) {
+    showLoginError('login-email-error', 'El correo electrónico es requerido');
+    document.getElementById('login-email').classList.add('error');
+    isValid = false;
+  } else if (!emailRegex.test(email)) {
+    showLoginError('login-email-error', 'Ingresa un correo electrónico válido');
+    document.getElementById('login-email').classList.add('error');
+    isValid = false;
+  }
+  
+  // Validar contraseña
+  const password = document.getElementById('login-password').value;
+  if (!password) {
+    showLoginError('login-password-error', 'La contraseña es requerida');
+    document.getElementById('login-password').classList.add('error');
+    isValid = false;
+  }
+  
+  return isValid;
+}
+
+function handleLogin(e) {
+  e.preventDefault();
+  
+  if (!validateLoginForm()) {
+    return;
+  }
+  
+  const submitButton = document.getElementById('submit-login');
+  const email = document.getElementById('login-email').value.toLowerCase().trim();
+  const password = document.getElementById('login-password').value;
+  const rememberMe = document.getElementById('remember-me').checked;
+  
+  submitButton.classList.add('loading');
+  submitButton.disabled = true;
+  
+  // Simular verificación de login (en una aplicación real sería una llamada a la API)
+  setTimeout(() => {
+    // Verificar si existe un usuario registrado
+    const existingUser = localStorage.getItem('levelup_user');
+    
+    if (existingUser) {
+      const userData = JSON.parse(existingUser);
+      
+      if (userData.email.toLowerCase() === email) {
+        // Login exitoso
+        const sessionData = {
+          ...userData,
+          loginTime: new Date().toISOString(),
+          rememberMe: rememberMe,
+          sessionExpiry: rememberMe 
+            ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 días
+            : new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 1 día
+        };
+        
+        // Guardar sesión
+        localStorage.setItem('levelup_session', JSON.stringify(sessionData));
+        
+        // Mostrar mensaje de éxito
+        const message = `¡Bienvenido de vuelta, ${userData.name}! 🎮`;
+        showNotification(message);
+        
+        // Cerrar modal
+        document.getElementById('login-modal').classList.remove('active');
+        document.body.style.overflow = '';
+        
+        // Actualizar UI
+        updateLoginInterface(sessionData);
+        
+      } else {
+        // Credenciales incorrectas
+        showLoginError('login-password-error', 'Credenciales incorrectas');
+        document.getElementById('login-password').classList.add('error');
+      }
+    } else {
+      // Usuario no encontrado
+      showLoginError('login-email-error', 'Usuario no encontrado. ¿Quieres registrarte?');
+      document.getElementById('login-email').classList.add('error');
+    }
+    
+    submitButton.classList.remove('loading');
+    submitButton.disabled = false;
+  }, 1500);
+}
+
+function updateLoginInterface(sessionData) {
+  const loginButton = document.getElementById('login-button');
+  const registerButton = document.getElementById('register-button');
+  
+  // Ocultar botones de login/registro y mostrar usuario logueado
+  loginButton.style.display = 'none';
+  registerButton.textContent = `👤 ${sessionData.name}`;
+  registerButton.title = sessionData.isDuocUser 
+    ? 'Usuario Duoc UC - 20% descuento' 
+    : 'Usuario Level-Up Gamer';
+  
+  // Cambiar funcionalidad del botón a logout/perfil
+  registerButton.onclick = () => showUserMenu(sessionData);
+}
+
+function showUserMenu(sessionData) {
+  const options = [
+    '🎮 Mi Perfil',
+    '🛒 Mis Pedidos', 
+    '🎯 Mis Puntos LevelUp',
+    '⚙️ Configuración',
+    '🚪 Cerrar Sesión'
+  ];
+  
+  // Simulación simple con confirm (en una app real sería un dropdown)
+  const choice = prompt(`Hola ${sessionData.name}!\n\nSelecciona una opción:\n1. Mi Perfil\n2. Mis Pedidos\n3. Mis Puntos\n4. Configuración\n5. Cerrar Sesión\n\nIngresa el número (1-5):`);
+  
+  switch(choice) {
+    case '5':
+      logout();
+      break;
+    case '1':
+      showNotification('🎮 Función Mi Perfil - Próximamente');
+      break;
+    case '2':
+      showNotification('🛒 Función Mis Pedidos - Próximamente'); 
+      break;
+    case '3':
+      showNotification('🎯 Función Mis Puntos - Próximamente');
+      break;
+    case '4':
+      showNotification('⚙️ Función Configuración - Próximamente');
+      break;
+    default:
+      break;
+  }
+}
+
+function logout() {
+  localStorage.removeItem('levelup_session');
+  localStorage.removeItem('levelup_user');
+  
+  // Restaurar interfaz original
+  const loginButton = document.getElementById('login-button');
+  const registerButton = document.getElementById('register-button');
+  
+  loginButton.style.display = 'inline-flex';
+  registerButton.textContent = '👤 Registrarse';
+  registerButton.title = '';
+  registerButton.onclick = null;
+  
+  showNotification('🚪 Sesión cerrada correctamente');
+}
+
+function showLoginError(elementId, message) {
+  const errorElement = document.getElementById(elementId);
+  errorElement.textContent = message;
+}
+
+function clearLoginErrors() {
+  const errorElements = document.querySelectorAll('#login-modal .error-message');
+  errorElements.forEach(element => {
+    element.textContent = '';
+  });
+  const inputElements = document.querySelectorAll('#login-modal input.error');
+  inputElements.forEach(input => {
+    input.classList.remove('error');
+  });
+}
+
+// Verificar sesión activa al cargar
+function checkActiveSession() {
+  const sessionData = localStorage.getItem('levelup_session');
+  if (sessionData) {
+    const session = JSON.parse(sessionData);
+    const now = new Date();
+    const expiry = new Date(session.sessionExpiry);
+    
+    if (now < expiry) {
+      // Sesión válida
+      updateLoginInterface(session);
+    } else {
+      // Sesión expirada
+      localStorage.removeItem('levelup_session');
+    }
+  }
+}
+
+// Verificar sesión al cargar la página
+document.addEventListener('DOMContentLoaded', checkActiveSession);

@@ -35,6 +35,9 @@
           <button class="btn-icon" type="button" aria-label="Abrir carrito" id="cart-button">
             🛒 <span class="badge" id="cart-count" aria-live="polite">0</span>
           </button>
+          <button class="btn-secondary" type="button" id="login-button">
+            🔑 Iniciar Sesión
+          </button>
           <button class="btn-secondary" type="button" id="register-button">
             👤 Registrarse
           </button>
@@ -244,6 +247,65 @@
               <span class="btn-text">Crear Cuenta</span>
               <span class="btn-loading" style="display: none;">⏳ Registrando...</span>
             </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL DE LOGIN ===================== -->
+  <div class="modal-overlay" id="login-modal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-labelledby="login-title" aria-describedby="login-description">
+      <div class="modal-header">
+        <h2 id="login-title">🔑 Iniciar Sesión</h2>
+        <button class="modal-close" aria-label="Cerrar modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="login-description">Accede a tu cuenta gamer</p>
+        
+        <form id="login-form" novalidate>
+          <div class="form-group">
+            <label for="login-email">Correo Electrónico *</label>
+            <input type="email" id="login-email" name="email" required 
+                   aria-describedby="login-email-error" placeholder="ejemplo@duocuc.cl">
+            <div class="error-message" id="login-email-error" aria-live="polite"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="login-password">Contraseña *</label>
+            <input type="password" id="login-password" name="password" required 
+                   aria-describedby="login-password-error" placeholder="Tu contraseña">
+            <div class="error-message" id="login-password-error" aria-live="polite"></div>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="remember-me" name="rememberMe">
+              <span class="checkmark"></span>
+              Recordarme por 30 días
+            </label>
+          </div>
+
+          <div class="user-preview" id="user-preview" style="display: none;">
+            <div class="user-badge">
+              <div class="user-info">
+                <div class="user-name"></div>
+                <div class="user-benefits"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" id="cancel-login">Cancelar</button>
+            <button type="submit" class="btn-primary" id="submit-login">
+              <span class="btn-text">Iniciar Sesión</span>
+              <span class="btn-loading" style="display: none;">🔑 Verificando...</span>
+            </button>
+          </div>
+
+          <div class="login-footer">
+            <p>¿No tienes cuenta? <a href="#" class="link" id="switch-to-register">Regístrate aquí</a></p>
+            <a href="#" class="link forgot-password">¿Olvidaste tu contraseña?</a>
           </div>
         </form>
       </div>
