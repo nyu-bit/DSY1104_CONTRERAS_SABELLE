@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initMobileMenu();
   initCart();
   initProductInteractions();
+  initRegistration();
   
   console.log('Tema Level-Up Gamer cargado correctamente');
 });
@@ -170,3 +171,260 @@ window.GameStore = {
   clearCart,
   updateCartCount
 };
+
+// ===================== SISTEMA DE REGISTRO =====================
+function initRegistration() {
+  const registerButton = document.getElementById('register-button');
+  const modal = document.getElementById('register-modal');
+  const closeButton = modal.querySelector('.modal-close');
+  const cancelButton = document.getElementById('cancel-register');
+  const form = document.getElementById('register-form');
+  
+  // Abrir modal
+  registerButton.addEventListener('click', () => {
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('register-name').focus();
+  });
+  
+  // Cerrar modal
+  function closeModal() {
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    form.reset();
+    clearErrors();
+    hideDiscountPreview();
+  }
+  
+  closeButton.addEventListener('click', closeModal);
+  cancelButton.addEventListener('click', closeModal);
+  
+  // Cerrar con ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+      closeModal();
+    }
+  });
+  
+  // Cerrar al hacer click fuera del modal
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closeModal();
+    }
+  });
+  
+  // Validación en tiempo real
+  const emailInput = document.getElementById('register-email');
+  const birthdateInput = document.getElementById('register-birthdate');
+  
+  emailInput.addEventListener('input', validateEmail);
+  birthdateInput.addEventListener('change', validateAge);
+  
+  // Submit del formulario
+  form.addEventListener('submit', handleRegistration);
+}
+
+function validateEmail() {
+  const emailInput = document.getElementById('register-email');
+  const email = emailInput.value.toLowerCase().trim();
+  const discountPreview = document.getElementById('discount-preview');
+  
+  if (email.includes('@duocuc.cl')) {
+    showDiscountPreview();
+  } else {
+    hideDiscountPreview();
+  }
+}
+
+function validateAge() {
+  const birthdateInput = document.getElementById('register-birthdate');
+  const errorElement = document.getElementById('birthdate-error');
+  const birthdate = new Date(birthdateInput.value);
+  const today = new Date();
+  const age = today.getFullYear() - birthdate.getFullYear();
+  const monthDiff = today.getMonth() - birthdate.getMonth();
+  
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthdate.getDate())) {
+    age--;
+  }
+  
+  if (age < 18) {
+    showError('birthdate-error', 'Debes ser mayor de 18 años para registrarte');
+    birthdateInput.classList.add('error');
+    return false;
+  } else {
+    clearError('birthdate-error');
+    birthdateInput.classList.remove('error');
+    return true;
+  }
+}
+
+function showDiscountPreview() {
+  const discountPreview = document.getElementById('discount-preview');
+  discountPreview.style.display = 'block';
+}
+
+function hideDiscountPreview() {
+  const discountPreview = document.getElementById('discount-preview');
+  discountPreview.style.display = 'none';
+}
+
+function validateForm() {
+  let isValid = true;
+  clearErrors();
+  
+  // Validar nombre
+  const name = document.getElementById('register-name').value.trim();
+  if (!name) {
+    showError('name-error', 'El nombre es requerido');
+    document.getElementById('register-name').classList.add('error');
+    isValid = false;
+  } else if (name.length < 2) {
+    showError('name-error', 'El nombre debe tener al menos 2 caracteres');
+    document.getElementById('register-name').classList.add('error');
+    isValid = false;
+  }
+  
+  // Validar email
+  const email = document.getElementById('register-email').value.trim();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email) {
+    showError('email-error', 'El correo electrónico es requerido');
+    document.getElementById('register-email').classList.add('error');
+    isValid = false;
+  } else if (!emailRegex.test(email)) {
+    showError('email-error', 'Ingresa un correo electrónico válido');
+    document.getElementById('register-email').classList.add('error');
+    isValid = false;
+  }
+  
+  // Validar edad
+  if (!validateAge()) {
+    isValid = false;
+  }
+  
+  // Validar contraseña
+  const password = document.getElementById('register-password').value;
+  if (!password) {
+    showError('password-error', 'La contraseña es requerida');
+    document.getElementById('register-password').classList.add('error');
+    isValid = false;
+  } else if (password.length < 8) {
+    showError('password-error', 'La contraseña debe tener al menos 8 caracteres');
+    document.getElementById('register-password').classList.add('error');
+    isValid = false;
+  }
+  
+  // Validar confirmación de contraseña
+  const confirmPassword = document.getElementById('register-confirm-password').value;
+  if (!confirmPassword) {
+    showError('confirm-password-error', 'Confirma tu contraseña');
+    document.getElementById('register-confirm-password').classList.add('error');
+    isValid = false;
+  } else if (password !== confirmPassword) {
+    showError('confirm-password-error', 'Las contraseñas no coinciden');
+    document.getElementById('register-confirm-password').classList.add('error');
+    isValid = false;
+  }
+  
+  // Validar términos
+  const terms = document.getElementById('register-terms').checked;
+  if (!terms) {
+    showError('terms-error', 'Debes aceptar los términos y condiciones');
+    isValid = false;
+  }
+  
+  return isValid;
+}
+
+function handleRegistration(e) {
+  e.preventDefault();
+  
+  if (!validateForm()) {
+    return;
+  }
+  
+  const submitButton = document.getElementById('submit-register');
+  submitButton.classList.add('loading');
+  submitButton.disabled = true;
+  
+  // Simular registro (en una aplicación real, esto sería una llamada a la API)
+  setTimeout(() => {
+    const email = document.getElementById('register-email').value.toLowerCase();
+    const name = document.getElementById('register-name').value.trim();
+    const isDuocUser = email.includes('@duocuc.cl');
+    
+    // Guardar usuario en localStorage (simulación)
+    const userData = {
+      name: name,
+      email: email,
+      isDuocUser: isDuocUser,
+      discount: isDuocUser ? 20 : 0,
+      registeredAt: new Date().toISOString()
+    };
+    
+    localStorage.setItem('levelup_user', JSON.stringify(userData));
+    
+    // Mostrar mensaje de éxito
+    const message = isDuocUser 
+      ? `¡Bienvenido ${name}! Tu cuenta ha sido creada con 20% de descuento de por vida 🎉`
+      : `¡Bienvenido ${name}! Tu cuenta ha sido creada exitosamente 🎮`;
+    
+    showNotification(message);
+    
+    // Cerrar modal
+    document.getElementById('register-modal').classList.remove('active');
+    document.body.style.overflow = '';
+    
+    // Actualizar UI
+    updateUserInterface(userData);
+    
+    submitButton.classList.remove('loading');
+    submitButton.disabled = false;
+  }, 2000);
+}
+
+function updateUserInterface(userData) {
+  const registerButton = document.getElementById('register-button');
+  registerButton.textContent = `👤 ${userData.name}`;
+  registerButton.title = userData.isDuocUser ? 'Usuario Duoc UC - 20% descuento' : 'Usuario registrado';
+}
+
+function showError(elementId, message) {
+  const errorElement = document.getElementById(elementId);
+  errorElement.textContent = message;
+}
+
+function clearError(elementId) {
+  const errorElement = document.getElementById(elementId);
+  errorElement.textContent = '';
+  const inputElement = document.querySelector(`[aria-describedby*="${elementId}"]`);
+  if (inputElement) {
+    inputElement.classList.remove('error');
+  }
+}
+
+function clearErrors() {
+  const errorElements = document.querySelectorAll('.error-message');
+  errorElements.forEach(element => {
+    element.textContent = '';
+  });
+  const inputElements = document.querySelectorAll('input.error');
+  inputElements.forEach(input => {
+    input.classList.remove('error');
+  });
+}
+
+// Verificar si hay usuario logueado al cargar la página
+function checkExistingUser() {
+  const userData = localStorage.getItem('levelup_user');
+  if (userData) {
+    const user = JSON.parse(userData);
+    updateUserInterface(user);
+  }
+}
+
+// Llamar al verificar usuario existente
+document.addEventListener('DOMContentLoaded', checkExistingUser);

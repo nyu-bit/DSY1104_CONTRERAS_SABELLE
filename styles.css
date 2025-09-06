@@ -108,11 +108,7 @@ button { font-family: inherit; }
   transition: all .15s ease;
   box-shadow: 0 0 10px rgba(30, 144, 255, 0.3); /* Glow azul */
 }
-.btn-icon:hover { 
-  background: var(--primary-hover);
-  box-shadow: 0 0 15px rgba(30, 144, 255, 0.5);
-  transform: translateY(-1px);
-}
+.btn-icon:hover { background: var(--primary-600); }
 .badge {
   min-inline-size: 1.25rem; padding: 0 .35rem; height: 1.25rem; font-size: .75rem;
   display: inline-grid; place-items: center; border-radius: 999px; 
@@ -272,4 +268,125 @@ button { font-family: inherit; }
 @media (max-width: 480px) {
   .cards { grid-template-columns: 1fr; }
   .actions { gap: .3rem; }
+}
+
+/* ===================== MODAL DE REGISTRO ===================== */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000; opacity: 0; visibility: hidden;
+  transition: all 0.3s ease;
+}
+.modal-overlay.active {
+  opacity: 1; visibility: visible;
+}
+.modal-overlay.active .modal {
+  transform: scale(1); opacity: 1;
+}
+
+.modal {
+  background: var(--surface); border-radius: 12px; border: 1px solid var(--border);
+  max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto;
+  transform: scale(0.9); opacity: 0; transition: all 0.3s ease;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.5rem; border-bottom: 1px solid var(--border);
+}
+.modal-header h2 {
+  margin: 0; color: var(--text); font-size: 1.5rem;
+}
+.modal-close {
+  background: none; border: none; font-size: 1.5rem; color: var(--muted);
+  cursor: pointer; padding: 0.25rem; border-radius: 4px;
+  transition: all 0.15s ease;
+}
+.modal-close:hover {
+  background: var(--border); color: var(--text);
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+.modal-body p {
+  margin-bottom: 1.5rem; color: var(--muted);
+}
+
+/* ===================== FORMULARIO ===================== */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+.form-group label {
+  display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text);
+}
+.form-group input {
+  width: 100%; padding: 0.75rem; border: 1px solid var(--border);
+  border-radius: 8px; background: var(--bg); color: var(--text);
+  font-size: 1rem; transition: all 0.15s ease;
+}
+.form-group input:focus {
+  outline: none; border-color: var(--focus);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--focus) 20%, transparent);
+}
+.form-group input.error {
+  border-color: #ef4444;
+}
+
+.form-hint {
+  margin-top: 0.5rem; font-size: 0.875rem; color: var(--muted);
+}
+.error-message {
+  margin-top: 0.5rem; font-size: 0.875rem; color: #ef4444;
+  min-height: 1.25rem;
+}
+
+.checkbox-group {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+}
+.checkbox-label {
+  display: flex; align-items: flex-start; gap: 0.5rem; cursor: pointer;
+  font-size: 0.875rem; line-height: 1.4;
+}
+.checkbox-label input[type="checkbox"] {
+  width: auto; margin: 0;
+}
+.link {
+  color: var(--primary); text-decoration: underline;
+}
+.link:hover {
+  color: var(--primary-600);
+}
+
+.discount-preview {
+  margin: 1rem 0;
+}
+.discount-badge {
+  background: linear-gradient(135deg, var(--accent), #32d74b);
+  color: #000; padding: 1rem; border-radius: 8px; font-weight: 600;
+  text-align: center; animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 5px var(--accent); }
+  to { box-shadow: 0 0 20px var(--accent), 0 0 30px var(--accent); }
+}
+
+.form-actions {
+  display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;
+}
+.form-actions .btn-secondary {
+  padding: 0.75rem 1.5rem;
+}
+
+.btn-loading {
+  display: none;
+}
+.btn-primary.loading .btn-text {
+  display: none;
+}
+.btn-primary.loading .btn-loading {
+  display: inline;
 }

@@ -32,8 +32,11 @@
         </ul>
         
         <div class="actions">
-          <button class="btn-icon" type="button" aria-label="Abrir carrito">
+          <button class="btn-icon" type="button" aria-label="Abrir carrito" id="cart-button">
             🛒 <span class="badge" id="cart-count" aria-live="polite">0</span>
+          </button>
+          <button class="btn-secondary" type="button" id="register-button">
+            👤 Registrarse
           </button>
           <summary class="nav-toggle" role="button" aria-label="Abrir menú">☰</summary>
         </div>
@@ -167,6 +170,85 @@
       <p>&copy; 2025 Game Store - Level-Up Gamer Theme. Desarrollado con ❤️ para gamers.</p>
     </div>
   </footer>
+
+  <!-- ===================== MODAL DE REGISTRO ===================== -->
+  <div class="modal-overlay" id="register-modal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-labelledby="register-title" aria-describedby="register-description">
+      <div class="modal-header">
+        <h2 id="register-title">🎮 Únete a Level-Up Gamer</h2>
+        <button class="modal-close" aria-label="Cerrar modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="register-description">Crea tu cuenta y accede a ofertas exclusivas</p>
+        
+        <form id="register-form" novalidate>
+          <div class="form-group">
+            <label for="register-name">Nombre Completo *</label>
+            <input type="text" id="register-name" name="name" required 
+                   aria-describedby="name-error" placeholder="Ingresa tu nombre completo">
+            <div class="error-message" id="name-error" aria-live="polite"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="register-email">Correo Electrónico *</label>
+            <input type="email" id="register-email" name="email" required 
+                   aria-describedby="email-error email-hint" placeholder="ejemplo@duocuc.cl">
+            <div class="form-hint" id="email-hint">
+              💡 ¿Eres de Duoc UC? ¡Obtén 20% de descuento de por vida!
+            </div>
+            <div class="error-message" id="email-error" aria-live="polite"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="register-birthdate">Fecha de Nacimiento *</label>
+            <input type="date" id="register-birthdate" name="birthdate" required 
+                   aria-describedby="birthdate-error birthdate-hint">
+            <div class="form-hint" id="birthdate-hint">
+              ⚠️ Debes ser mayor de 18 años para registrarte
+            </div>
+            <div class="error-message" id="birthdate-error" aria-live="polite"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="register-password">Contraseña *</label>
+            <input type="password" id="register-password" name="password" required 
+                   aria-describedby="password-error" placeholder="Mínimo 8 caracteres">
+            <div class="error-message" id="password-error" aria-live="polite"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="register-confirm-password">Confirmar Contraseña *</label>
+            <input type="password" id="register-confirm-password" name="confirmPassword" required 
+                   aria-describedby="confirm-password-error" placeholder="Repite tu contraseña">
+            <div class="error-message" id="confirm-password-error" aria-live="polite"></div>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="register-terms" name="terms" required>
+              <span class="checkmark"></span>
+              Acepto los <a href="#" class="link">términos y condiciones</a> *
+            </label>
+            <div class="error-message" id="terms-error" aria-live="polite"></div>
+          </div>
+
+          <div class="discount-preview" id="discount-preview" style="display: none;">
+            <div class="discount-badge">
+              🎉 ¡Felicidades! Tienes 20% de descuento de por vida por ser de Duoc UC
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" id="cancel-register">Cancelar</button>
+            <button type="submit" class="btn-primary" id="submit-register">
+              <span class="btn-text">Crear Cuenta</span>
+              <span class="btn-loading" style="display: none;">⏳ Registrando...</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
   <!-- ===================== JAVASCRIPT ===================== -->
   <script src="script.js"></script>
