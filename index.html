@@ -312,6 +312,266 @@
     </div>
   </div>
 
+  <!-- ===================== MODAL DE PERFIL ===================== -->
+  <div class="modal-overlay" id="profile-modal" aria-hidden="true">
+    <div class="modal profile-modal" role="dialog" aria-labelledby="profile-title" aria-describedby="profile-description">
+      <div class="modal-header">
+        <h2 id="profile-title">🎮 Mi Perfil Gamer</h2>
+        <button class="modal-close" aria-label="Cerrar modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="profile-description">Gestiona tu información personal y preferencias de compra</p>
+        
+        <!-- Pestañas del perfil -->
+        <div class="profile-tabs">
+          <button class="tab-button active" data-tab="personal">👤 Información Personal</button>
+          <button class="tab-button" data-tab="preferences">⚙️ Preferencias</button>
+          <button class="tab-button" data-tab="security">🔒 Seguridad</button>
+        </div>
+
+        <!-- Contenido de pestañas -->
+        <div class="tab-content">
+          
+          <!-- Pestaña: Información Personal -->
+          <div class="tab-pane active" id="personal-tab">
+            <form id="profile-form" novalidate>
+              <div class="profile-section">
+                <h3>Datos Básicos</h3>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="profile-name">Nombre Completo *</label>
+                    <input type="text" id="profile-name" name="name" required>
+                    <div class="error-message" id="profile-name-error"></div>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="profile-email">Correo Electrónico *</label>
+                    <input type="email" id="profile-email" name="email" required readonly>
+                    <div class="form-hint">El correo no se puede modificar</div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="profile-phone">Teléfono</label>
+                    <input type="tel" id="profile-phone" name="phone" placeholder="+56 9 1234 5678">
+                    <div class="error-message" id="profile-phone-error"></div>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="profile-birthdate">Fecha de Nacimiento</label>
+                    <input type="date" id="profile-birthdate" name="birthdate" readonly>
+                    <div class="form-hint">No se puede modificar después del registro</div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="profile-address">Dirección de Envío</label>
+                  <textarea id="profile-address" name="address" rows="3" 
+                            placeholder="Ingresa tu dirección completa para entregas"></textarea>
+                </div>
+              </div>
+
+              <div class="profile-section">
+                <h3>Información Gamer</h3>
+                
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="profile-gamertag">Gamer Tag</label>
+                    <input type="text" id="profile-gamertag" name="gamertag" 
+                           placeholder="Tu nombre de usuario gamer">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="profile-platform">Plataforma Favorita</label>
+                    <select id="profile-platform" name="platform">
+                      <option value="">Selecciona tu plataforma</option>
+                      <option value="pc">PC</option>
+                      <option value="playstation">PlayStation</option>
+                      <option value="xbox">Xbox</option>
+                      <option value="nintendo">Nintendo</option>
+                      <option value="mobile">Mobile</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="profile-genres">Géneros Favoritos</label>
+                  <div class="checkbox-grid">
+                    <label class="checkbox-label">
+                      <input type="checkbox" name="genres" value="action">
+                      <span class="checkmark"></span>
+                      Acción
+                    </label>
+                    <label class="checkbox-label">
+                      <input type="checkbox" name="genres" value="rpg">
+                      <span class="checkmark"></span>
+                      RPG
+                    </label>
+                    <label class="checkbox-label">
+                      <input type="checkbox" name="genres" value="strategy">
+                      <span class="checkmark"></span>
+                      Estrategia
+                    </label>
+                    <label class="checkbox-label">
+                      <input type="checkbox" name="genres" value="sports">
+                      <span class="checkmark"></span>
+                      Deportes
+                    </label>
+                    <label class="checkbox-label">
+                      <input type="checkbox" name="genres" value="racing">
+                      <span class="checkmark"></span>
+                      Carreras
+                    </label>
+                    <label class="checkbox-label">
+                      <input type="checkbox" name="genres" value="simulation">
+                      <span class="checkmark"></span>
+                      Simulación
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Pestaña: Preferencias -->
+          <div class="tab-pane" id="preferences-tab">
+            <form id="preferences-form">
+              <div class="profile-section">
+                <h3>Preferencias de Compra</h3>
+                
+                <div class="form-group">
+                  <label for="currency-preference">Moneda Preferida</label>
+                  <select id="currency-preference" name="currency">
+                    <option value="CLP">Peso Chileno (CLP)</option>
+                    <option value="USD">Dólar Americano (USD)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="budget-range">Rango de Presupuesto Mensual</label>
+                  <select id="budget-range" name="budget">
+                    <option value="">No especificar</option>
+                    <option value="low">Hasta $50.000 CLP</option>
+                    <option value="medium">$50.000 - $150.000 CLP</option>
+                    <option value="high">$150.000 - $500.000 CLP</option>
+                    <option value="premium">Más de $500.000 CLP</option>
+                  </select>
+                </div>
+
+                <div class="checkbox-group">
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="autoRecommendations" id="auto-recommendations">
+                    <span class="checkmark"></span>
+                    Recibir recomendaciones automáticas basadas en mis gustos
+                  </label>
+                </div>
+              </div>
+
+              <div class="profile-section">
+                <h3>Notificaciones</h3>
+                
+                <div class="checkbox-group">
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="emailOffers" id="email-offers" checked>
+                    <span class="checkmark"></span>
+                    Ofertas y promociones por email
+                  </label>
+                </div>
+
+                <div class="checkbox-group">
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="newProducts" id="new-products" checked>
+                    <span class="checkmark"></span>
+                    Notificaciones de nuevos productos
+                  </label>
+                </div>
+
+                <div class="checkbox-group">
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="events" id="events-notifications" checked>
+                    <span class="checkmark"></span>
+                    Eventos y torneos Level-Up
+                  </label>
+                </div>
+
+                <div class="checkbox-group">
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="orderUpdates" id="order-updates" checked>
+                    <span class="checkmark"></span>
+                    Actualizaciones de pedidos
+                  </label>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Pestaña: Seguridad -->
+          <div class="tab-pane" id="security-tab">
+            <form id="security-form">
+              <div class="profile-section">
+                <h3>Cambiar Contraseña</h3>
+                
+                <div class="form-group">
+                  <label for="current-password">Contraseña Actual *</label>
+                  <input type="password" id="current-password" name="currentPassword">
+                  <div class="error-message" id="current-password-error"></div>
+                </div>
+
+                <div class="form-group">
+                  <label for="new-password">Nueva Contraseña *</label>
+                  <input type="password" id="new-password" name="newPassword" 
+                         placeholder="Mínimo 8 caracteres">
+                  <div class="error-message" id="new-password-error"></div>
+                </div>
+
+                <div class="form-group">
+                  <label for="confirm-new-password">Confirmar Nueva Contraseña *</label>
+                  <input type="password" id="confirm-new-password" name="confirmNewPassword">
+                  <div class="error-message" id="confirm-new-password-error"></div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="change-password-btn">
+                  🔒 Cambiar Contraseña
+                </button>
+              </div>
+
+              <div class="profile-section">
+                <h3>Configuración de Sesión</h3>
+                
+                <div class="checkbox-group">
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="twoFactor" id="two-factor">
+                    <span class="checkmark"></span>
+                    Habilitar autenticación de dos factores (próximamente)
+                  </label>
+                </div>
+
+                <div class="security-info">
+                  <p><strong>Última sesión:</strong> <span id="last-login">Hoy</span></p>
+                  <p><strong>Sesiones activas:</strong> <span id="active-sessions">1 dispositivo</span></p>
+                </div>
+
+                <button type="button" class="btn-secondary" id="logout-all-sessions">
+                  🚪 Cerrar todas las sesiones
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="profile-actions">
+          <button type="button" class="btn-secondary" id="cancel-profile">Cancelar</button>
+          <button type="button" class="btn-primary" id="save-profile">
+            <span class="btn-text">💾 Guardar Cambios</span>
+            <span class="btn-loading" style="display: none;">⏳ Guardando...</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ===================== JAVASCRIPT ===================== -->
   <script src="script.js"></script>
 

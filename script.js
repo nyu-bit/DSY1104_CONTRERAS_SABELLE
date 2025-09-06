@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initProductInteractions();
   initRegistration();
   initLogin();
+  initProfile();
   
   console.log('Tema Level-Up Gamer cargado correctamente');
 });
@@ -647,11 +648,11 @@ function showUserMenu(sessionData) {
   const choice = prompt(`Hola ${sessionData.name}!\n\nSelecciona una opción:\n1. Mi Perfil\n2. Mis Pedidos\n3. Mis Puntos\n4. Configuración\n5. Cerrar Sesión\n\nIngresa el número (1-5):`);
   
   switch(choice) {
+    case '1':
+      openProfileModal();
+      break;
     case '5':
       logout();
-      break;
-    case '1':
-      showNotification('🎮 Función Mi Perfil - Próximamente');
       break;
     case '2':
       showNotification('🛒 Función Mis Pedidos - Próximamente'); 
@@ -719,3 +720,272 @@ function checkActiveSession() {
 
 // Verificar sesión al cargar la página
 document.addEventListener('DOMContentLoaded', checkActiveSession);
+
+// ===================== GESTIÓN DE PERFIL =====================
+function initProfile() {
+  const modal = document.getElementById('profile-modal');
+  const closeButton = modal.querySelector('.modal-close');
+  const cancelButton = document.getElementById('cancel-profile');
+  const saveButton = document.getElementById('save-profile');
+  const tabButtons = document.querySelectorAll('.tab-button');
+  const forms = {
+    profile: document.getElementById('profile-form'),
+    preferences: document.getElementById('preferences-form'),
+    security: document.getElementById('security-form')
+  };
+  
+  // Cerrar modal
+  function closeProfileModal() {
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    clearProfileErrors();
+  }
+  
+  closeButton.addEventListener('click', closeProfileModal);
+  cancelButton.addEventListener('click', closeProfileModal);
+  
+  // Cerrar con ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+      closeProfileModal();
+    }
+  });
+  
+  // Cerrar al hacer click fuera del modal
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closeProfileModal();
+    }
+  });
+  
+  // Gestión de pestañas
+  tabButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const targetTab = button.dataset.tab;
+      switchTab(targetTab);
+    });
+  });
+  
+  // Guardar cambios
+  saveButton.addEventListener('click', saveProfile);
+  
+  // Cambio de contraseña
+  forms.security.addEventListener('submit', handlePasswordChange);
+  
+  // Cerrar todas las sesiones
+  document.getElementById('logout-all-sessions').addEventListener('click', logoutAllSessions);
+}
+
+function openProfileModal() {
+  const modal = document.getElementById('profile-modal');
+  modal.classList.add('active');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  
+  // Cargar datos del usuario
+  loadUserProfile();
+  
+  // Enfocar en el primer campo
+  document.getElementById('profile-name').focus();
+}
+
+function switchTab(tabName) {
+  // Actualizar botones
+  document.querySelectorAll('.tab-button').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+  
+  // Actualizar contenido
+  document.querySelectorAll('.tab-pane').forEach(pane => {
+    pane.classList.remove('active');
+  });
+  document.getElementById(`${tabName}-tab`).classList.add('active');
+}
+
+function loadUserProfile() {
+  const sessionData = JSON.parse(localStorage.getItem('levelup_session') || '{}');
+  const userData = JSON.parse(localStorage.getItem('levelup_user') || '{}');
+  const profileData = JSON.parse(localStorage.getItem('levelup_profile') || '{}');
+  
+  // Cargar datos básicos
+  document.getElementById('profile-name').value = userData.name || '';
+  document.getElementById('profile-email').value = userData.email || '';
+  document.getElementById('profile-phone').value = profileData.phone || '';
+  document.getElementById('profile-birthdate').value = profileData.birthdate || '';
+  document.getElementById('profile-address').value = profileData.address || '';
+  
+  // Cargar datos gamer
+  document.getElementById('profile-gamertag').value = profileData.gamertag || '';
+  document.getElementById('profile-platform').value = profileData.platform || '';
+  
+  // Cargar géneros favoritos
+  const genres = profileData.genres || [];
+  document.querySelectorAll('input[name="genres"]').forEach(checkbox => {
+    checkbox.checked = genres.includes(checkbox.value);
+  });
+  
+  // Cargar preferencias
+  document.getElementById('currency-preference').value = profileData.currency || 'CLP';
+  document.getElementById('budget-range').value = profileData.budget || '';
+  document.getElementById('auto-recommendations').checked = profileData.autoRecommendations !== false;
+  
+  // Cargar preferencias de notificaciones
+  document.getElementById('email-offers').checked = profileData.emailOffers !== false;
+  document.getElementById('new-products').checked = profileData.newProducts !== false;
+  document.getElementById('events-notifications').checked = profileData.events !== false;
+  document.getElementById('order-updates').checked = profileData.orderUpdates !== false;
+  
+  // Cargar info de seguridad
+  document.getElementById('two-factor').checked = profileData.twoFactor || false;
+  document.getElementById('last-login').textContent = sessionData.loginTime ? 
+    new Date(sessionData.loginTime).toLocaleDateString('es-CL') : 'Hoy';
+}
+
+function saveProfile() {
+  const saveButton = document.getElementById('save-profile');
+  saveButton.classList.add('loading');
+  saveButton.disabled = true;
+  
+  // Recopilar datos del formulario
+  const profileData = {
+    // Datos básicos
+    name: document.getElementById('profile-name').value.trim(),
+    phone: document.getElementById('profile-phone').value.trim(),
+    address: document.getElementById('profile-address').value.trim(),
+    
+    // Datos gamer
+    gamertag: document.getElementById('profile-gamertag').value.trim(),
+    platform: document.getElementById('profile-platform').value,
+    genres: Array.from(document.querySelectorAll('input[name="genres"]:checked')).map(cb => cb.value),
+    
+    // Preferencias
+    currency: document.getElementById('currency-preference').value,
+    budget: document.getElementById('budget-range').value,
+    autoRecommendations: document.getElementById('auto-recommendations').checked,
+    
+    // Notificaciones
+    emailOffers: document.getElementById('email-offers').checked,
+    newProducts: document.getElementById('new-products').checked,
+    events: document.getElementById('events-notifications').checked,
+    orderUpdates: document.getElementById('order-updates').checked,
+    
+    // Seguridad
+    twoFactor: document.getElementById('two-factor').checked,
+    
+    // Metadata
+    lastUpdated: new Date().toISOString()
+  };
+  
+  // Validar datos básicos
+  if (!profileData.name) {
+    showProfileError('profile-name-error', 'El nombre es requerido');
+    document.getElementById('profile-name').classList.add('error');
+    saveButton.classList.remove('loading');
+    saveButton.disabled = false;
+    switchTab('personal');
+    return;
+  }
+  
+  // Simular guardado
+  setTimeout(() => {
+    // Actualizar datos del usuario
+    const userData = JSON.parse(localStorage.getItem('levelup_user') || '{}');
+    userData.name = profileData.name;
+    localStorage.setItem('levelup_user', JSON.stringify(userData));
+    
+    // Guardar perfil
+    localStorage.setItem('levelup_profile', JSON.stringify(profileData));
+    
+    // Actualizar interfaz
+    updateUserInterface(userData);
+    updateLoginInterface(userData);
+    
+    showNotification('✅ Perfil actualizado correctamente');
+    
+    // Cerrar modal
+    document.getElementById('profile-modal').classList.remove('active');
+    document.body.style.overflow = '';
+    
+    saveButton.classList.remove('loading');
+    saveButton.disabled = false;
+  }, 1500);
+}
+
+function handlePasswordChange(e) {
+  e.preventDefault();
+  
+  const currentPassword = document.getElementById('current-password').value;
+  const newPassword = document.getElementById('new-password').value;
+  const confirmNewPassword = document.getElementById('confirm-new-password').value;
+  const changeButton = document.getElementById('change-password-btn');
+  
+  // Validar campos
+  clearProfileErrors();
+  let isValid = true;
+  
+  if (!currentPassword) {
+    showProfileError('current-password-error', 'Ingresa tu contraseña actual');
+    isValid = false;
+  }
+  
+  if (!newPassword) {
+    showProfileError('new-password-error', 'Ingresa una nueva contraseña');
+    isValid = false;
+  } else if (newPassword.length < 8) {
+    showProfileError('new-password-error', 'La contraseña debe tener al menos 8 caracteres');
+    isValid = false;
+  }
+  
+  if (!confirmNewPassword) {
+    showProfileError('confirm-new-password-error', 'Confirma tu nueva contraseña');
+    isValid = false;
+  } else if (newPassword !== confirmNewPassword) {
+    showProfileError('confirm-new-password-error', 'Las contraseñas no coinciden');
+    isValid = false;
+  }
+  
+  if (!isValid) return;
+  
+  changeButton.classList.add('loading');
+  changeButton.disabled = true;
+  
+  // Simular cambio de contraseña
+  setTimeout(() => {
+    showNotification('🔒 Contraseña actualizada correctamente');
+    
+    // Limpiar campos
+    document.getElementById('current-password').value = '';
+    document.getElementById('new-password').value = '';
+    document.getElementById('confirm-new-password').value = '';
+    
+    changeButton.classList.remove('loading');
+    changeButton.disabled = false;
+  }, 2000);
+}
+
+function logoutAllSessions() {
+  if (confirm('¿Estás seguro de que quieres cerrar todas las sesiones? Tendrás que iniciar sesión nuevamente.')) {
+    logout();
+    showNotification('🚪 Todas las sesiones han sido cerradas');
+  }
+}
+
+function showProfileError(elementId, message) {
+  const errorElement = document.getElementById(elementId);
+  if (errorElement) {
+    errorElement.textContent = message;
+  }
+}
+
+function clearProfileErrors() {
+  const errorElements = document.querySelectorAll('#profile-modal .error-message');
+  errorElements.forEach(element => {
+    element.textContent = '';
+  });
+  const inputElements = document.querySelectorAll('#profile-modal input.error');
+  inputElements.forEach(input => {
+    input.classList.remove('error');
+  });
+}
