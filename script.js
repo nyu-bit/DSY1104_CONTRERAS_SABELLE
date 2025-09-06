@@ -1,3 +1,33 @@
+// Carrusel Banner de Promociones
+document.addEventListener('DOMContentLoaded', function() {
+  const slides = document.querySelectorAll('.promo-slide');
+  const leftBtn = document.querySelector('.promo-arrow.left');
+  const rightBtn = document.querySelector('.promo-arrow.right');
+  let current = 0;
+
+  function showSlide(idx) {
+    slides.forEach((slide, i) => {
+      slide.style.display = (i === idx) ? 'flex' : 'none';
+    });
+  }
+
+  leftBtn.addEventListener('click', () => {
+    current = (current - 1 + slides.length) % slides.length;
+    showSlide(current);
+  });
+  rightBtn.addEventListener('click', () => {
+    current = (current + 1) % slides.length;
+    showSlide(current);
+  });
+
+  // Auto-carrusel cada 6 segundos
+  setInterval(() => {
+    current = (current + 1) % slides.length;
+    showSlide(current);
+  }, 6000);
+
+  showSlide(current);
+});
 // ===================== FUNCIONES BÁSICAS PARA EL TEMA GAMER =====================
 document.addEventListener('DOMContentLoaded', function() {
   // Asegurar que el tema gamer esté aplicado
