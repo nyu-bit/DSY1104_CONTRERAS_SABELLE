@@ -41,7 +41,7 @@
         </ul>
         
         <div class="actions">
-          <button class="btn-icon" type="button" aria-label="Abrir carrito" id="cart-button">
+          <button class="btn-icon" type="button" aria-label="Abrir carrito" onclick="showCart()">
             🛒 <span class="badge" id="cart-count" aria-live="polite">0</span>
           </button>
           <div class="level-indicator" id="level-indicator" style="display: none;">
@@ -143,9 +143,9 @@
             <div class="card-image">🎮</div>
             <div class="card-content">
               <h3 class="card-title">Gaming Controller Pro</h3>
-              <div class="card-price">$89.99</div>
+              <div class="card-price">$89.990</div>
               <p class="card-description">Control inalámbrico premium con retroalimentación háptica avanzada</p>
-              <button class="card-button">Agregar al Carrito</button>
+              <button class="card-button" onclick="addToCart(1)">Agregar al Carrito</button>
             </div>
           </article>
 
@@ -163,10 +163,10 @@
                 </div>
                 <span class="rating-text">(4.8) 127 reseñas</span>
               </div>
-              <div class="card-price">$599.99</div>
+              <div class="card-price">$599.990</div>
               <p class="card-description">Tarjeta gráfica de última generación para gaming en 4K</p>
               <div class="card-actions">
-                <button class="card-button">Agregar al Carrito</button>
+                <button class="card-button" onclick="addToCart(2)">Agregar al Carrito</button>
                 <button class="reviews-button" onclick="openProductReviews('rtx-gpu')">Ver Reseñas</button>
               </div>
             </div>
@@ -186,10 +186,10 @@
                 </div>
                 <span class="rating-text">(4.3) 89 reseñas</span>
               </div>
-              <div class="card-price">$149.99</div>
+              <div class="card-price">$149.990</div>
               <p class="card-description">Auriculares con sonido envolvente y micrófono de calidad profesional</p>
               <div class="card-actions">
-                <button class="card-button">Agregar al Carrito</button>
+                <button class="card-button" onclick="addToCart(5)">Agregar al Carrito</button>
                 <button class="reviews-button" onclick="openProductReviews('headset-gaming')">Ver Reseñas</button>
               </div>
             </div>
@@ -209,10 +209,10 @@
                 </div>
                 <span class="rating-text">(4.2) 64 reseñas</span>
               </div>
-              <div class="card-price">$129.99</div>
+              <div class="card-price">$129.990</div>
               <p class="card-description">Teclado mecánico con switches Cherry MX e iluminación RGB personalizable</p>
               <div class="card-actions">
-                <button class="card-button">Agregar al Carrito</button>
+                <button class="card-button" onclick="addToCart(3)">Agregar al Carrito</button>
                 <button class="reviews-button" onclick="openProductReviews('keyboard-rgb')">Ver Reseñas</button>
               </div>
             </div>
@@ -232,10 +232,10 @@
                 </div>
                 <span class="rating-text">(4.6) 156 reseñas</span>
               </div>
-              <div class="card-price">$79.99</div>
+              <div class="card-price">$79.990</div>
               <p class="card-description">Ratón de alta precisión con 16000 DPI y 8 botones programables</p>
               <div class="card-actions">
-                <button class="card-button">Agregar al Carrito</button>
+                <button class="card-button" onclick="addToCart(4)">Agregar al Carrito</button>
                 <button class="reviews-button" onclick="openProductReviews('mouse-ultra')">Ver Reseñas</button>
               </div>
             </div>
@@ -255,10 +255,10 @@
                 </div>
                 <span class="rating-text">(4.1) 92 reseñas</span>
               </div>
-              <div class="card-price">$299.99</div>
+              <div class="card-price">$299.990</div>
               <p class="card-description">Monitor curvo de 27" con 144Hz y tecnología FreeSync para gaming fluido</p>
               <div class="card-actions">
-                <button class="card-button">Agregar al Carrito</button>
+                <button class="card-button" onclick="addToCart(6)">Agregar al Carrito</button>
                 <button class="reviews-button" onclick="openProductReviews('monitor-144hz')">Ver Reseñas</button>
               </div>
             </div>
@@ -997,6 +997,198 @@
             <button type="submit" class="btn-primary" id="submit-review">
               <span class="btn-text">Publicar Reseña</span>
               <span class="btn-loading" style="display: none;">⏳ Publicando...</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL DE CARRITO ===================== -->
+  <div class="modal-overlay" id="cart-modal" aria-hidden="true">
+    <div class="modal cart-modal" role="dialog" aria-labelledby="cart-title">
+      <div class="modal-header">
+        <h2 id="cart-title">🛒 Tu Carrito de Compras</h2>
+        <button class="modal-close" aria-label="Cerrar modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Estado vacío -->
+        <div class="empty-cart" id="empty-cart" style="display: none;">
+          <div class="empty-cart-icon">🛒</div>
+          <h3>Tu carrito está vacío</h3>
+          <p>¡Agrega algunos productos increíbles y comienza tu experiencia gaming!</p>
+          <button class="btn-primary" onclick="closeCartModal()">Continuar Comprando</button>
+        </div>
+
+        <!-- Contenido del carrito -->
+        <div class="cart-content" id="cart-content">
+          <!-- Items del carrito -->
+          <div class="cart-items" id="cart-items">
+            <!-- Los items se cargarán dinámicamente -->
+          </div>
+
+          <!-- Resumen de descuentos -->
+          <div class="cart-discounts" id="cart-discounts" style="display: none;">
+            <h4>💰 Descuentos Aplicados</h4>
+            <div class="discount-list" id="discount-list">
+              <!-- Los descuentos se cargarán dinámicamente -->
+            </div>
+          </div>
+
+          <!-- Resumen de totales -->
+          <div class="cart-summary">
+            <div class="summary-row">
+              <span>Subtotal:</span>
+              <span id="cart-subtotal">$0</span>
+            </div>
+            <div class="summary-row discount" id="discount-row" style="display: none;">
+              <span>Descuento (<span id="discount-percentage">0</span>%):</span>
+              <span id="cart-discount">-$0</span>
+            </div>
+            <div class="summary-row shipping">
+              <span>Envío:</span>
+              <span id="cart-shipping">$0</span>
+            </div>
+            <div class="summary-row total">
+              <span>Total:</span>
+              <span id="cart-total">$0</span>
+            </div>
+            <div class="points-earned" id="points-earned" style="display: none;">
+              <span>🎁 Ganarás <strong><span id="points-amount">0</span> puntos LevelUp</strong> con esta compra</span>
+            </div>
+          </div>
+
+          <!-- Acciones del carrito -->
+          <div class="cart-actions">
+            <button class="btn-secondary" onclick="clearCart()">🗑️ Vaciar Carrito</button>
+            <button class="btn-primary" id="checkout-btn" onclick="initiateCheckout()">
+              💳 Proceder al Checkout
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL DE CHECKOUT ===================== -->
+  <div class="modal-overlay" id="checkout-modal" aria-hidden="true">
+    <div class="modal checkout-modal" role="dialog" aria-labelledby="checkout-title">
+      <div class="modal-header">
+        <h2 id="checkout-title">💳 Finalizar Compra</h2>
+        <button class="modal-close" aria-label="Cerrar modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="checkout-form" novalidate>
+          <!-- Información de envío -->
+          <div class="checkout-section">
+            <h3>📦 Información de Envío</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="shipping-name">Nombre completo *</label>
+                <input type="text" id="shipping-name" name="name" required>
+                <div class="error-message" id="shipping-name-error"></div>
+              </div>
+              <div class="form-group">
+                <label for="shipping-phone">Teléfono *</label>
+                <input type="tel" id="shipping-phone" name="phone" required>
+                <div class="error-message" id="shipping-phone-error"></div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="shipping-address">Dirección completa *</label>
+              <textarea id="shipping-address" name="address" required rows="3" 
+                        placeholder="Calle, número, comuna, ciudad, región"></textarea>
+              <div class="error-message" id="shipping-address-error"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="shipping-city">Ciudad *</label>
+                <input type="text" id="shipping-city" name="city" required>
+                <div class="error-message" id="shipping-city-error"></div>
+              </div>
+              <div class="form-group">
+                <label for="shipping-zipcode">Código postal</label>
+                <input type="text" id="shipping-zipcode" name="zipcode">
+              </div>
+            </div>
+          </div>
+
+          <!-- Método de pago -->
+          <div class="checkout-section">
+            <h3>💳 Método de Pago</h3>
+            <div class="payment-methods">
+              <label class="payment-method">
+                <input type="radio" name="payment" value="credit" checked>
+                <span class="payment-icon">💳</span>
+                <span class="payment-label">Tarjeta de Crédito/Débito</span>
+              </label>
+              <label class="payment-method">
+                <input type="radio" name="payment" value="transfer">
+                <span class="payment-icon">🏦</span>
+                <span class="payment-label">Transferencia Bancaria</span>
+              </label>
+              <label class="payment-method">
+                <input type="radio" name="payment" value="webpay">
+                <span class="payment-icon">🔒</span>
+                <span class="payment-label">WebPay Plus</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Información de pago (solo para tarjeta) -->
+          <div class="checkout-section" id="card-details">
+            <h3>💳 Detalles de la Tarjeta</h3>
+            <div class="form-group">
+              <label for="card-number">Número de tarjeta *</label>
+              <input type="text" id="card-number" name="cardNumber" 
+                     placeholder="1234 5678 9012 3456" maxlength="19">
+              <div class="error-message" id="card-number-error"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="card-expiry">Vencimiento *</label>
+                <input type="text" id="card-expiry" name="cardExpiry" 
+                       placeholder="MM/AA" maxlength="5">
+                <div class="error-message" id="card-expiry-error"></div>
+              </div>
+              <div class="form-group">
+                <label for="card-cvv">CVV *</label>
+                <input type="text" id="card-cvv" name="cardCvv" 
+                       placeholder="123" maxlength="4">
+                <div class="error-message" id="card-cvv-error"></div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="card-name">Nombre en la tarjeta *</label>
+              <input type="text" id="card-name" name="cardName">
+              <div class="error-message" id="card-name-error"></div>
+            </div>
+          </div>
+
+          <!-- Resumen de la orden -->
+          <div class="checkout-section">
+            <h3>📋 Resumen de tu Orden</h3>
+            <div class="order-summary" id="order-summary">
+              <!-- Se cargará dinámicamente -->
+            </div>
+          </div>
+
+          <!-- Términos y condiciones -->
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="terms-checkout" name="terms" required>
+              <span class="checkmark"></span>
+              Acepto los <a href="#" class="link">términos y condiciones</a> y la <a href="#" class="link">política de privacidad</a> *
+            </label>
+            <div class="error-message" id="terms-checkout-error"></div>
+          </div>
+
+          <!-- Acciones del checkout -->
+          <div class="checkout-actions">
+            <button type="button" class="btn-secondary" onclick="closeCheckoutModal()">Volver al Carrito</button>
+            <button type="submit" class="btn-primary" id="place-order-btn">
+              <span class="btn-text">🚀 Confirmar Pedido</span>
+              <span class="btn-loading" style="display: none;">⏳ Procesando...</span>
             </button>
           </div>
         </form>

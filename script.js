@@ -74,62 +74,8 @@ function initMobileMenu() {
 }
 
 // ===================== CARRITO DE COMPRAS =====================
-let cart = [];
+// (Implementación completa al final del archivo)
 
-function initCart() {
-  updateCartCount();
-  
-  // Event listeners para botones de agregar al carrito
-  document.addEventListener('click', function(e) {
-    if (e.target.classList.contains('card-button')) {
-      const card = e.target.closest('.card');
-      const product = {
-        id: Date.now(), // ID simple para demo
-        title: card.querySelector('.card-title').textContent,
-        price: card.querySelector('.card-price').textContent,
-        image: card.querySelector('.card-image').textContent
-      };
-      addToCart(product);
-    }
-  });
-}
-
-function addToCart(product) {
-  cart.push(product);
-  updateCartCount();
-  showNotification(`${product.title} agregado al carrito`);
-}
-
-function updateCartCount() {
-  const cartCount = document.getElementById('cart-count');
-  if (cartCount) {
-    cartCount.textContent = cart.length;
-  }
-}
-
-function showNotification(message) {
-  // Crear notificación temporal
-  const notification = document.createElement('div');
-  notification.textContent = message;
-  notification.style.cssText = `
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: var(--accent);
-    color: #000;
-    padding: 1rem 1.5rem;
-    border-radius: 8px;
-    font-weight: 600;
-    z-index: 1000;
-    animation: slideIn 0.3s ease;
-  `;
-  
-  document.body.appendChild(notification);
-  
-  setTimeout(() => {
-    notification.remove();
-  }, 3000);
-}
 
 // ===================== INTERACCIONES DE PRODUCTOS =====================
 function initProductInteractions() {
@@ -2517,3 +2463,504 @@ function handleReviewsModalOutsideClick(e) {
     closeReviewsModal();
   }
 }
+
+// ===== Sistema de Carrito de Compras =====
+let cart = JSON.parse(localStorage.getItem('levelUpCart')) || [];
+
+// Definición de productos disponibles
+const products = [
+    { id: 1, name: 'Gaming Controller Pro', price: 89990, icon: '🎮', available: true },
+    { id: 2, name: 'RTX Gaming GPU', price: 599990, icon: '⚡', available: true },
+    { id: 3, name: 'Mechanical Keyboard RGB', price: 129990, icon: '⌨️', available: true },
+    { id: 4, name: 'Gaming Mouse Pro', price: 79990, icon: '🖱️', available: true },
+    { id: 5, name: 'Gaming Headset 7.1', price: 149990, icon: '🎧', available: true },
+    { id: 6, name: 'Curved Gaming Monitor', price: 299990, icon: '🖥️', available: true }
+];
+
+// Cargar datos del carrito al iniciar
+function initCart() {
+    updateCartDisplay();
+    updateCartBadge();
+}
+
+// Agregar producto al carrito
+function addToCart(productId) {
+    if (!isLoggedIn()) {
+        showNotification('Debes iniciar sesión para agregar productos al carrito', 'error');
+        showLogin();
+        return;
+    }
+
+    // Buscar el producto
+    const product = products.find(p => p.id === productId);
+    if (!product || !product.available) {
+        showNotification('Producto no disponible', 'error');
+        return;
+    }
+
+    // Verificar si ya está en el carrito
+    const existingItem = cart.find(item => item.id === productId);
+    
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({
+            id: productId,
+            name: product.name,
+            price: product.price,
+            quantity: 1,
+            icon: product.icon
+        });
+    }
+
+    saveCart();
+    updateCartDisplay();
+    updateCartBadge();
+    showNotification(`${product.name} agregado al carrito`, 'success');
+}
+
+// Remover producto del carrito
+function removeFromCart(productId) {
+    cart = cart.filter(item => item.id !== productId);
+    saveCart();
+    updateCartDisplay();
+    updateCartBadge();
+    showNotification('Producto removido del carrito', 'info');
+}
+
+// Actualizar cantidad de producto
+function updateCartQuantity(productId, quantity) {
+    const item = cart.find(item => item.id === productId);
+    if (item) {
+        if (quantity <= 0) {
+            removeFromCart(productId);
+        } else {
+            item.quantity = Math.min(quantity, 99); // Máximo 99
+            saveCart();
+            updateCartDisplay();
+            updateCartBadge();
+        }
+    }
+}
+
+// Calcular descuentos aplicables
+function calculateDiscounts() {
+    if (!isLoggedIn()) return [];
+    
+    const user = getCurrentUser();
+    const discounts = [];
+    
+    // Descuento por nivel
+    const levelDiscount = Math.floor(user.level / 2) * 5; // 5% cada 2 niveles
+    if (levelDiscount > 0) {
+        discounts.push({
+            type: 'level',
+            label: `Descuento Nivel ${user.level}`,
+            percentage: Math.min(levelDiscount, 25), // Máximo 25%
+            icon: '🏆'
+        });
+    }
+    
+    // Descuento Duoc UC
+    if (user.duocDiscount) {
+        discounts.push({
+            type: 'duoc',
+            label: 'Descuento Duoc UC',
+            percentage: 10,
+            icon: '🎓'
+        });
+    }
+    
+    // Descuento por primera compra
+    if (!user.hasPurchased) {
+        discounts.push({
+            type: 'first',
+            label: 'Primera Compra',
+            percentage: 5,
+            icon: '🎉'
+        });
+    }
+    
+    return discounts;
+}
+
+// Calcular totales del carrito
+function calculateCartTotals() {
+    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const discounts = calculateDiscounts();
+    
+    let totalDiscount = 0;
+    discounts.forEach(discount => {
+        totalDiscount += (subtotal * discount.percentage / 100);
+    });
+    
+    const total = Math.max(subtotal - totalDiscount, 0);
+    const pointsToEarn = Math.floor(total / 1000); // 1 punto por cada $1000
+    
+    return {
+        subtotal,
+        discounts,
+        totalDiscount,
+        total,
+        pointsToEarn
+    };
+}
+
+// Actualizar visualización del carrito
+function updateCartDisplay() {
+    const cartModal = document.getElementById('cart-modal');
+    const emptyCart = cartModal.querySelector('.empty-cart');
+    const cartContent = cartModal.querySelector('.cart-content');
+    
+    if (cart.length === 0) {
+        emptyCart.style.display = 'block';
+        cartContent.style.display = 'none';
+        return;
+    }
+    
+    emptyCart.style.display = 'none';
+    cartContent.style.display = 'block';
+    
+    // Actualizar items del carrito
+    const cartItems = cartModal.querySelector('.cart-items');
+    cartItems.innerHTML = cart.map(item => `
+        <div class="cart-item">
+            <div class="cart-item-icon">${item.icon}</div>
+            <div class="cart-item-details">
+                <div class="cart-item-name">${item.name}</div>
+                <div class="cart-item-price">$${item.price.toLocaleString()}</div>
+            </div>
+            <div class="cart-item-controls">
+                <div class="quantity-controls">
+                    <button class="quantity-btn" onclick="updateCartQuantity(${item.id}, ${item.quantity - 1})" ${item.quantity <= 1 ? 'disabled' : ''}>-</button>
+                    <input type="number" class="quantity-input" value="${item.quantity}" min="1" max="99" onchange="updateCartQuantity(${item.id}, parseInt(this.value))">
+                    <button class="quantity-btn" onclick="updateCartQuantity(${item.id}, ${item.quantity + 1})" ${item.quantity >= 99 ? 'disabled' : ''}>+</button>
+                </div>
+                <button class="remove-item-btn" onclick="removeFromCart(${item.id})" title="Remover producto">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    `).join('');
+    
+    // Actualizar descuentos
+    const totals = calculateCartTotals();
+    const discountsSection = cartModal.querySelector('.cart-discounts');
+    const discountList = discountsSection.querySelector('.discount-list');
+    
+    if (totals.discounts.length > 0) {
+        discountsSection.style.display = 'block';
+        discountList.innerHTML = totals.discounts.map(discount => `
+            <div class="discount-item">
+                <div class="discount-label">
+                    <span>${discount.icon}</span>
+                    <span>${discount.label} (${discount.percentage}%)</span>
+                </div>
+                <div class="discount-amount">-$${(totals.subtotal * discount.percentage / 100).toLocaleString()}</div>
+            </div>
+        `).join('');
+    } else {
+        discountsSection.style.display = 'none';
+    }
+    
+    // Actualizar resumen
+    const summary = cartModal.querySelector('.cart-summary');
+    summary.innerHTML = `
+        <div class="summary-row">
+            <span>Subtotal:</span>
+            <span>$${totals.subtotal.toLocaleString()}</span>
+        </div>
+        ${totals.totalDiscount > 0 ? `
+        <div class="summary-row discount">
+            <span>Descuentos:</span>
+            <span>-$${totals.totalDiscount.toLocaleString()}</span>
+        </div>
+        ` : ''}
+        <div class="summary-row total">
+            <span>Total:</span>
+            <span>$${totals.total.toLocaleString()}</span>
+        </div>
+        ${totals.pointsToEarn > 0 ? `
+        <div class="points-earned">
+            🌟 Ganarás ${totals.pointsToEarn} puntos con esta compra
+        </div>
+        ` : ''}
+    `;
+}
+
+// Actualizar badge del carrito
+function updateCartBadge() {
+    const badge = document.querySelector('.cart-icon .badge');
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    
+    if (totalItems > 0) {
+        badge.textContent = totalItems;
+        badge.classList.remove('empty');
+    } else {
+        badge.classList.add('empty');
+    }
+}
+
+// Mostrar carrito
+function showCart() {
+    updateCartDisplay();
+    showModal('cart-modal');
+}
+
+// Proceder al checkout
+function proceedToCheckout() {
+    if (cart.length === 0) {
+        showNotification('El carrito está vacío', 'error');
+        return;
+    }
+    
+    if (!isLoggedIn()) {
+        showNotification('Debes iniciar sesión para continuar', 'error');
+        showLogin();
+        return;
+    }
+    
+    // Actualizar resumen de la orden
+    updateOrderSummary();
+    hideModal('cart-modal');
+    showModal('checkout-modal');
+}
+
+// Actualizar resumen de la orden en checkout
+function updateOrderSummary() {
+    const orderItems = document.querySelector('.order-items');
+    const totals = calculateCartTotals();
+    
+    orderItems.innerHTML = cart.map(item => `
+        <div class="order-item">
+            <div class="order-item-info">
+                <div class="order-item-icon">${item.icon}</div>
+                <div class="order-item-details">
+                    <div class="order-item-name">${item.name}</div>
+                    <div class="order-item-quantity">Cantidad: ${item.quantity}</div>
+                </div>
+            </div>
+            <div class="order-item-price">$${(item.price * item.quantity).toLocaleString()}</div>
+        </div>
+    `).join('');
+    
+    // Actualizar totales en checkout
+    const checkoutSummary = document.querySelector('.checkout-summary');
+    checkoutSummary.innerHTML = `
+        <div class="summary-row">
+            <span>Subtotal:</span>
+            <span>$${totals.subtotal.toLocaleString()}</span>
+        </div>
+        ${totals.totalDiscount > 0 ? `
+        <div class="summary-row discount">
+            <span>Descuentos:</span>
+            <span>-$${totals.totalDiscount.toLocaleString()}</span>
+        </div>
+        ` : ''}
+        <div class="summary-row">
+            <span>Envío:</span>
+            <span id="shipping-cost">$0</span>
+        </div>
+        <div class="summary-row total">
+            <span>Total:</span>
+            <span id="final-total">$${totals.total.toLocaleString()}</span>
+        </div>
+    `;
+}
+
+// Manejar cambio de método de envío
+function handleShippingChange() {
+    const shippingMethod = document.querySelector('input[name="shipping"]:checked');
+    const shippingCost = shippingMethod ? parseInt(shippingMethod.value) : 0;
+    const totals = calculateCartTotals();
+    const finalTotal = totals.total + shippingCost;
+    
+    document.getElementById('shipping-cost').textContent = shippingCost > 0 ? `$${shippingCost.toLocaleString()}` : 'Gratis';
+    document.getElementById('final-total').textContent = `$${finalTotal.toLocaleString()}`;
+}
+
+// Manejar cambio de método de pago
+function handlePaymentMethodChange() {
+    const paymentMethod = document.querySelector('input[name="payment"]:checked');
+    const cardDetails = document.getElementById('card-details');
+    
+    if (paymentMethod && paymentMethod.value === 'credit') {
+        cardDetails.classList.remove('hidden');
+        // Hacer campos requeridos
+        cardDetails.querySelectorAll('input').forEach(input => {
+            input.required = true;
+        });
+    } else {
+        cardDetails.classList.add('hidden');
+        // Quitar requerido
+        cardDetails.querySelectorAll('input').forEach(input => {
+            input.required = false;
+        });
+    }
+}
+
+// Validar formulario de checkout
+function validateCheckoutForm() {
+    const form = document.getElementById('checkout-form');
+    const formData = new FormData(form);
+    const errors = [];
+    
+    // Validar datos de envío
+    if (!formData.get('full-name')) errors.push('Nombre completo es requerido');
+    if (!formData.get('phone')) errors.push('Teléfono es requerido');
+    if (!formData.get('address')) errors.push('Dirección es requerida');
+    if (!formData.get('city')) errors.push('Ciudad es requerida');
+    if (!formData.get('shipping')) errors.push('Método de envío es requerido');
+    if (!formData.get('payment')) errors.push('Método de pago es requerido');
+    
+    // Validar datos de tarjeta si es pago con tarjeta
+    if (formData.get('payment') === 'credit') {
+        const cardNumber = formData.get('card-number');
+        const cardExpiry = formData.get('card-expiry');
+        const cardCvv = formData.get('card-cvv');
+        
+        if (!cardNumber || cardNumber.length < 16) errors.push('Número de tarjeta inválido');
+        if (!cardExpiry || !/^\d{2}\/\d{2}$/.test(cardExpiry)) errors.push('Fecha de vencimiento inválida');
+        if (!cardCvv || cardCvv.length < 3) errors.push('CVV inválido');
+    }
+    
+    return errors;
+}
+
+// Procesar orden
+async function processOrder() {
+    const errors = validateCheckoutForm();
+    if (errors.length > 0) {
+        showNotification(errors.join('\n'), 'error');
+        return;
+    }
+    
+    const processBtn = document.getElementById('process-order-btn');
+    const btnText = processBtn.querySelector('.btn-text');
+    const btnLoading = processBtn.querySelector('.btn-loading');
+    
+    // Mostrar estado de carga
+    processBtn.classList.add('loading');
+    processBtn.disabled = true;
+    
+    try {
+        // Simular procesamiento de pago
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        // Calcular totales finales
+        const totals = calculateCartTotals();
+        const shippingCost = parseInt(document.querySelector('input[name="shipping"]:checked').value) || 0;
+        const finalTotal = totals.total + shippingCost;
+        
+        // Actualizar usuario
+        const user = getCurrentUser();
+        user.points += totals.pointsToEarn;
+        user.hasPurchased = true;
+        user.totalSpent = (user.totalSpent || 0) + finalTotal;
+        
+        // Subir de nivel si corresponde
+        checkLevelUp(user);
+        
+        // Guardar usuario actualizado
+        updateUserInStorage(user);
+        
+        // Limpiar carrito
+        cart = [];
+        saveCart();
+        updateCartDisplay();
+        updateCartBadge();
+        
+        // Cerrar modal
+        hideModal('checkout-modal');
+        
+        // Mostrar confirmación
+        showNotification(`¡Compra realizada con éxito! Has ganado ${totals.pointsToEarn} puntos`, 'success');
+        
+        // Actualizar interfaz de usuario
+        updateUserInfo();
+        
+    } catch (error) {
+        showNotification('Error al procesar el pago. Intenta nuevamente.', 'error');
+    } finally {
+        // Quitar estado de carga
+        processBtn.classList.remove('loading');
+        processBtn.disabled = false;
+    }
+}
+
+// Limpiar carrito completo
+function clearCart() {
+    if (cart.length === 0) {
+        showNotification('El carrito ya está vacío', 'info');
+        return;
+    }
+    
+    cart = [];
+    saveCart();
+    updateCartDisplay();
+    updateCartBadge();
+    showNotification('Carrito vaciado', 'info');
+}
+
+// Guardar carrito en localStorage
+function saveCart() {
+    localStorage.setItem('levelUpCart', JSON.stringify(cart));
+}
+
+// Cerrar modal de checkout
+function closeCheckoutModal() {
+    hideModal('checkout-modal');
+}
+
+// Formatear número de tarjeta
+function formatCardNumber(input) {
+    let value = input.value.replace(/\s/g, '').replace(/[^0-9]/gi, '');
+    let formattedValue = value.match(/.{1,4}/g)?.join(' ') || '';
+    input.value = formattedValue;
+}
+
+// Formatear fecha de vencimiento
+function formatCardExpiry(input) {
+    let value = input.value.replace(/\D/g, '');
+    if (value.length >= 2) {
+        value = value.substring(0, 2) + '/' + value.substring(2, 4);
+    }
+    input.value = value;
+}
+
+// Event listeners para carrito
+document.addEventListener('DOMContentLoaded', function() {
+    // Métodos de envío
+    document.querySelectorAll('input[name="shipping"]').forEach(radio => {
+        radio.addEventListener('change', handleShippingChange);
+    });
+    
+    // Métodos de pago
+    document.querySelectorAll('input[name="payment"]').forEach(radio => {
+        radio.addEventListener('change', handlePaymentMethodChange);
+    });
+    
+    // Formateo de tarjeta
+    const cardNumber = document.getElementById('card-number');
+    if (cardNumber) {
+        cardNumber.addEventListener('input', function() {
+            formatCardNumber(this);
+        });
+    }
+    
+    const cardExpiry = document.getElementById('card-expiry');
+    if (cardExpiry) {
+        cardExpiry.addEventListener('input', function() {
+            formatCardExpiry(this);
+        });
+    }
+    
+    // Inicializar carrito
+    initCart();
+    
+    // Inicializar sistema existente
+    updateUserInfo();
+    updateLevelDisplay();
+    loadReviews();
+    updateProductDisplays();
+});
