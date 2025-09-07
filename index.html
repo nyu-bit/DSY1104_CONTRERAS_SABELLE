@@ -2019,41 +2019,193 @@
     - Actualiza #cart-count con el total del carrito y pon aria-live="polite".
   ================================================================ -->
 </body>
-  <!-- Widget flotante de Ayuda/FAQ -->
-  <button id="faq-widget-btn" class="faq-widget-btn" aria-label="Abrir ayuda y preguntas frecuentes">
-    <span class="faq-icon">❓</span>
-  </button>
-  <aside id="faq-panel" class="faq-panel" aria-label="Preguntas Frecuentes" tabindex="-1" style="display:none;">
-    <header class="faq-header">
-      <h2>Ayuda & FAQ</h2>
-      <button id="faq-close" class="faq-close" aria-label="Cerrar ayuda">✖</button>
-    </header>
-    <div class="faq-search">
-      <input type="search" id="faq-search" placeholder="Buscar pregunta..." aria-label="Buscar en FAQ">
+  <!-- Widget Avanzado de Ayuda/FAQ -->
+  <div class="help-widget-container">
+    <button id="help-widget-btn" class="help-widget-btn" aria-label="Abrir centro de ayuda">
+      <div class="help-icon">
+        <span class="icon-main">🎮</span>
+        <span class="icon-notification" id="help-notification"></span>
+      </div>
+      <span class="help-text">Ayuda Gaming</span>
+    </button>
+    
+    <!-- Panel de Ayuda Flotante -->
+    <div id="help-panel" class="help-panel" style="display: none;">
+      <div class="help-header">
+        <div class="help-title">
+          <h2>🎮 Centro de Ayuda Gaming</h2>
+          <div class="help-status">
+            <span class="status-indicator online"></span>
+            <span>Soporte Online</span>
+          </div>
+        </div>
+        <button id="help-close" class="help-close" aria-label="Cerrar ayuda">✕</button>
+      </div>
+      
+      <!-- Navegación de Categorías de Ayuda -->
+      <div class="help-navigation">
+        <button class="help-nav-btn active" data-category="faq" onclick="showHelpCategory('faq')">
+          ❓ FAQ
+        </button>
+        <button class="help-nav-btn" data-category="tutorials" onclick="showHelpCategory('tutorials')">
+          📚 Tutoriales
+        </button>
+        <button class="help-nav-btn" data-category="contact" onclick="showHelpCategory('contact')">
+          📞 Contacto
+        </button>
+        <button class="help-nav-btn" data-category="guides" onclick="showHelpCategory('guides')">
+          🎯 Guías Gaming
+        </button>
+      </div>
+      
+      <!-- Búsqueda Inteligente -->
+      <div class="help-search-container">
+        <input type="search" 
+               id="help-search" 
+               placeholder="🔍 ¿En qué puedo ayudarte hoy?" 
+               aria-label="Buscar en centro de ayuda">
+        <div class="search-suggestions" id="search-suggestions"></div>
+      </div>
+      
+      <!-- Contenido de Ayuda -->
+      <div class="help-content">
+        
+        <!-- FAQ Section -->
+        <div class="help-section active" id="faq-section">
+          <div class="help-section-header">
+            <h3>❓ Preguntas Frecuentes</h3>
+            <span class="section-count" id="faq-count"></span>
+          </div>
+          <div class="faq-categories">
+            <button class="faq-category-btn active" onclick="filterFAQ('all')">
+              🌐 Todas
+            </button>
+            <button class="faq-category-btn" onclick="filterFAQ('shopping')">
+              🛒 Compras
+            </button>
+            <button class="faq-category-btn" onclick="filterFAQ('technical')">
+              🔧 Técnico
+            </button>
+            <button class="faq-category-btn" onclick="filterFAQ('gaming')">
+              🎮 Gaming
+            </button>
+          </div>
+          <div class="faq-list" id="faq-list">
+            <!-- FAQ items se generarán dinámicamente -->
+          </div>
+        </div>
+        
+        <!-- Tutorials Section -->
+        <div class="help-section" id="tutorials-section">
+          <div class="help-section-header">
+            <h3>📚 Tutoriales Gaming</h3>
+          </div>
+          <div class="tutorials-grid">
+            <div class="tutorial-card">
+              <div class="tutorial-icon">🔧</div>
+              <h4>Cómo armar tu PC Gaming</h4>
+              <p>Guía paso a paso para ensamblar tu setup perfecto</p>
+              <button class="tutorial-btn" onclick="openTutorial('pc-building')">Ver Tutorial</button>
+            </div>
+            <div class="tutorial-card">
+              <div class="tutorial-icon">⚡</div>
+              <h4>Optimizar Rendimiento</h4>
+              <p>Configura tu sistema para máximo FPS</p>
+              <button class="tutorial-btn" onclick="openTutorial('optimization')">Ver Tutorial</button>
+            </div>
+            <div class="tutorial-card">
+              <div class="tutorial-icon">🎯</div>
+              <h4>Elegir Componentes</h4>
+              <p>Encuentra los mejores componentes para tu presupuesto</p>
+              <button class="tutorial-btn" onclick="openTutorial('components')">Ver Tutorial</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Contact Section -->
+        <div class="help-section" id="contact-section">
+          <div class="help-section-header">
+            <h3>📞 Contacto Directo</h3>
+          </div>
+          <div class="contact-options">
+            <div class="contact-option">
+              <div class="contact-icon">💬</div>
+              <div class="contact-info">
+                <h4>Chat en Vivo</h4>
+                <p>Respuesta inmediata • Online ahora</p>
+                <button class="contact-btn primary" onclick="openLiveChat()">Iniciar Chat</button>
+              </div>
+            </div>
+            <div class="contact-option">
+              <div class="contact-icon">📞</div>
+              <div class="contact-info">
+                <h4>Soporte Telefónico</h4>
+                <p>+56 2 2800 GAME (4263)</p>
+                <button class="contact-btn" onclick="makePhoneCall()">Llamar Ahora</button>
+              </div>
+            </div>
+            <div class="contact-option">
+              <div class="contact-icon">📧</div>
+              <div class="contact-info">
+                <h4>Email Soporte</h4>
+                <p>Respuesta en 24 horas</p>
+                <button class="contact-btn" onclick="openEmailForm()">Enviar Email</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Gaming Guides Section -->
+        <div class="help-section" id="guides-section">
+          <div class="help-section-header">
+            <h3>🎯 Guías Gaming Especializadas</h3>
+          </div>
+          <div class="guides-list">
+            <div class="guide-item">
+              <div class="guide-category">🎮 Setup Gaming</div>
+              <h4>Configuración Perfecta para Esports</h4>
+              <p>Mouse, teclado, monitor: todo lo que necesitas para competir</p>
+              <div class="guide-meta">
+                <span>⏱️ 15 min</span>
+                <span>👁️ 1.2k vistas</span>
+              </div>
+            </div>
+            <div class="guide-item">
+              <div class="guide-category">🔥 Hardware</div>
+              <h4>RTX 4090 vs RTX 4080: ¿Cuál elegir?</h4>
+              <p>Comparación detallada para gaming en 4K</p>
+              <div class="guide-meta">
+                <span>⏱️ 12 min</span>
+                <span>👁️ 2.5k vistas</span>
+              </div>
+            </div>
+            <div class="guide-item">
+              <div class="guide-category">💰 Presupuesto</div>
+              <h4>PC Gaming por $500.000</h4>
+              <p>Build completa para 1080p gaming</p>
+              <div class="guide-meta">
+                <span>⏱️ 18 min</span>
+                <span>👁️ 3.1k vistas</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Quick Actions -->
+      <div class="help-quick-actions">
+        <button class="quick-action-btn" onclick="requestCallback()">
+          📞 Solicitar Llamada
+        </button>
+        <button class="quick-action-btn" onclick="reportIssue()">
+          🐛 Reportar Problema
+        </button>
+        <button class="quick-action-btn" onclick="giveFeedback()">
+          ⭐ Dar Feedback
+        </button>
+      </div>
     </div>
-    <ul class="faq-list">
-      <li class="faq-item">
-        <button class="faq-question" aria-expanded="false">¿Cómo puedo comprar un producto?</button>
-        <div class="faq-answer" hidden>Selecciona el producto, agrégalo al carrito y sigue el proceso de pago.</div>
-      </li>
-      <li class="faq-item">
-        <button class="faq-question" aria-expanded="false">¿Qué métodos de retiro existen?</button>
-        <div class="faq-answer" hidden>Puedes retirar en tienda o solicitar envío a domicilio.</div>
-      </li>
-      <li class="faq-item">
-        <button class="faq-question" aria-expanded="false">¿Cómo sé si un producto está disponible?</button>
-        <div class="faq-answer" hidden>Los productos en stock se muestran con el filtro de disponibilidad.</div>
-      </li>
-      <li class="faq-item">
-        <button class="faq-question" aria-expanded="false">¿Puedo comparar productos?</button>
-        <div class="faq-answer" hidden>Sí, selecciona "Comparar" en los productos destacados.</div>
-      </li>
-      <li class="faq-item">
-        <button class="faq-question" aria-expanded="false">¿Cómo contacto soporte?</button>
-        <div class="faq-answer" hidden>Puedes escribirnos desde el formulario de contacto o por chat en línea.</div>
-      </li>
-    </ul>
-  </aside>
+  </div>
 
   <!-- Modal Comparador de Productos -->
   <div class="modal" id="product-comparator-modal" aria-hidden="true">

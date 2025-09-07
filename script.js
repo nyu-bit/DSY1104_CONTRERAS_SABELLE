@@ -5965,6 +5965,464 @@ function reportReview(reviewId) {
     showNotification('Reseña reportada. Será revisada por nuestro equipo.', 'info');
 }
 
+// ===================== WIDGET DE AYUDA/FAQ AVANZADO =====================
+
+let helpSearchTimeout;
+let currentHelpCategory = 'faq';
+
+const faqDatabase = {
+    shopping: [
+        {
+            id: 1,
+            question: "¿Cómo puedo comprar un producto?",
+            answer: "Selecciona el producto deseado, haz clic en 'Agregar al Carrito', revisa tu carrito y procede con el checkout. Puedes pagar con tarjeta, transferencia o efectivo.",
+            category: "shopping",
+            tags: ["comprar", "carrito", "pago", "checkout"]
+        },
+        {
+            id: 2,
+            question: "¿Qué métodos de pago aceptan?",
+            answer: "Aceptamos tarjetas de crédito/débito (Visa, MasterCard), transferencias bancarias, WebPay Plus y pago en efectivo en tienda.",
+            category: "shopping",
+            tags: ["pago", "tarjeta", "transferencia", "efectivo"]
+        },
+        {
+            id: 3,
+            question: "¿Puedo cancelar mi pedido?",
+            answer: "Sí, puedes cancelar tu pedido antes de que sea procesado. Contacta a nuestro equipo de soporte lo antes posible.",
+            category: "shopping",
+            tags: ["cancelar", "pedido", "orden"]
+        }
+    ],
+    technical: [
+        {
+            id: 4,
+            question: "¿Ofrecen instalación de componentes?",
+            answer: "Sí, ofrecemos servicio de instalación por $25.000. Nuestros técnicos especializados pueden instalar y configurar tus componentes.",
+            category: "technical",
+            tags: ["instalación", "técnico", "componentes", "servicio"]
+        },
+        {
+            id: 5,
+            question: "¿Cómo sé si los componentes son compatibles?",
+            answer: "Usa nuestro comparador de productos o consulta con nuestro equipo técnico. También puedes verificar las especificaciones en cada producto.",
+            category: "technical",
+            tags: ["compatibilidad", "componentes", "comparador"]
+        },
+        {
+            id: 6,
+            question: "¿Qué garantía tienen los productos?",
+            answer: "Todos nuestros productos incluyen garantía del fabricante. Componentes gaming tienen entre 1-5 años según la marca.",
+            category: "technical",
+            tags: ["garantía", "warranty", "defectos"]
+        }
+    ],
+    gaming: [
+        {
+            id: 7,
+            question: "¿Qué configuración necesito para gaming 4K?",
+            answer: "Para gaming 4K recomendamos RTX 4080/4090, CPU Intel i7/i9 o AMD Ryzen 7/9, 32GB RAM DDR4/DDR5 y SSD NVMe.",
+            category: "gaming",
+            tags: ["4K", "gaming", "configuración", "RTX", "specs"]
+        },
+        {
+            id: 8,
+            question: "¿Cuál es la diferencia entre gaming y streaming?",
+            answer: "Para streaming necesitas más CPU y RAM. Recomendamos dual-PC setup o configuraciones con i9/Ryzen 9 y 32GB+ RAM.",
+            category: "gaming",
+            tags: ["streaming", "gaming", "CPU", "setup"]
+        },
+        {
+            id: 9,
+            question: "¿Qué periféricos gaming recomiendan?",
+            answer: "Para esports: mouse gaming de alta precisión, teclado mecánico, headset gaming y monitor 144Hz+. Revisa nuestras recomendaciones por juego.",
+            category: "gaming",
+            tags: ["periféricos", "esports", "mouse", "teclado", "monitor"]
+        }
+    ]
+};
+
+// Inicializar widget de ayuda
+function initHelpWidget() {
+    setupHelpEventListeners();
+    populateFAQList();
+    updateFAQCount();
+}
+
+// Configurar event listeners para ayuda
+function setupHelpEventListeners() {
+    const helpBtn = document.getElementById('help-widget-btn');
+    const helpClose = document.getElementById('help-close');
+    const helpSearch = document.getElementById('help-search');
+    
+    if (helpBtn) {
+        helpBtn.addEventListener('click', toggleHelpPanel);
+    }
+    
+    if (helpClose) {
+        helpClose.addEventListener('click', closeHelpPanel);
+    }
+    
+    if (helpSearch) {
+        helpSearch.addEventListener('input', debounce(searchHelp, 300));
+        helpSearch.addEventListener('focus', showSearchSuggestions);
+    }
+    
+    // Click outside to close
+    document.addEventListener('click', (e) => {
+        const helpPanel = document.getElementById('help-panel');
+        const helpBtn = document.getElementById('help-widget-btn');
+        
+        if (helpPanel && helpPanel.style.display !== 'none') {
+            if (!helpPanel.contains(e.target) && !helpBtn.contains(e.target)) {
+                closeHelpPanel();
+            }
+        }
+    });
+}
+
+// Toggle panel de ayuda
+function toggleHelpPanel() {
+    const panel = document.getElementById('help-panel');
+    if (panel) {
+        if (panel.style.display === 'none') {
+            openHelpPanel();
+        } else {
+            closeHelpPanel();
+        }
+    }
+}
+
+// Abrir panel de ayuda
+function openHelpPanel() {
+    const panel = document.getElementById('help-panel');
+    const notification = document.getElementById('help-notification');
+    
+    if (panel) {
+        panel.style.display = 'block';
+        panel.classList.add('active');
+        addGamerCoins(3, 'help-panel-opened');
+        
+        // Ocultar notificación
+        if (notification) {
+            notification.style.display = 'none';
+        }
+        
+        // Animación de entrada
+        setTimeout(() => {
+            panel.classList.add('animate-in');
+        }, 10);
+    }
+}
+
+// Cerrar panel de ayuda
+function closeHelpPanel() {
+    const panel = document.getElementById('help-panel');
+    if (panel) {
+        panel.classList.remove('animate-in');
+        setTimeout(() => {
+            panel.style.display = 'none';
+            panel.classList.remove('active');
+        }, 300);
+    }
+}
+
+// Mostrar categoría de ayuda
+function showHelpCategory(category) {
+    currentHelpCategory = category;
+    
+    // Actualizar navegación
+    document.querySelectorAll('.help-nav-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelector(`[data-category="${category}"]`).classList.add('active');
+    
+    // Mostrar sección correspondiente
+    document.querySelectorAll('.help-section').forEach(section => {
+        section.classList.remove('active');
+    });
+    document.getElementById(`${category}-section`).classList.add('active');
+    
+    addGamerCoins(2, `help-category-${category}`);
+}
+
+// Poblar lista de FAQ
+function populateFAQList() {
+    const faqList = document.getElementById('faq-list');
+    if (!faqList) return;
+    
+    const allFAQs = Object.values(faqDatabase).flat();
+    
+    faqList.innerHTML = allFAQs.map(faq => `
+        <div class="faq-item" data-category="${faq.category}" data-tags="${faq.tags.join(' ')}">
+            <button class="faq-question" onclick="toggleFAQAnswer(${faq.id})" aria-expanded="false">
+                <span class="question-text">${faq.question}</span>
+                <span class="question-icon">➕</span>
+            </button>
+            <div class="faq-answer" id="faq-answer-${faq.id}" style="display: none;">
+                <p>${faq.answer}</p>
+                <div class="faq-actions">
+                    <button class="faq-action-btn helpful" onclick="markHelpful(${faq.id}, true)">
+                        👍 Útil
+                    </button>
+                    <button class="faq-action-btn not-helpful" onclick="markHelpful(${faq.id}, false)">
+                        👎 No útil
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Toggle respuesta FAQ
+function toggleFAQAnswer(faqId) {
+    const answer = document.getElementById(`faq-answer-${faqId}`);
+    const question = answer.previousElementSibling;
+    const icon = question.querySelector('.question-icon');
+    
+    if (answer.style.display === 'none') {
+        answer.style.display = 'block';
+        question.setAttribute('aria-expanded', 'true');
+        icon.textContent = '➖';
+        addGamerCoins(1, 'faq-answer-viewed');
+    } else {
+        answer.style.display = 'none';
+        question.setAttribute('aria-expanded', 'false');
+        icon.textContent = '➕';
+    }
+}
+
+// Filtrar FAQ por categoría
+function filterFAQ(category) {
+    const faqItems = document.querySelectorAll('.faq-item');
+    
+    // Actualizar botones de categoría
+    document.querySelectorAll('.faq-category-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // Filtrar items
+    faqItems.forEach(item => {
+        if (category === 'all' || item.dataset.category === category) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+    
+    addGamerCoins(2, `faq-filtered-${category}`);
+}
+
+// Buscar en ayuda
+function searchHelp() {
+    const query = document.getElementById('help-search').value.toLowerCase().trim();
+    const faqItems = document.querySelectorAll('.faq-item');
+    
+    if (!query) {
+        faqItems.forEach(item => item.style.display = 'block');
+        hideSuggestions();
+        return;
+    }
+    
+    let visibleCount = 0;
+    faqItems.forEach(item => {
+        const question = item.querySelector('.question-text').textContent.toLowerCase();
+        const answer = item.querySelector('.faq-answer p').textContent.toLowerCase();
+        const tags = item.dataset.tags.toLowerCase();
+        
+        if (question.includes(query) || answer.includes(query) || tags.includes(query)) {
+            item.style.display = 'block';
+            visibleCount++;
+        } else {
+            item.style.display = 'none';
+        }
+    });
+    
+    // Mostrar sugerencias si no hay resultados
+    if (visibleCount === 0) {
+        showNoResultsSuggestions(query);
+    } else {
+        hideSuggestions();
+    }
+    
+    addGamerCoins(2, 'help-search-performed');
+}
+
+// Mostrar sugerencias de búsqueda
+function showSearchSuggestions() {
+    const suggestions = document.getElementById('search-suggestions');
+    if (!suggestions) return;
+    
+    const commonQueries = [
+        "¿Cómo comprar?",
+        "Métodos de pago",
+        "Gaming 4K",
+        "Garantía productos",
+        "Instalación componentes"
+    ];
+    
+    suggestions.innerHTML = `
+        <div class="suggestions-header">Búsquedas populares:</div>
+        ${commonQueries.map(query => `
+            <button class="suggestion-item" onclick="selectSuggestion('${query}')">
+                ${query}
+            </button>
+        `).join('')}
+    `;
+    suggestions.style.display = 'block';
+}
+
+// Seleccionar sugerencia
+function selectSuggestion(query) {
+    document.getElementById('help-search').value = query;
+    searchHelp();
+    hideSuggestions();
+}
+
+// Ocultar sugerencias
+function hideSuggestions() {
+    const suggestions = document.getElementById('search-suggestions');
+    if (suggestions) {
+        suggestions.style.display = 'none';
+    }
+}
+
+// Mostrar sugerencias cuando no hay resultados
+function showNoResultsSuggestions(query) {
+    const suggestions = document.getElementById('search-suggestions');
+    if (!suggestions) return;
+    
+    suggestions.innerHTML = `
+        <div class="no-results-help">
+            <p>No encontramos resultados para "${query}"</p>
+            <div class="help-alternatives">
+                <button class="alternative-btn" onclick="requestCustomHelp('${query}')">
+                    💬 Contactar Soporte
+                </button>
+                <button class="alternative-btn" onclick="suggestQuestion('${query}')">
+                    ✍️ Sugerir Pregunta
+                </button>
+            </div>
+        </div>
+    `;
+    suggestions.style.display = 'block';
+}
+
+// Marcar FAQ como útil
+function markHelpful(faqId, isHelpful) {
+    const action = isHelpful ? 'útil' : 'no útil';
+    showNotification(`📝 Marcado como ${action}. ¡Gracias por tu feedback!`);
+    addGamerCoins(2, 'faq-feedback-given');
+}
+
+// Actualizar contador de FAQ
+function updateFAQCount() {
+    const faqCount = document.getElementById('faq-count');
+    if (faqCount) {
+        const totalFAQs = Object.values(faqDatabase).flat().length;
+        faqCount.textContent = `${totalFAQs} preguntas`;
+    }
+}
+
+// Abrir tutorial
+function openTutorial(tutorialType) {
+    const tutorials = {
+        'pc-building': {
+            title: 'Cómo Armar tu PC Gaming',
+            content: 'Tutorial completo para ensamblar tu primera PC gaming paso a paso...'
+        },
+        'optimization': {
+            title: 'Optimización para Gaming',
+            content: 'Configura tu sistema para obtener el máximo rendimiento...'
+        },
+        'components': {
+            title: 'Guía de Componentes',
+            content: 'Aprende a elegir los mejores componentes para tu presupuesto...'
+        }
+    };
+    
+    const tutorial = tutorials[tutorialType];
+    if (tutorial) {
+        showNotification(`📚 Abriendo: ${tutorial.title}`, 'info');
+        addGamerCoins(5, `tutorial-${tutorialType}-opened`);
+    }
+}
+
+// Abrir chat en vivo
+function openLiveChat() {
+    showNotification('💬 Conectando con soporte en vivo...', 'info');
+    addGamerCoins(5, 'live-chat-opened');
+    
+    // Simular conexión
+    setTimeout(() => {
+        showNotification('✅ Conectado con Alex - Especialista Gaming', 'success');
+    }, 2000);
+}
+
+// Hacer llamada telefónica
+function makePhoneCall() {
+    if (navigator.userAgent.match(/iPhone|Android/i)) {
+        window.location.href = 'tel:+56228004263';
+    } else {
+        showNotification('📞 Llama al +56 2 2800 GAME (4263)', 'info');
+    }
+    addGamerCoins(3, 'phone-call-initiated');
+}
+
+// Abrir formulario de email
+function openEmailForm() {
+    const subject = encodeURIComponent('Consulta Level-Up Gamer');
+    const body = encodeURIComponent('Hola,\n\nTengo una consulta sobre...\n\nGracias.');
+    window.location.href = `mailto:soporte@levelupgamer.cl?subject=${subject}&body=${body}`;
+    addGamerCoins(3, 'email-form-opened');
+}
+
+// Solicitar callback
+function requestCallback() {
+    showNotification('📞 Solicitud de llamada registrada. Te contactaremos en 15 minutos.', 'success');
+    addGamerCoins(5, 'callback-requested');
+}
+
+// Reportar problema
+function reportIssue() {
+    const modal = document.createElement('div');
+    modal.className = 'modal active';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🐛 Reportar Problema</h2>
+                <button class="modal-close" onclick="this.closest('.modal').remove()">✕</button>
+            </div>
+            <form class="issue-form">
+                <textarea placeholder="Describe el problema que encontraste..." rows="4"></textarea>
+                <button type="submit" class="btn-primary">Enviar Reporte</button>
+            </form>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    addGamerCoins(3, 'issue-reported');
+}
+
+// Dar feedback
+function giveFeedback() {
+    showNotification('⭐ ¡Gracias por usar nuestro centro de ayuda!', 'success');
+    addGamerCoins(5, 'feedback-given');
+}
+
+// Solicitar ayuda personalizada
+function requestCustomHelp(query) {
+    showNotification(`💬 Enviando consulta sobre "${query}" a nuestro equipo de soporte`, 'info');
+    addGamerCoins(5, 'custom-help-requested');
+}
+
+// Sugerir nueva pregunta
+function suggestQuestion(query) {
+    showNotification(`✍️ Sugerencia registrada: "${query}". La revisaremos para futuros FAQ.`, 'success');
+    addGamerCoins(3, 'question-suggested');
+}
+
 // ===================== FILTROS DE DISPONIBILIDAD Y RETIRO =====================
 
 let activeFilters = {
@@ -7120,6 +7578,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Inicializar filtros avanzados
     initAdvancedFilters();
+    
+    // Inicializar widget de ayuda
+    initHelpWidget();
     
     // Event listeners para reseñas
     const closeReviewsBtn = document.querySelector('.close-reviews');
