@@ -35,6 +35,7 @@
         
         <ul class="menu">
           <li><a href="#categorias">Categorías</a></li>
+          <li><a href="#productos">Productos</a></li>
           <li><a href="#destacados">Destacados</a></li>
           <li><a href="#noticias">Noticias</a></li>
           <li><a href="#eventos">Eventos</a></li>
@@ -43,6 +44,9 @@
         </ul>
         
         <div class="actions">
+          <button class="btn-icon nav-wishlist" type="button" aria-label="Ver lista de deseos" onclick="toggleWishlist()">
+            ♡ <span class="nav-count" style="display: none;">0</span>
+          </button>
           <button class="btn-icon" type="button" aria-label="Abrir carrito" onclick="showCart()">
             🛒 <span class="badge" id="cart-count" aria-live="polite">0</span>
           </button>
@@ -517,6 +521,162 @@
           </div>
         </div>
       </div>
+      </section>
+
+      <!-- ============ SECCIÓN COMPLETA DE PRODUCTOS ============ -->
+      <section id="productos" class="products-section">
+          <div class="container">
+              <h2 class="section-title">Catálogo de Productos</h2>
+              
+              <!-- LG-021/LG-022: Filtros y Búsqueda -->
+              <div class="filters-section">
+                  <div class="filters-header">
+                      <h3 class="filters-title">Filtros</h3>
+                      <button class="filters-toggle">Mostrar/Ocultar</button>
+                  </div>
+                  
+                  <div class="search-filters">
+                      <div class="search-box">
+                          <span class="search-icon">🔍</span>
+                          <input type="text" id="searchInput" class="search-input" placeholder="Buscar productos...">
+                      </div>
+                      
+                      <div class="sort-controls">
+                          <select id="sortSelect" class="sort-select">
+                              <option value="name-asc">Nombre A-Z</option>
+                              <option value="name-desc">Nombre Z-A</option>
+                              <option value="price-asc">Precio: Menor a Mayor</option>
+                              <option value="price-desc">Precio: Mayor a Menor</option>
+                              <option value="rating-desc">Mejor Valorados</option>
+                              <option value="newest-desc">Más Nuevos</option>
+                          </select>
+                          
+                          <div class="view-toggle">
+                              <button class="view-btn active" data-view="grid">⚏</button>
+                              <button class="view-btn" data-view="list">☰</button>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <div class="filter-groups">
+                      <div class="filter-group">
+                          <h4>Categoría</h4>
+                          <div class="filter-options">
+                              <div class="filter-option">
+                                  <input type="radio" id="cat-all" name="category" value="">
+                                  <label for="cat-all">Todas</label>
+                              </div>
+                              <div class="filter-option">
+                                  <input type="radio" id="cat-juegos" name="category" value="Juegos">
+                                  <label for="cat-juegos">Juegos</label>
+                              </div>
+                              <div class="filter-option">
+                                  <input type="radio" id="cat-consolas" name="category" value="Consolas">
+                                  <label for="cat-consolas">Consolas</label>
+                              </div>
+                              <div class="filter-option">
+                                  <input type="radio" id="cat-accesorios" name="category" value="Accesorios">
+                                  <label for="cat-accesorios">Accesorios</label>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <div class="filter-group">
+                          <h4>Plataforma</h4>
+                          <div class="filter-options">
+                              <div class="filter-option">
+                                  <input type="checkbox" id="plat-pc" name="platform" value="PC">
+                                  <label for="plat-pc">PC</label>
+                              </div>
+                              <div class="filter-option">
+                                  <input type="checkbox" id="plat-ps5" name="platform" value="PlayStation 5">
+                                  <label for="plat-ps5">PlayStation 5</label>
+                              </div>
+                              <div class="filter-option">
+                                  <input type="checkbox" id="plat-xbox" name="platform" value="Xbox Series X">
+                                  <label for="plat-xbox">Xbox Series X</label>
+                              </div>
+                              <div class="filter-option">
+                                  <input type="checkbox" id="plat-switch" name="platform" value="Nintendo Switch">
+                                  <label for="plat-switch">Nintendo Switch</label>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <div class="filter-group">
+                          <h4>Precio</h4>
+                          <div class="filter-options">
+                              <div class="price-range">
+                                  <input type="number" name="priceMin" class="price-input" placeholder="Min">
+                                  <span>-</span>
+                                  <input type="number" name="priceMax" class="price-input" placeholder="Max">
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <div class="filter-group">
+                          <h4>Disponibilidad</h4>
+                          <div class="filter-options">
+                              <div class="filter-option">
+                                  <input type="radio" id="avail-all" name="availability" value="all" checked>
+                                  <label for="avail-all">Todos</label>
+                              </div>
+                              <div class="filter-option">
+                                  <input type="radio" id="avail-stock" name="availability" value="available">
+                                  <label for="avail-stock">En Stock</label>
+                              </div>
+                              <div class="filter-option">
+                                  <input type="radio" id="avail-out" name="availability" value="out-of-stock">
+                                  <label for="avail-out">Agotado</label>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <div class="filter-actions">
+                      <button id="clearFilters" class="btn-secondary">Limpiar Filtros</button>
+                      <button class="btn-primary">Aplicar Filtros</button>
+                  </div>
+              </div>
+              
+              <!-- Grid de productos -->
+              <div id="productsGrid" class="products-grid">
+                  <!-- Los productos se cargarán dinámicamente -->
+              </div>
+              
+              <!-- LG-023: Paginación -->
+              <div class="pagination-container">
+                  <div id="paginationContainer"></div>
+                  <div id="paginationInfo"></div>
+                  <div class="items-per-page">
+                      <label>Productos por página:</label>
+                      <select id="itemsPerPage">
+                          <option value="12">12</option>
+                          <option value="24">24</option>
+                          <option value="36">36</option>
+                          <option value="48">48</option>
+                      </select>
+                  </div>
+              </div>
+          </div>
+      </section>
+
+      <!-- ============ LG-031: LISTA DE DESEOS ============ -->
+      <section id="wishlist" class="wishlist-section" style="display: none;">
+          <div class="container">
+              <div class="wishlist-header">
+                  <h2 class="wishlist-title">Lista de Deseos</h2>
+                  <span class="wishlist-count">0</span>
+                  <div class="wishlist-actions">
+                      <button class="btn-secondary" onclick="wishlistManager.renderWishlist()">Actualizar</button>
+                      <button class="btn-primary" onclick="document.getElementById('productos').scrollIntoView()">Seguir Comprando</button>
+                  </div>
+              </div>
+              
+              <div id="wishlistGrid" class="wishlist-grid">
+                  <!-- Los productos de wishlist se cargarán dinámicamente -->
+              </div>
+          </div>
       </section>
 
       <!-- ===================== SECCIÓN DE NOTICIAS GAMING ===================== -->
@@ -1889,4 +2049,38 @@
       </li>
     </ul>
   </aside>
+
+  <!-- ============ CARRITO LATERAL ============ -->
+  <div id="cartOverlay" class="cart-overlay"></div>
+  <div id="cartSidebar" class="cart-sidebar">
+    <div class="cart-header">
+      <h3 class="cart-title">Mi Carrito</h3>
+      <button class="cart-close" aria-label="Cerrar carrito">×</button>
+    </div>
+    
+    <div class="cart-content">
+      <!-- Reglas del carrito -->
+      <div id="cartRules"></div>
+      
+      <!-- Items del carrito -->
+      <div id="cartItems" class="cart-items"></div>
+      
+      <!-- Sección de cupones -->
+      <div class="coupon-section">
+        <div class="coupon-input-group">
+          <input type="text" id="couponInput" class="coupon-input" placeholder="Código de cupón">
+          <button class="coupon-apply">Aplicar</button>
+        </div>
+      </div>
+      
+      <!-- Resumen del carrito -->
+      <div id="cartSummary" class="cart-summary"></div>
+      
+      <!-- Acciones del carrito -->
+      <div class="cart-actions">
+        <button class="btn-checkout">Finalizar Compra</button>
+        <button class="btn-clear-cart">Vaciar Carrito</button>
+      </div>
+    </div>
+  </div>
 </html>
