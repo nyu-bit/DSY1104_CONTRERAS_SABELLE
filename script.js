@@ -1228,6 +1228,216 @@ function copyReferralLink() {
 
 // ===================== SISTEMA DE GAMIFICACIÓN =====================
 
+// Datos mock de productos y reseñas
+const PRODUCTS_DATA = {
+  'rtx-gpu': {
+    name: 'RTX Gaming GPU',
+    icon: '⚡',
+    reviews: [
+      {
+        id: 1,
+        user: 'ProGamer_01',
+        rating: 5,
+        title: 'Increíble rendimiento para 4K',
+        content: 'Esta GPU ha superado todas mis expectativas. Puedo jugar todos los juegos en 4K con ray tracing activado y mantengo más de 60 FPS. La temperatura se mantiene bien con un buen sistema de refrigeración. Vale cada peso.',
+        date: '2024-11-15',
+        recommend: true,
+        helpful: 23,
+        userVoted: false
+      },
+      {
+        id: 2,
+        user: 'TechReviewer',
+        rating: 5,
+        title: 'Perfecta para streaming y gaming',
+        content: 'Uso esta tarjeta para streaming en Twitch mientras juego y funciona perfecto. El encoder NVENC es excelente y no afecta el rendimiento en juegos. Muy recomendada para creadores de contenido.',
+        date: '2024-11-10',
+        recommend: true,
+        helpful: 18,
+        userVoted: false
+      },
+      {
+        id: 3,
+        user: 'CasualGamer',
+        rating: 4,
+        title: 'Excelente pero cara',
+        content: 'El rendimiento es fantástico, pero el precio es bastante alto. Si tienes el presupuesto, definitivamente vale la pena. Solo asegúrate de tener una buena fuente de poder.',
+        date: '2024-11-05',
+        recommend: true,
+        helpful: 12,
+        userVoted: false
+      },
+      {
+        id: 4,
+        user: 'GamerChile',
+        rating: 5,
+        title: 'La mejor inversión gaming',
+        content: 'Después de años con una GPU antigua, esto es un salto gigantesco. Los gráficos se ven espectaculares y finalmente puedo disfrutar los juegos como se supone que deben verse.',
+        date: '2024-10-28',
+        recommend: true,
+        helpful: 15,
+        userVoted: false
+      }
+    ]
+  },
+  'headset-gaming': {
+    name: 'Headset Gaming 7.1',
+    icon: '🎧',
+    reviews: [
+      {
+        id: 5,
+        user: 'AudioPhile',
+        rating: 4,
+        title: 'Buen sonido pero micrófono mejorable',
+        content: 'Los auriculares suenan muy bien para gaming, el sonido envolvente es convincente. Sin embargo, el micrófono podría ser mejor para streaming profesional.',
+        date: '2024-11-12',
+        recommend: true,
+        helpful: 14,
+        userVoted: false
+      },
+      {
+        id: 6,
+        user: 'FPSMaster',
+        rating: 5,
+        title: 'Perfectos para FPS competitivos',
+        content: 'Puedo escuchar exactamente de dónde vienen los pasos enemigos. La calidad del audio para gaming competitivo es excelente. Muy cómodos para sesiones largas.',
+        date: '2024-11-08',
+        recommend: true,
+        helpful: 19,
+        userVoted: false
+      },
+      {
+        id: 7,
+        user: 'StreamerPro',
+        rating: 3,
+        title: 'Decentes pero hay mejores opciones',
+        content: 'Para el precio están bien, pero si tienes un poco más de presupuesto, hay opciones mejores en el mercado. La comodidad es buena.',
+        date: '2024-10-30',
+        recommend: false,
+        helpful: 8,
+        userVoted: false
+      }
+    ]
+  },
+  'keyboard-rgb': {
+    name: 'Mechanical Keyboard RGB',
+    icon: '⌨️',
+    reviews: [
+      {
+        id: 8,
+        user: 'MechKeyboard_Fan',
+        rating: 5,
+        title: 'Switches Cherry MX son lo mejor',
+        content: 'La sensación de escribir es increíble. Los switches Cherry MX Blue son perfectos para quien le gusta el click. Las luces RGB se ven espectaculares y son muy personalizables.',
+        date: '2024-11-14',
+        recommend: true,
+        helpful: 21,
+        userVoted: false
+      },
+      {
+        id: 9,
+        user: 'OfficeWorker',
+        rating: 4,
+        title: 'Bueno para trabajo y gaming',
+        content: 'Lo uso tanto para trabajar como para jugar. Es cómodo para escribir mucho texto y los switches responden bien para gaming. Solo es un poco ruidoso para oficina.',
+        date: '2024-11-06',
+        recommend: true,
+        helpful: 11,
+        userVoted: false
+      },
+      {
+        id: 10,
+        user: 'RGBLover',
+        rating: 4,
+        title: 'Las luces RGB son increíbles',
+        content: 'Los efectos de iluminación son muy buenos y personalizables. La calidad de construcción se siente sólida. Algunos teclas comenzaron a fallar después de 6 meses.',
+        date: '2024-10-25',
+        recommend: true,
+        helpful: 9,
+        userVoted: false
+      }
+    ]
+  },
+  'mouse-ultra': {
+    name: 'Gaming Mouse Ultra',
+    icon: '🖱️',
+    reviews: [
+      {
+        id: 11,
+        user: 'PrecisionGamer',
+        rating: 5,
+        title: 'Precisión perfecta para FPS',
+        content: 'Los 16000 DPI son más que suficientes y la precisión es excelente. Los 8 botones programables son muy útiles para MMORPGs. Muy recomendado.',
+        date: '2024-11-13',
+        recommend: true,
+        helpful: 17,
+        userVoted: false
+      },
+      {
+        id: 12,
+        user: 'MMOPlayer',
+        rating: 4,
+        title: 'Excelente para MMO',
+        content: 'Los botones laterales son perfectos para asignar habilidades en MMOs. El sensor es muy preciso y no hay lag perceptible.',
+        date: '2024-11-09',
+        recommend: true,
+        helpful: 13,
+        userVoted: false
+      },
+      {
+        id: 13,
+        user: 'ErgonomicsFirst',
+        rating: 4,
+        title: 'Cómodo para sesiones largas',
+        content: 'La forma se adapta bien a mi mano y no me cansa después de horas de uso. La calidad de construcción es buena.',
+        date: '2024-11-01',
+        recommend: true,
+        helpful: 10,
+        userVoted: false
+      }
+    ]
+  },
+  'monitor-144hz': {
+    name: 'Gaming Monitor 144Hz',
+    icon: '🖥️',
+    reviews: [
+      {
+        id: 14,
+        user: 'CompetitiveGamer',
+        rating: 4,
+        title: 'Gran diferencia con 144Hz',
+        content: 'Venir de 60Hz a 144Hz es un cambio enorme. Los juegos se sienten mucho más fluidos y responsive. La curva ayuda con la inmersión.',
+        date: '2024-11-11',
+        recommend: true,
+        helpful: 16,
+        userVoted: false
+      },
+      {
+        id: 15,
+        user: 'GraphicsDesigner',
+        rating: 3,
+        title: 'Bueno para gaming, regular para diseño',
+        content: 'Para gaming está perfecto, pero los colores no son tan precisos para trabajo de diseño profesional. FreeSync funciona bien.',
+        date: '2024-11-07',
+        recommend: true,
+        helpful: 7,
+        userVoted: false
+      },
+      {
+        id: 16,
+        user: 'BudgetGamer',
+        rating: 4,
+        title: 'Buena relación calidad-precio',
+        content: 'Para el precio que tiene, ofrece muy buenas características. El 144Hz se nota mucho y la calidad de imagen es decente.',
+        date: '2024-10-29',
+        recommend: true,
+        helpful: 12,
+        userVoted: false
+      }
+    ]
+  }
+};
+
 // Definición de niveles
 const LEVELS = [
   {
@@ -1726,5 +1936,584 @@ function initializeUserGamification(userData) {
   // Actualizar display si el perfil está abierto
   if (document.getElementById('profile-modal').classList.contains('active')) {
     loadGamificationData(userData);
+  }
+}
+
+// ===================== SISTEMA DE RESEÑAS =====================
+
+let currentProductId = null;
+let currentReviews = [];
+let currentPage = 1;
+const reviewsPerPage = 5;
+
+function openProductReviews(productId) {
+  currentProductId = productId;
+  const product = PRODUCTS_DATA[productId];
+  
+  if (!product) {
+    showNotification('❌ Producto no encontrado');
+    return;
+  }
+  
+  // Cargar reseñas del localStorage (combinar con mock)
+  const savedReviews = JSON.parse(localStorage.getItem(`reviews_${productId}`) || '[]');
+  currentReviews = [...product.reviews, ...savedReviews];
+  
+  // Configurar modal
+  setupReviewsModal(product);
+  
+  // Abrir modal
+  const modal = document.getElementById('reviews-modal');
+  modal.classList.add('active');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  
+  // Cargar contenido
+  loadReviewsContent();
+  
+  // Event listeners para este modal
+  initReviewsModalListeners();
+}
+
+function setupReviewsModal(product) {
+  // Información del producto
+  document.getElementById('review-product-icon').textContent = product.icon;
+  document.getElementById('review-product-name').textContent = product.name;
+  
+  // Estadísticas
+  const stats = calculateReviewStats(currentReviews);
+  renderProductRating(stats);
+  renderRatingDistribution(stats);
+}
+
+function calculateReviewStats(reviews) {
+  if (reviews.length === 0) {
+    return {
+      average: 0,
+      count: 0,
+      distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }
+    };
+  }
+  
+  const distribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+  let total = 0;
+  
+  reviews.forEach(review => {
+    distribution[review.rating]++;
+    total += review.rating;
+  });
+  
+  return {
+    average: total / reviews.length,
+    count: reviews.length,
+    distribution
+  };
+}
+
+function renderProductRating(stats) {
+  // Renderizar estrellas
+  const starsContainer = document.getElementById('review-product-stars');
+  starsContainer.innerHTML = generateStarsHTML(stats.average);
+  
+  // Mostrar promedio y count
+  document.getElementById('review-rating-average').textContent = stats.average.toFixed(1);
+  document.getElementById('review-rating-count').textContent = stats.count;
+}
+
+function renderRatingDistribution(stats) {
+  const maxCount = Math.max(...Object.values(stats.distribution));
+  
+  [5, 4, 3, 2, 1].forEach(stars => {
+    const bar = document.querySelector(`[data-stars="${stars}"]`);
+    const count = stats.distribution[stars];
+    const percentage = maxCount > 0 ? (count / maxCount) * 100 : 0;
+    
+    bar.querySelector('.bar-fill').style.width = `${percentage}%`;
+    bar.querySelector('.bar-count').textContent = count;
+  });
+}
+
+function generateStarsHTML(rating) {
+  let html = '';
+  for (let i = 1; i <= 5; i++) {
+    if (i <= rating) {
+      html += '<span class="star filled">★</span>';
+    } else if (i - 0.5 <= rating) {
+      html += '<span class="star half">★</span>';
+    } else {
+      html += '<span class="star">★</span>';
+    }
+  }
+  return html;
+}
+
+function loadReviewsContent() {
+  // Aplicar filtros y ordenamiento
+  const filter = document.getElementById('reviews-filter').value;
+  const sort = document.getElementById('reviews-sort').value;
+  
+  let filteredReviews = filterReviews(currentReviews, filter);
+  filteredReviews = sortReviews(filteredReviews, sort);
+  
+  // Paginación
+  const totalPages = Math.ceil(filteredReviews.length / reviewsPerPage);
+  const startIndex = (currentPage - 1) * reviewsPerPage;
+  const endIndex = startIndex + reviewsPerPage;
+  const pageReviews = filteredReviews.slice(startIndex, endIndex);
+  
+  // Renderizar reseñas
+  renderReviewsList(pageReviews);
+  
+  // Renderizar paginación
+  renderPagination(totalPages);
+}
+
+function filterReviews(reviews, filter) {
+  if (filter === 'all') return reviews;
+  const rating = parseInt(filter);
+  return reviews.filter(review => review.rating === rating);
+}
+
+function sortReviews(reviews, sort) {
+  const sorted = [...reviews];
+  
+  switch (sort) {
+    case 'newest':
+      return sorted.sort((a, b) => new Date(b.date) - new Date(a.date));
+    case 'oldest':
+      return sorted.sort((a, b) => new Date(a.date) - new Date(b.date));
+    case 'highest':
+      return sorted.sort((a, b) => b.rating - a.rating);
+    case 'lowest':
+      return sorted.sort((a, b) => a.rating - b.rating);
+    case 'helpful':
+      return sorted.sort((a, b) => b.helpful - a.helpful);
+    default:
+      return sorted;
+  }
+}
+
+function renderReviewsList(reviews) {
+  const container = document.getElementById('reviews-list');
+  
+  if (reviews.length === 0) {
+    container.innerHTML = `
+      <div class="no-reviews">
+        <p>😔 No hay reseñas que coincidan con los filtros seleccionados.</p>
+      </div>
+    `;
+    return;
+  }
+  
+  container.innerHTML = reviews.map(review => `
+    <div class="review-item" data-review-id="${review.id}">
+      <div class="review-header">
+        <div class="review-user">
+          <div class="review-avatar">${review.user.charAt(0).toUpperCase()}</div>
+          <div class="review-user-info">
+            <div class="review-username">${review.user}</div>
+            <div class="review-date">${formatDate(review.date)}</div>
+          </div>
+        </div>
+        <div class="review-rating">
+          ${generateStarsHTML(review.rating)}
+        </div>
+      </div>
+      
+      <div class="review-content">
+        <div class="review-title">${review.title}</div>
+        <div class="review-text">${review.content}</div>
+        <div class="review-recommendation">
+          ${review.recommend ? '👍 Recomenda este producto' : '👎 No recomienda este producto'}
+        </div>
+      </div>
+      
+      <div class="review-actions">
+        <button class="review-helpful ${review.userVoted ? 'voted' : ''}" 
+                onclick="toggleHelpful(${review.id})">
+          👍 Útil (${review.helpful})
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderPagination(totalPages) {
+  const pagination = document.getElementById('reviews-pagination');
+  
+  if (totalPages <= 1) {
+    pagination.style.display = 'none';
+    return;
+  }
+  
+  pagination.style.display = 'flex';
+  document.getElementById('current-page').textContent = currentPage;
+  document.getElementById('total-pages').textContent = totalPages;
+  
+  const prevBtn = document.getElementById('prev-reviews');
+  const nextBtn = document.getElementById('next-reviews');
+  
+  prevBtn.disabled = currentPage === 1;
+  nextBtn.disabled = currentPage === totalPages;
+}
+
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('es-CL', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+}
+
+function toggleHelpful(reviewId) {
+  const userData = JSON.parse(localStorage.getItem('levelup_user') || '{}');
+  
+  if (!userData.email) {
+    showNotification('🔑 Inicia sesión para votar por la utilidad de las reseñas');
+    return;
+  }
+  
+  // Encontrar la reseña
+  const review = currentReviews.find(r => r.id === reviewId);
+  if (!review) return;
+  
+  // Toggle voto
+  if (review.userVoted) {
+    review.helpful--;
+    review.userVoted = false;
+    showNotification('❌ Voto removido');
+  } else {
+    review.helpful++;
+    review.userVoted = true;
+    showNotification('👍 ¡Gracias por tu voto!');
+  }
+  
+  // Guardar en localStorage si es una reseña de usuario
+  if (review.id > 1000) {
+    saveUserReviews();
+  }
+  
+  // Recargar contenido
+  loadReviewsContent();
+}
+
+function initReviewsModalListeners() {
+  // Filtros
+  document.getElementById('reviews-filter').addEventListener('change', () => {
+    currentPage = 1;
+    loadReviewsContent();
+  });
+  
+  document.getElementById('reviews-sort').addEventListener('change', () => {
+    currentPage = 1;
+    loadReviewsContent();
+  });
+  
+  // Paginación
+  document.getElementById('prev-reviews').addEventListener('click', () => {
+    if (currentPage > 1) {
+      currentPage--;
+      loadReviewsContent();
+    }
+  });
+  
+  document.getElementById('next-reviews').addEventListener('click', () => {
+    const totalPages = Math.ceil(currentReviews.length / reviewsPerPage);
+    if (currentPage < totalPages) {
+      currentPage++;
+      loadReviewsContent();
+    }
+  });
+  
+  // Escribir reseña
+  document.getElementById('write-review-btn').addEventListener('click', openWriteReviewModal);
+  
+  // Cerrar modal
+  const closeButtons = document.querySelectorAll('#reviews-modal .modal-close');
+  closeButtons.forEach(btn => {
+    btn.addEventListener('click', closeReviewsModal);
+  });
+  
+  // Cerrar con ESC
+  document.addEventListener('keydown', handleReviewsModalEsc);
+  
+  // Cerrar al hacer click fuera
+  document.getElementById('reviews-modal').addEventListener('click', handleReviewsModalOutsideClick);
+}
+
+function openWriteReviewModal() {
+  const userData = JSON.parse(localStorage.getItem('levelup_user') || '{}');
+  
+  if (!userData.email) {
+    showNotification('🔑 Inicia sesión para escribir una reseña');
+    return;
+  }
+  
+  const product = PRODUCTS_DATA[currentProductId];
+  if (!product) return;
+  
+  // Configurar modal
+  document.getElementById('write-review-product-icon').textContent = product.icon;
+  document.getElementById('write-review-product-name').textContent = product.name;
+  
+  // Limpiar formulario
+  resetWriteReviewForm();
+  
+  // Abrir modal
+  const modal = document.getElementById('write-review-modal');
+  modal.classList.add('active');
+  modal.setAttribute('aria-hidden', 'false');
+  
+  // Enfocar primera entrada
+  document.getElementById('review-title').focus();
+  
+  // Event listeners
+  initWriteReviewModalListeners();
+}
+
+function resetWriteReviewForm() {
+  document.getElementById('review-form').reset();
+  
+  // Limpiar rating
+  document.querySelectorAll('.star-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  document.getElementById('rating-label').textContent = 'Selecciona una calificación';
+  
+  // Limpiar contador de caracteres
+  document.getElementById('char-count').textContent = '0';
+  
+  // Limpiar errores
+  clearWriteReviewErrors();
+}
+
+function initWriteReviewModalListeners() {
+  // Rating interactivo
+  const starBtns = document.querySelectorAll('.star-btn');
+  starBtns.forEach(btn => {
+    btn.addEventListener('click', () => setRating(parseInt(btn.dataset.rating)));
+    btn.addEventListener('mouseenter', () => previewRating(parseInt(btn.dataset.rating)));
+  });
+  
+  document.getElementById('review-rating').addEventListener('mouseleave', resetRatingPreview);
+  
+  // Contador de caracteres
+  document.getElementById('review-content').addEventListener('input', updateCharCount);
+  
+  // Envío del formulario
+  document.getElementById('review-form').addEventListener('submit', handleSubmitReview);
+  
+  // Cancelar
+  document.getElementById('cancel-review').addEventListener('click', closeWriteReviewModal);
+  
+  // Cerrar modal
+  const closeButtons = document.querySelectorAll('#write-review-modal .modal-close');
+  closeButtons.forEach(btn => {
+    btn.addEventListener('click', closeWriteReviewModal);
+  });
+}
+
+function setRating(rating) {
+  // Actualizar visual
+  const starBtns = document.querySelectorAll('.star-btn');
+  starBtns.forEach((btn, index) => {
+    btn.classList.toggle('active', index < rating);
+  });
+  
+  // Actualizar label
+  const labels = ['', 'Muy malo', 'Malo', 'Regular', 'Bueno', 'Excelente'];
+  document.getElementById('rating-label').textContent = labels[rating];
+  
+  // Guardar valor
+  document.getElementById('review-rating').dataset.rating = rating;
+}
+
+function previewRating(rating) {
+  const starBtns = document.querySelectorAll('.star-btn');
+  starBtns.forEach((btn, index) => {
+    btn.style.color = index < rating ? '#ffd700' : '#666';
+  });
+}
+
+function resetRatingPreview() {
+  const currentRating = parseInt(document.getElementById('review-rating').dataset.rating || '0');
+  const starBtns = document.querySelectorAll('.star-btn');
+  starBtns.forEach((btn, index) => {
+    btn.style.color = index < currentRating ? '#ffd700' : '#666';
+  });
+}
+
+function updateCharCount() {
+  const textarea = document.getElementById('review-content');
+  const counter = document.getElementById('char-count');
+  counter.textContent = textarea.value.length;
+  
+  if (textarea.value.length > 900) {
+    counter.style.color = '#ef4444';
+  } else {
+    counter.style.color = 'var(--muted)';
+  }
+}
+
+function handleSubmitReview(e) {
+  e.preventDefault();
+  
+  if (!validateReviewForm()) {
+    return;
+  }
+  
+  // Mostrar loading
+  const submitBtn = document.getElementById('submit-review');
+  submitBtn.classList.add('loading');
+  submitBtn.disabled = true;
+  
+  // Simular envío
+  setTimeout(() => {
+    const review = createReviewFromForm();
+    saveReview(review);
+    
+    // Cerrar modal
+    closeWriteReviewModal();
+    
+    // Actualizar lista de reseñas
+    setupReviewsModal(PRODUCTS_DATA[currentProductId]);
+    loadReviewsContent();
+    
+    // Notificación de éxito
+    showNotification('✅ ¡Reseña publicada exitosamente!');
+    
+    // Otorgar puntos por escribir reseña
+    addPoints(15, 'Reseña publicada');
+    
+    // Verificar logro de reseñas
+    updateChallenge('review_challenge', 1);
+    checkReviewAchievements();
+    
+    submitBtn.classList.remove('loading');
+    submitBtn.disabled = false;
+  }, 2000);
+}
+
+function validateReviewForm() {
+  let isValid = true;
+  clearWriteReviewErrors();
+  
+  // Validar rating
+  const rating = parseInt(document.getElementById('review-rating').dataset.rating || '0');
+  if (rating === 0) {
+    showWriteReviewError('rating-error', 'Selecciona una calificación');
+    isValid = false;
+  }
+  
+  // Validar título
+  const title = document.getElementById('review-title').value.trim();
+  if (!title) {
+    showWriteReviewError('title-error', 'El título es requerido');
+    isValid = false;
+  } else if (title.length < 5) {
+    showWriteReviewError('title-error', 'El título debe tener al menos 5 caracteres');
+    isValid = false;
+  }
+  
+  // Validar contenido
+  const content = document.getElementById('review-content').value.trim();
+  if (!content) {
+    showWriteReviewError('content-error', 'La reseña detallada es requerida');
+    isValid = false;
+  } else if (content.length < 20) {
+    showWriteReviewError('content-error', 'La reseña debe tener al menos 20 caracteres');
+    isValid = false;
+  }
+  
+  return isValid;
+}
+
+function createReviewFromForm() {
+  const userData = JSON.parse(localStorage.getItem('levelup_user') || '{}');
+  
+  return {
+    id: Date.now(), // ID único basado en timestamp
+    user: userData.name || 'Usuario Anónimo',
+    rating: parseInt(document.getElementById('review-rating').dataset.rating),
+    title: document.getElementById('review-title').value.trim(),
+    content: document.getElementById('review-content').value.trim(),
+    date: new Date().toISOString().split('T')[0], // Formato YYYY-MM-DD
+    recommend: document.querySelector('input[name="recommend"]:checked').value === 'yes',
+    helpful: 0,
+    userVoted: false
+  };
+}
+
+function saveReview(review) {
+  // Agregar a la lista actual
+  currentReviews.unshift(review); // Agregar al principio
+  
+  // Guardar en localStorage
+  saveUserReviews();
+}
+
+function saveUserReviews() {
+  // Guardar solo las reseñas de usuarios (ID > 1000)
+  const userReviews = currentReviews.filter(review => review.id > 1000);
+  localStorage.setItem(`reviews_${currentProductId}`, JSON.stringify(userReviews));
+}
+
+function checkReviewAchievements() {
+  // Contar total de reseñas del usuario
+  let totalUserReviews = 0;
+  Object.keys(PRODUCTS_DATA).forEach(productId => {
+    const reviews = JSON.parse(localStorage.getItem(`reviews_${productId}`) || '[]');
+    totalUserReviews += reviews.length;
+  });
+  
+  // Verificar logro de 10 reseñas
+  if (totalUserReviews >= 10) {
+    unlockAchievement('review_writer');
+  }
+}
+
+function showWriteReviewError(elementId, message) {
+  const errorElement = document.getElementById(elementId);
+  errorElement.textContent = message;
+}
+
+function clearWriteReviewErrors() {
+  const errorElements = document.querySelectorAll('#write-review-modal .error-message');
+  errorElements.forEach(element => {
+    element.textContent = '';
+  });
+}
+
+function closeReviewsModal() {
+  const modal = document.getElementById('reviews-modal');
+  modal.classList.remove('active');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+  
+  // Limpiar listeners específicos
+  document.removeEventListener('keydown', handleReviewsModalEsc);
+}
+
+function closeWriteReviewModal() {
+  const modal = document.getElementById('write-review-modal');
+  modal.classList.remove('active');
+  modal.setAttribute('aria-hidden', 'true');
+  resetWriteReviewForm();
+}
+
+function handleReviewsModalEsc(e) {
+  if (e.key === 'Escape') {
+    if (document.getElementById('write-review-modal').classList.contains('active')) {
+      closeWriteReviewModal();
+    } else if (document.getElementById('reviews-modal').classList.contains('active')) {
+      closeReviewsModal();
+    }
+  }
+}
+
+function handleReviewsModalOutsideClick(e) {
+  if (e.target === e.currentTarget) {
+    closeReviewsModal();
   }
 }

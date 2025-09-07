@@ -149,53 +149,118 @@
             </div>
           </article>
 
-          <article class="card">
+          <article class="card" data-product-id="rtx-gpu">
             <div class="card-image">⚡</div>
             <div class="card-content">
               <h3 class="card-title">RTX Gaming GPU</h3>
+              <div class="card-rating">
+                <div class="stars">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                </div>
+                <span class="rating-text">(4.8) 127 reseñas</span>
+              </div>
               <div class="card-price">$599.99</div>
               <p class="card-description">Tarjeta gráfica de última generación para gaming en 4K</p>
-              <button class="card-button">Agregar al Carrito</button>
+              <div class="card-actions">
+                <button class="card-button">Agregar al Carrito</button>
+                <button class="reviews-button" onclick="openProductReviews('rtx-gpu')">Ver Reseñas</button>
+              </div>
             </div>
           </article>
 
-          <article class="card">
+          <article class="card" data-product-id="headset-gaming">
             <div class="card-image">🎧</div>
             <div class="card-content">
               <h3 class="card-title">Headset Gaming 7.1</h3>
+              <div class="card-rating">
+                <div class="stars">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star half">★</span>
+                </div>
+                <span class="rating-text">(4.3) 89 reseñas</span>
+              </div>
               <div class="card-price">$149.99</div>
               <p class="card-description">Auriculares con sonido envolvente y micrófono de calidad profesional</p>
-              <button class="card-button">Agregar al Carrito</button>
+              <div class="card-actions">
+                <button class="card-button">Agregar al Carrito</button>
+                <button class="reviews-button" onclick="openProductReviews('headset-gaming')">Ver Reseñas</button>
+              </div>
             </div>
           </article>
 
-          <article class="card">
+          <article class="card" data-product-id="keyboard-rgb">
             <div class="card-image">⌨️</div>
             <div class="card-content">
               <h3 class="card-title">Mechanical Keyboard RGB</h3>
+              <div class="card-rating">
+                <div class="stars">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star">★</span>
+                </div>
+                <span class="rating-text">(4.2) 64 reseñas</span>
+              </div>
               <div class="card-price">$129.99</div>
               <p class="card-description">Teclado mecánico con switches Cherry MX e iluminación RGB personalizable</p>
-              <button class="card-button">Agregar al Carrito</button>
+              <div class="card-actions">
+                <button class="card-button">Agregar al Carrito</button>
+                <button class="reviews-button" onclick="openProductReviews('keyboard-rgb')">Ver Reseñas</button>
+              </div>
             </div>
           </article>
 
-          <article class="card">
+          <article class="card" data-product-id="mouse-ultra">
             <div class="card-image">🖱️</div>
             <div class="card-content">
               <h3 class="card-title">Gaming Mouse Ultra</h3>
+              <div class="card-rating">
+                <div class="stars">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star half">★</span>
+                </div>
+                <span class="rating-text">(4.6) 156 reseñas</span>
+              </div>
               <div class="card-price">$79.99</div>
               <p class="card-description">Ratón de alta precisión con 16000 DPI y 8 botones programables</p>
-              <button class="card-button">Agregar al Carrito</button>
+              <div class="card-actions">
+                <button class="card-button">Agregar al Carrito</button>
+                <button class="reviews-button" onclick="openProductReviews('mouse-ultra')">Ver Reseñas</button>
+              </div>
             </div>
           </article>
 
-          <article class="card">
+          <article class="card" data-product-id="monitor-144hz">
             <div class="card-image">🖥️</div>
             <div class="card-content">
               <h3 class="card-title">Gaming Monitor 144Hz</h3>
+              <div class="card-rating">
+                <div class="stars">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star">★</span>
+                </div>
+                <span class="rating-text">(4.1) 92 reseñas</span>
+              </div>
               <div class="card-price">$299.99</div>
               <p class="card-description">Monitor curvo de 27" con 144Hz y tecnología FreeSync para gaming fluido</p>
-              <button class="card-button">Agregar al Carrito</button>
+              <div class="card-actions">
+                <button class="card-button">Agregar al Carrito</button>
+                <button class="reviews-button" onclick="openProductReviews('monitor-144hz')">Ver Reseñas</button>
+              </div>
             </div>
           </article>
         </div>
@@ -757,6 +822,184 @@
             <span class="btn-loading" style="display: none;">⏳ Guardando...</span>
           </button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL DE RESEÑAS ===================== -->
+  <div class="modal-overlay" id="reviews-modal" aria-hidden="true">
+    <div class="modal reviews-modal" role="dialog" aria-labelledby="reviews-title">
+      <div class="modal-header">
+        <h2 id="reviews-title">⭐ Reseñas del Producto</h2>
+        <button class="modal-close" aria-label="Cerrar modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Información del producto -->
+        <div class="product-info">
+          <div class="product-summary">
+            <div class="product-icon" id="review-product-icon">⚡</div>
+            <div class="product-details">
+              <h3 id="review-product-name">Producto</h3>
+              <div class="product-rating-summary">
+                <div class="rating-stars" id="review-product-stars">
+                  <!-- Estrellas generadas dinámicamente -->
+                </div>
+                <span class="rating-average" id="review-rating-average">4.5</span>
+                <span class="rating-count">(<span id="review-rating-count">0</span> reseñas)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Distribución de calificaciones -->
+        <div class="rating-distribution">
+          <h4>📊 Distribución de Calificaciones</h4>
+          <div class="rating-bars">
+            <div class="rating-bar" data-stars="5">
+              <span class="bar-label">5 ★</span>
+              <div class="bar-fill-container">
+                <div class="bar-fill" style="width: 0%"></div>
+              </div>
+              <span class="bar-count">0</span>
+            </div>
+            <div class="rating-bar" data-stars="4">
+              <span class="bar-label">4 ★</span>
+              <div class="bar-fill-container">
+                <div class="bar-fill" style="width: 0%"></div>
+              </div>
+              <span class="bar-count">0</span>
+            </div>
+            <div class="rating-bar" data-stars="3">
+              <span class="bar-label">3 ★</span>
+              <div class="bar-fill-container">
+                <div class="bar-fill" style="width: 0%"></div>
+              </div>
+              <span class="bar-count">0</span>
+            </div>
+            <div class="rating-bar" data-stars="2">
+              <span class="bar-label">2 ★</span>
+              <div class="bar-fill-container">
+                <div class="bar-fill" style="width: 0%"></div>
+              </div>
+              <span class="bar-count">0</span>
+            </div>
+            <div class="rating-bar" data-stars="1">
+              <span class="bar-label">1 ★</span>
+              <div class="bar-fill-container">
+                <div class="bar-fill" style="width: 0%"></div>
+              </div>
+              <span class="bar-count">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filtros y acciones -->
+        <div class="reviews-controls">
+          <div class="filters">
+            <select id="reviews-filter" class="filter-select">
+              <option value="all">Todas las reseñas</option>
+              <option value="5">5 estrellas</option>
+              <option value="4">4 estrellas</option>
+              <option value="3">3 estrellas</option>
+              <option value="2">2 estrellas</option>
+              <option value="1">1 estrella</option>
+            </select>
+            <select id="reviews-sort" class="filter-select">
+              <option value="newest">Más recientes</option>
+              <option value="oldest">Más antiguos</option>
+              <option value="highest">Mejor calificados</option>
+              <option value="lowest">Peor calificados</option>
+              <option value="helpful">Más útiles</option>
+            </select>
+          </div>
+          <button class="btn-primary" id="write-review-btn">✍️ Escribir Reseña</button>
+        </div>
+
+        <!-- Lista de reseñas -->
+        <div class="reviews-list" id="reviews-list">
+          <!-- Las reseñas se cargarán dinámicamente -->
+        </div>
+
+        <!-- Paginación -->
+        <div class="reviews-pagination" id="reviews-pagination" style="display: none;">
+          <button class="pagination-btn" id="prev-reviews">← Anterior</button>
+          <span class="pagination-info">Página <span id="current-page">1</span> de <span id="total-pages">1</span></span>
+          <button class="pagination-btn" id="next-reviews">Siguiente →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL DE ESCRIBIR RESEÑA ===================== -->
+  <div class="modal-overlay" id="write-review-modal" aria-hidden="true">
+    <div class="modal write-review-modal" role="dialog" aria-labelledby="write-review-title">
+      <div class="modal-header">
+        <h2 id="write-review-title">✍️ Escribir Reseña</h2>
+        <button class="modal-close" aria-label="Cerrar modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="review-form" novalidate>
+          <div class="review-product-info">
+            <div class="product-icon" id="write-review-product-icon">⚡</div>
+            <div class="product-details">
+              <h3 id="write-review-product-name">Producto</h3>
+              <p>Comparte tu experiencia con este producto</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="review-rating">Calificación *</label>
+            <div class="star-rating" id="review-rating">
+              <button type="button" class="star-btn" data-rating="1">★</button>
+              <button type="button" class="star-btn" data-rating="2">★</button>
+              <button type="button" class="star-btn" data-rating="3">★</button>
+              <button type="button" class="star-btn" data-rating="4">★</button>
+              <button type="button" class="star-btn" data-rating="5">★</button>
+            </div>
+            <div class="rating-label" id="rating-label">Selecciona una calificación</div>
+            <div class="error-message" id="rating-error"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="review-title">Título de la reseña *</label>
+            <input type="text" id="review-title" name="title" required 
+                   placeholder="Resume tu experiencia en pocas palabras" maxlength="100">
+            <div class="error-message" id="title-error"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="review-content">Reseña detallada *</label>
+            <textarea id="review-content" name="content" required rows="6"
+                      placeholder="Cuéntanos sobre tu experiencia con este producto. ¿Qué te gustó? ¿Qué mejorarías?" 
+                      maxlength="1000"></textarea>
+            <div class="char-count"><span id="char-count">0</span>/1000 caracteres</div>
+            <div class="error-message" id="content-error"></div>
+          </div>
+
+          <div class="form-group">
+            <label>¿Recomendarías este producto?</label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="recommend" value="yes" checked>
+                <span class="radio-mark"></span>
+                👍 Sí, lo recomiendo
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="recommend" value="no">
+                <span class="radio-mark"></span>
+                👎 No lo recomiendo
+              </label>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" id="cancel-review">Cancelar</button>
+            <button type="submit" class="btn-primary" id="submit-review">
+              <span class="btn-text">Publicar Reseña</span>
+              <span class="btn-loading" style="display: none;">⏳ Publicando...</span>
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
