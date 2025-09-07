@@ -165,72 +165,103 @@
             <p>Equipamiento profesional</p>
           </div>
         </div>
+        <!-- Separador Gamer de Categorías y Subcategorías -->
+        <div class="category-separator" role="separator" aria-label="Separador de categorías y subcategorías">
+          <span class="separator-icon">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+              <circle cx="20" cy="20" r="18" stroke="#39FF14" stroke-width="3"/>
+              <path d="M10 20h20" stroke="#1E90FF" stroke-width="3" stroke-linecap="round"/>
+              <path d="M20 10v20" stroke="#FFD700" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="separator-text">Subcategorías</span>
+        </div>
       </section>
 
       <!-- Productos Destacados -->
       <section id="destacados">
         <h2 class="section-title">Productos Destacados</h2>
         <div class="cards" id="featured-grid">
-          <article class="card">
+          <article class="card producto" data-id="1">
             <div class="card-image">🎮</div>
             <div class="card-content">
-              <h3 class="card-title">Gaming Controller Pro</h3>
+              <h3 class="card-title producto-nombre">Gaming Controller Pro</h3>
               <div class="card-price">$89.99</div>
               <p class="card-description">Control inalámbrico premium con retroalimentación háptica avanzada</p>
               <button class="card-button">Agregar al Carrito</button>
+              <label class="compare-checkbox">
+                <input type="checkbox" class="compare-input" data-id="1"> Comparar
+              </label>
             </div>
           </article>
 
-          <article class="card">
+          <article class="card producto" data-id="2">
             <div class="card-image">⚡</div>
             <div class="card-content">
-              <h3 class="card-title">RTX Gaming GPU</h3>
+              <h3 class="card-title producto-nombre">RTX Gaming GPU</h3>
               <div class="card-price">$599.99</div>
               <p class="card-description">Tarjeta gráfica de última generación para gaming en 4K</p>
               <button class="card-button">Agregar al Carrito</button>
+              <label class="compare-checkbox">
+                <input type="checkbox" class="compare-input" data-id="2"> Comparar
+              </label>
             </div>
           </article>
 
-          <article class="card">
+          <article class="card producto" data-id="3">
             <div class="card-image">🎧</div>
             <div class="card-content">
-              <h3 class="card-title">Headset Gaming 7.1</h3>
+              <h3 class="card-title producto-nombre">Headset Gaming 7.1</h3>
               <div class="card-price">$149.99</div>
               <p class="card-description">Auriculares con sonido envolvente y micrófono de calidad profesional</p>
               <button class="card-button">Agregar al Carrito</button>
+              <label class="compare-checkbox">
+                <input type="checkbox" class="compare-input" data-id="3"> Comparar
+              </label>
             </div>
           </article>
 
-          <article class="card">
+          <article class="card producto" data-id="4">
             <div class="card-image">⌨️</div>
             <div class="card-content">
-              <h3 class="card-title">Mechanical Keyboard RGB</h3>
+              <h3 class="card-title producto-nombre">Mechanical Keyboard RGB</h3>
               <div class="card-price">$129.99</div>
               <p class="card-description">Teclado mecánico con switches Cherry MX e iluminación RGB personalizable</p>
               <button class="card-button">Agregar al Carrito</button>
+              <label class="compare-checkbox">
+                <input type="checkbox" class="compare-input" data-id="4"> Comparar
+              </label>
             </div>
           </article>
 
-          <article class="card">
+          <article class="card producto" data-id="5">
             <div class="card-image">🖱️</div>
             <div class="card-content">
-              <h3 class="card-title">Gaming Mouse Ultra</h3>
+              <h3 class="card-title producto-nombre">Gaming Mouse Ultra</h3>
               <div class="card-price">$79.99</div>
               <p class="card-description">Ratón de alta precisión con 16000 DPI y 8 botones programables</p>
               <button class="card-button">Agregar al Carrito</button>
+              <label class="compare-checkbox">
+                <input type="checkbox" class="compare-input" data-id="5"> Comparar
+              </label>
             </div>
           </article>
 
-          <article class="card">
+          <article class="card producto" data-id="6">
             <div class="card-image">🖥️</div>
             <div class="card-content">
-              <h3 class="card-title">Gaming Monitor 144Hz</h3>
+              <h3 class="card-title producto-nombre">Gaming Monitor 144Hz</h3>
               <div class="card-price">$299.99</div>
               <p class="card-description">Monitor curvo de 27" con 144Hz y tecnología FreeSync para gaming fluido</p>
               <button class="card-button">Agregar al Carrito</button>
+              <label class="compare-checkbox">
+                <input type="checkbox" class="compare-input" data-id="6"> Comparar
+              </label>
             </div>
           </article>
         </div>
+        <!-- Panel Comparador de Productos -->
+        <div id="compare-panel" class="compare-panel" aria-live="polite" style="display:none;"></div>
       </section>
     </div>
   </main>
