@@ -38,6 +38,11 @@ document.addEventListener('DOMContentLoaded', function() {
   initCart();
   initProductInteractions();
   initRegistration();
+  
+  // Inicializar chat WhatsApp
+  if (typeof initWhatsAppChat === 'function') {
+    initWhatsAppChat();
+  }
   initLogin();
   initProfile();
   initProductFiltersAndSearch();
@@ -3977,4 +3982,164 @@ function fallbackCopyLink(url) {
 function closeShareModal(btn) {
     const modal = btn.closest('.modal');
     modal.remove();
+}
+
+// ===== Sistema de Chat WhatsApp =====
+
+// Estado del chat
+let chatOpen = false;
+let chatMessages = [];
+
+// Inicializar chat
+function initWhatsAppChat() {
+    // Ocultar notificación después de 5 segundos
+    setTimeout(() => {
+        const notification = document.getElementById('whatsapp-notification');
+        if (notification) {
+            notification.style.display = 'none';
+        }
+    }, 5000);
+    
+    // Agregar mensaje de bienvenida después de 3 segundos
+    setTimeout(() => {
+        if (!chatOpen) {
+            showChatNotification();
+        }
+    }, 3000);
+}
+
+// Mostrar notificación de chat
+function showChatNotification() {
+    const notification = document.getElementById('whatsapp-notification');
+    if (notification) {
+        notification.style.display = 'flex';
+        notification.textContent = '1';
+    }
+}
+
+// Toggle del chat
+function toggleWhatsAppChat() {
+    const modal = document.getElementById('whatsapp-chat-modal');
+    const notification = document.getElementById('whatsapp-notification');
+    
+    chatOpen = !chatOpen;
+    
+    if (chatOpen) {
+        modal.classList.add('active');
+        notification.style.display = 'none';
+    } else {
+        modal.classList.remove('active');
+    }
+}
+
+// Enviar respuesta rápida
+function sendQuickResponse(message) {
+    addMessageToChat(message, 'sent');
+    
+    // Simular respuesta automática
+    setTimeout(() => {
+        let response = '';
+        
+        switch(message) {
+            case '💰 Consultar precios':
+                response = 'Perfecto! Todos nuestros productos tienen precios competitivos. ¿Hay algún producto específico que te interese? 🎮';
+                break;
+            case '📦 Estado de mi pedido':
+                response = 'Para consultar el estado de tu pedido, necesito tu número de orden. También puedes revisarlo en tu perfil si estás registrado. 📋';
+                break;
+            case '🎮 Recomendaciones':
+                response = 'Excelente! Te recomiendo revisar nuestros productos destacados. ¿Qué tipo de gaming te gusta más? PC, consolas, o accesorios? 🚀';
+                break;
+            case '🛠️ Soporte técnico':
+                response = 'Estoy aquí para ayudarte con cualquier problema técnico. ¿Podrías contarme más detalles sobre el inconveniente? 🔧';
+                break;
+            default:
+                response = 'Gracias por tu mensaje. Un agente se contactará contigo pronto. ¿Hay algo más en lo que pueda ayudarte? 😊';
+        }
+        
+        addMessageToChat(response, 'received');
+    }, 1000);
+}
+
+// Manejar Enter en input
+function handleWhatsAppEnter(event) {
+    if (event.key === 'Enter') {
+        sendWhatsAppMessage();
+    }
+}
+
+// Enviar mensaje personalizado
+function sendWhatsAppMessage() {
+    const input = document.getElementById('whatsapp-input');
+    const message = input.value.trim();
+    
+    if (message) {
+        addMessageToChat(message, 'sent');
+        input.value = '';
+        
+        // Simular respuesta automática
+        setTimeout(() => {
+            const responses = [
+                'Gracias por tu mensaje. Un agente se contactará contigo en breve. 👍',
+                'He recibido tu consulta. Te responderemos lo antes posible. 🚀',
+                'Mensaje recibido! Nuestro equipo te ayudará pronto. 💪',
+                'Perfecto! Un especialista revisará tu consulta y te responderá. ⚡'
+            ];
+            
+            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+            addMessageToChat(randomResponse, 'received');
+        }, 1500);
+    }
+}
+
+// Agregar mensaje al chat
+function addMessageToChat(message, type) {
+    const messagesContainer = document.getElementById('whatsapp-messages');
+    const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    
+    const messageElement = document.createElement('div');
+    messageElement.className = `whatsapp-message ${type}`;
+    messageElement.innerHTML = `
+        <div class="message-content">${message}</div>
+        <div class="message-time">${time}</div>
+    `;
+    
+    messagesContainer.appendChild(messageElement);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    
+    // Guardar mensaje
+    chatMessages.push({
+        message: message,
+        type: type,
+        time: time
+    });
+    
+    // Dar puntos por interactuar con el chat (solo la primera vez)
+    if (chatMessages.length === 1 && isLoggedIn()) {
+        const user = getCurrentUser();
+        user.points += 3; // 3 puntos por usar el chat
+        updateUserInStorage(user);
+        updateUserInfo();
+        showNotification('¡Has ganado 3 puntos por usar el chat!', 'info');
+    }
+}
+
+// Abrir WhatsApp directo
+function openWhatsAppDirect() {
+    const phoneNumber = '+56912345678'; // Número de ejemplo
+    const message = '¡Hola! Vengo desde Level-Up Gamer y me gustaría hacer una consulta. 🎮';
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    
+    window.open(whatsappUrl, '_blank');
+    showNotification('Abriendo WhatsApp...', 'info');
+    
+    // Cerrar chat modal
+    toggleWhatsAppChat();
+}
+
+// Llamar a soporte
+function callSupport() {
+    const phoneNumber = '+56912345678'; // Número de ejemplo
+    window.location.href = `tel:${phoneNumber}`;
+    showNotification('Iniciando llamada...', 'info');
 }
