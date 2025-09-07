@@ -3803,3 +3803,178 @@ function shareEvent(eventId) {
         });
     }
 }
+
+// ===== Sistema de Compartir Productos =====
+
+// Función para compartir productos
+function shareProduct(productId) {
+    const product = products.find(p => p.id === productId);
+    if (!product) {
+        showNotification('Producto no encontrado', 'error');
+        return;
+    }
+    
+    const shareData = {
+        title: `🎮 ${product.name} - Level-Up Gamer`,
+        text: `¡Mira este increíble producto gaming! ${product.name} por solo $${product.price.toLocaleString()} 🚀`,
+        url: `${window.location.origin}${window.location.pathname}#product-${productId}`
+    };
+    
+    // Verificar si el navegador soporta Web Share API
+    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+        navigator.share(shareData)
+            .then(() => {
+                showNotification('¡Producto compartido exitosamente!', 'success');
+                
+                // Dar puntos por compartir (si está logueado)
+                if (isLoggedIn()) {
+                    const user = getCurrentUser();
+                    user.points += 5; // 5 puntos por compartir
+                    updateUserInStorage(user);
+                    updateUserInfo();
+                    showNotification('¡Has ganado 5 puntos por compartir!', 'info');
+                }
+            })
+            .catch((error) => {
+                console.log('Error compartiendo:', error);
+                fallbackShare(product, shareData);
+            });
+    } else {
+        // Fallback para navegadores que no soportan Web Share API
+        fallbackShare(product, shareData);
+    }
+}
+
+// Función de respaldo para compartir
+function fallbackShare(product, shareData) {
+    // Crear modal de compartir
+    const modal = document.createElement('div');
+    modal.className = 'modal active';
+    modal.innerHTML = `
+        <div class="modal-content share-modal">
+            <div class="modal-header">
+                <h2>📤 Compartir Producto</h2>
+                <button class="close-btn" onclick="closeShareModal(this)">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="product-share-info">
+                    <div class="product-share-icon">${product.icon}</div>
+                    <div class="product-share-details">
+                        <h3>${product.name}</h3>
+                        <p class="product-share-price">$${product.price.toLocaleString()}</p>
+                    </div>
+                </div>
+                
+                <div class="share-options">
+                    <h4>Compartir en:</h4>
+                    <div class="share-buttons">
+                        <button class="share-option whatsapp" onclick="shareToWhatsApp('${encodeURIComponent(shareData.text)}', '${encodeURIComponent(shareData.url)}')">
+                            <span class="share-icon">📱</span>
+                            <span>WhatsApp</span>
+                        </button>
+                        
+                        <button class="share-option facebook" onclick="shareToFacebook('${encodeURIComponent(shareData.url)}')">
+                            <span class="share-icon">📘</span>
+                            <span>Facebook</span>
+                        </button>
+                        
+                        <button class="share-option twitter" onclick="shareToTwitter('${encodeURIComponent(shareData.text)}', '${encodeURIComponent(shareData.url)}')">
+                            <span class="share-icon">🐦</span>
+                            <span>Twitter</span>
+                        </button>
+                        
+                        <button class="share-option email" onclick="shareByEmail('${encodeURIComponent(shareData.title)}', '${encodeURIComponent(shareData.text + ' ' + shareData.url)}')">
+                            <span class="share-icon">📧</span>
+                            <span>Email</span>
+                        </button>
+                        
+                        <button class="share-option copy" onclick="copyProductLink('${shareData.url}')">
+                            <span class="share-icon">📋</span>
+                            <span>Copiar enlace</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+// Funciones para compartir en diferentes plataformas
+function shareToWhatsApp(text, url) {
+    const whatsappUrl = `https://wa.me/?text=${text}%20${url}`;
+    window.open(whatsappUrl, '_blank');
+    closeShareModal(document.querySelector('.share-modal .close-btn'));
+    showNotification('Abriendo WhatsApp...', 'info');
+}
+
+function shareToFacebook(url) {
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+    window.open(facebookUrl, '_blank', 'width=600,height=400');
+    closeShareModal(document.querySelector('.share-modal .close-btn'));
+    showNotification('Abriendo Facebook...', 'info');
+}
+
+function shareToTwitter(text, url) {
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+    window.open(twitterUrl, '_blank', 'width=600,height=400');
+    closeShareModal(document.querySelector('.share-modal .close-btn'));
+    showNotification('Abriendo Twitter...', 'info');
+}
+
+function shareByEmail(subject, body) {
+    const emailUrl = `mailto:?subject=${subject}&body=${body}`;
+    window.location.href = emailUrl;
+    closeShareModal(document.querySelector('.share-modal .close-btn'));
+    showNotification('Abriendo cliente de email...', 'info');
+}
+
+function copyProductLink(url) {
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(() => {
+            showNotification('¡Enlace copiado al portapapeles!', 'success');
+            closeShareModal(document.querySelector('.share-modal .close-btn'));
+            
+            // Dar puntos por compartir
+            if (isLoggedIn()) {
+                const user = getCurrentUser();
+                user.points += 5;
+                updateUserInStorage(user);
+                updateUserInfo();
+                showNotification('¡Has ganado 5 puntos por compartir!', 'info');
+            }
+        }).catch(() => {
+            fallbackCopyLink(url);
+        });
+    } else {
+        fallbackCopyLink(url);
+    }
+}
+
+function fallbackCopyLink(url) {
+    // Crear input temporal para copiar
+    const tempInput = document.createElement('input');
+    tempInput.value = url;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempInput);
+    
+    showNotification('¡Enlace copiado al portapapeles!', 'success');
+    closeShareModal(document.querySelector('.share-modal .close-btn'));
+    
+    if (isLoggedIn()) {
+        const user = getCurrentUser();
+        user.points += 5;
+        updateUserInStorage(user);
+        updateUserInfo();
+        showNotification('¡Has ganado 5 puntos por compartir!', 'info');
+    }
+}
+
+// Cerrar modal de compartir
+function closeShareModal(btn) {
+    const modal = btn.closest('.modal');
+    modal.remove();
+}

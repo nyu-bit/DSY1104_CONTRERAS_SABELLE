@@ -1453,6 +1453,33 @@ button { font-family: inherit; }
   color: #000;
 }
 
+/* Botón de compartir producto */
+.share-button {
+  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+  color: #000;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  min-width: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.share-button:hover {
+  background: linear-gradient(135deg, #FF5252, #FF7979);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+}
+
+.share-button:active {
+  transform: translateY(0) scale(0.95);
+}
+
 /* Modal de reseñas */
 .reviews-modal {
   max-width: 800px;
@@ -2946,4 +2973,156 @@ button { font-family: inherit; }
   .event-actions {
     flex-direction: column;
   }
+}
+
+/* ===== Modal de Compartir ===== */
+.share-modal {
+    max-width: 500px;
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    border: 2px solid #e74c3c;
+    border-radius: 15px;
+    color: white;
+}
+
+.share-modal .modal-header {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    margin: -20px -20px 20px -20px;
+    padding: 15px 20px;
+    border-radius: 13px 13px 0 0;
+}
+
+.share-modal .modal-header h2 {
+    margin: 0;
+    font-size: 1.3rem;
+}
+
+.product-share-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: rgba(52, 73, 94, 0.5);
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.product-share-icon {
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    padding: 15px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-share-details h3 {
+    margin: 0 0 5px 0;
+    color: #ecf0f1;
+    font-size: 1.1rem;
+}
+
+.product-share-price {
+    color: #e74c3c;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.share-options h4 {
+    color: #ecf0f1;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.share-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+}
+
+.share-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 15px 10px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: white;
+}
+
+.share-option.whatsapp {
+    background: linear-gradient(135deg, #25D366, #128C7E);
+}
+
+.share-option.whatsapp:hover {
+    background: linear-gradient(135deg, #128C7E, #075E54);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+}
+
+.share-option.facebook {
+    background: linear-gradient(135deg, #1877F2, #166FE5);
+}
+
+.share-option.facebook:hover {
+    background: linear-gradient(135deg, #166FE5, #1464CC);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(24, 119, 242, 0.4);
+}
+
+.share-option.twitter {
+    background: linear-gradient(135deg, #1DA1F2, #0D8BD9);
+}
+
+.share-option.twitter:hover {
+    background: linear-gradient(135deg, #0D8BD9, #0A7BC1);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(29, 161, 242, 0.4);
+}
+
+.share-option.email {
+    background: linear-gradient(135deg, #EA4335, #D33B2C);
+}
+
+.share-option.email:hover {
+    background: linear-gradient(135deg, #D33B2C, #B52D20);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(234, 67, 53, 0.4);
+}
+
+.share-option.copy {
+    background: linear-gradient(135deg, #6C5CE7, #5F4FCF);
+}
+
+.share-option.copy:hover {
+    background: linear-gradient(135deg, #5F4FCF, #5240B7);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
+}
+
+.share-icon {
+    font-size: 1.5rem;
+}
+
+/* Responsivo para pantallas pequeñas */
+@media (max-width: 600px) {
+    .share-buttons {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .share-option {
+        padding: 12px 8px;
+        font-size: 0.8rem;
+    }
+    
+    .share-icon {
+        font-size: 1.3rem;
+    }
 }
