@@ -4832,3 +4832,283 @@ button { font-family: inherit; }
         display: none;
     }
 }
+
+/* ===================== PRODUCT COMPARATOR (LG-007) ===================== */
+.product-comparator {
+    background: rgba(30, 144, 255, 0.05);
+    border: 2px solid #1E90FF;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 32px;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 8px 32px rgba(30, 144, 255, 0.2);
+}
+
+.comparator-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.comparator-header h3 {
+    color: #39FF14;
+    font-family: 'Orbitron', monospace;
+    font-size: 1.5rem;
+    margin: 0;
+    text-shadow: 0 0 8px #39FF14;
+}
+
+.close-comparator {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid #39FF14;
+    color: #39FF14;
+    font-size: 24px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-comparator:hover {
+    background: #39FF14;
+    color: #000;
+    transform: rotate(90deg);
+}
+
+.compare-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    min-height: 200px;
+    margin-bottom: 20px;
+}
+
+.compare-empty-state {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    color: #1E90FF;
+    text-align: center;
+}
+
+.empty-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    opacity: 0.7;
+}
+
+.compare-product-card {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #39FF14;
+    border-radius: 8px;
+    padding: 16px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.compare-product-card:hover {
+    border-color: #1E90FF;
+    box-shadow: 0 4px 16px rgba(30, 144, 255, 0.3);
+}
+
+.compare-remove {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(255, 0, 0, 0.7);
+    color: white;
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.compare-product-title {
+    color: #39FF14;
+    font-size: 1rem;
+    margin: 8px 0;
+    font-weight: 600;
+}
+
+.compare-product-price {
+    color: #FFD700;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.compare-features {
+    font-size: 0.85rem;
+    color: #ccc;
+}
+
+.compare-features li {
+    margin: 4px 0;
+    padding-left: 12px;
+    position: relative;
+}
+
+.compare-features li:before {
+    content: "•";
+    color: #1E90FF;
+    position: absolute;
+    left: 0;
+}
+
+.comparator-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.compare-button {
+    background: rgba(30, 144, 255, 0.2);
+    border: 1px solid #1E90FF;
+    color: #1E90FF;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.compare-button:hover {
+    background: #1E90FF;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* ===================== ENHANCED FILTERS (LG-008) ===================== */
+.filters-panel {
+    background: rgba(57, 255, 20, 0.05);
+    border: 2px solid #39FF14;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    align-items: start;
+}
+
+.filter-group {
+    border: 1px solid rgba(30, 144, 255, 0.3);
+    border-radius: 8px;
+    padding: 16px;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.filter-group legend {
+    color: #39FF14;
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 0 8px;
+    margin-bottom: 12px;
+}
+
+.filter-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0;
+    color: #fff;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.filter-group label:hover {
+    color: #1E90FF;
+}
+
+.filter-group input[type="radio"],
+.filter-group input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #39FF14;
+}
+
+.filter-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 16px;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #39FF14, #1E90FF);
+    border: none;
+    color: #000;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(57, 255, 20, 0.4);
+}
+
+.btn-secondary {
+    background: rgba(30, 144, 255, 0.2);
+    border: 1px solid #1E90FF;
+    color: #1E90FF;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: #1E90FF;
+    color: white;
+}
+
+.btn-text {
+    background: transparent;
+    border: 1px solid #39FF14;
+    color: #39FF14;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-text:hover {
+    background: rgba(57, 255, 20, 0.1);
+    transform: translateY(-1px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .filters-panel {
+        grid-template-columns: 1fr;
+    }
+    
+    .compare-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .filter-actions,
+    .comparator-actions {
+        flex-direction: column;
+    }
+}

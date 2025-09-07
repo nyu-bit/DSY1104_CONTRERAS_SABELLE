@@ -5344,3 +5344,317 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Llamar a soporte
 // ...existing code...
+
+// ===================== PRODUCT COMPARATOR (LG-007) =====================
+let comparisonList = [];
+const maxComparisons = 4;
+
+function addToComparison(productId) {
+    if (comparisonList.includes(productId)) {
+        showNotification('Este producto ya está en comparación', 'warning');
+        return;
+    }
+    
+    if (comparisonList.length >= maxComparisons) {
+        showNotification('Máximo ' + maxComparisons + ' productos para comparar', 'warning');
+        return;
+    }
+    
+    comparisonList.push(productId);
+    updateComparisonView();
+    showNotification('Producto agregado al comparador', 'success');
+    
+    // Auto-abrir comparador si se agrega el segundo producto
+    if (comparisonList.length === 2) {
+        toggleComparator();
+    }
+}
+
+function removeFromComparison(productId) {
+    comparisonList = comparisonList.filter(id => id !== productId);
+    updateComparisonView();
+    showNotification('Producto removido del comparador', 'info');
+}
+
+function clearComparison() {
+    comparisonList = [];
+    updateComparisonView();
+    showNotification('Comparación limpiada', 'info');
+}
+
+function toggleComparator() {
+    const comparator = document.getElementById('product-comparator');
+    if (comparator.style.display === 'none' || !comparator.style.display) {
+        comparator.style.display = 'block';
+        comparator.scrollIntoView({ behavior: 'smooth' });
+    } else {
+        comparator.style.display = 'none';
+    }
+}
+
+function closeComparator() {
+    const comparator = document.getElementById('product-comparator');
+    comparator.style.display = 'none';
+}
+
+function updateComparisonView() {
+    const compareGrid = document.getElementById('compare-grid');
+    
+    if (comparisonList.length === 0) {
+        compareGrid.innerHTML = '<div class="compare-empty-state">' +
+            '<div class="empty-icon">📊</div>' +
+            '<p>Selecciona productos para comparar</p>' +
+            '<small>Haz clic en "Comparar" en las tarjetas de productos</small>' +
+            '</div>';
+        return;
+    }
+    
+    compareGrid.innerHTML = '';
+    
+    comparisonList.forEach(productId => {
+        const product = getProductById(productId);
+        if (product) {
+            const compareCard = createCompareCard(product);
+            compareGrid.appendChild(compareCard);
+        }
+    });
+}
+
+function createCompareCard(product) {
+    const card = document.createElement('div');
+    card.className = 'compare-product-card';
+    card.innerHTML = 
+        '<button class="compare-remove" onclick="removeFromComparison(' + product.id + ')">&times;</button>' +
+        '<div class="compare-product-image">' + product.emoji + '</div>' +
+        '<h4 class="compare-product-title">' + product.name + '</h4>' +
+        '<div class="compare-product-price">$' + product.price.toLocaleString() + '</div>' +
+        '<ul class="compare-features">' +
+        '<li>Categoría: ' + product.category + '</li>' +
+        '<li>Rating: ' + product.rating + ' ⭐</li>' +
+        '<li>Stock: ' + (product.stock ? 'Disponible' : 'Agotado') + '</li>' +
+        '<li>Envío: ' + (product.freeShipping ? 'Gratis' : 'Con costo') + '</li>' +
+        '<li>Retiro: ' + (product.pickupAvailable ? 'En tienda' : 'Solo envío') + '</li>' +
+        '</ul>';
+    return card;
+}
+
+function exportComparison() {
+    if (comparisonList.length === 0) {
+        showNotification('No hay productos para exportar', 'warning');
+        return;
+    }
+    
+    let comparisonData = 'COMPARACIÓN DE PRODUCTOS\n\n';
+    
+    comparisonList.forEach(productId => {
+        const product = getProductById(productId);
+        if (product) {
+            comparisonData += '• ' + product.name + ' - $' + product.price.toLocaleString() + '\n';
+            comparisonData += '  Rating: ' + product.rating + ' ⭐\n';
+            comparisonData += '  Categoría: ' + product.category + '\n\n';
+        }
+    });
+    
+    // Crear archivo para descarga
+    const blob = new Blob([comparisonData], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'comparacion-productos.txt';
+    a.click();
+    window.URL.revokeObjectURL(url);
+    
+    showNotification('Comparación exportada exitosamente', 'success');
+}
+
+// ===================== ENHANCED AVAILABILITY FILTERS (LG-008) =====================
+function applyAvailabilityFilters() {
+    const disponibilidad = document.querySelector('input[name="disponibilidad"]:checked').value;
+    const retiroOptions = Array.from(document.querySelectorAll('input[name="retiro"]:checked'))
+        .map(input => input.value);
+    
+    // Obtener todos los productos
+    const productCards = document.querySelectorAll('.card[data-product-id]');
+    let visibleCount = 0;
+    
+    productCards.forEach(card => {
+        const productId = parseInt(card.dataset.id || card.dataset.productId);
+        const product = getProductById(productId);
+        
+        if (!product) return;
+        
+        let shouldShow = true;
+        
+        // Filtro de disponibilidad
+        if (disponibilidad === 'stock' && !product.stock) {
+            shouldShow = false;
+        } else if (disponibilidad === 'agotado' && product.stock) {
+            shouldShow = false;
+        } else if (disponibilidad === 'preventa' && product.stock !== 'preventa') {
+            shouldShow = false;
+        }
+        
+        // Filtro de retiro/envío
+        if (retiroOptions.length > 0) {
+            let hasValidOption = false;
+            
+            if (retiroOptions.includes('tienda') && product.pickupAvailable) {
+                hasValidOption = true;
+            }
+            if (retiroOptions.includes('envio') && product.shippingAvailable) {
+                hasValidOption = true;
+            }
+            if (retiroOptions.includes('express') && product.expressShipping) {
+                hasValidOption = true;
+            }
+            if (retiroOptions.includes('gratis') && product.freeShipping) {
+                hasValidOption = true;
+            }
+            
+            if (!hasValidOption) {
+                shouldShow = false;
+            }
+        }
+        
+        // Mostrar/ocultar producto
+        if (shouldShow) {
+            card.style.display = 'block';
+            visibleCount++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+    
+    // Mostrar resultado
+    showNotification('Filtros aplicados: ' + visibleCount + ' productos encontrados', 'info');
+    
+    // Animar productos visibles
+    setTimeout(() => {
+        const visibleCards = document.querySelectorAll('.card[data-product-id]:not([style*="display: none"])');
+        visibleCards.forEach((card, index) => {
+            setTimeout(() => {
+                card.style.animation = 'fadeInUp 0.5s ease forwards';
+            }, index * 100);
+        });
+    }, 100);
+}
+
+function clearAvailabilityFilters() {
+    // Reset filtros a valores por defecto
+    document.querySelector('input[name="disponibilidad"][value="todos"]').checked = true;
+    document.querySelectorAll('input[name="retiro"]').forEach(input => {
+        input.checked = input.value === 'tienda' || input.value === 'envio';
+    });
+    
+    // Mostrar todos los productos
+    const productCards = document.querySelectorAll('.card[data-product-id]');
+    productCards.forEach(card => {
+        card.style.display = 'block';
+        card.style.animation = 'fadeInUp 0.5s ease forwards';
+    });
+    
+    showNotification('Filtros limpiados', 'info');
+}
+
+// Helper function para obtener producto por ID
+function getProductById(id) {
+    // Base de datos de productos simulada
+    const products = [
+        {
+            id: 1,
+            name: 'Gaming Console Pro',
+            price: 899990,
+            category: 'Consolas',
+            rating: 4.9,
+            emoji: '🎮',
+            stock: true,
+            pickupAvailable: true,
+            shippingAvailable: true,
+            expressShipping: true,
+            freeShipping: false
+        },
+        {
+            id: 2,
+            name: 'RTX Gaming GPU',
+            price: 599990,
+            category: 'Componentes',
+            rating: 4.8,
+            emoji: '⚡',
+            stock: true,
+            pickupAvailable: true,
+            shippingAvailable: true,
+            expressShipping: false,
+            freeShipping: true
+        },
+        {
+            id: 3,
+            name: 'Mechanical Keyboard RGB',
+            price: 129990,
+            category: 'Periféricos',
+            rating: 4.2,
+            emoji: '⌨️',
+            stock: true,
+            pickupAvailable: true,
+            shippingAvailable: true,
+            expressShipping: true,
+            freeShipping: true
+        },
+        {
+            id: 4,
+            name: 'Gaming Mouse Ultra',
+            price: 79990,
+            category: 'Periféricos',
+            rating: 4.6,
+            emoji: '🖱️',
+            stock: true,
+            pickupAvailable: false,
+            shippingAvailable: true,
+            expressShipping: true,
+            freeShipping: true
+        },
+        {
+            id: 5,
+            name: 'Headset Gaming 7.1',
+            price: 149990,
+            category: 'Audio',
+            rating: 4.3,
+            emoji: '🎧',
+            stock: true,
+            pickupAvailable: false,
+            shippingAvailable: true,
+            expressShipping: true,
+            freeShipping: false
+        },
+        {
+            id: 6,
+            name: 'Gaming Monitor 144Hz',
+            price: 299990,
+            category: 'Monitores',
+            rating: 4.1,
+            emoji: '🖥️',
+            stock: true,
+            pickupAvailable: true,
+            shippingAvailable: true,
+            expressShipping: false,
+            freeShipping: false
+        }
+    ];
+    
+    return products.find(p => p.id === id);
+}
+
+// CSS Animation keyframes para fadeInUp
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+`;
+document.head.appendChild(style);

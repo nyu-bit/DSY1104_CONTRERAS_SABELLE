@@ -307,28 +307,71 @@
 
       <!-- Productos Destacados -->
       <section id="destacados">
+        <!-- Comparador de Productos (LG-007) -->
+        <div class="product-comparator" id="product-comparator" style="display: none;">
+          <div class="comparator-header">
+            <h3>🔍 Comparador de Productos</h3>
+            <button class="close-comparator" onclick="closeComparator()" aria-label="Cerrar comparador">&times;</button>
+          </div>
+          <div class="compare-grid" id="compare-grid">
+            <div class="compare-empty-state">
+              <div class="empty-icon">📊</div>
+              <p>Selecciona productos para comparar</p>
+              <small>Haz clic en "Comparar" en las tarjetas de productos</small>
+            </div>
+          </div>
+          <div class="comparator-actions">
+            <button class="btn-secondary" onclick="clearComparison()">Limpiar Comparación</button>
+            <button class="btn-primary" onclick="exportComparison()">Exportar Comparación</button>
+          </div>
+        </div>
+        
         <h2 class="section-title">Productos Destacados</h2>
-        <!-- Filtros de Disponibilidad y Retiro -->
+        <!-- Filtros de Disponibilidad y Retiro (LG-008) -->
         <form class="filters-panel" id="filters-panel" aria-label="Filtrar productos">
           <fieldset class="filter-group">
-            <legend>Disponibilidad</legend>
-            <label><input type="radio" name="disponibilidad" value="todos" checked> Todos</label>
-            <label><input type="radio" name="disponibilidad" value="stock"> En stock</label>
-            <label><input type="radio" name="disponibilidad" value="agotado"> Agotado</label>
+            <legend>📦 Disponibilidad</legend>
+            <label><input type="radio" name="disponibilidad" value="todos" checked> Todos los productos</label>
+            <label><input type="radio" name="disponibilidad" value="stock"> ✅ Solo en stock</label>
+            <label><input type="radio" name="disponibilidad" value="agotado"> ❌ Solo agotados</label>
+            <label><input type="radio" name="disponibilidad" value="preventa"> 📅 En preventa</label>
           </fieldset>
           <fieldset class="filter-group">
-            <legend>Retiro</legend>
-            <label><input type="checkbox" name="retiro" value="tienda" checked> En tienda</label>
-            <label><input type="checkbox" name="retiro" value="envio" checked> Envío a domicilio</label>
+            <legend>🚚 Opciones de Retiro</legend>
+            <label><input type="checkbox" name="retiro" value="tienda" checked> 🏪 Retiro en tienda</label>
+            <label><input type="checkbox" name="retiro" value="envio" checked> 📦 Envío a domicilio</label>
+            <label><input type="checkbox" name="retiro" value="express"> ⚡ Envío express (24h)</label>
+            <label><input type="checkbox" name="retiro" value="gratis"> 🆓 Envío gratis</label>
           </fieldset>
+          <div class="filter-actions">
+            <button type="button" class="btn-primary" onclick="applyAvailabilityFilters()">Aplicar Filtros</button>
+            <button type="button" class="btn-secondary" onclick="clearAvailabilityFilters()">Limpiar Filtros</button>
+            <button type="button" class="btn-text" onclick="toggleComparator()">🔍 Abrir Comparador</button>
+          </div>
         </form>
         <div class="cards" id="featured-grid">
-          <article class="card producto" data-id="1">
+          <article class="card producto" data-id="1" data-product-id="gaming-console">
             <div class="card-image">🎮</div>
+            <div class="card-content">
+              <h3 class="card-title">Gaming Console Pro</h3>
+              <div class="card-rating">
+                <div class="stars">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                </div>
+                <span class="rating-text">(4.9) 234 reseñas</span>
+              </div>
+              <div class="card-price">$899.990</div>
+              <p class="card-description">Consola de última generación con gráficos 4K y 120fps</p>
               <div class="card-actions">
                 <button class="card-button" onclick="addToCart(1)">Agregar al Carrito</button>
+                <button class="compare-button" onclick="addToComparison(1)" title="Comparar producto">🔍 Comparar</button>
                 <button class="share-button" onclick="shareProduct(1)" title="Compartir producto">📤</button>
               </div>
+            </div>
           </article>
 
           <article class="card" data-product-id="rtx-gpu">
@@ -350,6 +393,7 @@
               <div class="card-actions">
                 <button class="card-button" onclick="addToCart(2)">Agregar al Carrito</button>
                 <button class="reviews-button" onclick="openProductReviews('rtx-gpu')">Ver Reseñas</button>
+                <button class="compare-button" onclick="addToComparison(2)" title="Comparar producto">🔍 Comparar</button>
                 <button class="share-button" onclick="shareProduct(2)" title="Compartir producto">📤</button>
               </div>
             </div>
@@ -374,6 +418,7 @@
               <div class="card-actions">
                 <button class="card-button" onclick="addToCart(5)">Agregar al Carrito</button>
                 <button class="reviews-button" onclick="openProductReviews('headset-gaming')">Ver Reseñas</button>
+                <button class="compare-button" onclick="addToComparison(5)" title="Comparar producto">🔍 Comparar</button>
                 <button class="share-button" onclick="shareProduct(5)" title="Compartir producto">📤</button>
               </div>
             </div>
@@ -398,6 +443,7 @@
               <div class="card-actions">
                 <button class="card-button" onclick="addToCart(3)">Agregar al Carrito</button>
                 <button class="reviews-button" onclick="openProductReviews('keyboard-rgb')">Ver Reseñas</button>
+                <button class="compare-button" onclick="addToComparison(3)" title="Comparar producto">🔍 Comparar</button>
                 <button class="share-button" onclick="shareProduct(3)" title="Compartir producto">📤</button>
               </div>
             </div>
@@ -422,6 +468,7 @@
               <div class="card-actions">
                 <button class="card-button" onclick="addToCart(4)">Agregar al Carrito</button>
                 <button class="reviews-button" onclick="openProductReviews('mouse-ultra')">Ver Reseñas</button>
+                <button class="compare-button" onclick="addToComparison(4)" title="Comparar producto">🔍 Comparar</button>
                 <button class="share-button" onclick="shareProduct(4)" title="Compartir producto">📤</button>
               </div>
             </div>
@@ -446,6 +493,7 @@
               <div class="card-actions">
                 <button class="card-button" onclick="addToCart(6)">Agregar al Carrito</button>
                 <button class="reviews-button" onclick="openProductReviews('monitor-144hz')">Ver Reseñas</button>
+                <button class="compare-button" onclick="addToComparison(6)" title="Comparar producto">🔍 Comparar</button>
                 <button class="share-button" onclick="shareProduct(6)" title="Compartir producto">📤</button>
               </div>
             </div>
