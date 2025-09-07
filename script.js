@@ -129,6 +129,54 @@ function showNotification(message) {
 }
 
 // ===================== INTERACCIONES DE PRODUCTOS =====================
+function renderCategoryTiles() {
+  const categorias = [
+    {
+      icon: '🎮',
+      nombre: 'Videojuegos',
+      desc: 'Los últimos lanzamientos y clásicos'
+    },
+    {
+      icon: '⚡',
+      nombre: 'Hardware',
+      desc: 'PCs, componentes y periféricos'
+    },
+    {
+      icon: '🎧',
+      nombre: 'Accesorios',
+      desc: 'Auriculares, teclados y ratones'
+    },
+    {
+      icon: '🏆',
+      nombre: 'eSports',
+      desc: 'Equipamiento profesional'
+    }
+  ];
+  const container = document.getElementById('tiles-categorias');
+  if (!container) return;
+  container.innerHTML = categorias.map(cat => `
+    <div class="tile" tabindex="0" aria-label="${cat.nombre}">
+      <div class="tile-icon">${cat.icon}</div>
+      <h3>${cat.nombre}</h3>
+      <p>${cat.desc}</p>
+    </div>
+  `).join('');
+  // Efectos y accesibilidad
+  const tiles = container.querySelectorAll('.tile');
+  tiles.forEach(tile => {
+    tile.addEventListener('click', function() {
+      const category = this.querySelector('h3').textContent;
+      showNotification(`Navegando a ${category}`);
+    });
+    tile.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        this.click();
+      }
+    });
+  });
+}
+
 function initProductInteractions() {
   // Efectos hover mejorados para las cards
   const cards = document.querySelectorAll('.card');
@@ -136,20 +184,12 @@ function initProductInteractions() {
     card.addEventListener('mouseenter', function() {
       this.style.transform = 'translateY(-8px) scale(1.02)';
     });
-    
     card.addEventListener('mouseleave', function() {
       this.style.transform = 'translateY(0) scale(1)';
     });
   });
-  
-  // Efectos para las categorías
-  const tiles = document.querySelectorAll('.tile');
-  tiles.forEach(tile => {
-    tile.addEventListener('click', function() {
-      const category = this.querySelector('h3').textContent;
-      showNotification(`Navegando a ${category}`);
-    });
-  });
+  // Render dinámico de tiles de categorías
+  renderCategoryTiles();
 }
 
 // ===================== ANIMACIONES CSS DINÁMICAS =====================
