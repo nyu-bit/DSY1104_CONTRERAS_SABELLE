@@ -8813,6 +8813,405 @@ function hideCart() {
   cart.hideCart();
 }
 
+// ===================== LG-040-043: SISTEMA DE CARRITO COMPLETO =====================
+class CartManager {
+  constructor() {
+    this.cart = [];
+    this.appliedCoupons = [];
+    this.cartRules = {
+      freeShipping: { minAmount: 50000, discount: 0 },
+      bulkDiscount: { minItems: 3, discount: 0.05 }
+    };
+    this.availableCoupons = {
+      'GAMER20': { discount: 0.20, minAmount: 30000, maxUses: 1 },
+      'FIRST10': { discount: 0.10, minAmount: 15000, maxUses: 1 },
+      'DUOC15': { discount: 0.15, minAmount: 25000, maxUses: 1 }
+    };
+    this.init();
+  }
+
+  init() {
+    this.loadFromStorage();
+    this.bindEvents();
+    this.render();
+  }
+
+  bindEvents() {
+    // Event listeners para el carrito
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('add-to-cart')) {
+        const productId = parseInt(e.target.dataset.id);
+        this.addToCart(productId);
+      }
+
+      if (e.target.classList.contains('cart-close')) {
+        this.closeCart();
+      }
+
+      if (e.target.classList.contains('quantity-btn')) {
+        const action = e.target.dataset.action;
+        const productId = parseInt(e.target.dataset.id);
+        if (action === 'increase') {
+          this.updateQuantity(productId, 1);
+        } else if (action === 'decrease') {
+          this.updateQuantity(productId, -1);
+        }
+      }
+
+      if (e.target.classList.contains('cart-item-remove')) {
+        const productId = parseInt(e.target.dataset.id);
+        this.removeFromCart(productId);
+      }
+
+      if (e.target.classList.contains('btn-clear-cart')) {
+        this.clearCart();
+      }
+
+      if (e.target.classList.contains('btn-checkout')) {
+        this.checkout();
+      }
+
+      if (e.target.classList.contains('coupon-apply')) {
+        this.applyCoupon();
+      }
+
+      if (e.target.classList.contains('coupon-remove')) {
+        const code = e.target.dataset.code;
+        this.removeCoupon(code);
+      }
+    });
+
+    // Event listener para overlay
+    document.getElementById('cartOverlay').addEventListener('click', () => {
+      this.closeCart();
+    });
+  }
+
+  addToCart(productId, quantity = 1) {
+    const product = products.find(p => p.id === productId);
+    if (!product) {
+      this.showNotification('Producto no encontrado', 'error');
+      return;
+    }
+
+    if (product.stock <= 0) {
+      this.showNotification('Producto sin stock', 'error');
+      return;
+    }
+
+    const existingItem = this.cart.find(item => item.id === productId);
+    
+    if (existingItem) {
+      if (existingItem.quantity + quantity > product.stock) {
+        this.showNotification(`Solo hay ${product.stock} unidades disponibles`, 'warning');
+        return;
+      }
+      existingItem.quantity += quantity;
+    } else {
+      this.cart.push({
+        id: productId,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        quantity: quantity,
+        stock: product.stock
+      });
+    }
+
+    this.saveToStorage();
+    this.render();
+    this.showNotification(`${product.name} agregado al carrito`, 'success');
+  }
+
+  updateQuantity(productId, change) {
+    const item = this.cart.find(item => item.id === productId);
+    if (!item) return;
+
+    const newQuantity = item.quantity + change;
+    
+    if (newQuantity <= 0) {
+      this.removeFromCart(productId);
+      return;
+    }
+
+    if (newQuantity > item.stock) {
+      this.showNotification(`Solo hay ${item.stock} unidades disponibles`, 'warning');
+      return;
+    }
+
+    item.quantity = newQuantity;
+    this.saveToStorage();
+    this.render();
+  }
+
+  removeFromCart(productId) {
+    const itemIndex = this.cart.findIndex(item => item.id === productId);
+    if (itemIndex !== -1) {
+      const item = this.cart[itemIndex];
+      this.cart.splice(itemIndex, 1);
+      this.saveToStorage();
+      this.render();
+      this.showNotification(`${item.name} eliminado del carrito`, 'info');
+    }
+  }
+
+  clearCart() {
+    if (this.cart.length === 0) return;
+    
+    if (confirm('¿Estás seguro de que quieres vaciar el carrito?')) {
+      this.cart = [];
+      this.appliedCoupons = [];
+      this.saveToStorage();
+      this.render();
+      this.showNotification('Carrito vaciado', 'info');
+    }
+  }
+
+  applyCoupon() {
+    const couponCode = document.getElementById('couponInput').value.trim().toUpperCase();
+    if (!couponCode) return;
+
+    if (this.appliedCoupons.includes(couponCode)) {
+      this.showNotification('Cupón ya aplicado', 'warning');
+      return;
+    }
+
+    const coupon = this.availableCoupons[couponCode];
+    if (!coupon) {
+      this.showNotification('Cupón inválido', 'error');
+      return;
+    }
+
+    const subtotal = this.getSubtotal();
+    if (subtotal < coupon.minAmount) {
+      this.showNotification(`Compra mínima de $${coupon.minAmount.toLocaleString()} para este cupón`, 'warning');
+      return;
+    }
+
+    this.appliedCoupons.push(couponCode);
+    document.getElementById('couponInput').value = '';
+    this.saveToStorage();
+    this.render();
+    this.showNotification(`Cupón ${couponCode} aplicado correctamente`, 'success');
+  }
+
+  removeCoupon(code) {
+    this.appliedCoupons = this.appliedCoupons.filter(c => c !== code);
+    this.saveToStorage();
+    this.render();
+    this.showNotification(`Cupón ${code} removido`, 'info');
+  }
+
+  getSubtotal() {
+    return this.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+  }
+
+  getDiscount() {
+    let discount = 0;
+    const subtotal = this.getSubtotal();
+    const totalItems = this.cart.reduce((total, item) => total + item.quantity, 0);
+
+    // Descuento por cantidad
+    if (totalItems >= this.cartRules.bulkDiscount.minItems) {
+      discount += subtotal * this.cartRules.bulkDiscount.discount;
+    }
+
+    // Descuento por cupones
+    this.appliedCoupons.forEach(code => {
+      const coupon = this.availableCoupons[code];
+      if (coupon) {
+        discount += subtotal * coupon.discount;
+      }
+    });
+
+    return discount;
+  }
+
+  getShipping() {
+    const subtotal = this.getSubtotal();
+    return subtotal >= this.cartRules.freeShipping.minAmount ? 0 : 5000;
+  }
+
+  getTotal() {
+    return this.getSubtotal() - this.getDiscount() + this.getShipping();
+  }
+
+  render() {
+    this.renderCartItems();
+    this.renderCartSummary();
+    this.renderCartRules();
+    this.updateCartCount();
+  }
+
+  renderCartItems() {
+    const container = document.getElementById('cartItems');
+    if (!container) return;
+
+    if (this.cart.length === 0) {
+      container.innerHTML = `
+        <div class="empty-cart">
+          <div class="empty-cart-icon">🛒</div>
+          <h3>Tu carrito está vacío</h3>
+          <p>Agrega algunos productos increíbles</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = this.cart.map(item => `
+      <div class="cart-item">
+        <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+        <div class="cart-item-info">
+          <h4 class="cart-item-name">${item.name}</h4>
+          <div class="cart-item-price">$${item.price.toLocaleString()}</div>
+          <div class="cart-item-controls">
+            <button class="quantity-btn" data-action="decrease" data-id="${item.id}">-</button>
+            <span class="quantity-display">${item.quantity}</span>
+            <button class="quantity-btn" data-action="increase" data-id="${item.id}">+</button>
+            <button class="cart-item-remove" data-id="${item.id}">Eliminar</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  renderCartSummary() {
+    const container = document.getElementById('cartSummary');
+    if (!container) return;
+
+    const subtotal = this.getSubtotal();
+    const discount = this.getDiscount();
+    const shipping = this.getShipping();
+    const total = this.getTotal();
+
+    let couponsHtml = '';
+    if (this.appliedCoupons.length > 0) {
+      couponsHtml = this.appliedCoupons.map(code => `
+        <div class="applied-coupon">
+          <span class="coupon-code">${code}</span>
+          <button class="coupon-remove" data-code="${code}">×</button>
+        </div>
+      `).join('');
+    }
+
+    container.innerHTML = `
+      ${couponsHtml}
+      <div class="cart-summary-row">
+        <span class="cart-summary-label">Subtotal:</span>
+        <span class="cart-summary-value">$${subtotal.toLocaleString()}</span>
+      </div>
+      ${discount > 0 ? `
+        <div class="cart-summary-row">
+          <span class="cart-summary-label">Descuento:</span>
+          <span class="cart-summary-value">-$${discount.toLocaleString()}</span>
+        </div>
+      ` : ''}
+      <div class="cart-summary-row">
+        <span class="cart-summary-label">Envío:</span>
+        <span class="cart-summary-value">${shipping === 0 ? 'GRATIS' : '$' + shipping.toLocaleString()}</span>
+      </div>
+      <div class="cart-summary-row total">
+        <span class="cart-summary-label">Total:</span>
+        <span class="cart-summary-value">$${total.toLocaleString()}</span>
+      </div>
+    `;
+  }
+
+  renderCartRules() {
+    const container = document.getElementById('cartRules');
+    if (!container) return;
+
+    const subtotal = this.getSubtotal();
+    const totalItems = this.cart.reduce((total, item) => total + item.quantity, 0);
+
+    container.innerHTML = `
+      <div class="cart-rules">
+        <div class="cart-rule ${subtotal >= this.cartRules.freeShipping.minAmount ? 'active' : ''}">
+          <span class="cart-rule-icon">${subtotal >= this.cartRules.freeShipping.minAmount ? '✅' : '📦'}</span>
+          <span>Envío gratis por compras sobre $${this.cartRules.freeShipping.minAmount.toLocaleString()}</span>
+        </div>
+        <div class="cart-rule ${totalItems >= this.cartRules.bulkDiscount.minItems ? 'active' : ''}">
+          <span class="cart-rule-icon">${totalItems >= this.cartRules.bulkDiscount.minItems ? '✅' : '🎯'}</span>
+          <span>5% de descuento por 3 o más productos</span>
+        </div>
+      </div>
+    `;
+  }
+
+  updateCartCount() {
+    const totalItems = this.cart.reduce((total, item) => total + item.quantity, 0);
+    const countElements = document.querySelectorAll('#cart-count, .cart-count');
+    countElements.forEach(element => {
+      element.textContent = totalItems;
+      element.style.display = totalItems > 0 ? 'block' : 'none';
+    });
+  }
+
+  showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `cart-notification ${type} show`;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.classList.remove('show');
+      setTimeout(() => {
+        document.body.removeChild(notification);
+      }, 300);
+    }, 3000);
+  }
+
+  checkout() {
+    if (this.cart.length === 0) {
+      this.showNotification('El carrito está vacío', 'warning');
+      return;
+    }
+
+    // Simular proceso de checkout
+    this.showNotification('Redirigiendo a checkout...', 'info');
+    
+    // Aquí iría la lógica real de checkout
+    setTimeout(() => {
+      alert(`Compra realizada por $${this.getTotal().toLocaleString()}`);
+      this.clearCart();
+      this.closeCart();
+    }, 1500);
+  }
+
+  openCart() {
+    document.getElementById('cartSidebar').classList.add('open');
+    document.getElementById('cartOverlay').classList.add('active');
+    this.render();
+  }
+
+  closeCart() {
+    document.getElementById('cartSidebar').classList.remove('open');
+    document.getElementById('cartOverlay').classList.remove('active');
+  }
+
+  saveToStorage() {
+    localStorage.setItem('gameStoreCart', JSON.stringify({
+      cart: this.cart,
+      appliedCoupons: this.appliedCoupons
+    }));
+  }
+
+  loadFromStorage() {
+    const saved = localStorage.getItem('gameStoreCart');
+    if (saved) {
+      const data = JSON.parse(saved);
+      this.cart = data.cart || [];
+      this.appliedCoupons = data.appliedCoupons || [];
+    }
+  }
+}
+
+// Función para mostrar carrito (llamada desde navbar)
+function showCart() {
+  cart.openCart();
+}
+
 // Función para toggle de wishlist
 function toggleWishlist() {
   const wishlistSection = document.getElementById('wishlist');
@@ -8825,13 +9224,222 @@ function toggleWishlist() {
   }
 }
 
+// ===================== PRODUCTOS DE EJEMPLO =====================
+const products = [
+  {
+    id: 1,
+    name: "PlayStation 5 Console",
+    description: "Consola de nueva generación con gráficos 4K y SSD ultrarrápido",
+    category: "Consolas",
+    platform: ["PlayStation 5"],
+    brand: "Sony",
+    price: 599990,
+    originalPrice: 649990,
+    stock: 15,
+    rating: 4.8,
+    reviews: 324,
+    image: "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=300&h=300&fit=crop",
+    isNew: true,
+    isFeatured: true,
+    discount: 8,
+    dateAdded: "2024-01-15"
+  },
+  {
+    id: 2,
+    name: "Xbox Series X",
+    description: "La consola Xbox más potente jamás creada",
+    category: "Consolas",
+    platform: ["Xbox Series X"],
+    brand: "Microsoft",
+    price: 549990,
+    stock: 12,
+    rating: 4.7,
+    reviews: 289,
+    image: "https://images.unsplash.com/photo-1621259182978-fbf93132d53d?w=300&h=300&fit=crop",
+    isFeatured: true,
+    dateAdded: "2024-01-10"
+  },
+  {
+    id: 3,
+    name: "Nintendo Switch OLED",
+    description: "Consola híbrida con pantalla OLED de 7 pulgadas",
+    category: "Consolas",
+    platform: ["Nintendo Switch"],
+    brand: "Nintendo",
+    price: 399990,
+    originalPrice: 429990,
+    stock: 8,
+    rating: 4.6,
+    reviews: 156,
+    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=300&fit=crop",
+    discount: 7,
+    dateAdded: "2024-01-08"
+  },
+  {
+    id: 4,
+    name: "The Last of Us Part II",
+    description: "Aventura post-apocalíptica aclamada por la crítica",
+    category: "Juegos",
+    platform: ["PlayStation 5", "PlayStation 4"],
+    brand: "Sony",
+    price: 59990,
+    originalPrice: 69990,
+    stock: 25,
+    rating: 4.9,
+    reviews: 892,
+    image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=300&h=300&fit=crop",
+    discount: 14,
+    isFeatured: true,
+    dateAdded: "2024-01-12"
+  },
+  {
+    id: 5,
+    name: "Cyberpunk 2077",
+    description: "RPG futurista en una ciudad cyberpunk",
+    category: "Juegos",
+    platform: ["PC", "PlayStation 5", "Xbox Series X"],
+    brand: "CD Projekt",
+    price: 49990,
+    stock: 18,
+    rating: 4.2,
+    reviews: 567,
+    image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=300&h=300&fit=crop",
+    dateAdded: "2024-01-05"
+  },
+  {
+    id: 6,
+    name: "DualSense Controller",
+    description: "Control inalámbrico con retroalimentación háptica",
+    category: "Accesorios",
+    platform: ["PlayStation 5"],
+    brand: "Sony",
+    price: 79990,
+    stock: 30,
+    rating: 4.5,
+    reviews: 234,
+    image: "https://images.unsplash.com/photo-1607853202273-797f1c22a38e?w=300&h=300&fit=crop",
+    isNew: true,
+    dateAdded: "2024-01-14"
+  },
+  {
+    id: 7,
+    name: "Gaming Headset Razer",
+    description: "Audífonos gaming con micrófono y sonido 7.1",
+    category: "Accesorios",
+    platform: ["PC", "PlayStation 5", "Xbox Series X"],
+    brand: "Razer",
+    price: 129990,
+    originalPrice: 149990,
+    stock: 20,
+    rating: 4.4,
+    reviews: 178,
+    image: "https://images.unsplash.com/photo-1599669454699-248893623440?w=300&h=300&fit=crop",
+    discount: 13,
+    dateAdded: "2024-01-09"
+  },
+  {
+    id: 8,
+    name: "Minecraft",
+    description: "Juego de construcción y supervivencia sandbox",
+    category: "Juegos",
+    platform: ["PC", "PlayStation 5", "Xbox Series X", "Nintendo Switch"],
+    brand: "Mojang",
+    price: 29990,
+    stock: 50,
+    rating: 4.8,
+    reviews: 1205,
+    image: "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=300&h=300&fit=crop",
+    isFeatured: true,
+    dateAdded: "2024-01-01"
+  },
+  {
+    id: 9,
+    name: "Gaming Chair RGB",
+    description: "Silla gamer ergonómica con iluminación RGB",
+    category: "Accesorios",
+    platform: ["PC"],
+    brand: "Gaming Plus",
+    price: 199990,
+    originalPrice: 249990,
+    stock: 5,
+    rating: 4.3,
+    reviews: 89,
+    image: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=300&h=300&fit=crop",
+    discount: 20,
+    isNew: true,
+    dateAdded: "2024-01-16"
+  },
+  {
+    id: 10,
+    name: "God of War",
+    description: "Aventura épica de mitología nórdica",
+    category: "Juegos",
+    platform: ["PlayStation 5", "PC"],
+    brand: "Sony",
+    price: 69990,
+    stock: 22,
+    rating: 4.9,
+    reviews: 756,
+    image: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=300&h=300&fit=crop",
+    isFeatured: true,
+    dateAdded: "2024-01-11"
+  },
+  {
+    id: 11,
+    name: "Mechanical Keyboard RGB",
+    description: "Teclado mecánico gaming con switches Cherry MX",
+    category: "Accesorios",
+    platform: ["PC"],
+    brand: "Corsair",
+    price: 159990,
+    stock: 15,
+    rating: 4.6,
+    reviews: 167,
+    image: "https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=300&h=300&fit=crop",
+    dateAdded: "2024-01-07"
+  },
+  {
+    id: 12,
+    name: "Gaming Mouse Pro",
+    description: "Mouse gaming de alta precisión con 16000 DPI",
+    category: "Accesorios",
+    platform: ["PC"],
+    brand: "Logitech",
+    price: 89990,
+    originalPrice: 99990,
+    stock: 0,
+    rating: 4.7,
+    reviews: 134,
+    image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=300&h=300&fit=crop",
+    discount: 10,
+    dateAdded: "2024-01-06"
+  }
+];
+
+// Función para cargar productos de ejemplo
+function loadSampleProducts() {
+  if (typeof pagination !== 'undefined') {
+    pagination.updateProducts(products);
+  }
+}
+
+// Inicializar managers
+const filtersManager = new FiltersManager();
+const pagination = new PaginationManager();
+const wishlistManager = new WishlistManager();
+const cart = new CartManager();
+
 // Inicializar cuando DOM esté listo  
 document.addEventListener('DOMContentLoaded', function() {
   // Inicializar contadores
   wishlistManager.updateWishlistCount();
+  cart.updateCartCount();
   
-  // Cargar productos iniciales
-  if (typeof products !== 'undefined') {
+  // Cargar productos iniciales si existen
+  if (typeof products !== 'undefined' && products.length > 0) {
     pagination.updateProducts(products);
+  } else {
+    // Cargar productos de ejemplo si no existen
+    loadSampleProducts();
   }
 });
