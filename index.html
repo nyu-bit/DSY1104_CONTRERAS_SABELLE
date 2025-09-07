@@ -95,6 +95,142 @@
       <button class="promo-arrow right" aria-label="Siguiente promoción">&#9654;</button>
     </div>
   </section>
+
+  <!-- Banner Promocional Dinámico -->
+  <section class="promotional-banner" id="promotional-banner">
+    <div class="banner-container">
+      <div class="banner-slide active" data-promo="1">
+        <div class="banner-content">
+          <div class="banner-badge">🔥 OFERTA ESPECIAL</div>
+          <h2 class="banner-title">¡BLACK FRIDAY GAMER!</h2>
+          <p class="banner-description">Descuentos de hasta 50% en tarjetas gráficas RTX y componentes gaming</p>
+          <div class="banner-price">
+            <span class="old-price">$2.500.000</span>
+            <span class="new-price">$1.250.000</span>
+            <span class="discount">-50%</span>
+          </div>
+          <button class="banner-cta" onclick="claimPromotion(1)">
+            ⚡ RECLAMAR OFERTA
+          </button>
+          <div class="banner-timer" id="timer-1">
+            <span class="timer-label">Termina en:</span>
+            <span class="timer-value">23:59:45</span>
+          </div>
+        </div>
+        <div class="banner-visual">
+          <div class="banner-icon">🎮</div>
+          <div class="banner-effects">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="banner-slide" data-promo="2">
+        <div class="banner-content">
+          <div class="banner-badge">💎 PREMIUM</div>
+          <h2 class="banner-title">SETUP GAMER COMPLETO</h2>
+          <p class="banner-description">PC Gaming + Monitor + Periféricos. Todo lo que necesitas para dominar</p>
+          <div class="banner-price">
+            <span class="old-price">$5.000.000</span>
+            <span class="new-price">$3.500.000</span>
+            <span class="discount">-30%</span>
+          </div>
+          <button class="banner-cta" onclick="claimPromotion(2)">
+            🚀 VER BUNDLE
+          </button>
+          <div class="banner-timer" id="timer-2">
+            <span class="timer-label">Termina en:</span>
+            <span class="timer-value">47:23:12</span>
+          </div>
+        </div>
+        <div class="banner-visual">
+          <div class="banner-icon">⚡</div>
+          <div class="banner-effects">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="banner-slide" data-promo="3">
+        <div class="banner-content">
+          <div class="banner-badge">🎁 REGALO</div>
+          <h2 class="banner-title">COMPRA Y GANA PUNTOS</h2>
+          <p class="banner-description">Por cada $100.000 en compras, obtén 500 puntos extra + juego gratis</p>
+          <div class="banner-price">
+            <span class="points-offer">+500 PUNTOS</span>
+            <span class="free-game">+ JUEGO GRATIS</span>
+          </div>
+          <button class="banner-cta" onclick="claimPromotion(3)">
+            🏆 ACTIVAR BONUS
+          </button>
+          <div class="banner-timer" id="timer-3">
+            <span class="timer-label">Válido por:</span>
+            <span class="timer-value">7 días</span>
+          </div>
+        </div>
+        <div class="banner-visual">
+          <div class="banner-icon">🏆</div>
+          <div class="banner-effects">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="banner-slide" data-promo="4">
+        <div class="banner-content">
+          <div class="banner-badge">⭐ NUEVO</div>
+          <h2 class="banner-title">RTX 4090 DISPONIBLE</h2>
+          <p class="banner-description">La GPU más potente del mundo. Rendimiento extremo para gaming 4K</p>
+          <div class="banner-price">
+            <span class="new-arrival">RECIÉN LLEGADO</span>
+            <span class="new-price">$2.500.000</span>
+          </div>
+          <button class="banner-cta" onclick="claimPromotion(4)">
+            🔥 PRE-ORDENAR
+          </button>
+          <div class="banner-timer" id="timer-4">
+            <span class="timer-label">Stock limitado:</span>
+            <span class="timer-value">15 unidades</span>
+          </div>
+        </div>
+        <div class="banner-visual">
+          <div class="banner-icon">🔥</div>
+          <div class="banner-effects">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controles del banner -->
+    <div class="banner-controls">
+      <button class="banner-nav prev" onclick="previousBanner()">❮</button>
+      <div class="banner-indicators">
+        <span class="indicator active" data-slide="0" onclick="goToBanner(0)"></span>
+        <span class="indicator" data-slide="1" onclick="goToBanner(1)"></span>
+        <span class="indicator" data-slide="2" onclick="goToBanner(2)"></span>
+        <span class="indicator" data-slide="3" onclick="goToBanner(3)"></span>
+      </div>
+      <button class="banner-nav next" onclick="nextBanner()">❯</button>
+    </div>
+
+    <!-- Banner de notificaciones -->
+    <div class="banner-notifications" id="banner-notifications">
+      <div class="notification-item">
+        <span class="notification-icon">🛒</span>
+        <span class="notification-text">Juan compró RTX 4080 hace 5 min</span>
+      </div>
+    </div>
+  </section>
+
     <!-- Panel de Acceso Rápido y Búsqueda -->
     <nav class="quick-access-panel" aria-label="Panel de acceso rápido">
       <ul class="quick-access-list">

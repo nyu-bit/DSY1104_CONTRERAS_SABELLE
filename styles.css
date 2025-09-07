@@ -3487,6 +3487,399 @@ button { font-family: inherit; }
     }
 }
 
+/* ===== Banner Promocional Dinámico ===== */
+.promotional-banner {
+    background: linear-gradient(135deg, #1a1a1a, #2c3e50);
+    border-radius: 20px;
+    margin: 20px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border: 2px solid #e74c3c;
+}
+
+.banner-container {
+    position: relative;
+    height: 300px;
+    overflow: hidden;
+}
+
+.banner-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 40px;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.5s ease;
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+}
+
+.banner-slide.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.banner-slide[data-promo="1"] {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.banner-slide[data-promo="2"] {
+    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+}
+
+.banner-slide[data-promo="3"] {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+}
+
+.banner-slide[data-promo="4"] {
+    background: linear-gradient(135deg, #1abc9c, #16a085);
+}
+
+.banner-content {
+    flex: 1;
+    color: white;
+    z-index: 2;
+}
+
+.banner-badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.banner-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(45deg, #fff, #f8f9fa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.banner-description {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    opacity: 0.95;
+    line-height: 1.5;
+}
+
+.banner-price {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.old-price {
+    font-size: 1.2rem;
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+.new-price {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #39ff14;
+    text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+}
+
+.discount {
+    background: #39ff14;
+    color: #000;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.points-offer {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #f39c12;
+    text-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+}
+
+.free-game {
+    background: #39ff14;
+    color: #000;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.new-arrival {
+    background: linear-gradient(45deg, #e74c3c, #c0392b);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.banner-cta {
+    background: linear-gradient(135deg, #39ff14, #32cd32);
+    color: #000;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(57, 255, 20, 0.4);
+    text-transform: uppercase;
+}
+
+.banner-cta:hover {
+    background: linear-gradient(135deg, #32cd32, #228b22);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(57, 255, 20, 0.6);
+}
+
+.banner-timer {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+}
+
+.timer-label {
+    opacity: 0.8;
+}
+
+.timer-value {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #39ff14;
+    font-family: 'Courier New', monospace;
+}
+
+.banner-visual {
+    flex: 0 0 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.banner-icon {
+    font-size: 8rem;
+    animation: float 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px rgba(57, 255, 20, 0.7));
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+.banner-effects {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #39ff14;
+    border-radius: 50%;
+    animation: particle 4s linear infinite;
+}
+
+.particle:nth-child(1) {
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.particle:nth-child(2) {
+    top: 60%;
+    left: 80%;
+    animation-delay: 1.5s;
+}
+
+.particle:nth-child(3) {
+    top: 80%;
+    left: 30%;
+    animation-delay: 3s;
+}
+
+@keyframes particle {
+    0% {
+        transform: translate(0, 0) scale(0);
+        opacity: 1;
+    }
+    50% {
+        transform: translate(50px, -50px) scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(100px, -100px) scale(0);
+        opacity: 0;
+    }
+}
+
+.banner-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    z-index: 3;
+}
+
+.banner-nav {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: 2px solid #39ff14;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.banner-nav:hover {
+    background: #39ff14;
+    color: #000;
+    transform: scale(1.1);
+}
+
+.banner-indicators {
+    display: flex;
+    gap: 10px;
+}
+
+.indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.indicator.active {
+    background: #39ff14;
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.7);
+}
+
+.banner-notifications {
+    position: absolute;
+    bottom: 70px;
+    right: 20px;
+    z-index: 3;
+}
+
+.notification-item {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(57, 255, 20, 0.3);
+    animation: slideInRight 0.5s ease;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.notification-icon {
+    font-size: 1.1rem;
+}
+
+/* Responsive para banner */
+@media (max-width: 768px) {
+    .banner-slide {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px;
+    }
+    
+    .banner-visual {
+        flex: none;
+        margin-top: 20px;
+    }
+    
+    .banner-icon {
+        font-size: 4rem;
+    }
+    
+    .banner-title {
+        font-size: 1.8rem;
+    }
+    
+    .banner-price {
+        justify-content: center;
+    }
+    
+    .banner-notifications {
+        position: static;
+        margin-top: 15px;
+        text-align: center;
+    }
+    
+    .promotional-banner {
+        margin: 10px;
+    }
+    
+    .banner-container {
+        height: 400px;
+    }
+}
+
 /* ===== Chat WhatsApp Flotante ===== */
 .whatsapp-chat-widget {
     position: fixed;

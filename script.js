@@ -51,6 +51,14 @@ document.addEventListener('DOMContentLoaded', function() {
       displayCatalogProducts();
     }, 1000);
   }
+  
+  // Inicializar banner promocional
+  if (typeof initPromotionalBanner === 'function') {
+    setTimeout(() => {
+      initPromotionalBanner();
+      checkExpiredDiscounts();
+    }, 500);
+  }
   initLogin();
   initProfile();
   initProductFiltersAndSearch();
@@ -4939,6 +4947,313 @@ function searchProductsCatalog(query) {
                 <p>Intenta con otros términos de búsqueda</p>
             </div>
         `;
+    }
+}
+
+// ===== Sistema de Banner Promocional Dinámico =====
+
+// Estado del banner
+let currentBannerSlide = 0;
+const totalBannerSlides = 4;
+let bannerInterval;
+let bannerTimers = {};
+
+// Datos de promociones
+const promotions = {
+    1: {
+        title: '¡BLACK FRIDAY GAMER!',
+        discount: 50,
+        endTime: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 horas
+        products: [101, 102], // IDs de productos en oferta
+        points: 20
+    },
+    2: {
+        title: 'SETUP GAMER COMPLETO',
+        discount: 30,
+        endTime: new Date(Date.now() + 48 * 60 * 60 * 1000), // 48 horas
+        products: [101, 103, 105, 106],
+        points: 50
+    },
+    3: {
+        title: 'COMPRA Y GANA PUNTOS',
+        bonusPoints: 500,
+        minPurchase: 100000,
+        endTime: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 días
+        points: 10
+    },
+    4: {
+        title: 'RTX 4090 DISPONIBLE',
+        newProduct: true,
+        products: [101],
+        stock: 15,
+        points: 15
+    }
+};
+
+// Inicializar banner promocional
+function initPromotionalBanner() {
+    startBannerRotation();
+    initBannerTimers();
+    showRandomNotification();
+    
+    // Mostrar notificaciones aleatorias cada 10 segundos
+    setInterval(showRandomNotification, 10000);
+}
+
+// Iniciar rotación automática del banner
+function startBannerRotation() {
+    bannerInterval = setInterval(() => {
+        nextBanner();
+    }, 8000); // Cambiar cada 8 segundos
+}
+
+// Función para siguiente banner
+function nextBanner() {
+    currentBannerSlide = (currentBannerSlide + 1) % totalBannerSlides;
+    showBannerSlide(currentBannerSlide);
+}
+
+// Función para banner anterior
+function previousBanner() {
+    currentBannerSlide = (currentBannerSlide - 1 + totalBannerSlides) % totalBannerSlides;
+    showBannerSlide(currentBannerSlide);
+}
+
+// Ir a banner específico
+function goToBanner(slideIndex) {
+    currentBannerSlide = slideIndex;
+    showBannerSlide(currentBannerSlide);
+    
+    // Reiniciar rotación automática
+    clearInterval(bannerInterval);
+    startBannerRotation();
+}
+
+// Mostrar slide específico
+function showBannerSlide(index) {
+    const slides = document.querySelectorAll('.banner-slide');
+    const indicators = document.querySelectorAll('.indicator');
+    
+    // Ocultar todos los slides
+    slides.forEach(slide => {
+        slide.classList.remove('active');
+    });
+    
+    // Remover active de todos los indicadores
+    indicators.forEach(indicator => {
+        indicator.classList.remove('active');
+    });
+    
+    // Mostrar slide actual
+    if (slides[index]) {
+        slides[index].classList.add('active');
+    }
+    
+    // Activar indicador actual
+    if (indicators[index]) {
+        indicators[index].classList.add('active');
+    }
+}
+
+// Inicializar timers de promociones
+function initBannerTimers() {
+    Object.keys(promotions).forEach(promoId => {
+        const promo = promotions[promoId];
+        if (promo.endTime) {
+            updateBannerTimer(promoId, promo.endTime);
+            bannerTimers[promoId] = setInterval(() => {
+                updateBannerTimer(promoId, promo.endTime);
+            }, 1000);
+        }
+    });
+}
+
+// Actualizar timer de banner
+function updateBannerTimer(promoId, endTime) {
+    const timerElement = document.getElementById(`timer-${promoId}`);
+    if (!timerElement) return;
+    
+    const now = new Date().getTime();
+    const distance = endTime.getTime() - now;
+    
+    if (distance < 0) {
+        timerElement.querySelector('.timer-value').textContent = 'EXPIRADO';
+        clearInterval(bannerTimers[promoId]);
+        return;
+    }
+    
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    
+    let timeString = '';
+    if (days > 0) {
+        timeString = `${days}d ${hours}h ${minutes}m`;
+    } else {
+        timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+    
+    timerElement.querySelector('.timer-value').textContent = timeString;
+}
+
+// Reclamar promoción
+function claimPromotion(promoId) {
+    const promo = promotions[promoId];
+    if (!promo) {
+        showNotification('Promoción no encontrada', 'error');
+        return;
+    }
+    
+    // Verificar si el usuario está logueado
+    if (!isLoggedIn()) {
+        showNotification('Debes iniciar sesión para reclamar promociones', 'warning');
+        openModal('login-modal');
+        return;
+    }
+    
+    const user = getCurrentUser();
+    
+    // Verificar si ya reclamó esta promoción
+    if (!user.claimedPromotions) {
+        user.claimedPromotions = [];
+    }
+    
+    if (user.claimedPromotions.includes(promoId)) {
+        showNotification('Ya has reclamado esta promoción', 'info');
+        return;
+    }
+    
+    // Aplicar promoción según el tipo
+    let message = '';
+    let pointsEarned = promo.points || 0;
+    
+    switch(promoId) {
+        case 1: // Black Friday
+            message = `¡Promoción activada! Descuento del ${promo.discount}% en productos seleccionados`;
+            applyDiscountToProducts(promo.products, promo.discount);
+            break;
+            
+        case 2: // Bundle completo
+            message = `¡Bundle activado! Descuento del ${promo.discount}% en setup completo`;
+            applyDiscountToProducts(promo.products, promo.discount);
+            break;
+            
+        case 3: // Bonus puntos
+            message = `¡Bonus activado! Ganarás ${promo.bonusPoints} puntos extra por compras sobre $${promo.minPurchase.toLocaleString()}`;
+            user.bonusActive = {
+                type: 'points',
+                bonus: promo.bonusPoints,
+                minPurchase: promo.minPurchase,
+                endTime: promo.endTime
+            };
+            break;
+            
+        case 4: // Nuevo producto
+            message = `¡Acceso prioritario activado! Puedes pre-ordenar el ${promo.title}`;
+            break;
+    }
+    
+    // Marcar promoción como reclamada
+    user.claimedPromotions.push(promoId);
+    
+    // Dar puntos
+    user.points += pointsEarned;
+    
+    // Guardar cambios
+    updateUserInStorage(user);
+    updateUserInfo();
+    
+    showNotification(message, 'success');
+    
+    if (pointsEarned > 0) {
+        setTimeout(() => {
+            showNotification(`¡Has ganado ${pointsEarned} puntos por reclamar la promoción!`, 'info');
+        }, 1500);
+    }
+}
+
+// Aplicar descuento a productos
+function applyDiscountToProducts(productIds, discountPercent) {
+    productIds.forEach(productId => {
+        const product = expandedProducts.find(p => p.id === productId);
+        if (product && !product.discountApplied) {
+            product.originalPrice = product.price;
+            product.price = Math.floor(product.price * (1 - discountPercent / 100));
+            product.discountApplied = discountPercent;
+            product.discountExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 horas
+        }
+    });
+    
+    // Actualizar localStorage
+    localStorage.setItem('levelup_expanded_products', JSON.stringify(expandedProducts));
+    
+    // Refrescar catálogo si está visible
+    if (document.querySelector('#featured-grid')) {
+        displayCatalogProducts();
+    }
+}
+
+// Mostrar notificaciones aleatorias de compras
+function showRandomNotification() {
+    const notifications = [
+        { icon: '🛒', text: 'María compró RTX 4080 hace 3 min' },
+        { icon: '⚡', text: 'Carlos agregó Ryzen 9 al carrito' },
+        { icon: '🎮', text: 'Ana completó su setup gaming' },
+        { icon: '🏆', text: 'Luis ganó 500 puntos por su compra' },
+        { icon: '💎', text: 'Sofía activó membership premium' },
+        { icon: '🔥', text: 'Pedro reclamó descuento Black Friday' },
+        { icon: '🎁', text: 'Alguien ganó un juego gratis' },
+        { icon: '⭐', text: 'Nueva reseña 5⭐ para SSD Samsung' }
+    ];
+    
+    const randomNotification = notifications[Math.floor(Math.random() * notifications.length)];
+    const notificationContainer = document.getElementById('banner-notifications');
+    
+    if (notificationContainer) {
+        // Limpiar notificación anterior
+        notificationContainer.innerHTML = '';
+        
+        // Crear nueva notificación
+        const notificationElement = document.createElement('div');
+        notificationElement.className = 'notification-item';
+        notificationElement.innerHTML = `
+            <span class="notification-icon">${randomNotification.icon}</span>
+            <span class="notification-text">${randomNotification.text}</span>
+        `;
+        
+        notificationContainer.appendChild(notificationElement);
+        
+        // Remover después de 8 segundos
+        setTimeout(() => {
+            if (notificationElement.parentNode) {
+                notificationElement.style.animation = 'slideOutRight 0.5s ease';
+                setTimeout(() => {
+                    notificationContainer.removeChild(notificationElement);
+                }, 500);
+            }
+        }, 8000);
+    }
+}
+
+// Verificar y limpiar descuentos expirados
+function checkExpiredDiscounts() {
+    const now = new Date();
+    let discountsRemoved = false;
+    
+    expandedProducts.forEach(product => {
+        if (product.discountApplied && product.discountExpiry && now > product.discountExpiry) {
+            product.price = product.originalPrice;
+            delete product.discountApplied;
+            delete product.discountExpiry;
+            delete product.originalPrice;
+            discountsRemoved = true;
+        }
+    });
+    
+    if (discountsRemoved) {
+        localStorage.setItem('levelup_expanded_products', JSON.stringify(expandedProducts));
+        showNotification('Algunos descuentos han expirado', 'info');
     }
 }
 
