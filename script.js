@@ -72,7 +72,6 @@ function initMobileMenu() {
       }
     });
   }
-}
 
 // ===================== CARRITO DE COMPRAS =====================
 // (Implementación completa al final del archivo)
@@ -81,6 +80,153 @@ function initMobileMenu() {
 // ===================== INTERACCIONES DE PRODUCTOS =====================
 // ===================== FILTROS Y BÚSQUEDA DE PRODUCTOS =====================
 function initProductFiltersAndSearch() {
+  // Abrir modal de detalle al hacer clic en la card
+  // Cards dinámicas
+  grid.addEventListener('click', function(e) {
+    const card = e.target.closest('.card.producto');
+    if (card) {
+      const id = parseInt(card.getAttribute('data-id'));
+      const prod = productos.find(p => p.id === id);
+      if (prod) showProductDetailModal(prod);
+    }
+  });
+
+  // Cards estáticas
+  document.querySelectorAll('.card[data-product-id]').forEach(card => {
+    card.addEventListener('click', function() {
+      const nombre = card.querySelector('.card-title')?.textContent?.trim();
+      const prod = productos.find(p => p.nombre === nombre);
+      if (prod) showProductDetailModal(prod);
+    });
+  });
+
+  // Cerrar modal de detalle
+  const modalCloseBtn = document.querySelector('#product-detail-modal .modal-close');
+  if (modalCloseBtn) {
+    modalCloseBtn.addEventListener('click', closeProductDetailModal);
+  }
+  const modalOverlay = document.getElementById('product-detail-modal');
+  if (modalOverlay) {
+    modalOverlay.addEventListener('click', function(e) {
+      if (e.target === this) closeProductDetailModal();
+    });
+  }
+}
+
+// Función para mostrar el modal de detalle de producto
+function showProductDetailModal(prod) {
+  const modal = document.getElementById('product-detail-modal');
+  const body = document.getElementById('product-detail-body');
+  body.innerHTML = `
+    <div class="product-detail-content">
+      <div class="product-detail-icon">${prod.icon}</div>
+      <h3 class="product-detail-name">${prod.nombre}</h3>
+      <div class="product-detail-price">${prod.precio}</div>
+      <p class="product-detail-desc">${prod.descripcion}</p>
+      <div class="product-detail-qty">
+        <label for="product-qty" class="qty-label">Cantidad:</label>
+        <div class="qty-selector">
+          <button type="button" class="qty-btn" id="qty-minus">-</button>
+          <input type="number" id="product-qty" min="1" value="1" />
+          <button type="button" class="qty-btn" id="qty-plus">+</button>
+        </div>
+      </div>
+      <button class="btn-primary add-to-cart-modal">Agregar al Carrito</button>
+    </div>
+  `;
+  modal.classList.add('active');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+
+  // Selector cantidad funcional
+  const qtyInput = document.getElementById('product-qty');
+  document.getElementById('qty-minus').onclick = () => {
+    let val = parseInt(qtyInput.value);
+    if (val > 1) qtyInput.value = val - 1;
+  };
+  document.getElementById('qty-plus').onclick = () => {
+    qtyInput.value = parseInt(qtyInput.value) + 1;
+  };
+
+  // Agregar al carrito desde modal
+  document.querySelector('.add-to-cart-modal').onclick = () => {
+    const cantidad = parseInt(qtyInput.value);
+    for (let i = 0; i < cantidad; i++) {
+      addToCart({
+        id: Date.now(),
+        title: prod.nombre,
+        price: prod.precio,
+        image: prod.icon
+      });
+    }
+    showNotification(`${prod.nombre} x${cantidad} agregado al carrito`);
+    closeProductDetailModal();
+  };
+}
+
+// Función para cerrar el modal de detalle
+function closeProductDetailModal() {
+  const modal = document.getElementById('product-detail-modal');
+  modal.classList.remove('active');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+function showProductDetailModal(prod) {
+  const modal = document.getElementById('product-detail-modal');
+  const body = document.getElementById('product-detail-body');
+  body.innerHTML = `
+    <div class="product-detail-content">
+      <div class="product-detail-icon">${prod.icon}</div>
+      <h3 class="product-detail-name">${prod.nombre}</h3>
+      <div class="product-detail-price">${prod.precio}</div>
+      <p class="product-detail-desc">${prod.descripcion}</p>
+      <div class="product-detail-qty">
+        <label for="product-qty" class="qty-label">Cantidad:</label>
+        <div class="qty-selector">
+          <button type="button" class="qty-btn" id="qty-minus">-</button>
+          <input type="number" id="product-qty" min="1" value="1" />
+          <button type="button" class="qty-btn" id="qty-plus">+</button>
+        </div>
+      </div>
+      <button class="btn-primary add-to-cart-modal">Agregar al Carrito</button>
+    </div>
+  `;
+  modal.classList.add('active');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+
+  // Selector cantidad funcional
+  const qtyInput = document.getElementById('product-qty');
+  document.getElementById('qty-minus').onclick = () => {
+    let val = parseInt(qtyInput.value);
+    if (val > 1) qtyInput.value = val - 1;
+  };
+  document.getElementById('qty-plus').onclick = () => {
+    qtyInput.value = parseInt(qtyInput.value) + 1;
+  };
+
+  // Agregar al carrito desde modal
+  document.querySelector('.add-to-cart-modal').onclick = () => {
+    const cantidad = parseInt(qtyInput.value);
+    for (let i = 0; i < cantidad; i++) {
+      addToCart({
+        id: Date.now(),
+        title: prod.nombre,
+        price: prod.precio,
+        image: prod.icon
+      });
+    }
+    showNotification(`${prod.nombre} x${cantidad} agregado al carrito`);
+    closeProductDetailModal();
+  };
+}
+
+function closeProductDetailModal() {
+  const modal = document.getElementById('product-detail-modal');
+  modal.classList.remove('active');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
   const productos = [
     {
       id: 1,
@@ -150,9 +296,9 @@ function initProductFiltersAndSearch() {
           <article class="card producto" data-id="${prod.id}" style="animation:fadeIn .5s;">
             <div class="card-image">${prod.icon}</div>
             <div class="card-content">
-              <h3 class="card-title producto-nombre">${prod.nombre}</h3>
-              <div class="card-price">${prod.precio}</div>
-              <p class="card-description">${prod.descripcion}</p>
+              <h3 class="card-title producto-nombre">${prod.name}</h3>
+              <div class="card-price">$${prod.price.toLocaleString('es-CL')}</div>
+              <p class="card-description">${prod.description}</p>
               <button class="card-button">Agregar al Carrito</button>
               <label class="compare-checkbox">
                 <input type="checkbox" class="compare-input" data-id="${prod.id}"> Comparar
@@ -170,15 +316,16 @@ function initProductFiltersAndSearch() {
   }
 
   function filtrarProductos() {
-    const { disponibilidad, retiro } = getFiltros();
+    // Adaptar filtros a los nuevos campos
+    const { disponibilidad, retiro } = getFiltros ? getFiltros() : { disponibilidad: 'todos', retiro: [] };
     const search = (searchInput.value || '').toLowerCase();
-    let filtrados = productos.filter(prod => {
-      // Filtro disponibilidad
-      if (disponibilidad !== 'todos' && prod.disponibilidad !== disponibilidad) return false;
-      // Filtro retiro
-      if (!prod.retiro.some(r => retiro.includes(r))) return false;
+    let filtrados = products.filter(prod => {
+      // Filtro disponibilidad (si existe el campo)
+      if (disponibilidad && disponibilidad !== 'todos' && prod.available !== (disponibilidad === 'stock')) return false;
+      // Filtro retiro (si existiera en el futuro)
+      // if (prod.retiro && retiro.length && !prod.retiro.some(r => retiro.includes(r))) return false;
       // Filtro búsqueda
-      if (search && !prod.nombre.toLowerCase().includes(search) && !prod.descripcion.toLowerCase().includes(search)) return false;
+      if (search && !prod.name.toLowerCase().includes(search) && !prod.description.toLowerCase().includes(search)) return false;
       return true;
     });
     renderProductos(filtrados);

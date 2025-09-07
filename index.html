@@ -314,6 +314,18 @@
         </div>
         <!-- Panel Comparador de Productos -->
         <div id="compare-panel" class="compare-panel" aria-live="polite" style="display:none;"></div>
+      <!-- Modal de Detalle de Producto -->
+      <div class="modal-overlay" id="product-detail-modal" aria-hidden="true">
+        <div class="modal product-modal" role="dialog" aria-labelledby="product-detail-title" aria-describedby="product-detail-desc">
+          <div class="modal-header">
+            <h2 id="product-detail-title">Detalle de Producto</h2>
+            <button class="modal-close" aria-label="Cerrar modal">&times;</button>
+          </div>
+          <div class="modal-body" id="product-detail-body">
+            <!-- Aquí se renderiza el detalle dinámico -->
+          </div>
+        </div>
+      </div>
       </section>
 
       <!-- ===================== SECCIÓN DE NOTICIAS GAMING ===================== -->

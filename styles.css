@@ -396,6 +396,80 @@ button { font-family: inherit; }
 }
 
 /* ===================== MAIN CONTENT ===================== */
+.modal-overlay#product-detail-modal {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7); z-index: 9999;
+  display: none; align-items: center; justify-content: center;
+}
+.modal-overlay#product-detail-modal.active {
+  display: flex;
+}
+.product-modal {
+  background: linear-gradient(135deg, #181825 60%, #0f3460 100%);
+  border-radius: 18px; box-shadow: 0 0 32px #1E90FF99;
+  max-width: 400px; width: 100%; padding: 2rem 1.5rem;
+  color: #fff; position: relative;
+  animation: fadeIn .5s;
+}
+.product-modal .modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.product-modal .modal-close {
+  background: none; border: none; color: #FFD700; font-size: 2rem; cursor: pointer;
+  transition: color 0.2s;
+}
+.product-modal .modal-close:hover {
+  color: #39FF14;
+}
+.product-detail-content {
+  text-align: center;
+}
+.product-detail-icon {
+  font-size: 3.5rem; margin-bottom: 1rem; text-shadow: 0 0 12px #39FF14;
+}
+.product-detail-name {
+  font-size: 1.5rem; font-family: 'Orbitron', 'Roboto', Arial, sans-serif; margin-bottom: .5rem;
+}
+.product-detail-price {
+  font-size: 1.3rem; color: #FFD700; font-weight: 700; margin-bottom: .5rem;
+}
+.product-detail-desc {
+  color: #D3D3D3; margin-bottom: 1.2rem; font-size: 1.05rem;
+}
+.product-detail-qty {
+  margin-bottom: 1.2rem;
+}
+.qty-label {
+  font-weight: 500; color: #39FF14; margin-right: .5rem;
+}
+.qty-selector {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: #222; border-radius: 8px; padding: .3rem .8rem;
+  box-shadow: 0 0 8px #1E90FF33;
+}
+.qty-btn {
+  background: #1E90FF; color: #fff; border: none; border-radius: 6px;
+  font-size: 1.2rem; width: 32px; height: 32px; cursor: pointer; font-weight: 700;
+  transition: background 0.2s;
+}
+.qty-btn:hover {
+  background: #39FF14; color: #222;
+}
+#product-qty {
+  width: 48px; text-align: center; font-size: 1.1rem; border: none; background: #181825; color: #FFD700;
+  border-radius: 6px; font-weight: 700;
+}
+.add-to-cart-modal {
+  margin-top: 1.2rem; width: 100%; font-size: 1.1rem;
+  background: linear-gradient(90deg, #1E90FF 0%, #FFD700 100%);
+  color: #222; border: none; border-radius: 8px; font-weight: 700; box-shadow: 0 0 12px #39FF14;
+  padding: 1rem 0; cursor: pointer; transition: background 0.2s;
+}
+.add-to-cart-modal:hover {
+  background: linear-gradient(90deg, #39FF14 0%, #FFD700 100%);
+  color: #1E90FF;
+}
 .main { padding: 3rem 0; }
 .section-title {
   font-size: clamp(1.75rem, 4vw, 2.5rem); text-align: center;
