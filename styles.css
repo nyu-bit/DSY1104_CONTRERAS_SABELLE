@@ -5112,3 +5112,341 @@ button { font-family: inherit; }
         flex-direction: column;
     }
 }
+
+/* ===================== ENHANCED CATEGORY TILES (LG-110) ===================== */
+.category-tile {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent;
+    background: linear-gradient(135deg, rgba(0,0,0,0.8), rgba(0,0,0,0.6));
+    animation: categorySlideIn 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+@keyframes categorySlideIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.category-tile:hover {
+    border-color: var(--category-color, #39FF14);
+    box-shadow: 0 8px 32px rgba(57, 255, 20, 0.3);
+    transform: translateY(-8px) scale(1.05);
+}
+
+.category-tile:hover .tile-icon {
+    animation: iconBounce 0.6s ease;
+    color: var(--category-color, #39FF14);
+}
+
+@keyframes iconBounce {
+    0%, 20%, 60%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    80% { transform: translateY(-5px); }
+}
+
+.product-count {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(57, 255, 20, 0.8);
+    color: #000;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    z-index: 2;
+}
+
+.product-preview {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.9));
+    padding: 8px;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+}
+
+.category-tile:hover .product-preview {
+    transform: translateY(0);
+}
+
+.preview-item {
+    display: block;
+    font-size: 0.75rem;
+    color: #39FF14;
+    margin: 2px 0;
+    opacity: 0.8;
+}
+
+/* ===================== ENHANCED GAMIFICATION (LG-062) ===================== */
+.challenges-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.challenge-item {
+    background: linear-gradient(135deg, rgba(30, 144, 255, 0.1), rgba(57, 255, 20, 0.1));
+    border: 1px solid rgba(30, 144, 255, 0.3);
+    border-radius: 12px;
+    padding: 16px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.challenge-item:hover {
+    border-color: #39FF14;
+    box-shadow: 0 4px 20px rgba(57, 255, 20, 0.2);
+    transform: translateY(-4px);
+}
+
+.challenge-item.completed {
+    background: linear-gradient(135deg, rgba(57, 255, 20, 0.2), rgba(30, 144, 255, 0.1));
+    border-color: #39FF14;
+}
+
+.challenge-item.completed::after {
+    content: "✅";
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 1.5rem;
+    z-index: 2;
+}
+
+.challenge-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.challenge-icon {
+    font-size: 2rem;
+    filter: drop-shadow(0 0 8px rgba(57, 255, 20, 0.5));
+}
+
+.challenge-info h4 {
+    color: #39FF14;
+    margin: 0 0 4px 0;
+    font-family: 'Orbitron', monospace;
+    font-size: 1rem;
+}
+
+.challenge-description {
+    color: #ccc;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.challenge-progress {
+    margin: 12px 0;
+}
+
+.challenge-progress-bar {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    height: 8px;
+    overflow: hidden;
+    margin: 8px 0;
+}
+
+.challenge-progress-fill {
+    background: linear-gradient(90deg, #39FF14, #1E90FF);
+    height: 100%;
+    transition: width 0.6s ease;
+    border-radius: 8px;
+}
+
+.challenge-progress-text {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    color: #39FF14;
+    font-weight: bold;
+}
+
+.challenge-reward {
+    background: rgba(255, 215, 0, 0.1);
+    border: 1px solid #FFD700;
+    border-radius: 6px;
+    padding: 6px 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: #FFD700;
+    font-weight: bold;
+}
+
+.challenge-reward .reward-icon {
+    font-size: 1rem;
+}
+
+/* ===================== ENHANCED SHARING (LG-100 improvements) ===================== */
+.share-modal {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(30, 144, 255, 0.1));
+    border: 2px solid #39FF14;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+}
+
+.share-modal .modal-header {
+    background: linear-gradient(90deg, #39FF14, #1E90FF);
+    color: #000;
+    border-radius: 14px 14px 0 0;
+    padding: 16px 20px;
+    margin: -2px -2px 20px -2px;
+}
+
+.product-share-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: rgba(57, 255, 20, 0.05);
+    border-radius: 12px;
+    border: 1px solid rgba(57, 255, 20, 0.2);
+}
+
+.product-share-icon {
+    font-size: 3rem;
+    filter: drop-shadow(0 0 8px rgba(57, 255, 20, 0.5));
+}
+
+.product-share-details h3 {
+    color: #39FF14;
+    margin: 0 0 8px 0;
+    font-family: 'Orbitron', monospace;
+}
+
+.product-share-price {
+    color: #FFD700;
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.share-options h4 {
+    color: #39FF14;
+    margin-bottom: 16px;
+    text-align: center;
+    font-family: 'Orbitron', monospace;
+}
+
+.share-option {
+    position: relative;
+    overflow: hidden;
+}
+
+.share-option::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.share-option:hover::before {
+    left: 100%;
+}
+
+.share-option .share-icon {
+    font-size: 1.5rem;
+    margin-bottom: 4px;
+}
+
+/* ===================== WHATSAPP ENHANCEMENTS (LG-101 improvements) ===================== */
+.whatsapp-widget {
+    animation: whatsappPulse 3s infinite;
+}
+
+@keyframes whatsappPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.whatsapp-notification {
+    animation: notificationBounce 1s ease infinite;
+}
+
+@keyframes notificationBounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+.whatsapp-chat-modal.active {
+    animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.quick-response {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.quick-response::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(37, 211, 102, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.quick-response:hover::before {
+    left: 100%;
+}
+
+.quick-response:hover {
+    background: rgba(37, 211, 102, 0.2);
+    transform: translateX(5px);
+}
+
+/* Responsive enhancements */
+@media (max-width: 768px) {
+    .challenges-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .category-tile {
+        padding: 16px;
+    }
+    
+    .product-share-info {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .share-buttons {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

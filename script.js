@@ -173,7 +173,6 @@ function renderCategoryTiles() {
     {
       icon: '🎧',
       nombre: 'Accesorios',
-    updateCartCount();
       desc: 'Auriculares, teclados y ratones'
     },
     {
@@ -1364,7 +1363,7 @@ const ACHIEVEMENTS = [
   }
 ];
 
-// Definición de desafíos
+// Definición de desafíos (LG-062: Expansión de gamificación)
 const CHALLENGES = [
   {
     id: "weekly_login",
@@ -1394,6 +1393,76 @@ const CHALLENGES = [
     reward: 75,
     progress: 0,
     target: 5,
+    active: true
+  },
+  {
+    id: "social_sharing",
+    title: "Influencer Gaming",
+    description: "Comparte 10 productos en redes sociales",
+    icon: "📱",
+    reward: 125,
+    progress: 0,
+    target: 10,
+    active: true
+  },
+  {
+    id: "referral_master",
+    title: "Maestro de Referencias",
+    description: "Refiere 3 amigos exitosamente",
+    icon: "👥",
+    reward: 200,
+    progress: 0,
+    target: 3,
+    active: true
+  },
+  {
+    id: "big_spender",
+    title: "Gastador VIP",
+    description: "Gasta más de $300.000 en total",
+    icon: "💎",
+    reward: 300,
+    progress: 0,
+    target: 300000,
+    active: true
+  },
+  {
+    id: "early_bird",
+    title: "Madrugador Gamer",
+    description: "Compra antes de las 10 AM (3 veces)",
+    icon: "🌅",
+    reward: 100,
+    progress: 0,
+    target: 3,
+    active: true
+  },
+  {
+    id: "category_explorer",
+    title: "Explorador de Categorías",
+    description: "Compra en 4 categorías diferentes",
+    icon: "🗺️",
+    reward: 150,
+    progress: 0,
+    target: 4,
+    active: true
+  },
+  {
+    id: "weekend_warrior",
+    title: "Guerrero de Fin de Semana",
+    description: "Compras en 3 fines de semana seguidos",
+    icon: "⚔️",
+    reward: 175,
+    progress: 0,
+    target: 3,
+    active: true
+  },
+  {
+    id: "loyalty_champion",
+    title: "Campeón de Lealtad",
+    description: "30 días como miembro activo",
+    icon: "🏆",
+    reward: 250,
+    progress: 0,
+    target: 30,
     active: true
   }
 ];
@@ -2469,20 +2538,49 @@ const detailedProducts = [
   }
 ];
 
-// Semillas de productos para expandir el catálogo
+// ===================== SEMILLAS DE PRODUCTOS EXPANDIDAS (LG-111) =====================
 const productSeeds = {
   tarjetasGraficas: [
     {
-      name: 'GeForce RTX 4080',
+      name: 'GeForce RTX 4090',
+      brand: 'NVIDIA',
+      price: 2400000,
+      icon: '🔥',
+      description: 'La tarjeta gráfica más potente del mundo para gaming 4K 120fps',
+      specifications: {
+        memory: '24GB GDDR6X',
+        coreClock: '2230 MHz',
+        memorySpeed: '21 Gbps',
+        powerConsumption: '450W',
+        ports: '3x DisplayPort 1.4a, 1x HDMI 2.1'
+      }
+    },
+    {
+      name: 'GeForce RTX 4080 Super',
       brand: 'NVIDIA',
       price: 1800000,
       icon: '🔥',
-      description: 'Tarjeta gráfica de alto rendimiento para gaming 4K',
+      description: 'Tarjeta gráfica de alto rendimiento para gaming 4K sin compromisos',
       specifications: {
         memory: '16GB GDDR6X',
-        coreClock: '2205 MHz',
+        coreClock: '2295 MHz',
         memorySpeed: '22.4 Gbps',
-        powerConsumption: '320W'
+        powerConsumption: '320W',
+        ports: '3x DisplayPort 1.4a, 1x HDMI 2.1'
+      }
+    },
+    {
+      name: 'GeForce RTX 4070 Ti Super',
+      brand: 'NVIDIA',
+      price: 1200000,
+      icon: '🔥',
+      description: 'Tarjeta gráfica equilibrada para gaming 1440p y ray tracing',
+      specifications: {
+        memory: '16GB GDDR6X',
+        coreClock: '2340 MHz',
+        memorySpeed: '21 Gbps',
+        powerConsumption: '285W',
+        ports: '3x DisplayPort 1.4a, 1x HDMI 2.1'
       }
     },
     {
@@ -2490,45 +2588,399 @@ const productSeeds = {
       brand: 'AMD',
       price: 1600000,
       icon: '🔥',
-      description: 'GPU AMD de última generación con arquitectura RDNA 3',
+      description: 'GPU AMD RDNA 3 de última generación con 24GB de memoria',
       specifications: {
         memory: '24GB GDDR6',
         coreClock: '2300 MHz',
         memorySpeed: '20 Gbps',
-        powerConsumption: '355W'
+        powerConsumption: '355W',
+        ports: '2x DisplayPort 2.1, 2x HDMI 2.1'
       }
     },
     {
-      name: 'GeForce RTX 4070 Ti',
-      brand: 'NVIDIA',
-      price: 1200000,
+      name: 'Radeon RX 7800 XT',
+      brand: 'AMD',
+      price: 950000,
       icon: '🔥',
-      description: 'Tarjeta gráfica equilibrada para gaming 1440p',
+      description: 'GPU AMD para gaming 1440p con excelente relación precio-rendimiento',
       specifications: {
-        memory: '12GB GDDR6X',
+        memory: '16GB GDDR6',
+        coreClock: '2124 MHz',
+        memorySpeed: '19.5 Gbps',
+        powerConsumption: '263W',
+        ports: '2x DisplayPort 2.1, 2x HDMI 2.1'
+      }
+    },
+    {
+      name: 'GeForce RTX 4060 Ti',
+      brand: 'NVIDIA',
+      price: 650000,
+      icon: '🔥',
+      description: 'GPU de gama media perfecta para gaming 1080p y 1440p',
+      specifications: {
+        memory: '16GB GDDR6',
         coreClock: '2310 MHz',
-        memorySpeed: '21 Gbps',
-        powerConsumption: '285W'
+        memorySpeed: '18 Gbps',
+        powerConsumption: '165W',
+        ports: '3x DisplayPort 1.4a, 1x HDMI 2.1'
       }
     }
   ],
   
   procesadores: [
     {
-      name: 'Intel Core i9-13900K',
+      name: 'Intel Core i9-14900K',
       brand: 'Intel',
-      price: 750000,
+      price: 850000,
       icon: '⚡',
-      description: 'Procesador Intel de 13va generación para gaming extremo',
+      description: 'Procesador Intel Raptor Lake Refresh de última generación',
       specifications: {
         cores: '24 cores (8P+16E)',
-        baseClock: '3.0 GHz',
-        boostClock: '5.8 GHz',
-        cache: '36MB'
+        baseClock: '3.2 GHz',
+        boostClock: '6.0 GHz',
+        cache: '36MB L3',
+        socket: 'LGA1700'
+      }
+    },
+    {
+      name: 'AMD Ryzen 9 7950X3D',
+      brand: 'AMD',
+      price: 950000,
+      icon: '⚡',
+      description: 'Procesador AMD con tecnología 3D V-Cache para gaming extremo',
+      specifications: {
+        cores: '16 cores / 32 threads',
+        baseClock: '4.2 GHz',
+        boostClock: '5.7 GHz',
+        cache: '128MB L3',
+        socket: 'AM5'
+      }
+    },
+    {
+      name: 'Intel Core i7-14700K',
+      brand: 'Intel',
+      price: 650000,
+      icon: '⚡',
+      description: 'Procesador Intel de alto rendimiento para gaming y productividad',
+      specifications: {
+        cores: '20 cores (8P+12E)',
+        baseClock: '3.4 GHz',
+        boostClock: '5.6 GHz',
+        cache: '33MB L3',
+        socket: 'LGA1700'
       }
     },
     {
       name: 'AMD Ryzen 7 7800X3D',
+      brand: 'AMD',
+      price: 750000,
+      icon: '⚡',
+      description: 'El mejor procesador gaming con tecnología 3D V-Cache',
+      specifications: {
+        cores: '8 cores / 16 threads',
+        baseClock: '4.2 GHz',
+        boostClock: '5.0 GHz',
+        cache: '96MB L3',
+        socket: 'AM5'
+      }
+    },
+    {
+      name: 'Intel Core i5-14600K',
+      brand: 'Intel',
+      price: 450000,
+      icon: '⚡',
+      description: 'Procesador Intel equilibrado para gaming 1440p',
+      specifications: {
+        cores: '14 cores (6P+8E)',
+        baseClock: '3.5 GHz',
+        boostClock: '5.3 GHz',
+        cache: '24MB L3',
+        socket: 'LGA1700'
+      }
+    }
+  ],
+
+  memoriaRAM: [
+    {
+      name: 'Corsair Dominator Platinum 32GB DDR5-6000',
+      brand: 'Corsair',
+      price: 380000,
+      icon: '💾',
+      description: 'Memoria DDR5 premium con RGB y disipadores de aluminio',
+      specifications: {
+        capacity: '32GB (2x16GB)',
+        speed: 'DDR5-6000',
+        timings: 'CL30-36-36-76',
+        voltage: '1.35V',
+        rgb: 'Sí'
+      }
+    },
+    {
+      name: 'G.Skill Trident Z5 RGB 32GB DDR5-6400',
+      brand: 'G.Skill',
+      price: 420000,
+      icon: '💾',
+      description: 'Memoria DDR5 de alta velocidad con iluminación RGB premium',
+      specifications: {
+        capacity: '32GB (2x16GB)',
+        speed: 'DDR5-6400',
+        timings: 'CL32-39-39-102',
+        voltage: '1.4V',
+        rgb: 'Sí'
+      }
+    },
+    {
+      name: 'Kingston Fury Beast 64GB DDR5-5600',
+      brand: 'Kingston',
+      price: 650000,
+      icon: '💾',
+      description: 'Kit de memoria DDR5 de alta capacidad para workstations gaming',
+      specifications: {
+        capacity: '64GB (2x32GB)',
+        speed: 'DDR5-5600',
+        timings: 'CL40-40-40-80',
+        voltage: '1.25V',
+        rgb: 'No'
+      }
+    },
+    {
+      name: 'Corsair Vengeance RGB 16GB DDR4-3600',
+      brand: 'Corsair',
+      price: 180000,
+      icon: '💾',
+      description: 'Memoria DDR4 confiable con iluminación RGB personalizable',
+      specifications: {
+        capacity: '16GB (2x8GB)',
+        speed: 'DDR4-3600',
+        timings: 'CL18-22-22-42',
+        voltage: '1.35V',
+        rgb: 'Sí'
+      }
+    }
+  ],
+
+  almacenamiento: [
+    {
+      name: 'Samsung 980 PRO 4TB NVMe SSD',
+      brand: 'Samsung',
+      price: 850000,
+      icon: '💿',
+      description: 'SSD NVMe PCIe 4.0 de alta capacidad para gaming sin límites',
+      specifications: {
+        capacity: '4TB',
+        interface: 'PCIe 4.0 x4',
+        readSpeed: '7,000 MB/s',
+        writeSpeed: '6,900 MB/s',
+        formFactor: 'M.2 2280'
+      }
+    },
+    {
+      name: 'WD Black SN850X 2TB Gaming SSD',
+      brand: 'Western Digital',
+      price: 420000,
+      icon: '💿',
+      description: 'SSD gaming optimizado con disipador térmico incluido',
+      specifications: {
+        capacity: '2TB',
+        interface: 'PCIe 4.0 x4',
+        readSpeed: '7,300 MB/s',
+        writeSpeed: '6,600 MB/s',
+        formFactor: 'M.2 2280'
+      }
+    },
+    {
+      name: 'Seagate FireCuda 530 1TB',
+      brand: 'Seagate',
+      price: 280000,
+      icon: '💿',
+      description: 'SSD NVMe ultra-rápido para carga instantánea de juegos',
+      specifications: {
+        capacity: '1TB',
+        interface: 'PCIe 4.0 x4',
+        readSpeed: '7,300 MB/s',
+        writeSpeed: '6,900 MB/s',
+        formFactor: 'M.2 2280'
+      }
+    }
+  ],
+
+  perifericos: [
+    {
+      name: 'Logitech G Pro X Superlight 2',
+      brand: 'Logitech',
+      price: 220000,
+      icon: '🖱️',
+      description: 'Ratón gaming inalámbrico ultra-liviano para esports profesional',
+      specifications: {
+        weight: '60g',
+        sensor: 'HERO 25K',
+        dpi: '25,400 DPI',
+        battery: '95 horas',
+        connectivity: 'LIGHTSPEED Wireless'
+      }
+    },
+    {
+      name: 'Razer Huntsman V3 Pro',
+      brand: 'Razer',
+      price: 380000,
+      icon: '⌨️',
+      description: 'Teclado mecánico gaming con switches ópticos de nueva generación',
+      specifications: {
+        switches: 'Razer Linear Optical Gen-2',
+        backlighting: 'Razer Chroma RGB',
+        connectivity: 'USB-C + Wireless',
+        battery: '90 horas',
+        layout: 'TKL'
+      }
+    },
+    {
+      name: 'SteelSeries Arctis Nova Pro Wireless',
+      brand: 'SteelSeries',
+      price: 650000,
+      icon: '🎧',
+      description: 'Auriculares gaming premium con cancelación activa de ruido',
+      specifications: {
+        driver: '40mm Neodymium',
+        frequency: '10Hz - 40kHz',
+        microphone: 'ClearCast Gen 2',
+        battery: '44 horas',
+        connectivity: '2.4GHz + Bluetooth'
+      }
+    },
+    {
+      name: 'Corsair K95 RGB Platinum XT',
+      brand: 'Corsair',
+      price: 320000,
+      icon: '⌨️',
+      description: 'Teclado mecánico premium con switches Cherry MX y rueda multimedia',
+      specifications: {
+        switches: 'Cherry MX Speed Silver',
+        backlighting: 'RGB por tecla',
+        mediaKeys: '6 teclas macro dedicadas',
+        connectivity: 'USB',
+        layout: 'Full Size'
+      }
+    }
+  ],
+
+  monitores: [
+    {
+      name: 'ASUS ROG Swift PG32UQX',
+      brand: 'ASUS',
+      price: 4500000,
+      icon: '🖥️',
+      description: 'Monitor gaming 4K 144Hz con mini-LED y HDR1400',
+      specifications: {
+        size: '32 pulgadas',
+        resolution: '3840x2160 (4K)',
+        refreshRate: '144Hz',
+        panelType: 'IPS con mini-LED',
+        hdr: 'DisplayHDR 1400'
+      }
+    },
+    {
+      name: 'Samsung Odyssey G9 49" Curved',
+      brand: 'Samsung',
+      price: 2800000,
+      icon: '🖥️',
+      description: 'Monitor ultra-wide curvo 240Hz para inmersión total',
+      specifications: {
+        size: '49 pulgadas',
+        resolution: '5120x1440 (DQHD)',
+        refreshRate: '240Hz',
+        panelType: 'VA Curvo 1000R',
+        hdr: 'DisplayHDR 1000'
+      }
+    },
+    {
+      name: 'LG UltraGear 27GP950-B',
+      brand: 'LG',
+      price: 1200000,
+      icon: '🖥️',
+      description: 'Monitor gaming 4K 160Hz con Nano IPS y G-Sync Compatible',
+      specifications: {
+        size: '27 pulgadas',
+        resolution: '3840x2160 (4K)',
+        refreshRate: '160Hz',
+        panelType: 'Nano IPS',
+        hdr: 'DisplayHDR 600'
+      }
+    },
+    {
+      name: 'ASUS TUF Gaming VG27AQ',
+      brand: 'ASUS',
+      price: 650000,
+      icon: '🖥️',
+      description: 'Monitor gaming 1440p 165Hz con excelente relación calidad-precio',
+      specifications: {
+        size: '27 pulgadas',
+        resolution: '2560x1440 (QHD)',
+        refreshRate: '165Hz',
+        panelType: 'IPS',
+        hdr: 'DisplayHDR 400'
+      }
+    }
+  ],
+
+  consolas: [
+    {
+      name: 'PlayStation 5 Pro',
+      brand: 'Sony',
+      price: 1200000,
+      icon: '🎮',
+      description: 'Consola de nueva generación con 8K gaming y ray tracing',
+      specifications: {
+        cpu: 'AMD Zen 4',
+        gpu: 'AMD RDNA 3',
+        storage: '2TB SSD',
+        resolution: 'Hasta 8K',
+        rayTracing: 'Sí'
+      }
+    },
+    {
+      name: 'Xbox Series X',
+      brand: 'Microsoft',
+      price: 950000,
+      icon: '🎮',
+      description: 'La consola Xbox más potente con 4K 120fps y Quick Resume',
+      specifications: {
+        cpu: 'AMD Zen 2',
+        gpu: 'AMD RDNA 2',
+        storage: '1TB SSD',
+        resolution: '4K 120fps',
+        quickResume: 'Sí'
+      }
+    },
+    {
+      name: 'Nintendo Switch OLED',
+      brand: 'Nintendo',
+      price: 650000,
+      icon: '🎮',
+      description: 'Consola híbrida con pantalla OLED vibrante de 7 pulgadas',
+      specifications: {
+        screen: '7" OLED',
+        resolution: '1280x720 portátil',
+        dockResolution: '1920x1080',
+        storage: '64GB',
+        battery: '4.5-9 horas'
+      }
+    },
+    {
+      name: 'Steam Deck OLED',
+      brand: 'Valve',
+      price: 850000,
+      icon: '🎮',
+      description: 'PC gaming portátil con acceso a toda la librería de Steam',
+      specifications: {
+        screen: '7.4" OLED HDR',
+        cpu: 'AMD APU',
+        ram: '16GB LPDDR5',
+        storage: '512GB NVMe',
+        os: 'SteamOS 3.0'
+      }
+    }
+  ]
+};
       brand: 'AMD',
       price: 650000,
       icon: '⚡',
