@@ -257,6 +257,18 @@
             <div class="error-message" id="confirm-password-error" aria-live="polite"></div>
           </div>
 
+          <div class="form-group">
+            <label for="register-referral-code">Código de Referido (Opcional)</label>
+            <input type="text" id="register-referral-code" name="referralCode" 
+                   aria-describedby="referral-code-hint referral-code-success" 
+                   placeholder="Ingresa código de referido" maxlength="10">
+            <div class="form-hint" id="referral-code-hint">
+              🎁 Con un código válido obtienes 50 puntos LevelUp de bienvenida
+            </div>
+            <div class="success-message" id="referral-code-success" aria-live="polite" style="display: none;"></div>
+            <div class="error-message" id="referral-code-error" aria-live="polite"></div>
+          </div>
+
           <div class="form-group checkbox-group">
             <label class="checkbox-label">
               <input type="checkbox" id="register-terms" name="terms" required>
@@ -357,6 +369,7 @@
         <div class="profile-tabs">
           <button class="tab-button active" data-tab="personal">👤 Información Personal</button>
           <button class="tab-button" data-tab="preferences">⚙️ Preferencias</button>
+          <button class="tab-button" data-tab="referral">🎁 Referidos</button>
           <button class="tab-button" data-tab="security">🔒 Seguridad</button>
         </div>
 
@@ -536,6 +549,70 @@
                 </div>
               </div>
             </form>
+          </div>
+
+          <!-- Pestaña: Referidos -->
+          <div class="tab-pane" id="referral-tab">
+            <div class="profile-section">
+              <h3>🎁 Tu Código de Referido</h3>
+              <p>Comparte tu código con amigos y gana puntos LevelUp por cada registro exitoso</p>
+              
+              <div class="referral-code-display">
+                <div class="referral-code-container">
+                  <span class="referral-code-label">Tu código único:</span>
+                  <div class="referral-code-value">
+                    <span id="user-referral-code">CARGANDO...</span>
+                    <button type="button" class="copy-button" id="copy-referral-code" title="Copiar código">
+                      📋
+                    </button>
+                  </div>
+                </div>
+                
+                <div class="referral-share">
+                  <p>💡 <strong>Compartir:</strong></p>
+                  <div class="share-buttons">
+                    <button type="button" class="share-btn" id="share-whatsapp">
+                      💬 WhatsApp
+                    </button>
+                    <button type="button" class="share-btn" id="share-email">
+                      📧 Email
+                    </button>
+                    <button type="button" class="share-btn" id="share-copy">
+                      🔗 Copiar Enlace
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="referral-stats">
+                <h4>📊 Estadísticas de Referidos</h4>
+                <div class="stats-grid">
+                  <div class="stat-card">
+                    <div class="stat-number" id="total-referrals">0</div>
+                    <div class="stat-label">Amigos referidos</div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-number" id="earned-points">0</div>
+                    <div class="stat-label">Puntos ganados</div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-number" id="current-points">0</div>
+                    <div class="stat-label">Puntos actuales</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="referral-info">
+                <h4>ℹ️ Cómo Funciona</h4>
+                <ul class="referral-rules">
+                  <li>Comparte tu código con amigos nuevos</li>
+                  <li>Ellos obtienen 50 puntos al registrarse</li>
+                  <li>Tú ganas 25 puntos por cada registro exitoso</li>
+                  <li>Los puntos se pueden canjear por descuentos</li>
+                  <li>No hay límite de referidos</li>
+                </ul>
+              </div>
+            </div>
           </div>
 
           <!-- Pestaña: Seguridad -->

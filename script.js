@@ -41,6 +41,9 @@ document.addEventListener('DOMContentLoaded', function() {
   initLogin();
   initProfile();
   
+  // Verificar si hay código de referido en la URL
+  checkReferralCode();
+  
   console.log('Tema Level-Up Gamer cargado correctamente');
 });
 
@@ -218,6 +221,15 @@ function initRegistration() {
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
     document.getElementById('register-name').focus();
+    
+    // Auto-llenar código de referido si hay uno pendiente
+    const pendingCode = sessionStorage.getItem('pending_referral_code');
+    if (pendingCode) {
+      const referralInput = document.getElementById('register-referral-code');
+      referralInput.value = pendingCode;
+      validateReferralCode();
+      sessionStorage.removeItem('pending_referral_code');
+    }
   });
   
   // Cerrar modal
@@ -250,9 +262,11 @@ function initRegistration() {
   // Validación en tiempo real
   const emailInput = document.getElementById('register-email');
   const birthdateInput = document.getElementById('register-birthdate');
+  const referralCodeInput = document.getElementById('register-referral-code');
   
   emailInput.addEventListener('input', validateEmail);
   birthdateInput.addEventListener('change', validateAge);
+  referralCodeInput.addEventListener('input', validateReferralCode);
   
   // Submit del formulario
   form.addEventListener('submit', handleRegistration);
@@ -301,6 +315,60 @@ function showDiscountPreview() {
 function hideDiscountPreview() {
   const discountPreview = document.getElementById('discount-preview');
   discountPreview.style.display = 'none';
+}
+
+function validateReferralCode() {
+  const referralInput = document.getElementById('register-referral-code');
+  const successElement = document.getElementById('referral-code-success');
+  const errorElement = document.getElementById('referral-code-error');
+  const code = referralInput.value.trim().toUpperCase();
+  
+  // Limpiar mensajes previos
+  successElement.style.display = 'none';
+  successElement.textContent = '';
+  clearError('referral-code-error');
+  referralInput.classList.remove('error', 'success');
+  
+  // Si no hay código, no mostrar nada
+  if (!code) {
+    return true;
+  }
+  
+  // Lista de códigos válidos (en una app real vendría de la API)
+  const validCodes = [
+    { code: 'GAMER2024', points: 50, referrer: 'ProGamer_01' },
+    { code: 'LEVELUP50', points: 50, referrer: 'ElitePlayer' },
+    { code: 'NEWBIE', points: 25, referrer: 'StarterKit' },
+    { code: 'ESPORTS', points: 75, referrer: 'ESports_Master' },
+    { code: 'DUOCGAMER', points: 60, referrer: 'DuocUC_Gaming' }
+  ];
+  
+  const validCode = validCodes.find(vc => vc.code === code);
+  
+  if (validCode) {
+    // Código válido
+    successElement.textContent = `¡Código válido! Recibirás ${validCode.points} puntos LevelUp de bienvenida`;
+    successElement.style.display = 'block';
+    referralInput.classList.add('success');
+    
+    // Guardar el código válido para usar en el registro
+    referralInput.dataset.validCode = JSON.stringify(validCode);
+    return true;
+  } else {
+    // Código inválido
+    showError('referral-code-error', 'Código de referido no válido');
+    referralInput.classList.add('error');
+    referralInput.removeAttribute('data-valid-code');
+    return false;
+  }
+}
+
+function generateUserReferralCode(name) {
+  // Generar código único basado en el nombre del usuario
+  const nameCode = name.replace(/\s+/g, '').substring(0, 4).toUpperCase();
+  const randomNum = Math.floor(Math.random() * 999) + 1;
+  const paddedNum = randomNum.toString().padStart(3, '0');
+  return `${nameCode}${paddedNum}`;
 }
 
 function validateForm() {
@@ -387,6 +455,13 @@ function handleRegistration(e) {
     const email = document.getElementById('register-email').value.toLowerCase();
     const name = document.getElementById('register-name').value.trim();
     const isDuocUser = email.includes('@duocuc.cl');
+    const referralInput = document.getElementById('register-referral-code');
+    
+    // Procesar código de referido si es válido
+    let referralBonus = null;
+    if (referralInput.dataset.validCode) {
+      referralBonus = JSON.parse(referralInput.dataset.validCode);
+    }
     
     // Guardar usuario en localStorage (simulación)
     const userData = {
@@ -394,15 +469,24 @@ function handleRegistration(e) {
       email: email,
       isDuocUser: isDuocUser,
       discount: isDuocUser ? 20 : 0,
+      levelUpPoints: referralBonus ? referralBonus.points : 0,
+      referredBy: referralBonus ? referralBonus.referrer : null,
+      referralCode: generateUserReferralCode(name),
       registeredAt: new Date().toISOString()
     };
     
     localStorage.setItem('levelup_user', JSON.stringify(userData));
     
     // Mostrar mensaje de éxito
-    const message = isDuocUser 
-      ? `¡Bienvenido ${name}! Tu cuenta ha sido creada con 20% de descuento de por vida 🎉`
-      : `¡Bienvenido ${name}! Tu cuenta ha sido creada exitosamente 🎮`;
+    let message = `¡Bienvenido ${name}! Tu cuenta ha sido creada exitosamente 🎮`;
+    
+    if (isDuocUser && referralBonus) {
+      message = `¡Bienvenido ${name}! Tienes 20% de descuento de por vida + ${referralBonus.points} puntos LevelUp 🎉🎁`;
+    } else if (isDuocUser) {
+      message = `¡Bienvenido ${name}! Tu cuenta ha sido creada con 20% de descuento de por vida 🎉`;
+    } else if (referralBonus) {
+      message = `¡Bienvenido ${name}! Has recibido ${referralBonus.points} puntos LevelUp de bienvenida �`;
+    }
     
     showNotification(message);
     
@@ -805,6 +889,9 @@ function initProfile() {
   
   // Cerrar todas las sesiones
   document.getElementById('logout-all-sessions').addEventListener('click', logoutAllSessions);
+  
+  // Funcionalidad de referidos
+  initReferralFunctionality();
 }
 
 function openProfileModal() {
@@ -871,6 +958,9 @@ function loadUserProfile() {
   document.getElementById('two-factor').checked = profileData.twoFactor || false;
   document.getElementById('last-login').textContent = sessionData.loginTime ? 
     new Date(sessionData.loginTime).toLocaleDateString('es-CL') : 'Hoy';
+  
+  // Cargar datos de referidos
+  loadReferralData(userData);
 }
 
 function saveProfile() {
@@ -1018,4 +1108,137 @@ function clearProfileErrors() {
   inputElements.forEach(input => {
     input.classList.remove('error');
   });
+}
+
+// ===================== FUNCIONALIDAD DE REFERIDOS =====================
+
+function initReferralFunctionality() {
+  // Event listeners para los botones de compartir
+  document.getElementById('copy-referral-code').addEventListener('click', copyReferralCode);
+  document.getElementById('share-whatsapp').addEventListener('click', shareViaWhatsApp);
+  document.getElementById('share-email').addEventListener('click', shareViaEmail);
+  document.getElementById('share-copy').addEventListener('click', copyReferralLink);
+}
+
+function loadReferralData(userData) {
+  // Mostrar código de referido del usuario
+  const referralCodeElement = document.getElementById('user-referral-code');
+  referralCodeElement.textContent = userData.referralCode || 'ERROR';
+  
+  // Cargar estadísticas desde localStorage
+  const referralStats = JSON.parse(localStorage.getItem('levelup_referral_stats') || '{}');
+  const userEmail = userData.email;
+  const userStats = referralStats[userEmail] || { totalReferrals: 0, earnedPoints: 0 };
+  
+  // Mostrar estadísticas
+  document.getElementById('total-referrals').textContent = userStats.totalReferrals;
+  document.getElementById('earned-points').textContent = userStats.earnedPoints;
+  document.getElementById('current-points').textContent = userData.levelUpPoints || 0;
+}
+
+function copyReferralCode() {
+  const codeElement = document.getElementById('user-referral-code');
+  const code = codeElement.textContent;
+  
+  navigator.clipboard.writeText(code).then(() => {
+    showNotification('¡Código copiado al portapapeles! 📋');
+    
+    // Efecto visual
+    const button = document.getElementById('copy-referral-code');
+    button.textContent = '✅';
+    setTimeout(() => {
+      button.textContent = '📋';
+    }, 2000);
+  }).catch(() => {
+    // Fallback para navegadores que no soportan clipboard API
+    const textArea = document.createElement('textarea');
+    textArea.value = code;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+    showNotification('¡Código copiado! 📋');
+  });
+}
+
+function shareViaWhatsApp() {
+  const code = document.getElementById('user-referral-code').textContent;
+  const message = `¡Únete a Level-Up Gamer con mi código de referido! 🎮\n\nCódigo: ${code}\n\n¡Obtendrás 50 puntos LevelUp gratis al registrarte! 🎁\n\nEnlace: ${window.location.origin}`;
+  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+  window.open(whatsappUrl, '_blank');
+}
+
+function shareViaEmail() {
+  const code = document.getElementById('user-referral-code').textContent;
+  const subject = '¡Únete a Level-Up Gamer y gana puntos gratis! 🎮';
+  const body = `¡Hola!
+
+Te invito a unirte a Level-Up Gamer, la mejor tienda online para gamers 🎮
+
+Usa mi código de referido: ${code}
+
+🎁 Beneficios al registrarte:
+- 50 puntos LevelUp gratis
+- Acceso a ofertas exclusivas
+- Si eres de Duoc UC: ¡20% de descuento de por vida!
+
+👇 Regístrate aquí:
+${window.location.origin}
+
+¡Nos vemos en el gaming! 🚀`;
+
+  const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.location.href = mailtoUrl;
+}
+
+function copyReferralLink() {
+  const code = document.getElementById('user-referral-code').textContent;
+  const link = `${window.location.origin}?ref=${code}`;
+  
+  navigator.clipboard.writeText(link).then(() => {
+    showNotification('¡Enlace de referido copiado! 🔗');
+    
+    // Efecto visual
+    const button = document.getElementById('share-copy');
+    const originalText = button.textContent;
+    button.textContent = '✅ Copiado';
+    setTimeout(() => {
+      button.textContent = originalText;
+    }, 2000);
+  }).catch(() => {
+    // Fallback
+    const textArea = document.createElement('textarea');
+    textArea.value = link;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+    showNotification('¡Enlace copiado! 🔗');
+  });
+}
+
+function checkReferralCode() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const refCode = urlParams.get('ref');
+  
+  if (refCode) {
+    // Guardar el código de referido en sessionStorage para usar durante el registro
+    sessionStorage.setItem('pending_referral_code', refCode.toUpperCase());
+    
+    // Mostrar notificación
+    showNotification(`¡Tienes un código de referido! Regístrate para obtener puntos gratis 🎁`);
+    
+    // Pre-llenar el campo de código de referido si el modal está abierto
+    setTimeout(() => {
+      const referralInput = document.getElementById('register-referral-code');
+      if (referralInput) {
+        referralInput.value = refCode.toUpperCase();
+        validateReferralCode();
+      }
+    }, 500);
+    
+    // Limpiar la URL sin recargar la página
+    const newUrl = window.location.origin + window.location.pathname;
+    window.history.replaceState(null, '', newUrl);
+  }
 }
