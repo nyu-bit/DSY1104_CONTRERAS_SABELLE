@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initRegistration();
   initLogin();
   initProfile();
+  initProductFiltersAndSearch();
   
   console.log('Tema Level-Up Gamer cargado correctamente');
 });
@@ -129,6 +130,116 @@ function showNotification(message) {
 }
 
 // ===================== INTERACCIONES DE PRODUCTOS =====================
+// ===================== FILTROS Y BÚSQUEDA DE PRODUCTOS =====================
+function initProductFiltersAndSearch() {
+  const productos = [
+    {
+      id: 1,
+      icon: '🎮',
+      nombre: 'Gaming Controller Pro',
+      precio: '$89.99',
+      descripcion: 'Control inalámbrico premium con retroalimentación háptica avanzada',
+      disponibilidad: 'stock',
+      retiro: ['tienda', 'envio']
+    },
+    {
+      id: 2,
+      icon: '⚡',
+      nombre: 'RTX Gaming GPU',
+      precio: '$599.99',
+      descripcion: 'Tarjeta gráfica de última generación para gaming en 4K',
+      disponibilidad: 'stock',
+      retiro: ['tienda', 'envio']
+    },
+    {
+      id: 3,
+      icon: '🎧',
+      nombre: 'Headset Gaming 7.1',
+      precio: '$149.99',
+      descripcion: 'Auriculares con sonido envolvente y micrófono de calidad profesional',
+      disponibilidad: 'stock',
+      retiro: ['tienda', 'envio']
+    },
+    {
+      id: 4,
+      icon: '⌨️',
+      nombre: 'Mechanical Keyboard RGB',
+      precio: '$129.99',
+      descripcion: 'Teclado mecánico con switches Cherry MX e iluminación RGB personalizable',
+      disponibilidad: 'stock',
+      retiro: ['tienda', 'envio']
+    },
+    {
+      id: 5,
+      icon: '🖱️',
+      nombre: 'Gaming Mouse Ultra',
+      precio: '$79.99',
+      descripcion: 'Ratón de alta precisión con 16000 DPI y 8 botones programables',
+      disponibilidad: 'stock',
+      retiro: ['tienda', 'envio']
+    },
+    {
+      id: 6,
+      icon: '🖥️',
+      nombre: 'Gaming Monitor 144Hz',
+      precio: '$299.99',
+      descripcion: 'Monitor curvo de 27" con 144Hz y tecnología FreeSync para gaming fluido',
+      disponibilidad: 'stock',
+      retiro: ['tienda', 'envio']
+    }
+  ];
+
+  const grid = document.getElementById('featured-grid');
+  const filtersPanel = document.getElementById('filters-panel');
+  const searchInput = document.getElementById('quick-search');
+
+  function renderProductos(list) {
+      if (list.length === 0) {
+        grid.innerHTML = `<div class="no-results"><span class="no-results-icon">😢</span><span class="no-results-text">No se encontraron productos</span></div>`;
+      } else {
+        grid.innerHTML = list.map(prod => `
+          <article class="card producto" data-id="${prod.id}" style="animation:fadeIn .5s;">
+            <div class="card-image">${prod.icon}</div>
+            <div class="card-content">
+              <h3 class="card-title producto-nombre">${prod.nombre}</h3>
+              <div class="card-price">${prod.precio}</div>
+              <p class="card-description">${prod.descripcion}</p>
+              <button class="card-button">Agregar al Carrito</button>
+              <label class="compare-checkbox">
+                <input type="checkbox" class="compare-input" data-id="${prod.id}"> Comparar
+              </label>
+            </div>
+          </article>
+        `).join('');
+      }
+  }
+
+  function getFiltros() {
+    const disponibilidad = filtersPanel.querySelector('input[name="disponibilidad"]:checked').value;
+    const retiro = Array.from(filtersPanel.querySelectorAll('input[name="retiro"]:checked')).map(cb => cb.value);
+    return { disponibilidad, retiro };
+  }
+
+  function filtrarProductos() {
+    const { disponibilidad, retiro } = getFiltros();
+    const search = (searchInput.value || '').toLowerCase();
+    let filtrados = productos.filter(prod => {
+      // Filtro disponibilidad
+      if (disponibilidad !== 'todos' && prod.disponibilidad !== disponibilidad) return false;
+      // Filtro retiro
+      if (!prod.retiro.some(r => retiro.includes(r))) return false;
+      // Filtro búsqueda
+      if (search && !prod.nombre.toLowerCase().includes(search) && !prod.descripcion.toLowerCase().includes(search)) return false;
+      return true;
+    });
+    renderProductos(filtrados);
+  }
+
+  filtersPanel.addEventListener('change', filtrarProductos);
+  searchInput.addEventListener('input', filtrarProductos);
+
+  renderProductos(productos);
+}
 function renderCategoryTiles() {
   const categorias = [
     {
@@ -206,21 +317,38 @@ style.textContent = `
       opacity: 1;
     }
   }
-  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
+  }
   .card {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: fadeIn .5s;
   }
-  
   .tile {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
   .btn-icon {
     transition: all 0.2s ease;
   }
-  
   .btn-icon:active {
     transform: scale(0.95);
+  }
+  .no-results {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: linear-gradient(90deg, #181825 60%, #0f3460 100%);
+    color: #39FF14; border-radius: 16px; min-height: 180px; font-size: 1.3rem;
+    box-shadow: 0 0 24px #1E90FF33; margin: 2rem 0;
+    animation: fadeIn .6s;
+  }
+  .no-results-icon {
+    font-size: 3rem; margin-bottom: 1rem; text-shadow: 0 0 8px #1E90FF;
+  }
+  .no-results-text {
+    font-family: 'Orbitron', 'Roboto', Arial, sans-serif;
+    font-size: 1.2rem;
+    color: #FFD700;
+    text-shadow: 0 0 8px #39FF14;
   }
 `;
 document.head.appendChild(style);
