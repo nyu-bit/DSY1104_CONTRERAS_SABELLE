@@ -36,14 +36,21 @@
         <ul class="menu">
           <li><a href="#categorias">Categorías</a></li>
           <li><a href="#destacados">Destacados</a></li>
+          <li><a href="#noticias">Noticias</a></li>
+          <li><a href="#eventos">Eventos</a></li>
           <li><a href="#ofertas">Ofertas</a></li>
           <li><a href="#contacto">Contacto</a></li>
         </ul>
         
         <div class="actions">
-          <button class="btn-icon" type="button" aria-label="Abrir carrito" id="cart-button">
+          <button class="btn-icon" type="button" aria-label="Abrir carrito" onclick="showCart()">
             🛒 <span class="badge" id="cart-count" aria-live="polite">0</span>
           </button>
+          <div class="level-indicator" id="level-indicator" style="display: none;">
+            <span class="level-icon" id="nav-level-icon">🥉</span>
+            <span class="level-text">Nivel <span id="nav-level-number">1</span></span>
+            <span class="level-points" id="nav-level-points">0 pts</span>
+          </div>
           <button class="btn-secondary" type="button" id="login-button">
             🔑 Iniciar Sesión
           </button>
@@ -183,83 +190,451 @@
           <article class="card producto" data-id="1">
             <div class="card-image">🎮</div>
             <div class="card-content">
-              <h3 class="card-title producto-nombre">Gaming Controller Pro</h3>
-              <div class="card-price">$89.99</div>
+              <h3 class="card-title">Gaming Controller Pro</h3>
+              <div class="card-price">$89.990</div>
               <p class="card-description">Control inalámbrico premium con retroalimentación háptica avanzada</p>
-              <button class="card-button">Agregar al Carrito</button>
-              <label class="compare-checkbox">
-                <input type="checkbox" class="compare-input" data-id="1"> Comparar
-              </label>
+              <button class="card-button" onclick="addToCart(1)">Agregar al Carrito</button>
             </div>
           </article>
 
-          <article class="card producto" data-id="2">
+          <article class="card" data-product-id="rtx-gpu">
             <div class="card-image">⚡</div>
             <div class="card-content">
-              <h3 class="card-title producto-nombre">RTX Gaming GPU</h3>
-              <div class="card-price">$599.99</div>
+              <h3 class="card-title">RTX Gaming GPU</h3>
+              <div class="card-rating">
+                <div class="stars">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                </div>
+                <span class="rating-text">(4.8) 127 reseñas</span>
+              </div>
+              <div class="card-price">$599.990</div>
               <p class="card-description">Tarjeta gráfica de última generación para gaming en 4K</p>
-              <button class="card-button">Agregar al Carrito</button>
-              <label class="compare-checkbox">
-                <input type="checkbox" class="compare-input" data-id="2"> Comparar
-              </label>
+              <div class="card-actions">
+                <button class="card-button" onclick="addToCart(2)">Agregar al Carrito</button>
+                <button class="reviews-button" onclick="openProductReviews('rtx-gpu')">Ver Reseñas</button>
+              </div>
             </div>
           </article>
 
-          <article class="card producto" data-id="3">
+          <article class="card" data-product-id="headset-gaming">
             <div class="card-image">🎧</div>
             <div class="card-content">
-              <h3 class="card-title producto-nombre">Headset Gaming 7.1</h3>
-              <div class="card-price">$149.99</div>
+              <h3 class="card-title">Headset Gaming 7.1</h3>
+              <div class="card-rating">
+                <div class="stars">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star half">★</span>
+                </div>
+                <span class="rating-text">(4.3) 89 reseñas</span>
+              </div>
+              <div class="card-price">$149.990</div>
               <p class="card-description">Auriculares con sonido envolvente y micrófono de calidad profesional</p>
-              <button class="card-button">Agregar al Carrito</button>
-              <label class="compare-checkbox">
-                <input type="checkbox" class="compare-input" data-id="3"> Comparar
-              </label>
+              <div class="card-actions">
+                <button class="card-button" onclick="addToCart(5)">Agregar al Carrito</button>
+                <button class="reviews-button" onclick="openProductReviews('headset-gaming')">Ver Reseñas</button>
+              </div>
             </div>
           </article>
 
-          <article class="card producto" data-id="4">
+          <article class="card" data-product-id="keyboard-rgb">
             <div class="card-image">⌨️</div>
             <div class="card-content">
-              <h3 class="card-title producto-nombre">Mechanical Keyboard RGB</h3>
-              <div class="card-price">$129.99</div>
+              <h3 class="card-title">Mechanical Keyboard RGB</h3>
+              <div class="card-rating">
+                <div class="stars">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star">★</span>
+                </div>
+                <span class="rating-text">(4.2) 64 reseñas</span>
+              </div>
+              <div class="card-price">$129.990</div>
               <p class="card-description">Teclado mecánico con switches Cherry MX e iluminación RGB personalizable</p>
-              <button class="card-button">Agregar al Carrito</button>
-              <label class="compare-checkbox">
-                <input type="checkbox" class="compare-input" data-id="4"> Comparar
-              </label>
+              <div class="card-actions">
+                <button class="card-button" onclick="addToCart(3)">Agregar al Carrito</button>
+                <button class="reviews-button" onclick="openProductReviews('keyboard-rgb')">Ver Reseñas</button>
+              </div>
             </div>
           </article>
 
-          <article class="card producto" data-id="5">
+          <article class="card" data-product-id="mouse-ultra">
             <div class="card-image">🖱️</div>
             <div class="card-content">
-              <h3 class="card-title producto-nombre">Gaming Mouse Ultra</h3>
-              <div class="card-price">$79.99</div>
+              <h3 class="card-title">Gaming Mouse Ultra</h3>
+              <div class="card-rating">
+                <div class="stars">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star half">★</span>
+                </div>
+                <span class="rating-text">(4.6) 156 reseñas</span>
+              </div>
+              <div class="card-price">$79.990</div>
               <p class="card-description">Ratón de alta precisión con 16000 DPI y 8 botones programables</p>
-              <button class="card-button">Agregar al Carrito</button>
-              <label class="compare-checkbox">
-                <input type="checkbox" class="compare-input" data-id="5"> Comparar
-              </label>
+              <div class="card-actions">
+                <button class="card-button" onclick="addToCart(4)">Agregar al Carrito</button>
+                <button class="reviews-button" onclick="openProductReviews('mouse-ultra')">Ver Reseñas</button>
+              </div>
             </div>
           </article>
 
-          <article class="card producto" data-id="6">
+          <article class="card" data-product-id="monitor-144hz">
             <div class="card-image">🖥️</div>
             <div class="card-content">
-              <h3 class="card-title producto-nombre">Gaming Monitor 144Hz</h3>
-              <div class="card-price">$299.99</div>
+              <h3 class="card-title">Gaming Monitor 144Hz</h3>
+              <div class="card-rating">
+                <div class="stars">
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star filled">★</span>
+                  <span class="star">★</span>
+                </div>
+                <span class="rating-text">(4.1) 92 reseñas</span>
+              </div>
+              <div class="card-price">$299.990</div>
               <p class="card-description">Monitor curvo de 27" con 144Hz y tecnología FreeSync para gaming fluido</p>
-              <button class="card-button">Agregar al Carrito</button>
-              <label class="compare-checkbox">
-                <input type="checkbox" class="compare-input" data-id="6"> Comparar
-              </label>
+              <div class="card-actions">
+                <button class="card-button" onclick="addToCart(6)">Agregar al Carrito</button>
+                <button class="reviews-button" onclick="openProductReviews('monitor-144hz')">Ver Reseñas</button>
+              </div>
             </div>
           </article>
         </div>
         <!-- Panel Comparador de Productos -->
         <div id="compare-panel" class="compare-panel" aria-live="polite" style="display:none;"></div>
+      </section>
+
+      <!-- ===================== SECCIÓN DE NOTICIAS GAMING ===================== -->
+      <section id="noticias" class="section">
+        <div class="container">
+          <h2 class="section-title">📰 Noticias Gaming</h2>
+          <div class="news-grid" id="news-grid">
+            
+            <article class="news-card featured-news">
+              <div class="news-image">🚀</div>
+              <div class="news-content">
+                <div class="news-meta">
+                  <span class="news-category">LANZAMIENTOS</span>
+                  <span class="news-date">5 Sep 2025</span>
+                </div>
+                <h3 class="news-title">Nuevo RTX 5090 revoluciona el gaming en 8K</h3>
+                <p class="news-excerpt">NVIDIA presenta su nueva arquitectura Blackwell con capacidades nunca antes vistas para gaming en resoluciones extremas y ray tracing avanzado.</p>
+                <div class="news-actions">
+                  <button class="read-more-btn" onclick="openNewsDetail(1)">Leer más</button>
+                  <div class="news-stats">
+                    <span>👁️ 2.5K</span>
+                    <span>❤️ 342</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="news-card">
+              <div class="news-image">🎮</div>
+              <div class="news-content">
+                <div class="news-meta">
+                  <span class="news-category">ESPORTS</span>
+                  <span class="news-date">4 Sep 2025</span>
+                </div>
+                <h3 class="news-title">Campeonato Mundial de LoL Chile 2025</h3>
+                <p class="news-excerpt">Se anuncian las fechas oficiales del torneo más importante de esports en Chile con premio de $100.000 USD.</p>
+                <div class="news-actions">
+                  <button class="read-more-btn" onclick="openNewsDetail(2)">Leer más</button>
+                  <div class="news-stats">
+                    <span>👁️ 1.8K</span>
+                    <span>❤️ 256</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="news-card">
+              <div class="news-image">⚡</div>
+              <div class="news-content">
+                <div class="news-meta">
+                  <span class="news-category">HARDWARE</span>
+                  <span class="news-date">3 Sep 2025</span>
+                </div>
+                <h3 class="news-title">AMD Ryzen 8000: El futuro del gaming</h3>
+                <p class="news-excerpt">Nuevos procesadores prometen 40% más rendimiento en juegos con arquitectura de 3nm y soporte DDR6.</p>
+                <div class="news-actions">
+                  <button class="read-more-btn" onclick="openNewsDetail(3)">Leer más</button>
+                  <div class="news-stats">
+                    <span>👁️ 3.1K</span>
+                    <span>❤️ 445</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="news-card">
+              <div class="news-image">🎯</div>
+              <div class="news-content">
+                <div class="news-meta">
+                  <span class="news-category">REVIEWS</span>
+                  <span class="news-date">2 Sep 2025</span>
+                </div>
+                <h3 class="news-title">Review: Steam Deck OLED 2025</h3>
+                <p class="news-excerpt">Analizamos la nueva versión de la consola portátil de Valve con pantalla OLED y mejor rendimiento.</p>
+                <div class="news-actions">
+                  <button class="read-more-btn" onclick="openNewsDetail(4)">Leer más</button>
+                  <div class="news-stats">
+                    <span>👁️ 4.2K</span>
+                    <span>❤️ 678</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="news-card">
+              <div class="news-image">🔥</div>
+              <div class="news-content">
+                <div class="news-meta">
+                  <span class="news-category">OFERTAS</span>
+                  <span class="news-date">1 Sep 2025</span>
+                </div>
+                <h3 class="news-title">Mega Sale Gaming: Hasta 70% descuento</h3>
+                <p class="news-excerpt">Steam, Epic y GOG se unen en la mayor venta del año con descuentos históricos en los mejores juegos.</p>
+                <div class="news-actions">
+                  <button class="read-more-btn" onclick="openNewsDetail(5)">Leer más</button>
+                  <div class="news-stats">
+                    <span>👁️ 5.7K</span>
+                    <span>❤️ 892</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="news-card">
+              <div class="news-image">🏆</div>
+              <div class="news-content">
+                <div class="news-meta">
+                  <span class="news-category">COMPETITIVO</span>
+                  <span class="news-date">31 Ago 2025</span>
+                </div>
+                <h3 class="news-title">The International 2025: Record de audiencia</h3>
+                <p class="news-excerpt">El torneo de Dota 2 supera los 3 millones de espectadores simultáneos y establece nuevo récord mundial.</p>
+                <div class="news-actions">
+                  <button class="read-more-btn" onclick="openNewsDetail(6)">Leer más</button>
+                  <div class="news-stats">
+                    <span>👁️ 2.9K</span>
+                    <span>❤️ 534</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+          </div>
+          
+          <div class="news-pagination">
+            <button class="btn-secondary" id="load-more-news" onclick="loadMoreNews()">
+              📄 Cargar más noticias
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== MAPA DE EVENTOS GAMER ===================== -->
+      <section id="eventos" class="section">
+        <div class="container">
+          <h2 class="section-title">🗺️ Eventos Gaming Chile</h2>
+          
+          <div class="events-controls">
+            <div class="events-filters">
+              <button class="filter-btn active" data-filter="all">Todos</button>
+              <button class="filter-btn" data-filter="tournament">Torneos</button>
+              <button class="filter-btn" data-filter="convention">Convenciones</button>
+              <button class="filter-btn" data-filter="workshop">Talleres</button>
+              <button class="filter-btn" data-filter="meetup">Meetups</button>
+            </div>
+            <div class="view-toggle">
+              <button class="view-btn active" data-view="map">🗺️ Mapa</button>
+              <button class="view-btn" data-view="list">📋 Lista</button>
+            </div>
+          </div>
+
+          <!-- Vista de Mapa -->
+          <div class="events-map-container" id="map-view">
+            <div class="map-placeholder">
+              <div class="map-header">
+                <h3>🌎 Mapa Interactivo de Eventos Gaming</h3>
+                <div class="map-legend">
+                  <span class="legend-item"><span class="legend-dot tournament"></span> Torneos</span>
+                  <span class="legend-item"><span class="legend-dot convention"></span> Convenciones</span>
+                  <span class="legend-item"><span class="legend-dot workshop"></span> Talleres</span>
+                  <span class="legend-item"><span class="legend-dot meetup"></span> Meetups</span>
+                </div>
+              </div>
+              
+              <div class="map-content">
+                <!-- Mapa SVG simplificado de Chile con eventos -->
+                <div class="chile-map">
+                  <svg viewBox="0 0 300 800" class="map-svg">
+                    <!-- Chile shape simplificado -->
+                    <path d="M50 50 L80 50 L90 100 L95 200 L100 300 L95 400 L90 500 L85 600 L80 700 L75 750 L50 750 L45 700 L40 600 L35 500 L30 400 L35 300 L40 200 L45 100 Z" 
+                          fill="var(--card-bg)" stroke="var(--border)" stroke-width="2"/>
+                    
+                    <!-- Eventos en el mapa -->
+                    <circle cx="65" cy="150" r="8" class="event-marker tournament" data-event="1"/>
+                    <circle cx="70" cy="200" r="8" class="event-marker convention" data-event="2"/>
+                    <circle cx="75" cy="280" r="8" class="event-marker tournament" data-event="3"/>
+                    <circle cx="65" cy="350" r="8" class="event-marker workshop" data-event="4"/>
+                    <circle cx="60" cy="420" r="8" class="event-marker meetup" data-event="5"/>
+                    <circle cx="68" cy="500" r="8" class="event-marker convention" data-event="6"/>
+                  </svg>
+                  
+                  <!-- Tooltips de eventos -->
+                  <div class="event-tooltip" id="tooltip">
+                    <div class="tooltip-content">
+                      <h4 class="tooltip-title"></h4>
+                      <p class="tooltip-date"></p>
+                      <p class="tooltip-location"></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vista de Lista -->
+          <div class="events-list-container" id="list-view" style="display: none;">
+            <div class="events-grid">
+              
+              <div class="event-card tournament" data-event="1">
+                <div class="event-header">
+                  <div class="event-icon">🏆</div>
+                  <div class="event-meta">
+                    <span class="event-type">TORNEO</span>
+                    <span class="event-date">15-17 Nov 2025</span>
+                  </div>
+                </div>
+                <h3 class="event-title">Championship Gaming Santiago</h3>
+                <p class="event-description">El torneo de esports más grande de Chile con múltiples categorías</p>
+                <div class="event-details">
+                  <div class="event-location">📍 Movistar Arena, Santiago</div>
+                  <div class="event-prize">💰 Premio: $50.000 USD</div>
+                </div>
+                <div class="event-actions">
+                  <button class="btn-primary" onclick="registerEvent(1)">Inscribirse</button>
+                  <button class="btn-secondary" onclick="showEventDetail(1)">Ver detalles</button>
+                </div>
+              </div>
+
+              <div class="event-card convention" data-event="2">
+                <div class="event-header">
+                  <div class="event-icon">🎮</div>
+                  <div class="event-meta">
+                    <span class="event-type">CONVENCIÓN</span>
+                    <span class="event-date">22-24 Nov 2025</span>
+                  </div>
+                </div>
+                <h3 class="event-title">GameCon Chile 2025</h3>
+                <p class="event-description">La convención de videojuegos más grande del país</p>
+                <div class="event-details">
+                  <div class="event-location">📍 Centro de Convenciones, Valparaíso</div>
+                  <div class="event-attendees">👥 5,000+ asistentes esperados</div>
+                </div>
+                <div class="event-actions">
+                  <button class="btn-primary" onclick="buyTicket(2)">Comprar entrada</button>
+                  <button class="btn-secondary" onclick="showEventDetail(2)">Ver detalles</button>
+                </div>
+              </div>
+
+              <div class="event-card tournament" data-event="3">
+                <div class="event-header">
+                  <div class="event-icon">⚔️</div>
+                  <div class="event-meta">
+                    <span class="event-type">TORNEO</span>
+                    <span class="event-date">29 Nov 2025</span>
+                  </div>
+                </div>
+                <h3 class="event-title">Tekken 8 Regional Cup</h3>
+                <p class="event-description">Torneo regional de Tekken 8 con los mejores luchadores</p>
+                <div class="event-details">
+                  <div class="event-location">📍 UC Gaming Center, Santiago</div>
+                  <div class="event-prize">💰 Premio: $15.000 USD</div>
+                </div>
+                <div class="event-actions">
+                  <button class="btn-primary" onclick="registerEvent(3)">Inscribirse</button>
+                  <button class="btn-secondary" onclick="showEventDetail(3)">Ver detalles</button>
+                </div>
+              </div>
+
+              <div class="event-card workshop" data-event="4">
+                <div class="event-header">
+                  <div class="event-icon">🎓</div>
+                  <div class="event-meta">
+                    <span class="event-type">TALLER</span>
+                    <span class="event-date">5 Dic 2025</span>
+                  </div>
+                </div>
+                <h3 class="event-title">Workshop: Desarrollo en Unity</h3>
+                <p class="event-description">Aprende a crear videojuegos desde cero con Unity</p>
+                <div class="event-details">
+                  <div class="event-location">📍 Duoc UC, Viña del Mar</div>
+                  <div class="event-duration">⏱️ 8 horas académicas</div>
+                </div>
+                <div class="event-actions">
+                  <button class="btn-primary" onclick="registerWorkshop(4)">Inscribirse</button>
+                  <button class="btn-secondary" onclick="showEventDetail(4)">Ver detalles</button>
+                </div>
+              </div>
+
+              <div class="event-card meetup" data-event="5">
+                <div class="event-header">
+                  <div class="event-icon">🤝</div>
+                  <div class="event-meta">
+                    <span class="event-type">MEETUP</span>
+                    <span class="event-date">12 Dic 2025</span>
+                  </div>
+                </div>
+                <h3 class="event-title">Retro Gaming Meetup</h3>
+                <p class="event-description">Encuentro de amantes de los videojuegos retro</p>
+                <div class="event-details">
+                  <div class="event-location">📍 Café Gamer, Concepción</div>
+                  <div class="event-attendees">👥 50 gamers máximo</div>
+                </div>
+                <div class="event-actions">
+                  <button class="btn-primary" onclick="joinMeetup(5)">Unirse</button>
+                  <button class="btn-secondary" onclick="showEventDetail(5)">Ver detalles</button>
+                </div>
+              </div>
+
+              <div class="event-card convention" data-event="6">
+                <div class="event-header">
+                  <div class="event-icon">🌟</div>
+                  <div class="event-meta">
+                    <span class="event-type">CONVENCIÓN</span>
+                    <span class="event-date">20-22 Dic 2025</span>
+                  </div>
+                </div>
+                <h3 class="event-title">Anime & Gaming Expo Sur</h3>
+                <p class="event-description">La convención de anime y gaming del sur de Chile</p>
+                <div class="event-details">
+                  <div class="event-location">📍 Centro de Eventos, Temuco</div>
+                  <div class="event-special">✨ Invitados especiales de Japón</div>
+                </div>
+                <div class="event-actions">
+                  <button class="btn-primary" onclick="buyTicket(6)">Comprar entrada</button>
+                  <button class="btn-secondary" onclick="showEventDetail(6)">Ver detalles</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   </main>
@@ -321,6 +696,18 @@
             <input type="password" id="register-confirm-password" name="confirmPassword" required 
                    aria-describedby="confirm-password-error" placeholder="Repite tu contraseña">
             <div class="error-message" id="confirm-password-error" aria-live="polite"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="register-referral-code">Código de Referido (Opcional)</label>
+            <input type="text" id="register-referral-code" name="referralCode" 
+                   aria-describedby="referral-code-hint referral-code-success" 
+                   placeholder="Ingresa código de referido" maxlength="10">
+            <div class="form-hint" id="referral-code-hint">
+              🎁 Con un código válido obtienes 50 puntos LevelUp de bienvenida
+            </div>
+            <div class="success-message" id="referral-code-success" aria-live="polite" style="display: none;"></div>
+            <div class="error-message" id="referral-code-error" aria-live="polite"></div>
           </div>
 
           <div class="form-group checkbox-group">
@@ -423,6 +810,8 @@
         <div class="profile-tabs">
           <button class="tab-button active" data-tab="personal">👤 Información Personal</button>
           <button class="tab-button" data-tab="preferences">⚙️ Preferencias</button>
+          <button class="tab-button" data-tab="gamification">🏆 Niveles & Logros</button>
+          <button class="tab-button" data-tab="referral">🎁 Referidos</button>
           <button class="tab-button" data-tab="security">🔒 Seguridad</button>
         </div>
 
@@ -604,6 +993,145 @@
             </form>
           </div>
 
+          <!-- Pestaña: Gamificación -->
+          <div class="tab-pane" id="gamification-tab">
+            <div class="profile-section">
+              <h3>🏆 Tu Progreso Gamer</h3>
+              <p>Gana puntos LevelUp comprando, refiriendo amigos y completando desafíos</p>
+              
+              <!-- Información del nivel actual -->
+              <div class="level-display">
+                <div class="level-card">
+                  <div class="level-info">
+                    <div class="level-badge">
+                      <span class="level-icon" id="current-level-icon">🥉</span>
+                      <div class="level-details">
+                        <span class="level-title" id="current-level-name">Novato</span>
+                        <span class="level-number">Nivel <span id="current-level-number">1</span></span>
+                      </div>
+                    </div>
+                    
+                    <div class="level-points">
+                      <span class="points-current" id="current-points">0</span>
+                      <span class="points-label">Puntos LevelUp</span>
+                    </div>
+                  </div>
+                  
+                  <!-- Barra de progreso al siguiente nivel -->
+                  <div class="level-progress">
+                    <div class="progress-info">
+                      <span>Progreso al siguiente nivel</span>
+                      <span><span id="progress-current">0</span> / <span id="progress-needed">100</span></span>
+                    </div>
+                    <div class="progress-bar">
+                      <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+                    </div>
+                    <div class="next-level-info">
+                      <span class="next-level-icon" id="next-level-icon">🥈</span>
+                      <span id="next-level-name">Explorador</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Lista de niveles disponibles -->
+              <div class="levels-list">
+                <h4>🎯 Todos los Niveles</h4>
+                <div class="levels-grid" id="levels-grid">
+                  <!-- Los niveles se generarán dinámicamente -->
+                </div>
+              </div>
+
+              <!-- Beneficios del nivel actual -->
+              <div class="level-benefits">
+                <h4>💎 Beneficios de tu Nivel</h4>
+                <div class="benefits-list" id="current-benefits">
+                  <!-- Los beneficios se cargarán dinámicamente -->
+                </div>
+              </div>
+
+              <!-- Logros desbloqueados -->
+              <div class="achievements">
+                <h4>🏅 Logros Desbloqueados</h4>
+                <div class="achievements-grid" id="achievements-grid">
+                  <!-- Los logros se generarán dinámicamente -->
+                </div>
+              </div>
+
+              <!-- Desafíos activos -->
+              <div class="challenges">
+                <h4>⚔️ Desafíos Activos</h4>
+                <div class="challenges-list" id="challenges-list">
+                  <!-- Los desafíos se generarán dinámicamente -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pestaña: Referidos -->
+          <div class="tab-pane" id="referral-tab">
+            <div class="profile-section">
+              <h3>🎁 Tu Código de Referido</h3>
+              <p>Comparte tu código con amigos y gana puntos LevelUp por cada registro exitoso</p>
+              
+              <div class="referral-code-display">
+                <div class="referral-code-container">
+                  <span class="referral-code-label">Tu código único:</span>
+                  <div class="referral-code-value">
+                    <span id="user-referral-code">CARGANDO...</span>
+                    <button type="button" class="copy-button" id="copy-referral-code" title="Copiar código">
+                      📋
+                    </button>
+                  </div>
+                </div>
+                
+                <div class="referral-share">
+                  <p>💡 <strong>Compartir:</strong></p>
+                  <div class="share-buttons">
+                    <button type="button" class="share-btn" id="share-whatsapp">
+                      💬 WhatsApp
+                    </button>
+                    <button type="button" class="share-btn" id="share-email">
+                      📧 Email
+                    </button>
+                    <button type="button" class="share-btn" id="share-copy">
+                      🔗 Copiar Enlace
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="referral-stats">
+                <h4>📊 Estadísticas de Referidos</h4>
+                <div class="stats-grid">
+                  <div class="stat-card">
+                    <div class="stat-number" id="total-referrals">0</div>
+                    <div class="stat-label">Amigos referidos</div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-number" id="earned-points">0</div>
+                    <div class="stat-label">Puntos ganados</div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-number" id="current-points">0</div>
+                    <div class="stat-label">Puntos actuales</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="referral-info">
+                <h4>ℹ️ Cómo Funciona</h4>
+                <ul class="referral-rules">
+                  <li>Comparte tu código con amigos nuevos</li>
+                  <li>Ellos obtienen 50 puntos al registrarse</li>
+                  <li>Tú ganas 25 puntos por cada registro exitoso</li>
+                  <li>Los puntos se pueden canjear por descuentos</li>
+                  <li>No hay límite de referidos</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
           <!-- Pestaña: Seguridad -->
           <div class="tab-pane" id="security-tab">
             <form id="security-form">
@@ -665,6 +1193,376 @@
             <span class="btn-loading" style="display: none;">⏳ Guardando...</span>
           </button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL DE RESEÑAS ===================== -->
+  <div class="modal-overlay" id="reviews-modal" aria-hidden="true">
+    <div class="modal reviews-modal" role="dialog" aria-labelledby="reviews-title">
+      <div class="modal-header">
+        <h2 id="reviews-title">⭐ Reseñas del Producto</h2>
+        <button class="modal-close" aria-label="Cerrar modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Información del producto -->
+        <div class="product-info">
+          <div class="product-summary">
+            <div class="product-icon" id="review-product-icon">⚡</div>
+            <div class="product-details">
+              <h3 id="review-product-name">Producto</h3>
+              <div class="product-rating-summary">
+                <div class="rating-stars" id="review-product-stars">
+                  <!-- Estrellas generadas dinámicamente -->
+                </div>
+                <span class="rating-average" id="review-rating-average">4.5</span>
+                <span class="rating-count">(<span id="review-rating-count">0</span> reseñas)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Distribución de calificaciones -->
+        <div class="rating-distribution">
+          <h4>📊 Distribución de Calificaciones</h4>
+          <div class="rating-bars">
+            <div class="rating-bar" data-stars="5">
+              <span class="bar-label">5 ★</span>
+              <div class="bar-fill-container">
+                <div class="bar-fill" style="width: 0%"></div>
+              </div>
+              <span class="bar-count">0</span>
+            </div>
+            <div class="rating-bar" data-stars="4">
+              <span class="bar-label">4 ★</span>
+              <div class="bar-fill-container">
+                <div class="bar-fill" style="width: 0%"></div>
+              </div>
+              <span class="bar-count">0</span>
+            </div>
+            <div class="rating-bar" data-stars="3">
+              <span class="bar-label">3 ★</span>
+              <div class="bar-fill-container">
+                <div class="bar-fill" style="width: 0%"></div>
+              </div>
+              <span class="bar-count">0</span>
+            </div>
+            <div class="rating-bar" data-stars="2">
+              <span class="bar-label">2 ★</span>
+              <div class="bar-fill-container">
+                <div class="bar-fill" style="width: 0%"></div>
+              </div>
+              <span class="bar-count">0</span>
+            </div>
+            <div class="rating-bar" data-stars="1">
+              <span class="bar-label">1 ★</span>
+              <div class="bar-fill-container">
+                <div class="bar-fill" style="width: 0%"></div>
+              </div>
+              <span class="bar-count">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filtros y acciones -->
+        <div class="reviews-controls">
+          <div class="filters">
+            <select id="reviews-filter" class="filter-select">
+              <option value="all">Todas las reseñas</option>
+              <option value="5">5 estrellas</option>
+              <option value="4">4 estrellas</option>
+              <option value="3">3 estrellas</option>
+              <option value="2">2 estrellas</option>
+              <option value="1">1 estrella</option>
+            </select>
+            <select id="reviews-sort" class="filter-select">
+              <option value="newest">Más recientes</option>
+              <option value="oldest">Más antiguos</option>
+              <option value="highest">Mejor calificados</option>
+              <option value="lowest">Peor calificados</option>
+              <option value="helpful">Más útiles</option>
+            </select>
+          </div>
+          <button class="btn-primary" id="write-review-btn">✍️ Escribir Reseña</button>
+        </div>
+
+        <!-- Lista de reseñas -->
+        <div class="reviews-list" id="reviews-list">
+          <!-- Las reseñas se cargarán dinámicamente -->
+        </div>
+
+        <!-- Paginación -->
+        <div class="reviews-pagination" id="reviews-pagination" style="display: none;">
+          <button class="pagination-btn" id="prev-reviews">← Anterior</button>
+          <span class="pagination-info">Página <span id="current-page">1</span> de <span id="total-pages">1</span></span>
+          <button class="pagination-btn" id="next-reviews">Siguiente →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL DE ESCRIBIR RESEÑA ===================== -->
+  <div class="modal-overlay" id="write-review-modal" aria-hidden="true">
+    <div class="modal write-review-modal" role="dialog" aria-labelledby="write-review-title">
+      <div class="modal-header">
+        <h2 id="write-review-title">✍️ Escribir Reseña</h2>
+        <button class="modal-close" aria-label="Cerrar modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="review-form" novalidate>
+          <div class="review-product-info">
+            <div class="product-icon" id="write-review-product-icon">⚡</div>
+            <div class="product-details">
+              <h3 id="write-review-product-name">Producto</h3>
+              <p>Comparte tu experiencia con este producto</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="review-rating">Calificación *</label>
+            <div class="star-rating" id="review-rating">
+              <button type="button" class="star-btn" data-rating="1">★</button>
+              <button type="button" class="star-btn" data-rating="2">★</button>
+              <button type="button" class="star-btn" data-rating="3">★</button>
+              <button type="button" class="star-btn" data-rating="4">★</button>
+              <button type="button" class="star-btn" data-rating="5">★</button>
+            </div>
+            <div class="rating-label" id="rating-label">Selecciona una calificación</div>
+            <div class="error-message" id="rating-error"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="review-title">Título de la reseña *</label>
+            <input type="text" id="review-title" name="title" required 
+                   placeholder="Resume tu experiencia en pocas palabras" maxlength="100">
+            <div class="error-message" id="title-error"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="review-content">Reseña detallada *</label>
+            <textarea id="review-content" name="content" required rows="6"
+                      placeholder="Cuéntanos sobre tu experiencia con este producto. ¿Qué te gustó? ¿Qué mejorarías?" 
+                      maxlength="1000"></textarea>
+            <div class="char-count"><span id="char-count">0</span>/1000 caracteres</div>
+            <div class="error-message" id="content-error"></div>
+          </div>
+
+          <div class="form-group">
+            <label>¿Recomendarías este producto?</label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="recommend" value="yes" checked>
+                <span class="radio-mark"></span>
+                👍 Sí, lo recomiendo
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="recommend" value="no">
+                <span class="radio-mark"></span>
+                👎 No lo recomiendo
+              </label>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" id="cancel-review">Cancelar</button>
+            <button type="submit" class="btn-primary" id="submit-review">
+              <span class="btn-text">Publicar Reseña</span>
+              <span class="btn-loading" style="display: none;">⏳ Publicando...</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL DE CARRITO ===================== -->
+  <div class="modal-overlay" id="cart-modal" aria-hidden="true">
+    <div class="modal cart-modal" role="dialog" aria-labelledby="cart-title">
+      <div class="modal-header">
+        <h2 id="cart-title">🛒 Tu Carrito de Compras</h2>
+        <button class="modal-close" aria-label="Cerrar modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Estado vacío -->
+        <div class="empty-cart" id="empty-cart" style="display: none;">
+          <div class="empty-cart-icon">🛒</div>
+          <h3>Tu carrito está vacío</h3>
+          <p>¡Agrega algunos productos increíbles y comienza tu experiencia gaming!</p>
+          <button class="btn-primary" onclick="closeCartModal()">Continuar Comprando</button>
+        </div>
+
+        <!-- Contenido del carrito -->
+        <div class="cart-content" id="cart-content">
+          <!-- Items del carrito -->
+          <div class="cart-items" id="cart-items">
+            <!-- Los items se cargarán dinámicamente -->
+          </div>
+
+          <!-- Resumen de descuentos -->
+          <div class="cart-discounts" id="cart-discounts" style="display: none;">
+            <h4>💰 Descuentos Aplicados</h4>
+            <div class="discount-list" id="discount-list">
+              <!-- Los descuentos se cargarán dinámicamente -->
+            </div>
+          </div>
+
+          <!-- Resumen de totales -->
+          <div class="cart-summary">
+            <div class="summary-row">
+              <span>Subtotal:</span>
+              <span id="cart-subtotal">$0</span>
+            </div>
+            <div class="summary-row discount" id="discount-row" style="display: none;">
+              <span>Descuento (<span id="discount-percentage">0</span>%):</span>
+              <span id="cart-discount">-$0</span>
+            </div>
+            <div class="summary-row shipping">
+              <span>Envío:</span>
+              <span id="cart-shipping">$0</span>
+            </div>
+            <div class="summary-row total">
+              <span>Total:</span>
+              <span id="cart-total">$0</span>
+            </div>
+            <div class="points-earned" id="points-earned" style="display: none;">
+              <span>🎁 Ganarás <strong><span id="points-amount">0</span> puntos LevelUp</strong> con esta compra</span>
+            </div>
+          </div>
+
+          <!-- Acciones del carrito -->
+          <div class="cart-actions">
+            <button class="btn-secondary" onclick="clearCart()">🗑️ Vaciar Carrito</button>
+            <button class="btn-primary" id="checkout-btn" onclick="initiateCheckout()">
+              💳 Proceder al Checkout
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MODAL DE CHECKOUT ===================== -->
+  <div class="modal-overlay" id="checkout-modal" aria-hidden="true">
+    <div class="modal checkout-modal" role="dialog" aria-labelledby="checkout-title">
+      <div class="modal-header">
+        <h2 id="checkout-title">💳 Finalizar Compra</h2>
+        <button class="modal-close" aria-label="Cerrar modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="checkout-form" novalidate>
+          <!-- Información de envío -->
+          <div class="checkout-section">
+            <h3>📦 Información de Envío</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="shipping-name">Nombre completo *</label>
+                <input type="text" id="shipping-name" name="name" required>
+                <div class="error-message" id="shipping-name-error"></div>
+              </div>
+              <div class="form-group">
+                <label for="shipping-phone">Teléfono *</label>
+                <input type="tel" id="shipping-phone" name="phone" required>
+                <div class="error-message" id="shipping-phone-error"></div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="shipping-address">Dirección completa *</label>
+              <textarea id="shipping-address" name="address" required rows="3" 
+                        placeholder="Calle, número, comuna, ciudad, región"></textarea>
+              <div class="error-message" id="shipping-address-error"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="shipping-city">Ciudad *</label>
+                <input type="text" id="shipping-city" name="city" required>
+                <div class="error-message" id="shipping-city-error"></div>
+              </div>
+              <div class="form-group">
+                <label for="shipping-zipcode">Código postal</label>
+                <input type="text" id="shipping-zipcode" name="zipcode">
+              </div>
+            </div>
+          </div>
+
+          <!-- Método de pago -->
+          <div class="checkout-section">
+            <h3>💳 Método de Pago</h3>
+            <div class="payment-methods">
+              <label class="payment-method">
+                <input type="radio" name="payment" value="credit" checked>
+                <span class="payment-icon">💳</span>
+                <span class="payment-label">Tarjeta de Crédito/Débito</span>
+              </label>
+              <label class="payment-method">
+                <input type="radio" name="payment" value="transfer">
+                <span class="payment-icon">🏦</span>
+                <span class="payment-label">Transferencia Bancaria</span>
+              </label>
+              <label class="payment-method">
+                <input type="radio" name="payment" value="webpay">
+                <span class="payment-icon">🔒</span>
+                <span class="payment-label">WebPay Plus</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Información de pago (solo para tarjeta) -->
+          <div class="checkout-section" id="card-details">
+            <h3>💳 Detalles de la Tarjeta</h3>
+            <div class="form-group">
+              <label for="card-number">Número de tarjeta *</label>
+              <input type="text" id="card-number" name="cardNumber" 
+                     placeholder="1234 5678 9012 3456" maxlength="19">
+              <div class="error-message" id="card-number-error"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="card-expiry">Vencimiento *</label>
+                <input type="text" id="card-expiry" name="cardExpiry" 
+                       placeholder="MM/AA" maxlength="5">
+                <div class="error-message" id="card-expiry-error"></div>
+              </div>
+              <div class="form-group">
+                <label for="card-cvv">CVV *</label>
+                <input type="text" id="card-cvv" name="cardCvv" 
+                       placeholder="123" maxlength="4">
+                <div class="error-message" id="card-cvv-error"></div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="card-name">Nombre en la tarjeta *</label>
+              <input type="text" id="card-name" name="cardName">
+              <div class="error-message" id="card-name-error"></div>
+            </div>
+          </div>
+
+          <!-- Resumen de la orden -->
+          <div class="checkout-section">
+            <h3>📋 Resumen de tu Orden</h3>
+            <div class="order-summary" id="order-summary">
+              <!-- Se cargará dinámicamente -->
+            </div>
+          </div>
+
+          <!-- Términos y condiciones -->
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="terms-checkout" name="terms" required>
+              <span class="checkmark"></span>
+              Acepto los <a href="#" class="link">términos y condiciones</a> y la <a href="#" class="link">política de privacidad</a> *
+            </label>
+            <div class="error-message" id="terms-checkout-error"></div>
+          </div>
+
+          <!-- Acciones del checkout -->
+          <div class="checkout-actions">
+            <button type="button" class="btn-secondary" onclick="closeCheckoutModal()">Volver al Carrito</button>
+            <button type="submit" class="btn-primary" id="place-order-btn">
+              <span class="btn-text">🚀 Confirmar Pedido</span>
+              <span class="btn-loading" style="display: none;">⏳ Procesando...</span>
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
