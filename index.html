@@ -383,21 +383,174 @@
 
       <!-- Productos Destacados -->
       <section id="destacados">
-        <h2 class="section-title">Productos Destacados</h2>
-        <!-- Filtros de Disponibilidad y Retiro -->
-        <form class="filters-panel" id="filters-panel" aria-label="Filtrar productos">
-          <fieldset class="filter-group">
-            <legend>Disponibilidad</legend>
-            <label><input type="radio" name="disponibilidad" value="todos" checked> Todos</label>
-            <label><input type="radio" name="disponibilidad" value="stock"> En stock</label>
-            <label><input type="radio" name="disponibilidad" value="agotado"> Agotado</label>
-          </fieldset>
-          <fieldset class="filter-group">
-            <legend>Retiro</legend>
-            <label><input type="checkbox" name="retiro" value="tienda" checked> En tienda</label>
-            <label><input type="checkbox" name="retiro" value="envio" checked> Envío a domicilio</label>
-          </fieldset>
-        </form>
+        <h2 class="section-title">🎮 Productos Destacados</h2>
+        
+        <!-- Filtros Avanzados de Disponibilidad y Retiro -->
+        <div class="advanced-filters-container">
+          <div class="filters-header">
+            <h3 class="filters-title">
+              <span class="filters-icon">🔧</span>
+              Filtros Avanzados
+            </h3>
+            <button class="reset-filters-btn" onclick="resetAllFilters()" title="Resetear filtros">
+              🔄 Resetear
+            </button>
+          </div>
+          
+          <form class="advanced-filters-panel" id="advanced-filters-panel" aria-label="Filtrar productos avanzado">
+            <!-- Filtros de Disponibilidad -->
+            <div class="filter-section">
+              <h4 class="filter-section-title">
+                <span class="section-icon">📦</span>
+                Disponibilidad
+              </h4>
+              <div class="filter-options availability-filters">
+                <label class="filter-option">
+                  <input type="radio" name="availability" value="all" checked>
+                  <span class="filter-label">
+                    <span class="option-icon">🌐</span>
+                    <span class="option-text">Todos los productos</span>
+                    <span class="option-count" id="all-count"></span>
+                  </span>
+                </label>
+                <label class="filter-option">
+                  <input type="radio" name="availability" value="in-stock">
+                  <span class="filter-label">
+                    <span class="option-icon">✅</span>
+                    <span class="option-text">En stock</span>
+                    <span class="option-count" id="in-stock-count"></span>
+                  </span>
+                </label>
+                <label class="filter-option">
+                  <input type="radio" name="availability" value="low-stock">
+                  <span class="filter-label">
+                    <span class="option-icon">⚠️</span>
+                    <span class="option-text">Stock bajo (< 10)</span>
+                    <span class="option-count" id="low-stock-count"></span>
+                  </span>
+                </label>
+                <label class="filter-option">
+                  <input type="radio" name="availability" value="out-of-stock">
+                  <span class="filter-label">
+                    <span class="option-icon">❌</span>
+                    <span class="option-text">Agotado</span>
+                    <span class="option-count" id="out-stock-count"></span>
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Filtros de Retiro y Entrega -->
+            <div class="filter-section">
+              <h4 class="filter-section-title">
+                <span class="section-icon">🚚</span>
+                Opciones de Retiro
+              </h4>
+              <div class="filter-options delivery-filters">
+                <label class="filter-option delivery-option">
+                  <input type="checkbox" name="delivery" value="store-pickup" checked>
+                  <span class="filter-label">
+                    <span class="option-icon">🏪</span>
+                    <span class="option-text">Retiro en tienda</span>
+                    <span class="delivery-info">Gratis • Disponible hoy</span>
+                  </span>
+                </label>
+                <label class="filter-option delivery-option">
+                  <input type="checkbox" name="delivery" value="home-delivery" checked>
+                  <span class="filter-label">
+                    <span class="option-icon">🏠</span>
+                    <span class="option-text">Envío a domicilio</span>
+                    <span class="delivery-info">$5.990 • 1-3 días hábiles</span>
+                  </span>
+                </label>
+                <label class="filter-option delivery-option">
+                  <input type="checkbox" name="delivery" value="express-delivery">
+                  <span class="filter-label">
+                    <span class="option-icon">⚡</span>
+                    <span class="option-text">Envío express</span>
+                    <span class="delivery-info">$12.990 • Mismo día</span>
+                  </span>
+                </label>
+                <label class="filter-option delivery-option">
+                  <input type="checkbox" name="delivery" value="installation">
+                  <span class="filter-label">
+                    <span class="option-icon">🔧</span>
+                    <span class="option-text">Con instalación</span>
+                    <span class="delivery-info">+$25.000 • Técnico especializado</span>
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Filtros de Rango de Precio -->
+            <div class="filter-section">
+              <h4 class="filter-section-title">
+                <span class="section-icon">💰</span>
+                Rango de Precio
+              </h4>
+              <div class="price-range-container">
+                <div class="price-inputs">
+                  <input type="number" 
+                         id="min-price" 
+                         placeholder="Mín. $" 
+                         min="0" 
+                         class="price-input">
+                  <span class="price-separator">-</span>
+                  <input type="number" 
+                         id="max-price" 
+                         placeholder="Máx. $" 
+                         min="0" 
+                         class="price-input">
+                </div>
+                <div class="price-presets">
+                  <button type="button" class="price-preset" onclick="setPriceRange(0, 100000)">
+                    < $100k
+                  </button>
+                  <button type="button" class="price-preset" onclick="setPriceRange(100000, 500000)">
+                    $100k - $500k
+                  </button>
+                  <button type="button" class="price-preset" onclick="setPriceRange(500000, 1000000)">
+                    $500k - $1M
+                  </button>
+                  <button type="button" class="price-preset" onclick="setPriceRange(1000000, 999999999)">
+                    > $1M
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Filtros de Ubicación -->
+            <div class="filter-section">
+              <h4 class="filter-section-title">
+                <span class="section-icon">📍</span>
+                Ubicación de Retiro
+              </h4>
+              <div class="filter-options location-filters">
+                <select class="location-select" id="store-location">
+                  <option value="">Seleccionar tienda</option>
+                  <option value="santiago-centro">Santiago Centro</option>
+                  <option value="las-condes">Las Condes</option>
+                  <option value="providencia">Providencia</option>
+                  <option value="maipu">Maipú</option>
+                  <option value="puente-alto">Puente Alto</option>
+                </select>
+                <div class="location-info" id="location-info">
+                  <span class="location-status">📍 Selecciona una tienda para ver disponibilidad</span>
+                </div>
+              </div>
+            </div>
+          </form>
+          
+          <!-- Resultados de Filtros -->
+          <div class="filter-results">
+            <div class="results-summary">
+              <span class="results-count" id="filtered-results-count">Mostrando todos los productos</span>
+              <button class="view-map-btn" onclick="showStoreMap()" title="Ver mapa de tiendas">
+                🗺️ Ver Mapa
+              </button>
+            </div>
+          </div>
+        </div>
         <div class="cards" id="featured-grid">
           <article class="card producto" data-id="1">
             <div class="card-image">🎮</div>
@@ -1901,4 +2054,93 @@
       </li>
     </ul>
   </aside>
+
+  <!-- Modal Comparador de Productos -->
+  <div class="modal" id="product-comparator-modal" aria-hidden="true">
+    <div class="modal-content comparator-modal">
+      <div class="modal-header">
+        <h2>⚖️ Comparador de Productos Gaming</h2>
+        <button class="modal-close" onclick="closeComparator()" aria-label="Cerrar comparador">✕</button>
+      </div>
+      
+      <div class="comparator-content">
+        <div class="comparator-controls">
+          <div class="comparison-slots">
+            <div class="slot-info">
+              <span>🎮 Productos seleccionados: <span id="comparison-count">0</span>/4</span>
+              <button class="btn-secondary clear-comparison" onclick="clearComparison()">
+                🗑️ Limpiar Todo
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="comparison-grid" id="comparison-grid">
+          <!-- Productos a comparar se llenarán dinámicamente -->
+        </div>
+        
+        <div class="comparison-actions">
+          <button class="btn-primary start-comparison" onclick="startComparison()" disabled>
+            🔍 Iniciar Comparación
+          </button>
+          <button class="btn-secondary add-more-products" onclick="showProductSelector()">
+            ➕ Agregar Productos
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Selector de Productos para Comparar -->
+  <div class="modal" id="product-selector-modal" aria-hidden="true">
+    <div class="modal-content selector-modal">
+      <div class="modal-header">
+        <h2>📦 Seleccionar Productos para Comparar</h2>
+        <button class="modal-close" onclick="closeProductSelector()" aria-label="Cerrar selector">✕</button>
+      </div>
+      
+      <div class="selector-content">
+        <div class="selector-filters">
+          <input type="search" 
+                 class="selector-search" 
+                 placeholder="🔍 Buscar productos..." 
+                 id="selector-search">
+          <select class="selector-category" id="selector-category">
+            <option value="">Todas las categorías</option>
+          </select>
+        </div>
+        
+        <div class="selector-grid" id="selector-grid">
+          <!-- Productos disponibles se llenarán dinámicamente -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Resultados de Comparación -->
+  <div class="modal" id="comparison-results-modal" aria-hidden="true">
+    <div class="modal-content results-modal">
+      <div class="modal-header">
+        <h2>📊 Resultados de Comparación</h2>
+        <button class="modal-close" onclick="closeComparisonResults()" aria-label="Cerrar resultados">✕</button>
+      </div>
+      
+      <div class="results-content">
+        <div class="comparison-table-container">
+          <table class="comparison-table" id="comparison-table">
+            <!-- Tabla de comparación se llenará dinámicamente -->
+          </table>
+        </div>
+        
+        <div class="comparison-insights">
+          <h3>🎯 Insights de Comparación</h3>
+          <div class="insights-grid" id="insights-grid">
+            <!-- Insights se generarán dinámicamente -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </html>

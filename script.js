@@ -4709,6 +4709,9 @@ function displayCatalogProducts(productsToShow = null) {
                     <button class="btn-secondary reviews-btn" onclick="openReviewsModal(${product.id})">
                         📝 Reseñas (${reviews.totalReviews || 0})
                     </button>
+                    <button class="btn-secondary compare-btn" onclick="addToComparison(${product.id})" title="Agregar a comparación">
+                        ⚖️ Comparar
+                    </button>
                     <button class="share-btn" onclick="shareProduct(${product.id})">
                         📤 Compartir
                     </button>
@@ -5962,6 +5965,751 @@ function reportReview(reviewId) {
     showNotification('Reseña reportada. Será revisada por nuestro equipo.', 'info');
 }
 
+// ===================== FILTROS DE DISPONIBILIDAD Y RETIRO =====================
+
+let activeFilters = {
+    availability: 'all',
+    delivery: ['store-pickup', 'home-delivery'],
+    priceRange: { min: null, max: null },
+    location: ''
+};
+
+// Inicializar filtros avanzados
+function initAdvancedFilters() {
+    updateFilterCounts();
+    setupFilterEventListeners();
+    updateFilterResults();
+}
+
+// Configurar event listeners para filtros
+function setupFilterEventListeners() {
+    // Filtros de disponibilidad
+    document.querySelectorAll('input[name="availability"]').forEach(input => {
+        input.addEventListener('change', handleAvailabilityFilter);
+    });
+    
+    // Filtros de entrega
+    document.querySelectorAll('input[name="delivery"]').forEach(input => {
+        input.addEventListener('change', handleDeliveryFilter);
+    });
+    
+    // Filtros de precio
+    const minPrice = document.getElementById('min-price');
+    const maxPrice = document.getElementById('max-price');
+    
+    if (minPrice) {
+        minPrice.addEventListener('input', debounce(handlePriceFilter, 500));
+    }
+    if (maxPrice) {
+        maxPrice.addEventListener('input', debounce(handlePriceFilter, 500));
+    }
+    
+    // Filtro de ubicación
+    const locationSelect = document.getElementById('store-location');
+    if (locationSelect) {
+        locationSelect.addEventListener('change', handleLocationFilter);
+    }
+}
+
+// Manejar filtro de disponibilidad
+function handleAvailabilityFilter(e) {
+    activeFilters.availability = e.target.value;
+    applyFilters();
+    addGamerCoins(2, 'availability-filter-used');
+}
+
+// Manejar filtros de entrega
+function handleDeliveryFilter(e) {
+    const value = e.target.value;
+    
+    if (e.target.checked) {
+        if (!activeFilters.delivery.includes(value)) {
+            activeFilters.delivery.push(value);
+        }
+    } else {
+        activeFilters.delivery = activeFilters.delivery.filter(d => d !== value);
+    }
+    
+    applyFilters();
+    addGamerCoins(2, 'delivery-filter-used');
+}
+
+// Manejar filtro de precio
+function handlePriceFilter() {
+    const minPrice = document.getElementById('min-price').value;
+    const maxPrice = document.getElementById('max-price').value;
+    
+    activeFilters.priceRange = {
+        min: minPrice ? parseInt(minPrice) : null,
+        max: maxPrice ? parseInt(maxPrice) : null
+    };
+    
+    applyFilters();
+    addGamerCoins(3, 'price-filter-used');
+}
+
+// Manejar filtro de ubicación
+function handleLocationFilter(e) {
+    activeFilters.location = e.target.value;
+    updateLocationInfo(e.target.value);
+    applyFilters();
+    addGamerCoins(2, 'location-filter-used');
+}
+
+// Aplicar todos los filtros
+function applyFilters() {
+    let filteredProducts = [...expandedProducts];
+    
+    // Filtro de disponibilidad
+    switch (activeFilters.availability) {
+        case 'in-stock':
+            filteredProducts = filteredProducts.filter(p => p.stock > 10);
+            break;
+        case 'low-stock':
+            filteredProducts = filteredProducts.filter(p => p.stock > 0 && p.stock <= 10);
+            break;
+        case 'out-of-stock':
+            filteredProducts = filteredProducts.filter(p => p.stock === 0);
+            break;
+        // 'all' no filtra nada
+    }
+    
+    // Filtro de precio
+    if (activeFilters.priceRange.min !== null) {
+        filteredProducts = filteredProducts.filter(p => p.price >= activeFilters.priceRange.min);
+    }
+    if (activeFilters.priceRange.max !== null) {
+        filteredProducts = filteredProducts.filter(p => p.price <= activeFilters.priceRange.max);
+    }
+    
+    // Mostrar productos filtrados
+    displayFilteredProducts(filteredProducts);
+    updateFilterResults(filteredProducts.length);
+}
+
+// Mostrar productos filtrados
+function displayFilteredProducts(products) {
+    if (products.length === 0) {
+        displayNoResultsMessage();
+    } else {
+        displayCatalogProducts(products);
+    }
+}
+
+// Mostrar mensaje sin resultados
+function displayNoResultsMessage() {
+    const productGrid = document.querySelector('#featured-grid') || document.querySelector('.products-grid');
+    if (!productGrid) return;
+    
+    productGrid.innerHTML = `
+        <div class="no-results-advanced">
+            <div class="no-results-icon">🔍</div>
+            <h3>No encontramos productos con estos filtros</h3>
+            <p>Intenta ajustar los criterios de búsqueda:</p>
+            <ul class="filter-suggestions">
+                <li>• Amplía el rango de precios</li>
+                <li>• Cambia los filtros de disponibilidad</li>
+                <li>• Selecciona más opciones de entrega</li>
+                <li>• Prueba con otra ubicación</li>
+            </ul>
+            <button class="btn-primary" onclick="resetAllFilters()">
+                🔄 Resetear Filtros
+            </button>
+        </div>
+    `;
+}
+
+// Actualizar contadores de filtros
+function updateFilterCounts() {
+    const allCount = expandedProducts.length;
+    const inStockCount = expandedProducts.filter(p => p.stock > 10).length;
+    const lowStockCount = expandedProducts.filter(p => p.stock > 0 && p.stock <= 10).length;
+    const outStockCount = expandedProducts.filter(p => p.stock === 0).length;
+    
+    // Actualizar UI
+    const updateCounter = (id, count) => {
+        const element = document.getElementById(id);
+        if (element) element.textContent = `(${count})`;
+    };
+    
+    updateCounter('all-count', allCount);
+    updateCounter('in-stock-count', inStockCount);
+    updateCounter('low-stock-count', lowStockCount);
+    updateCounter('out-stock-count', outStockCount);
+}
+
+// Actualizar resultados de filtros
+function updateFilterResults(count = expandedProducts.length) {
+    const resultsElement = document.getElementById('filtered-results-count');
+    if (resultsElement) {
+        if (count === expandedProducts.length) {
+            resultsElement.textContent = 'Mostrando todos los productos';
+        } else {
+            resultsElement.textContent = `Mostrando ${count} de ${expandedProducts.length} productos`;
+        }
+    }
+}
+
+// Establecer rango de precio predefinido
+function setPriceRange(min, max) {
+    document.getElementById('min-price').value = min;
+    document.getElementById('max-price').value = max === 999999999 ? '' : max;
+    
+    activeFilters.priceRange = {
+        min: min,
+        max: max === 999999999 ? null : max
+    };
+    
+    applyFilters();
+    addGamerCoins(2, 'price-preset-used');
+}
+
+// Actualizar información de ubicación
+function updateLocationInfo(location) {
+    const locationInfo = document.getElementById('location-info');
+    if (!locationInfo) return;
+    
+    const storeInfo = {
+        'santiago-centro': {
+            name: 'Santiago Centro',
+            address: 'Av. Libertador Bernardo O\'Higgins 1234',
+            status: 'Abierto hasta las 20:00',
+            availability: 'Stock completo disponible'
+        },
+        'las-condes': {
+            name: 'Las Condes',
+            address: 'Av. Apoquindo 5678',
+            status: 'Abierto hasta las 21:00',
+            availability: 'Stock limitado en algunos productos'
+        },
+        'providencia': {
+            name: 'Providencia',
+            address: 'Av. Providencia 2345',
+            status: 'Abierto hasta las 19:30',
+            availability: 'Stock completo disponible'
+        },
+        'maipu': {
+            name: 'Maipú',
+            address: 'Av. Pajaritos 1567',
+            status: 'Abierto hasta las 20:30',
+            availability: 'Stock completo disponible'
+        },
+        'puente-alto': {
+            name: 'Puente Alto',
+            address: 'Av. Concha y Toro 890',
+            status: 'Abierto hasta las 20:00',
+            availability: 'Stock limitado en algunos productos'
+        }
+    };
+    
+    if (location && storeInfo[location]) {
+        const store = storeInfo[location];
+        locationInfo.innerHTML = `
+            <div class="store-details">
+                <div class="store-name">📍 ${store.name}</div>
+                <div class="store-address">${store.address}</div>
+                <div class="store-status">🕐 ${store.status}</div>
+                <div class="store-availability">📦 ${store.availability}</div>
+            </div>
+        `;
+    } else {
+        locationInfo.innerHTML = '<span class="location-status">📍 Selecciona una tienda para ver disponibilidad</span>';
+    }
+}
+
+// Resetear todos los filtros
+function resetAllFilters() {
+    // Resetear filtros activos
+    activeFilters = {
+        availability: 'all',
+        delivery: ['store-pickup', 'home-delivery'],
+        priceRange: { min: null, max: null },
+        location: ''
+    };
+    
+    // Resetear UI
+    document.querySelector('input[name="availability"][value="all"]').checked = true;
+    
+    document.querySelectorAll('input[name="delivery"]').forEach(input => {
+        input.checked = ['store-pickup', 'home-delivery'].includes(input.value);
+    });
+    
+    document.getElementById('min-price').value = '';
+    document.getElementById('max-price').value = '';
+    document.getElementById('store-location').value = '';
+    
+    updateLocationInfo('');
+    applyFilters();
+    
+    showNotification('🔄 Filtros reseteados', 'info');
+    addGamerCoins(1, 'filters-reset');
+}
+
+// Mostrar mapa de tiendas
+function showStoreMap() {
+    const modal = document.createElement('div');
+    modal.className = 'modal active';
+    modal.innerHTML = `
+        <div class="modal-content store-map-modal">
+            <div class="modal-header">
+                <h2>🗺️ Mapa de Tiendas Level-Up Gamer</h2>
+                <button class="modal-close" onclick="this.closest('.modal').remove()">✕</button>
+            </div>
+            <div class="map-content">
+                <div class="map-placeholder">
+                    <div class="map-icon">🗺️</div>
+                    <p>Mapa interactivo próximamente disponible</p>
+                    <div class="stores-list">
+                        <h3>📍 Nuestras Tiendas:</h3>
+                        <div class="store-item">
+                            <strong>Santiago Centro</strong><br>
+                            Av. Libertador Bernardo O'Higgins 1234<br>
+                            📞 +56 2 2234 5678
+                        </div>
+                        <div class="store-item">
+                            <strong>Las Condes</strong><br>
+                            Av. Apoquindo 5678<br>
+                            📞 +56 2 2345 6789
+                        </div>
+                        <div class="store-item">
+                            <strong>Providencia</strong><br>
+                            Av. Providencia 2345<br>
+                            📞 +56 2 2456 7890
+                        </div>
+                        <div class="store-item">
+                            <strong>Maipú</strong><br>
+                            Av. Pajaritos 1567<br>
+                            📞 +56 2 2567 8901
+                        </div>
+                        <div class="store-item">
+                            <strong>Puente Alto</strong><br>
+                            Av. Concha y Toro 890<br>
+                            📞 +56 2 2678 9012
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    addGamerCoins(3, 'store-map-viewed');
+}
+
+// Función debounce para optimizar performance
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// ===================== COMPARADOR DE PRODUCTOS =====================
+
+let comparisonList = [];
+const MAX_COMPARISON_ITEMS = 4;
+
+// Agregar producto a comparación
+function addToComparison(productId) {
+    const product = expandedProducts.find(p => p.id === productId);
+    if (!product) return;
+    
+    // Verificar si ya está en la lista
+    if (comparisonList.find(p => p.id === productId)) {
+        showNotification('📦 Este producto ya está en la comparación', 'info');
+        return;
+    }
+    
+    // Verificar límite máximo
+    if (comparisonList.length >= MAX_COMPARISON_ITEMS) {
+        showNotification(`⚠️ Máximo ${MAX_COMPARISON_ITEMS} productos para comparar`, 'warning');
+        return;
+    }
+    
+    // Agregar a la lista
+    comparisonList.push(product);
+    updateComparisonUI();
+    addGamerCoins(3, 'product-added-to-comparison');
+    
+    // Mostrar notificación
+    showNotification(`✅ ${product.name} agregado a comparación (${comparisonList.length}/${MAX_COMPARISON_ITEMS})`);
+    
+    // Efecto visual en el botón
+    const compareBtn = document.querySelector(`[onclick="addToComparison(${productId})"]`);
+    if (compareBtn) {
+        compareBtn.classList.add('added-to-comparison');
+        compareBtn.innerHTML = '✅ Agregado';
+        setTimeout(() => {
+            compareBtn.classList.remove('added-to-comparison');
+            compareBtn.innerHTML = '⚖️ Comparar';
+        }, 2000);
+    }
+}
+
+// Actualizar UI de comparación
+function updateComparisonUI() {
+    // Actualizar contador
+    const countElement = document.getElementById('comparison-count');
+    if (countElement) {
+        countElement.textContent = comparisonList.length;
+    }
+    
+    // Actualizar grid de comparación
+    const grid = document.getElementById('comparison-grid');
+    if (grid) {
+        grid.innerHTML = comparisonList.map(product => `
+            <div class="comparison-item">
+                <div class="comparison-item-header">
+                    <div class="product-icon">${product.icon}</div>
+                    <button class="remove-from-comparison" onclick="removeFromComparison(${product.id})" title="Quitar de comparación">
+                        ✕
+                    </button>
+                </div>
+                <div class="comparison-item-content">
+                    <h4 class="comparison-product-name">${product.name}</h4>
+                    <p class="comparison-product-brand">${product.brand}</p>
+                    <div class="comparison-price">$${product.price.toLocaleString()}</div>
+                </div>
+            </div>
+        `).join('');
+        
+        // Agregar slots vacíos
+        for (let i = comparisonList.length; i < MAX_COMPARISON_ITEMS; i++) {
+            grid.innerHTML += `
+                <div class="comparison-slot-empty">
+                    <div class="empty-slot-icon">➕</div>
+                    <p>Agregar Producto</p>
+                </div>
+            `;
+        }
+    }
+    
+    // Habilitar/deshabilitar botón de comparación
+    const startBtn = document.querySelector('.start-comparison');
+    if (startBtn) {
+        startBtn.disabled = comparisonList.length < 2;
+        startBtn.textContent = comparisonList.length < 2 
+            ? `🔍 Selecciona ${2 - comparisonList.length} producto(s) más`
+            : '🔍 Iniciar Comparación';
+    }
+}
+
+// Quitar producto de comparación
+function removeFromComparison(productId) {
+    comparisonList = comparisonList.filter(p => p.id !== productId);
+    updateComparisonUI();
+    showNotification('🗑️ Producto removido de la comparación');
+}
+
+// Limpiar toda la comparación
+function clearComparison() {
+    comparisonList = [];
+    updateComparisonUI();
+    showNotification('🧹 Comparación limpiada');
+}
+
+// Abrir modal de comparador
+function openComparator() {
+    const modal = document.getElementById('product-comparator-modal');
+    if (modal) {
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        updateComparisonUI();
+        addGamerCoins(5, 'comparator-opened');
+    }
+}
+
+// Cerrar modal de comparador
+function closeComparator() {
+    const modal = document.getElementById('product-comparator-modal');
+    if (modal) {
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+}
+
+// Mostrar selector de productos
+function showProductSelector() {
+    const modal = document.getElementById('product-selector-modal');
+    if (modal) {
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        populateProductSelector();
+        addGamerCoins(3, 'product-selector-opened');
+    }
+}
+
+// Cerrar selector de productos
+function closeProductSelector() {
+    const modal = document.getElementById('product-selector-modal');
+    if (modal) {
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+    }
+}
+
+// Poblar selector de productos
+function populateProductSelector() {
+    // Poblar categorías
+    const categorySelect = document.getElementById('selector-category');
+    if (categorySelect) {
+        const categories = [...new Set(expandedProducts.map(p => p.category))];
+        categorySelect.innerHTML = '<option value="">Todas las categorías</option>' +
+            categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+    }
+    
+    // Mostrar productos
+    renderSelectorProducts(expandedProducts);
+    
+    // Event listeners para filtros
+    const searchInput = document.getElementById('selector-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', filterSelectorProducts);
+    }
+    
+    if (categorySelect) {
+        categorySelect.addEventListener('change', filterSelectorProducts);
+    }
+}
+
+// Renderizar productos en selector
+function renderSelectorProducts(products) {
+    const grid = document.getElementById('selector-grid');
+    if (!grid) return;
+    
+    grid.innerHTML = products.map(product => {
+        const isSelected = comparisonList.find(p => p.id === product.id);
+        const isDisabled = comparisonList.length >= MAX_COMPARISON_ITEMS && !isSelected;
+        
+        return `
+            <div class="selector-product ${isSelected ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}"
+                 onclick="${!isDisabled ? `selectProductForComparison(${product.id})` : ''}">
+                <div class="selector-product-icon">${product.icon}</div>
+                <div class="selector-product-info">
+                    <h4>${product.name}</h4>
+                    <p>${product.brand}</p>
+                    <div class="selector-price">$${product.price.toLocaleString()}</div>
+                </div>
+                <div class="selector-product-action">
+                    ${isSelected ? '✅' : isDisabled ? '🚫' : '➕'}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Filtrar productos en selector
+function filterSelectorProducts() {
+    const searchTerm = document.getElementById('selector-search').value.toLowerCase();
+    const categoryFilter = document.getElementById('selector-category').value;
+    
+    let filtered = expandedProducts;
+    
+    if (searchTerm) {
+        filtered = filtered.filter(p => 
+            p.name.toLowerCase().includes(searchTerm) ||
+            p.brand.toLowerCase().includes(searchTerm)
+        );
+    }
+    
+    if (categoryFilter) {
+        filtered = filtered.filter(p => p.category === categoryFilter);
+    }
+    
+    renderSelectorProducts(filtered);
+}
+
+// Seleccionar producto para comparación
+function selectProductForComparison(productId) {
+    const isSelected = comparisonList.find(p => p.id === productId);
+    
+    if (isSelected) {
+        removeFromComparison(productId);
+    } else {
+        addToComparison(productId);
+    }
+    
+    // Actualizar selector
+    const searchTerm = document.getElementById('selector-search').value.toLowerCase();
+    const categoryFilter = document.getElementById('selector-category').value;
+    filterSelectorProducts();
+}
+
+// Iniciar comparación
+function startComparison() {
+    if (comparisonList.length < 2) {
+        showNotification('⚠️ Necesitas al menos 2 productos para comparar', 'warning');
+        return;
+    }
+    
+    generateComparisonTable();
+    generateComparisonInsights();
+    openComparisonResults();
+    addGamerCoins(10, 'comparison-started');
+}
+
+// Generar tabla de comparación
+function generateComparisonTable() {
+    const table = document.getElementById('comparison-table');
+    if (!table) return;
+    
+    // Características a comparar
+    const features = [
+        { key: 'name', label: 'Producto', type: 'text' },
+        { key: 'brand', label: 'Marca', type: 'text' },
+        { key: 'price', label: 'Precio', type: 'currency' },
+        { key: 'category', label: 'Categoría', type: 'text' },
+        { key: 'rating', label: 'Calificación', type: 'rating' },
+        { key: 'stock', label: 'Disponibilidad', type: 'stock' }
+    ];
+    
+    // Generar encabezados
+    const headerRow = `
+        <thead>
+            <tr>
+                <th>Características</th>
+                ${comparisonList.map(product => `
+                    <th class="product-header">
+                        <div class="product-header-content">
+                            <div class="product-icon">${product.icon}</div>
+                            <div class="product-name">${product.name}</div>
+                        </div>
+                    </th>
+                `).join('')}
+            </tr>
+        </thead>
+    `;
+    
+    // Generar filas de características
+    const bodyRows = features.map(feature => `
+        <tr class="feature-row">
+            <td class="feature-label">${feature.label}</td>
+            ${comparisonList.map(product => {
+                let value = product[feature.key];
+                let cellClass = '';
+                
+                switch (feature.type) {
+                    case 'currency':
+                        value = `$${value.toLocaleString()}`;
+                        // Highlight mejor precio
+                        const prices = comparisonList.map(p => p.price);
+                        if (value === `$${Math.min(...prices).toLocaleString()}`) {
+                            cellClass = 'best-value';
+                        }
+                        break;
+                    case 'rating':
+                        value = `${'⭐'.repeat(Math.floor(value))} ${value}`;
+                        // Highlight mejor rating
+                        const ratings = comparisonList.map(p => p.rating);
+                        if (product.rating === Math.max(...ratings)) {
+                            cellClass = 'best-value';
+                        }
+                        break;
+                    case 'stock':
+                        value = `${value} disponibles`;
+                        cellClass = value < 10 ? 'low-stock' : 'in-stock';
+                        break;
+                }
+                
+                return `<td class="feature-value ${cellClass}">${value}</td>`;
+            }).join('')}
+        </tr>
+    `).join('');
+    
+    table.innerHTML = headerRow + '<tbody>' + bodyRows + '</tbody>';
+}
+
+// Generar insights de comparación
+function generateComparisonInsights() {
+    const insightsGrid = document.getElementById('insights-grid');
+    if (!insightsGrid) return;
+    
+    const insights = [];
+    
+    // Mejor precio
+    const prices = comparisonList.map(p => ({ name: p.name, price: p.price }));
+    const cheapest = prices.reduce((min, p) => p.price < min.price ? p : min);
+    insights.push({
+        icon: '💰',
+        title: 'Mejor Precio',
+        description: `${cheapest.name} con $${cheapest.price.toLocaleString()}`,
+        type: 'success'
+    });
+    
+    // Mejor calificación
+    const ratings = comparisonList.map(p => ({ name: p.name, rating: p.rating }));
+    const topRated = ratings.reduce((max, p) => p.rating > max.rating ? p : max);
+    insights.push({
+        icon: '⭐',
+        title: 'Mejor Calificado',
+        description: `${topRated.name} con ${topRated.rating} estrellas`,
+        type: 'info'
+    });
+    
+    // Diferencia de precio
+    const maxPrice = Math.max(...prices.map(p => p.price));
+    const minPrice = Math.min(...prices.map(p => p.price));
+    const difference = maxPrice - minPrice;
+    insights.push({
+        icon: '📊',
+        title: 'Diferencia de Precio',
+        description: `Hasta $${difference.toLocaleString()} de diferencia`,
+        type: 'warning'
+    });
+    
+    // Recomendación
+    insights.push({
+        icon: '🎯',
+        title: 'Recomendación Gaming',
+        description: `Para gaming, recomendamos ${topRated.name} por su excelente balance precio-calidad`,
+        type: 'primary'
+    });
+    
+    insightsGrid.innerHTML = insights.map(insight => `
+        <div class="insight-card ${insight.type}">
+            <div class="insight-icon">${insight.icon}</div>
+            <div class="insight-content">
+                <h4>${insight.title}</h4>
+                <p>${insight.description}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Abrir resultados de comparación
+function openComparisonResults() {
+    const modal = document.getElementById('comparison-results-modal');
+    if (modal) {
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+    }
+}
+
+// Cerrar resultados de comparación
+function closeComparisonResults() {
+    const modal = document.getElementById('comparison-results-modal');
+    if (modal) {
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+    }
+}
+
+// Función para mostrar comparador rápido desde panel de acceso
+function showQuickCompare() {
+    if (comparisonList.length === 0) {
+        showProductSelector();
+    } else {
+        openComparator();
+    }
+}
+
 // ===================== SEPARADOR DE CATEGORÍAS =====================
 
 // Categorías organizadas por grupos
@@ -6369,6 +7117,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Inicializar categorías avanzadas
     initAdvancedCategories();
+    
+    // Inicializar filtros avanzados
+    initAdvancedFilters();
     
     // Event listeners para reseñas
     const closeReviewsBtn = document.querySelector('.close-reviews');
