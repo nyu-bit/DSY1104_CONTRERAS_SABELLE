@@ -696,4 +696,39 @@
     - Actualiza #cart-count con el total del carrito y pon aria-live="polite".
   ================================================================ -->
 </body>
+  <!-- Widget flotante de Ayuda/FAQ -->
+  <button id="faq-widget-btn" class="faq-widget-btn" aria-label="Abrir ayuda y preguntas frecuentes">
+    <span class="faq-icon">❓</span>
+  </button>
+  <aside id="faq-panel" class="faq-panel" aria-label="Preguntas Frecuentes" tabindex="-1" style="display:none;">
+    <header class="faq-header">
+      <h2>Ayuda & FAQ</h2>
+      <button id="faq-close" class="faq-close" aria-label="Cerrar ayuda">✖</button>
+    </header>
+    <div class="faq-search">
+      <input type="search" id="faq-search" placeholder="Buscar pregunta..." aria-label="Buscar en FAQ">
+    </div>
+    <ul class="faq-list">
+      <li class="faq-item">
+        <button class="faq-question" aria-expanded="false">¿Cómo puedo comprar un producto?</button>
+        <div class="faq-answer" hidden>Selecciona el producto, agrégalo al carrito y sigue el proceso de pago.</div>
+      </li>
+      <li class="faq-item">
+        <button class="faq-question" aria-expanded="false">¿Qué métodos de retiro existen?</button>
+        <div class="faq-answer" hidden>Puedes retirar en tienda o solicitar envío a domicilio.</div>
+      </li>
+      <li class="faq-item">
+        <button class="faq-question" aria-expanded="false">¿Cómo sé si un producto está disponible?</button>
+        <div class="faq-answer" hidden>Los productos en stock se muestran con el filtro de disponibilidad.</div>
+      </li>
+      <li class="faq-item">
+        <button class="faq-question" aria-expanded="false">¿Puedo comparar productos?</button>
+        <div class="faq-answer" hidden>Sí, selecciona "Comparar" en los productos destacados.</div>
+      </li>
+      <li class="faq-item">
+        <button class="faq-question" aria-expanded="false">¿Cómo contacto soporte?</button>
+        <div class="faq-answer" hidden>Puedes escribirnos desde el formulario de contacto o por chat en línea.</div>
+      </li>
+    </ul>
+  </aside>
 </html>

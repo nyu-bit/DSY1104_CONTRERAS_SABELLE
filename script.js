@@ -1019,3 +1019,54 @@ function clearProfileErrors() {
     input.classList.remove('error');
   });
 }
+
+// Widget FAQ flotante
+const faqBtn = document.getElementById('faq-widget-btn');
+const faqPanel = document.getElementById('faq-panel');
+const faqClose = document.getElementById('faq-close');
+const faqSearch = document.getElementById('faq-search');
+
+if (faqBtn && faqPanel && faqClose) {
+  faqBtn.addEventListener('click', function() {
+    faqPanel.style.display = 'flex';
+    faqPanel.style.animation = 'faq-slide-in 0.35s cubic-bezier(.68,-0.55,.27,1.55)';
+    setTimeout(() => faqPanel.focus(), 200);
+  });
+  faqClose.addEventListener('click', function() {
+    faqPanel.style.display = 'none';
+    faqBtn.focus();
+  });
+  faqPanel.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      faqPanel.style.display = 'none';
+      faqBtn.focus();
+    }
+  });
+}
+
+if (faqSearch) {
+  faqSearch.addEventListener('input', function(e) {
+    const query = e.target.value.toLowerCase();
+    document.querySelectorAll('.faq-item').forEach(item => {
+      const question = item.querySelector('.faq-question').textContent.toLowerCase();
+      if (question.includes(query)) {
+        item.style.display = '';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+  });
+}
+
+document.querySelectorAll('.faq-question').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const answer = btn.nextElementSibling;
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', !expanded);
+    if (expanded) {
+      answer.hidden = true;
+    } else {
+      answer.hidden = false;
+    }
+  });
+});
