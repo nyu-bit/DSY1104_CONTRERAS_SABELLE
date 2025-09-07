@@ -181,6 +181,20 @@
       <!-- Productos Destacados -->
       <section id="destacados">
         <h2 class="section-title">Productos Destacados</h2>
+        <!-- Filtros de Disponibilidad y Retiro -->
+        <form class="filters-panel" id="filters-panel" aria-label="Filtrar productos">
+          <fieldset class="filter-group">
+            <legend>Disponibilidad</legend>
+            <label><input type="radio" name="disponibilidad" value="todos" checked> Todos</label>
+            <label><input type="radio" name="disponibilidad" value="stock"> En stock</label>
+            <label><input type="radio" name="disponibilidad" value="agotado"> Agotado</label>
+          </fieldset>
+          <fieldset class="filter-group">
+            <legend>Retiro</legend>
+            <label><input type="checkbox" name="retiro" value="tienda" checked> En tienda</label>
+            <label><input type="checkbox" name="retiro" value="envio" checked> Envío a domicilio</label>
+          </fieldset>
+        </form>
         <div class="cards" id="featured-grid">
           <article class="card producto" data-id="1">
             <div class="card-image">🎮</div>

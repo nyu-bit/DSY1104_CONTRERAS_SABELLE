@@ -69,6 +69,21 @@
    overflow: hidden;
  }
 .quick-access-panel::before {
+  /* Estilos Gamer para los filtros */
+  .filters-panel {
+    background: linear-gradient(90deg, #000000 60%, #111111 100%);
+    border: 2px solid #FFD700;
+  }
+  .filter-group legend {
+    color: #39FF14;
+  }
+  .filter-group label {
+    color: #FFFFFF;
+  }
+  .filter-group input[type="radio"],
+  .filter-group input[type="checkbox"] {
+    accent-color: #FFD700;
+  }
    content: '';
    position: absolute;
    left: 0; top: 0; right: 0; bottom: 0;
