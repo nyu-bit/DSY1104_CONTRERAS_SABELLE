@@ -42,6 +42,35 @@
           <li><a href="#contacto">Contacto</a></li>
         </ul>
         
+        <!-- Panel de Acceso Rápido y Búsqueda -->
+        <div class="quick-access-panel">
+          <div class="search-container">
+            <input type="search" 
+                   class="quick-search" 
+                   placeholder="🔍 Búsqueda rápida... (Ctrl+K)"
+                   aria-label="Búsqueda rápida de productos"
+                   id="quick-search">
+            <button class="search-btn" type="button" aria-label="Buscar">
+              🔍
+            </button>
+          </div>
+          
+          <div class="quick-actions">
+            <button class="quick-btn" type="button" title="Categorías" onclick="showQuickCategories()">
+              📂 <span>Categorías</span>
+            </button>
+            <button class="quick-btn" type="button" title="Ofertas" onclick="showQuickOffers()">
+              🏷️ <span>Ofertas</span>
+            </button>
+            <button class="quick-btn" type="button" title="Comparar" onclick="showQuickCompare()">
+              ⚖️ <span>Comparar</span>
+            </button>
+            <button class="quick-btn" type="button" title="Ayuda" onclick="showQuickHelp()">
+              ❓ <span>Ayuda</span>
+            </button>
+          </div>
+        </div>
+
         <div class="actions">
           <button class="btn-icon" type="button" aria-label="Abrir carrito" onclick="showCart()">
             🛒 <span class="badge" id="cart-count" aria-live="polite">0</span>
@@ -288,20 +317,67 @@
   <main class="main" id="contenido">
     <div class="container">
       
-      <!-- Categorías -->
-      <section id="categorias">
-  <h2 class="section-title">Categorías Gaming</h2>
-  <div class="tiles" id="tiles-categorias"></div>
-        <!-- Separador Gamer de Categorías y Subcategorías -->
-        <div class="category-separator" role="separator" aria-label="Separador de categorías y subcategorías">
-          <span class="separator-icon">
-            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-              <circle cx="20" cy="20" r="18" stroke="#39FF14" stroke-width="3"/>
-              <path d="M10 20h20" stroke="#1E90FF" stroke-width="3" stroke-linecap="round"/>
-              <path d="M20 10v20" stroke="#FFD700" stroke-width="3" stroke-linecap="round"/>
-            </svg>
-          </span>
-          <span class="separator-text">Subcategorías</span>
+      <!-- Categorías con Separadores Avanzados -->
+      <section id="categorias" class="categories-section">
+        <h2 class="section-title">🎮 Universo Gaming</h2>
+        
+        <!-- Categorías Principales -->
+        <div class="main-categories">
+          <h3 class="category-group-title">
+            <span class="category-icon">🔥</span>
+            Componentes Principales
+            <span class="category-count" id="main-components-count"></span>
+          </h3>
+          <div class="tiles" id="main-components-tiles"></div>
+        </div>
+
+        <!-- Separador Animado -->
+        <div class="advanced-separator">
+          <div class="separator-line">
+            <div class="separator-glow"></div>
+          </div>
+          <div class="separator-content">
+            <div class="separator-icon">⚡</div>
+            <span class="separator-text">LEVEL UP</span>
+            <div class="separator-icon">⚡</div>
+          </div>
+          <div class="separator-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+          </div>
+        </div>
+
+        <!-- Subcategorías Periféricos -->
+        <div class="sub-categories">
+          <h3 class="category-group-title">
+            <span class="category-icon">🖱️</span>
+            Periféricos & Gaming
+            <span class="category-count" id="peripherals-count"></span>
+          </h3>
+          <div class="tiles" id="peripherals-tiles"></div>
+        </div>
+
+        <!-- Separador Especializado -->
+        <div class="advanced-separator specialized">
+          <div class="separator-line">
+            <div class="separator-glow"></div>
+          </div>
+          <div class="separator-content">
+            <div class="separator-icon">🎯</div>
+            <span class="separator-text">ESPECIALIDADES</span>
+            <div class="separator-icon">🎯</div>
+          </div>
+        </div>
+
+        <!-- Subcategorías Especiales -->
+        <div class="special-categories">
+          <h3 class="category-group-title">
+            <span class="category-icon">⭐</span>
+            Ediciones Especiales
+            <span class="category-count" id="specials-count"></span>
+          </h3>
+          <div class="tiles" id="specials-tiles"></div>
         </div>
       </section>
 

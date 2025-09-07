@@ -5962,8 +5962,414 @@ function reportReview(reviewId) {
     showNotification('Reseña reportada. Será revisada por nuestro equipo.', 'info');
 }
 
+// ===================== SEPARADOR DE CATEGORÍAS =====================
+
+// Categorías organizadas por grupos
+const categoryGroups = {
+    mainComponents: ['Procesadores', 'Tarjetas Gráficas', 'Memorias RAM', 'Almacenamiento', 'Placas Madre', 'Fuentes de Poder'],
+    peripherals: ['Periféricos', 'Audio', 'Monitores', 'Gabinetes', 'Refrigeración'],
+    specials: ['Especiales']
+};
+
+// Inicializar categorías separadas
+function initAdvancedCategories() {
+    renderMainComponents();
+    renderPeripherals();
+    renderSpecials();
+    updateCategoryCounts();
+}
+
+// Renderizar componentes principales
+function renderMainComponents() {
+    const container = document.getElementById('main-components-tiles');
+    if (!container) return;
+    
+    const mainCategories = categoryGroups.mainComponents;
+    const categoryTiles = mainCategories.map(category => {
+        const products = expandedProducts.filter(p => p.category === category);
+        const icon = getCategoryIcon(category);
+        
+        return `
+            <div class="tile main-component-tile" 
+                 data-category="${category}"
+                 onclick="filterByAdvancedCategory('${category}')"
+                 role="button" 
+                 tabindex="0"
+                 aria-label="Categoría ${category}, ${products.length} productos">
+                <div class="tile-icon">${icon}</div>
+                <div class="tile-content">
+                    <h3 class="tile-title">${category}</h3>
+                    <p class="tile-description">${products.length} productos disponibles</p>
+                    <div class="tile-stats">
+                        <span class="price-range">
+                            $${Math.min(...products.map(p => p.price)).toLocaleString()} - 
+                            $${Math.max(...products.map(p => p.price)).toLocaleString()}
+                        </span>
+                    </div>
+                </div>
+                <div class="tile-badge">${products.length}</div>
+            </div>
+        `;
+    }).join('');
+    
+    container.innerHTML = categoryTiles;
+}
+
+// Renderizar periféricos
+function renderPeripherals() {
+    const container = document.getElementById('peripherals-tiles');
+    if (!container) return;
+    
+    const peripheralCategories = categoryGroups.peripherals;
+    const categoryTiles = peripheralCategories.map(category => {
+        const products = expandedProducts.filter(p => p.category === category);
+        const icon = getCategoryIcon(category);
+        
+        return `
+            <div class="tile peripheral-tile" 
+                 data-category="${category}"
+                 onclick="filterByAdvancedCategory('${category}')"
+                 role="button" 
+                 tabindex="0"
+                 aria-label="Categoría ${category}, ${products.length} productos">
+                <div class="tile-icon">${icon}</div>
+                <div class="tile-content">
+                    <h3 class="tile-title">${category}</h3>
+                    <p class="tile-description">${products.length} productos gaming</p>
+                    <div class="tile-features">
+                        <span class="feature-tag">Gaming Ready</span>
+                        <span class="feature-tag">RGB Available</span>
+                    </div>
+                </div>
+                <div class="tile-badge peripheral">${products.length}</div>
+            </div>
+        `;
+    }).join('');
+    
+    container.innerHTML = categoryTiles;
+}
+
+// Renderizar categorías especiales
+function renderSpecials() {
+    const container = document.getElementById('specials-tiles');
+    if (!container) return;
+    
+    const specialCategories = categoryGroups.specials;
+    const categoryTiles = specialCategories.map(category => {
+        const products = expandedProducts.filter(p => p.category === category);
+        const icon = getCategoryIcon(category);
+        
+        return `
+            <div class="tile special-tile" 
+                 data-category="${category}"
+                 onclick="filterByAdvancedCategory('${category}')"
+                 role="button" 
+                 tabindex="0"
+                 aria-label="Categoría ${category}, ${products.length} productos especiales">
+                <div class="tile-icon special">${icon}</div>
+                <div class="tile-content">
+                    <h3 class="tile-title">${category}</h3>
+                    <p class="tile-description">Ediciones limitadas y exclusivas</p>
+                    <div class="special-features">
+                        <span class="special-tag">Limitado</span>
+                        <span class="special-tag">Exclusivo</span>
+                        <span class="special-tag">Premium</span>
+                    </div>
+                </div>
+                <div class="tile-badge special">${products.length}</div>
+            </div>
+        `;
+    }).join('');
+    
+    container.innerHTML = categoryTiles;
+}
+
+// Actualizar contadores de categorías
+function updateCategoryCounts() {
+    // Componentes principales
+    const mainCount = categoryGroups.mainComponents.reduce((total, cat) => {
+        return total + expandedProducts.filter(p => p.category === cat).length;
+    }, 0);
+    const mainCounter = document.getElementById('main-components-count');
+    if (mainCounter) mainCounter.textContent = `${mainCount} productos`;
+    
+    // Periféricos
+    const peripheralCount = categoryGroups.peripherals.reduce((total, cat) => {
+        return total + expandedProducts.filter(p => p.category === cat).length;
+    }, 0);
+    const peripheralCounter = document.getElementById('peripherals-count');
+    if (peripheralCounter) peripheralCounter.textContent = `${peripheralCount} productos`;
+    
+    // Especiales
+    const specialCount = categoryGroups.specials.reduce((total, cat) => {
+        return total + expandedProducts.filter(p => p.category === cat).length;
+    }, 0);
+    const specialCounter = document.getElementById('specials-count');
+    if (specialCounter) specialCounter.textContent = `${specialCount} productos`;
+}
+
+// Filtrar por categoría avanzada
+function filterByAdvancedCategory(category) {
+    const filtered = expandedProducts.filter(p => p.category === category);
+    displaySearchResults(filtered, `Categoría: ${category}`);
+    addGamerCoins(5, 'advanced-category-filtered');
+    
+    // Scroll a resultados
+    const catalogSection = document.getElementById('catalogo');
+    if (catalogSection) {
+        catalogSection.scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    // Efecto visual en la tile seleccionada
+    const tiles = document.querySelectorAll('.tile');
+    tiles.forEach(tile => tile.classList.remove('selected'));
+    
+    const selectedTile = document.querySelector(`[data-category="${category}"]`);
+    if (selectedTile) {
+        selectedTile.classList.add('selected');
+        setTimeout(() => selectedTile.classList.remove('selected'), 2000);
+    }
+}
+
+// ===================== PANEL DE ACCESO RÁPIDO =====================
+
+let quickSearchTimeout;
+
+// Inicializar panel de acceso rápido
+function initQuickAccessPanel() {
+    const quickSearch = document.getElementById('quick-search');
+    const searchBtn = document.querySelector('.search-btn');
+    
+    if (quickSearch) {
+        // Atajo de teclado Ctrl+K para enfocar búsqueda
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'k') {
+                e.preventDefault();
+                quickSearch.focus();
+                addGamerCoins(2, 'quick-search-focus');
+            }
+        });
+        
+        // Búsqueda en tiempo real
+        quickSearch.addEventListener('input', (e) => {
+            clearTimeout(quickSearchTimeout);
+            quickSearchTimeout = setTimeout(() => {
+                performQuickSearch(e.target.value);
+            }, 300);
+        });
+        
+        // Búsqueda al presionar Enter
+        quickSearch.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performQuickSearch(e.target.value);
+            }
+        });
+    }
+    
+    if (searchBtn) {
+        searchBtn.addEventListener('click', () => {
+            const query = quickSearch.value.trim();
+            if (query) {
+                performQuickSearch(query);
+            }
+        });
+    }
+}
+
+// Realizar búsqueda rápida
+function performQuickSearch(query) {
+    if (!query.trim()) return;
+    
+    const searchResults = expandedProducts.filter(product => 
+        product.name.toLowerCase().includes(query.toLowerCase()) ||
+        product.description.toLowerCase().includes(query.toLowerCase()) ||
+        product.brand.toLowerCase().includes(query.toLowerCase()) ||
+        product.category.toLowerCase().includes(query.toLowerCase())
+    );
+    
+    // Mostrar resultados
+    displaySearchResults(searchResults, query);
+    
+    // Gamificación
+    addGamerCoins(5, 'quick-search-performed');
+    
+    // Scroll a resultados
+    const catalogSection = document.getElementById('catalogo');
+    if (catalogSection) {
+        catalogSection.scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    // Notificación
+    showNotification(`🔍 Encontrados ${searchResults.length} resultados para "${query}"`);
+}
+
+// Mostrar resultados de búsqueda
+function displaySearchResults(results, query) {
+    const productGrid = document.querySelector('#featured-grid') || document.querySelector('.products-grid');
+    if (!productGrid) return;
+    
+    if (results.length === 0) {
+        productGrid.innerHTML = `
+            <div class="no-results-gamer">
+                <div class="no-results-icon">🎮</div>
+                <h3>¡Ups! No hay power-ups aquí</h3>
+                <p>No encontramos productos para "<strong>${query}</strong>"</p>
+                <p>💡 Intenta con términos como: Gaming, RTX, Ryzen, PlayStation...</p>
+                <button class="btn-primary" onclick="displayCatalogProducts()">
+                    🔄 Ver Todos los Productos
+                </button>
+            </div>
+        `;
+        return;
+    }
+    
+    // Actualizar título de la sección
+    const catalogTitle = document.querySelector('.catalog-header h2');
+    if (catalogTitle) {
+        catalogTitle.innerHTML = `🔍 Resultados para "${query}" (${results.length})`;
+    }
+    
+    // Mostrar productos encontrados
+    displayCatalogProducts(results);
+}
+
+// Mostrar categorías rápidas
+function showQuickCategories() {
+    const categories = [...new Set(expandedProducts.map(p => p.category))];
+    
+    const modal = document.createElement('div');
+    modal.className = 'modal active';
+    modal.innerHTML = `
+        <div class="modal-content quick-categories-modal">
+            <div class="modal-header">
+                <h2>📂 Categorías Rápidas</h2>
+                <button class="modal-close" onclick="this.closest('.modal').remove()">✕</button>
+            </div>
+            <div class="categories-grid">
+                ${categories.map(category => {
+                    const count = expandedProducts.filter(p => p.category === category).length;
+                    const icon = getCategoryIcon(category);
+                    return `
+                        <button class="category-quick-btn" onclick="filterByCategory('${category}'); this.closest('.modal').remove();">
+                            <span class="category-icon">${icon}</span>
+                            <span class="category-name">${category}</span>
+                            <span class="category-count">${count} productos</span>
+                        </button>
+                    `;
+                }).join('')}
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    addGamerCoins(3, 'quick-categories-opened');
+}
+
+// Mostrar ofertas rápidas
+function showQuickOffers() {
+    const offerProducts = expandedProducts.filter(p => p.price < 500000 || p.category.includes('Especial'));
+    
+    displaySearchResults(offerProducts, 'Ofertas Especiales');
+    addGamerCoins(5, 'quick-offers-viewed');
+    
+    // Scroll a resultados
+    const catalogSection = document.getElementById('catalogo');
+    if (catalogSection) {
+        catalogSection.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+// Mostrar comparador rápido
+function showQuickCompare() {
+    showNotification('🚀 Comparador próximamente disponible', 'info');
+    addGamerCoins(2, 'quick-compare-interest');
+}
+
+// Mostrar ayuda rápida
+function showQuickHelp() {
+    const modal = document.createElement('div');
+    modal.className = 'modal active';
+    modal.innerHTML = `
+        <div class="modal-content quick-help-modal">
+            <div class="modal-header">
+                <h2>❓ Ayuda Rápida</h2>
+                <button class="modal-close" onclick="this.closest('.modal').remove()">✕</button>
+            </div>
+            <div class="help-content">
+                <div class="help-section">
+                    <h3>🔍 Búsqueda</h3>
+                    <ul>
+                        <li><kbd>Ctrl + K</kbd> - Enfocar búsqueda rápida</li>
+                        <li>Busca por nombre, marca o categoría</li>
+                        <li>Resultados en tiempo real</li>
+                    </ul>
+                </div>
+                <div class="help-section">
+                    <h3>🎮 Gamificación</h3>
+                    <ul>
+                        <li>Gana Gamer Coins por cada acción</li>
+                        <li>Sube de nivel con puntos</li>
+                        <li>Desbloquea logros especiales</li>
+                    </ul>
+                </div>
+                <div class="help-section">
+                    <h3>🛒 Compras</h3>
+                    <ul>
+                        <li>Agrega productos al carrito</li>
+                        <li>Descuentos por nivel de usuario</li>
+                        <li>Reseñas y calificaciones</li>
+                    </ul>
+                </div>
+                <div class="help-section">
+                    <h3>📞 Soporte</h3>
+                    <ul>
+                        <li>Chat WhatsApp integrado</li>
+                        <li>Soporte en tiempo real</li>
+                        <li>Asesoría personalizada</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    addGamerCoins(3, 'quick-help-opened');
+}
+
+// Obtener icono de categoría
+function getCategoryIcon(category) {
+    const icons = {
+        'Procesadores': '🔥',
+        'Tarjetas Gráficas': '🎮',
+        'Memorias RAM': '⚡',
+        'Almacenamiento': '💾',
+        'Placas Madre': '🔧',
+        'Fuentes de Poder': '🔋',
+        'Gabinetes': '🏠',
+        'Refrigeración': '❄️',
+        'Periféricos': '🖱️',
+        'Audio': '🎧',
+        'Monitores': '🖥️',
+        'Especiales': '⭐'
+    };
+    return icons[category] || '📦';
+}
+
+// Filtrar por categoría
+function filterByCategory(category) {
+    const filtered = expandedProducts.filter(p => p.category === category);
+    displaySearchResults(filtered, `Categoría: ${category}`);
+    addGamerCoins(3, 'category-filtered');
+}
+
 // ===================== EVENT LISTENERS =====================
 document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar panel de acceso rápido
+    initQuickAccessPanel();
+    
+    // Inicializar categorías avanzadas
+    initAdvancedCategories();
+    
     // Event listeners para reseñas
     const closeReviewsBtn = document.querySelector('.close-reviews');
     const closeWriteReviewBtn = document.querySelector('.close-write-review');
