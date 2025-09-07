@@ -63,8 +63,18 @@
 .promo-arrow:hover {
   color: #39FF14;
 }
-@media (max-width: 600px) {
-  .promo-carousel {
+ .quick-access-panel {
+   background: linear-gradient(90deg, #181825 60%, #0f3460 100%);
+   position: relative;
+   overflow: hidden;
+ }
+.quick-access-panel::before {
+   content: '';
+   position: absolute;
+   left: 0; top: 0; right: 0; bottom: 0;
+   background: url('https://www.transparenttextures.com/patterns/diamond-upholstery.png');
+   opacity: 0.08;
+   pointer-events: none;
     flex-direction: column;
     gap: 0.5rem;
   }
@@ -78,7 +88,7 @@
     padding: 0.4rem 0.8rem;
     font-size: 0.95rem;
   }
-}
+/* Fin de .quick-access-panel */
 /* ===================== VARIABLES Y RESET ===================== */
 :root {
   --bg: #f8fafc; --surface: #ffffff; --text: #0f172a; --muted: #64748b; --border: #e2e8f0;
