@@ -1,3 +1,66 @@
+// ===================== PAGINACIÓN DEL GRID DE PRODUCTOS =====================
+const PRODUCTS_PER_PAGE = 4;
+
+function renderProductosPaginados(list) {
+  const totalPages = Math.ceil(list.length / PRODUCTS_PER_PAGE);
+  const start = (currentPage - 1) * PRODUCTS_PER_PAGE;
+  const end = start + PRODUCTS_PER_PAGE;
+  const pageItems = list.slice(start, end);
+  renderProductos(pageItems);
+  renderPagination(totalPages);
+}
+
+function renderPagination(totalPages) {
+  const pagNav = document.getElementById('product-pagination');
+  if (!pagNav) return;
+  if (totalPages <= 1) {
+    pagNav.innerHTML = '';
+    return;
+  }
+  let html = `<button class="pag-btn" ${currentPage === 1 ? 'disabled' : ''} aria-label="Anterior">&lt;</button>`;
+  for (let i = 1; i <= totalPages; i++) {
+    html += `<button class="pag-btn${i === currentPage ? ' active' : ''}" data-page="${i}">${i}</button>`;
+  }
+  html += `<button class="pag-btn" ${currentPage === totalPages ? 'disabled' : ''} aria-label="Siguiente">&gt;</button>`;
+  pagNav.innerHTML = html;
+  pagNav.querySelectorAll('.pag-btn[data-page]').forEach(btn => {
+    btn.onclick = () => {
+      currentPage = parseInt(btn.getAttribute('data-page'));
+      filtrarProductos();
+    };
+  });
+  pagNav.querySelector('.pag-btn[aria-label="Anterior"]').onclick = () => {
+    if (currentPage > 1) {
+      currentPage--;
+      filtrarProductos();
+    }
+  };
+  pagNav.querySelector('.pag-btn[aria-label="Siguiente"]').onclick = () => {
+    if (currentPage < totalPages) {
+      currentPage++;
+      filtrarProductos();
+    }
+  };
+}
+
+// Modificar filtrarProductos para usar paginación
+const originalFiltrarProductos = filtrarProductos;
+filtrarProductos = function() {
+  // ...existing code para filtros...
+  const { disponibilidad, retiro } = getFiltros ? getFiltros() : { disponibilidad: 'todos', retiro: [] };
+  const search = (searchInput.value || '').toLowerCase();
+  let filtrados = products.filter(prod => {
+    if (disponibilidad && disponibilidad !== 'todos' && prod.available !== (disponibilidad === 'stock')) return false;
+    if (search && !prod.name.toLowerCase().includes(search) && !prod.description.toLowerCase().includes(search)) return false;
+    return true;
+  });
+  renderProductosPaginados(filtrados);
+};
+
+// Inicializar paginación al cargar
+document.addEventListener('DOMContentLoaded', () => {
+  filtrarProductos();
+});
 // Carrusel Banner de Promociones
 document.addEventListener('DOMContentLoaded', function() {
   const slides = document.querySelectorAll('.promo-slide');
