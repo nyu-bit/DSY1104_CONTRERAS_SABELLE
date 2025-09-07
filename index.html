@@ -126,12 +126,17 @@
       </form>
     </nav>
   <!-- ===================== HERO ===================== -->
-  <section class="hero">
-    <div class="container">
-      <h1>Level Up Your Gaming</h1>
-      <p>Descubre los mejores juegos, accesorios y hardware gaming al mejor precio</p>
-      <button class="cta-button" onclick="document.getElementById('destacados').scrollIntoView()">
-        🎮 Explorar Productos
+  <section class="hero gamer-hero" aria-label="Bienvenida gamer" tabindex="0">
+    <div class="hero-bg-animated" aria-hidden="true"></div>
+    <div class="container hero-content" role="region" aria-labelledby="hero-title">
+      <h1 id="hero-title" class="hero-title">
+        <span class="hero-icon" style="color:#1E90FF;">⚡</span> <span style="color:#fff;">Level Up Your Gaming</span> <span class="hero-icon" style="color:#FFD700;">🎮</span>
+      </h1>
+      <p class="hero-desc" style="color:#fff;">Descubre los <strong style="color:#FFD700;">mejores juegos</strong>, <strong style="color:#1E90FF;">accesorios</strong> y <strong style="color:#FFD700;">hardware</strong> gaming al mejor precio.<br>
+        <span class="hero-highlight" style="color:#1E90FF;">¡Potencia tu experiencia gamer!</span>
+      </p>
+      <button class="cta-button hero-cta" style="color:#fff; border-color:#1E90FF; background:rgba(30,144,255,0.15);" onclick="document.getElementById('destacados').scrollIntoView()" aria-label="Explorar productos destacados">
+        <span class="cta-icon" style="color:#FFD700;">🚀</span> Explorar Productos
       </button>
     </div>
   </section>
