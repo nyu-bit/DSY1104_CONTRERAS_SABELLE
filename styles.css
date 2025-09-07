@@ -3880,6 +3880,460 @@ button { font-family: inherit; }
     }
 }
 
+/* ===== Sistema de Reseñas Avanzado ===== */
+.reviews-modal {
+    max-width: 900px;
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    color: white;
+}
+
+.reviews-summary {
+    background: rgba(52, 73, 94, 0.5);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.rating-overview {
+    text-align: center;
+}
+
+.average-rating {
+    margin-bottom: 20px;
+}
+
+.rating-number {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #f39c12;
+    display: block;
+}
+
+.rating-stars {
+    font-size: 1.5rem;
+    margin: 10px 0;
+}
+
+.total-reviews {
+    color: #bdc3c7;
+    font-size: 1.1rem;
+}
+
+.rating-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rating-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rating-label {
+    width: 50px;
+    font-size: 0.9rem;
+    color: #f39c12;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    transition: width 0.3s ease;
+}
+
+.rating-count {
+    width: 30px;
+    text-align: right;
+    font-size: 0.9rem;
+    color: #bdc3c7;
+}
+
+.review-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    grid-column: 1 / -1;
+}
+
+.reviews-list {
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.review-item {
+    background: rgba(52, 73, 94, 0.3);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.review-item:hover {
+    border-color: #3498db;
+    background: rgba(52, 73, 94, 0.5);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.reviewer-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.reviewer-avatar {
+    font-size: 2rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reviewer-details {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.reviewer-name {
+    font-weight: bold;
+    color: #3498db;
+}
+
+.verified-badge {
+    font-size: 0.8rem;
+    color: #27ae60;
+    background: rgba(39, 174, 96, 0.2);
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.review-rating {
+    text-align: right;
+}
+
+.review-date {
+    color: #95a5a6;
+    font-size: 0.8rem;
+    display: block;
+    margin-top: 5px;
+}
+
+.review-content {
+    margin-bottom: 15px;
+}
+
+.review-title {
+    color: #ecf0f1;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.review-comment {
+    line-height: 1.6;
+    color: #bdc3c7;
+    margin-bottom: 15px;
+}
+
+.review-images {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.review-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.review-image:hover {
+    transform: scale(1.1);
+}
+
+.review-actions {
+    display: flex;
+    gap: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.review-action-btn {
+    background: rgba(52, 152, 219, 0.2);
+    color: #3498db;
+    border: 1px solid #3498db;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.review-action-btn:hover {
+    background: #3498db;
+    color: white;
+}
+
+.review-action-btn.helpful:hover {
+    background: #27ae60;
+    border-color: #27ae60;
+}
+
+.review-action-btn.report:hover {
+    background: #e74c3c;
+    border-color: #e74c3c;
+}
+
+/* Modal para escribir reseña */
+.write-review-modal {
+    max-width: 600px;
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    color: white;
+}
+
+.review-form-group {
+    margin-bottom: 20px;
+}
+
+.review-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #3498db;
+}
+
+.rating-input {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.star {
+    font-size: 2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.star.large {
+    font-size: 2.5rem;
+}
+
+.star:hover {
+    transform: scale(1.1);
+}
+
+.star.full {
+    color: #f39c12;
+    text-shadow: 0 0 10px rgba(243, 156, 18, 0.7);
+}
+
+.star.empty {
+    color: #7f8c8d;
+}
+
+.review-form-group input,
+.review-form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #3498db;
+    border-radius: 8px;
+    background: rgba(52, 73, 94, 0.3);
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.review-form-group input:focus,
+.review-form-group textarea:focus {
+    border-color: #e74c3c;
+    background: rgba(52, 73, 94, 0.5);
+    box-shadow: 0 0 10px rgba(231, 76, 60, 0.3);
+}
+
+.review-form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.char-counter {
+    text-align: right;
+    font-size: 0.8rem;
+    color: #95a5a6;
+    margin-top: 5px;
+}
+
+.recommendation-input {
+    display: flex;
+    gap: 20px;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 10px 15px;
+    border: 2px solid transparent;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.radio-label:hover {
+    border-color: #3498db;
+    background: rgba(52, 152, 219, 0.1);
+}
+
+.radio-label input[type="radio"] {
+    width: auto;
+    margin: 0;
+}
+
+.review-form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.no-reviews {
+    text-align: center;
+    padding: 40px;
+    color: #7f8c8d;
+}
+
+.no-reviews h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+/* Vista previa de reseñas en detalles del producto */
+.recent-reviews-preview {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid rgba(52, 152, 219, 0.3);
+}
+
+.recent-reviews-preview h4 {
+    color: #3498db;
+    margin-bottom: 15px;
+}
+
+.mini-review {
+    background: rgba(52, 152, 219, 0.1);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+}
+
+.mini-review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.mini-reviewer {
+    font-weight: bold;
+    color: #3498db;
+    font-size: 0.9rem;
+}
+
+.mini-rating {
+    font-size: 0.8rem;
+}
+
+.mini-review-comment {
+    color: #bdc3c7;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.no-reviews-mini {
+    color: #95a5a6;
+    font-style: italic;
+    text-align: center;
+    margin: 0;
+}
+
+.view-reviews-btn {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.view-reviews-btn:hover {
+    background: linear-gradient(135deg, #2980b9, #21618c);
+    transform: translateY(-2px);
+}
+
+/* Responsive para reseñas */
+@media (max-width: 768px) {
+    .reviews-summary {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .review-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .review-actions {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .review-action-btn {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+    
+    .rating-input {
+        justify-content: center;
+    }
+    
+    .recommendation-input {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
 /* ===== Chat WhatsApp Flotante ===== */
 .whatsapp-chat-widget {
     position: fixed;

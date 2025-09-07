@@ -59,6 +59,11 @@ document.addEventListener('DOMContentLoaded', function() {
       checkExpiredDiscounts();
     }, 500);
   }
+  
+  // Inicializar sistema de reseñas
+  if (typeof initReviewSystem === 'function') {
+    initReviewSystem();
+  }
   initLogin();
   initProfile();
   initProductFiltersAndSearch();
@@ -4671,39 +4676,46 @@ function displayCatalogProducts(productsToShow = null) {
     
     const products = productsToShow || expandedProducts.slice(0, 12); // Mostrar primeros 12
     
-    productGrid.innerHTML = products.map(product => `
-        <div class="product-card" data-product-id="${product.id}">
-            <div class="product-icon">${product.icon}</div>
-            <div class="product-info">
-                <h3 class="product-name">${product.name}</h3>
-                <p class="product-description">${product.description}</p>
-                <div class="product-specs">
-                    <span class="product-brand">${product.brand}</span>
-                    <span class="product-category">${product.category}</span>
+    productGrid.innerHTML = products.map(product => {
+        const reviews = productReviews[product.id] || { averageRating: 0, totalReviews: 0 };
+        
+        return `
+            <div class="product-card" data-product-id="${product.id}">
+                <div class="product-icon">${product.icon}</div>
+                <div class="product-info">
+                    <h3 class="product-name">${product.name}</h3>
+                    <p class="product-description">${product.description}</p>
+                    <div class="product-specs">
+                        <span class="product-brand">${product.brand}</span>
+                        <span class="product-category">${product.category}</span>
+                    </div>
+                    <div class="product-rating">
+                        <span class="stars">${generateStarRating(reviews.averageRating || 0)}</span>
+                        <span class="rating-value">${reviews.averageRating || 0}</span>
+                        <span class="reviews-count">(${reviews.totalReviews || 0} reseñas)</span>
+                    </div>
+                    <div class="product-price">$${product.price.toLocaleString()}</div>
+                    <div class="product-stock ${product.stock < 10 ? 'low-stock' : ''}">
+                        ${product.stock < 10 ? '⚠️ ' : '✅ '}${product.stock} disponibles
+                    </div>
                 </div>
-                <div class="product-rating">
-                    <span class="stars">${'⭐'.repeat(Math.floor(product.rating))}</span>
-                    <span class="rating-value">${product.rating}</span>
-                    <span class="reviews-count">(${product.reviews} reseñas)</span>
-                </div>
-                <div class="product-price">$${product.price.toLocaleString()}</div>
-                <div class="product-stock ${product.stock < 10 ? 'low-stock' : ''}">
-                    ${product.stock < 10 ? '⚠️ ' : '✅ '}${product.stock} disponibles
+                <div class="product-actions">
+                    <button class="btn-primary add-to-cart" onclick="addAdvancedToCart(${product.id})">
+                        🛒 Agregar al Carrito
+                    </button>
+                    <button class="btn-secondary view-details" onclick="viewProductDetails(${product.id})">
+                        👁️ Ver Detalles
+                    </button>
+                    <button class="btn-secondary reviews-btn" onclick="openReviewsModal(${product.id})">
+                        📝 Reseñas (${reviews.totalReviews || 0})
+                    </button>
+                    <button class="share-btn" onclick="shareProduct(${product.id})">
+                        📤 Compartir
+                    </button>
                 </div>
             </div>
-            <div class="product-actions">
-                <button class="btn-primary add-to-cart" onclick="addAdvancedToCart(${product.id})">
-                    🛒 Agregar al Carrito
-                </button>
-                <button class="btn-secondary view-details" onclick="viewProductDetails(${product.id})">
-                    👁️ Ver Detalles
-                </button>
-                <button class="share-btn" onclick="shareProduct(${product.id})">
-                    📤 Compartir
-                </button>
-            </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 // Función para agregar productos avanzados al carrito
@@ -4766,6 +4778,9 @@ function viewProductDetails(productId) {
         return;
     }
     
+    // Obtener reseñas del producto
+    const reviews = productReviews[productId] || { reviews: [], averageRating: 0, totalReviews: 0 };
+    
     // Crear modal de detalles
     const modal = document.createElement('div');
     modal.className = 'modal active';
@@ -4784,9 +4799,12 @@ function viewProductDetails(productId) {
                             ${product.stock < 10 ? '⚠️ ' : '✅ '}${product.stock} en stock
                         </div>
                         <div class="product-rating-detailed">
-                            <div class="stars-large">${'⭐'.repeat(Math.floor(product.rating))}</div>
-                            <span class="rating-large">${product.rating}/5.0</span>
-                            <span class="reviews-large">(${product.reviews} reseñas)</span>
+                            <div class="stars-large">${generateStarRating(reviews.averageRating || 0)}</div>
+                            <span class="rating-large">${reviews.averageRating || 0}/5.0</span>
+                            <span class="reviews-large">(${reviews.totalReviews || 0} reseñas)</span>
+                            <button class="view-reviews-btn" onclick="openReviewsModal(${productId})">
+                                📝 Ver todas las reseñas
+                            </button>
                         </div>
                     </div>
                     
@@ -4803,6 +4821,22 @@ function viewProductDetails(productId) {
                             <p><strong>Categoría:</strong> ${product.category}</p>
                             <p><strong>Descripción:</strong> ${product.description}</p>
                         </div>
+                        
+                        <div class="recent-reviews-preview">
+                            <h4>📝 Reseñas Recientes</h4>
+                            ${reviews.reviews.length > 0 ? 
+                                reviews.reviews.slice(0, 2).map(review => `
+                                    <div class="mini-review">
+                                        <div class="mini-review-header">
+                                            <span class="mini-reviewer">${review.username}</span>
+                                            <span class="mini-rating">${generateStarRating(review.rating)}</span>
+                                        </div>
+                                        <p class="mini-review-comment">"${review.comment.substring(0, 100)}${review.comment.length > 100 ? '...' : ''}"</p>
+                                    </div>
+                                `).join('') :
+                                '<p class="no-reviews-mini">Aún no hay reseñas para este producto.</p>'
+                            }
+                        </div>
                     </div>
                 </div>
                 
@@ -4815,6 +4849,9 @@ function viewProductDetails(productId) {
                     </button>
                     <button class="btn-secondary" onclick="addToWishlist(${product.id})">
                         💝 Agregar a Favoritos
+                    </button>
+                    <button class="btn-secondary" onclick="openWriteReviewModal(${product.id})">
+                        ✍️ Escribir Reseña
                     </button>
                 </div>
             </div>
@@ -5256,5 +5293,743 @@ function checkExpiredDiscounts() {
         showNotification('Algunos descuentos han expirado', 'info');
     }
 }
+
+// ===== Sistema de Reseñas Avanzado =====
+
+// Base de datos de reseñas
+let productReviews = JSON.parse(localStorage.getItem('levelup_reviews')) || {};
+
+// Estructura de reseña
+// {
+//   productId: {
+//     reviews: [
+//       {
+//         id: uniqueId,
+//         userId: userId,
+//         username: username,
+//         rating: 1-5,
+//         title: string,
+//         comment: string,
+//         date: timestamp,
+//         helpful: number,
+//         verified: boolean,
+//         images: [urls]
+//       }
+//     ],
+//     averageRating: number,
+//     totalReviews: number
+//   }
+// }
+
+// Inicializar sistema de reseñas
+function initReviewSystem() {
+    // Cargar reseñas desde localStorage
+    loadReviewsFromStorage();
+    
+    // Generar reseñas de ejemplo si no existen
+    if (Object.keys(productReviews).length === 0) {
+        generateSampleReviews();
+    }
+}
+
+// Cargar reseñas desde localStorage
+function loadReviewsFromStorage() {
+    const stored = localStorage.getItem('levelup_reviews');
+    if (stored) {
+        productReviews = JSON.parse(stored);
+    }
+}
+
+// Guardar reseñas en localStorage
+function saveReviewsToStorage() {
+    localStorage.setItem('levelup_reviews', JSON.stringify(productReviews));
+}
+
+// Generar reseñas de ejemplo
+function generateSampleReviews() {
+    const sampleReviews = {
+        101: { // RTX 4090
+            reviews: [
+                {
+                    id: 'review_101_1',
+                    userId: 'user_sample_1',
+                    username: 'GamerPro2023',
+                    rating: 5,
+                    title: '¡Increíble rendimiento en 4K!',
+                    comment: 'Esta GPU es simplemente espectacular. Puedo jugar todos los juegos en 4K a 120fps sin problemas. La inversión vale totalmente la pena para gamers serios.',
+                    date: Date.now() - 7 * 24 * 60 * 60 * 1000, // 7 días atrás
+                    helpful: 23,
+                    verified: true,
+                    images: []
+                },
+                {
+                    id: 'review_101_2',
+                    userId: 'user_sample_2',
+                    username: 'TechReviewer',
+                    rating: 4,
+                    title: 'Potente pero costosa',
+                    comment: 'Excelente para gaming y trabajo profesional. El consumo de energía es alto, asegúrate de tener una fuente adecuada. Temperaturas controladas con buen cooling.',
+                    date: Date.now() - 3 * 24 * 60 * 60 * 1000,
+                    helpful: 15,
+                    verified: true,
+                    images: []
+                },
+                {
+                    id: 'review_101_3',
+                    userId: 'user_sample_3',
+                    username: 'CyberGamer',
+                    rating: 5,
+                    title: 'La mejor inversión gaming',
+                    comment: 'Después de 2 meses de uso intensivo, puedo confirmar que es la mejor GPU del mercado. Ray tracing perfecto, DLSS increíble.',
+                    date: Date.now() - 1 * 24 * 60 * 60 * 1000,
+                    helpful: 8,
+                    verified: true,
+                    images: []
+                }
+            ]
+        },
+        102: { // Ryzen 9 7950X
+            reviews: [
+                {
+                    id: 'review_102_1',
+                    userId: 'user_sample_4',
+                    username: 'ProcessorExpert',
+                    rating: 5,
+                    title: 'Bestia de procesador',
+                    comment: 'Para gaming y streaming es perfecto. Los 16 cores manejan todo sin problemas. Temperaturas bajo control con buen cooler.',
+                    date: Date.now() - 5 * 24 * 60 * 60 * 1000,
+                    helpful: 19,
+                    verified: true,
+                    images: []
+                },
+                {
+                    id: 'review_102_2',
+                    userId: 'user_sample_5',
+                    username: 'ContentCreator',
+                    rating: 5,
+                    title: 'Perfecto para creación de contenido',
+                    comment: 'Renderizo videos 4K en tiempo récord. Para gaming va de lujo, pero donde realmente brilla es en productividad.',
+                    date: Date.now() - 2 * 24 * 60 * 60 * 1000,
+                    helpful: 12,
+                    verified: true,
+                    images: []
+                }
+            ]
+        },
+        105: { // Mouse Logitech
+            reviews: [
+                {
+                    id: 'review_105_1',
+                    userId: 'user_sample_6',
+                    username: 'ProPlayer',
+                    rating: 5,
+                    title: 'Mouse perfecto para esports',
+                    comment: 'Llevo 6 meses usándolo en competencias. La precisión es increíble, cero delay, batería dura muchísimo. Lo recomiendo 100%.',
+                    date: Date.now() - 4 * 24 * 60 * 60 * 1000,
+                    helpful: 31,
+                    verified: true,
+                    images: []
+                },
+                {
+                    id: 'review_105_2',
+                    userId: 'user_sample_7',
+                    username: 'CasualGamer',
+                    rating: 4,
+                    title: 'Muy bueno, pero caro',
+                    comment: 'Excelente calidad y performance. Para usuarios casuales quizás sea mucho, pero si juegas en serio vale la pena.',
+                    date: Date.now() - 1 * 24 * 60 * 60 * 1000,
+                    helpful: 7,
+                    verified: false,
+                    images: []
+                }
+            ]
+        }
+    };
+    
+    // Calcular estadísticas para cada producto
+    Object.keys(sampleReviews).forEach(productId => {
+        const reviews = sampleReviews[productId].reviews;
+        const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+        const averageRating = (totalRating / reviews.length).toFixed(1);
+        
+        sampleReviews[productId].averageRating = parseFloat(averageRating);
+        sampleReviews[productId].totalReviews = reviews.length;
+    });
+    
+    productReviews = sampleReviews;
+    saveReviewsToStorage();
+}
+
+// Abrir modal de reseñas para un producto
+function openReviewsModal(productId) {
+    const product = expandedProducts.find(p => p.id === productId);
+    if (!product) {
+        showNotification('Producto no encontrado', 'error');
+        return;
+    }
+    
+    const reviews = productReviews[productId] || { reviews: [], averageRating: 0, totalReviews: 0 };
+    
+    const modal = document.createElement('div');
+    modal.className = 'modal active';
+    modal.innerHTML = `
+        <div class="modal-content reviews-modal">
+            <div class="modal-header">
+                <h2>📝 Reseñas: ${product.name}</h2>
+                <button class="close-btn" onclick="closeModal(this)">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="reviews-summary">
+                    <div class="rating-overview">
+                        <div class="average-rating">
+                            <span class="rating-number">${reviews.averageRating || 0}</span>
+                            <div class="rating-stars">
+                                ${generateStarRating(reviews.averageRating || 0)}
+                            </div>
+                            <span class="total-reviews">${reviews.totalReviews || 0} reseñas</span>
+                        </div>
+                        <div class="rating-breakdown">
+                            ${generateRatingBreakdown(reviews.reviews || [])}
+                        </div>
+                    </div>
+                    
+                    <div class="review-actions">
+                        <button class="btn-primary" onclick="openWriteReviewModal(${productId})">
+                            ✍️ Escribir Reseña
+                        </button>
+                        <button class="btn-secondary" onclick="filterReviews(${productId}, 'helpful')">
+                            👍 Más Útiles
+                        </button>
+                        <button class="btn-secondary" onclick="filterReviews(${productId}, 'recent')">
+                            🕒 Más Recientes
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="reviews-list" id="reviews-list-${productId}">
+                    ${generateReviewsList(reviews.reviews || [])}
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+// Generar estrellas de calificación
+function generateStarRating(rating, interactive = false, size = 'normal') {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+    
+    let stars = '';
+    
+    // Estrellas llenas
+    for (let i = 0; i < fullStars; i++) {
+        stars += interactive ? 
+            `<span class="star ${size} full" data-rating="${i + 1}" onclick="setRating(${i + 1})">⭐</span>` :
+            `<span class="star ${size} full">⭐</span>`;
+    }
+    
+    // Media estrella
+    if (hasHalfStar) {
+        stars += `<span class="star ${size} half">⭐</span>`;
+    }
+    
+    // Estrellas vacías
+    for (let i = 0; i < emptyStars; i++) {
+        const starIndex = fullStars + (hasHalfStar ? 1 : 0) + i + 1;
+        stars += interactive ? 
+            `<span class="star ${size} empty" data-rating="${starIndex}" onclick="setRating(${starIndex})">☆</span>` :
+            `<span class="star ${size} empty">☆</span>`;
+    }
+    
+    return stars;
+}
+
+// Generar desglose de calificaciones
+function generateRatingBreakdown(reviews) {
+    const ratingCounts = [0, 0, 0, 0, 0]; // índices 0-4 para estrellas 1-5
+    
+    reviews.forEach(review => {
+        if (review.rating >= 1 && review.rating <= 5) {
+            ratingCounts[review.rating - 1]++;
+        }
+    });
+    
+    const totalReviews = reviews.length;
+    
+    let breakdown = '';
+    for (let i = 4; i >= 0; i--) { // 5 estrellas a 1 estrella
+        const count = ratingCounts[i];
+        const percentage = totalReviews > 0 ? (count / totalReviews * 100).toFixed(0) : 0;
+        
+        breakdown += `
+            <div class="rating-bar">
+                <span class="rating-label">${i + 1} ⭐</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${percentage}%"></div>
+                </div>
+                <span class="rating-count">${count}</span>
+            </div>
+        `;
+    }
+    
+    return breakdown;
+}
+
+// Generar lista de reseñas
+function generateReviewsList(reviews) {
+    if (reviews.length === 0) {
+        return `
+            <div class="no-reviews">
+                <h3>🤔 Aún no hay reseñas</h3>
+                <p>¡Sé el primero en escribir una reseña!</p>
+            </div>
+        `;
+    }
+    
+    return reviews.map(review => `
+        <div class="review-item" data-review-id="${review.id}">
+            <div class="review-header">
+                <div class="reviewer-info">
+                    <div class="reviewer-avatar">${getAvatarIcon(review.username)}</div>
+                    <div class="reviewer-details">
+                        <span class="reviewer-name">${review.username}</span>
+                        ${review.verified ? '<span class="verified-badge">✅ Compra verificada</span>' : ''}
+                    </div>
+                </div>
+                <div class="review-rating">
+                    ${generateStarRating(review.rating)}
+                    <span class="review-date">${formatReviewDate(review.date)}</span>
+                </div>
+            </div>
+            
+            <div class="review-content">
+                <h4 class="review-title">${review.title}</h4>
+                <p class="review-comment">${review.comment}</p>
+                
+                ${review.images && review.images.length > 0 ? `
+                    <div class="review-images">
+                        ${review.images.map(img => `<img src="${img}" alt="Imagen de reseña" class="review-image">`).join('')}
+                    </div>
+                ` : ''}
+            </div>
+            
+            <div class="review-actions">
+                <button class="review-action-btn helpful" onclick="markReviewHelpful('${review.id}')">
+                    👍 Útil (${review.helpful || 0})
+                </button>
+                <button class="review-action-btn reply" onclick="replyToReview('${review.id}')">
+                    💬 Responder
+                </button>
+                <button class="review-action-btn report" onclick="reportReview('${review.id}')">
+                    🚨 Reportar
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Obtener ícono de avatar basado en username
+function getAvatarIcon(username) {
+    const avatars = ['👨‍💻', '👩‍💻', '🎮', '👨‍🎓', '👩‍🎓', '🕹️', '👾', '🤖'];
+    const index = username.length % avatars.length;
+    return avatars[index];
+}
+
+// Formatear fecha de reseña
+function formatReviewDate(timestamp) {
+    const now = new Date();
+    const reviewDate = new Date(timestamp);
+    const diffTime = Math.abs(now - reviewDate);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 1) return 'Hace 1 día';
+    if (diffDays < 7) return `Hace ${diffDays} días`;
+    if (diffDays < 30) return `Hace ${Math.floor(diffDays / 7)} semanas`;
+    if (diffDays < 365) return `Hace ${Math.floor(diffDays / 30)} meses`;
+    return `Hace ${Math.floor(diffDays / 365)} años`;
+}
+
+// Abrir modal para escribir reseña
+function openWriteReviewModal(productId) {
+    if (!isLoggedIn()) {
+        showNotification('Debes iniciar sesión para escribir una reseña', 'warning');
+        return;
+    }
+    
+    const product = expandedProducts.find(p => p.id === productId);
+    const user = getCurrentUser();
+    
+    // Verificar si ya escribió una reseña
+    const existingReview = productReviews[productId]?.reviews?.find(r => r.userId === user.username);
+    if (existingReview) {
+        showNotification('Ya has escrito una reseña para este producto', 'info');
+        return;
+    }
+    
+    const modal = document.createElement('div');
+    modal.className = 'modal active';
+    modal.innerHTML = `
+        <div class="modal-content write-review-modal">
+            <div class="modal-header">
+                <h2>✍️ Escribir Reseña: ${product.name}</h2>
+                <button class="close-btn" onclick="closeModal(this)">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="review-form" onsubmit="submitReview(event, ${productId})">
+                    <div class="review-form-group">
+                        <label>Calificación *</label>
+                        <div class="rating-input" id="rating-input">
+                            ${generateStarRating(0, true, 'large')}
+                        </div>
+                        <input type="hidden" id="review-rating" name="rating" value="0" required>
+                    </div>
+                    
+                    <div class="review-form-group">
+                        <label for="review-title">Título de tu reseña *</label>
+                        <input 
+                            type="text" 
+                            id="review-title" 
+                            name="title" 
+                            placeholder="Ej: Excelente producto para gaming"
+                            maxlength="100"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="review-form-group">
+                        <label for="review-comment">Tu opinión *</label>
+                        <textarea 
+                            id="review-comment" 
+                            name="comment" 
+                            placeholder="Comparte tu experiencia con este producto..."
+                            rows="6"
+                            maxlength="1000"
+                            required
+                        ></textarea>
+                        <div class="char-counter">
+                            <span id="char-count">0</span>/1000 caracteres
+                        </div>
+                    </div>
+                    
+                    <div class="review-form-group">
+                        <label>¿Recomendarías este producto?</label>
+                        <div class="recommendation-input">
+                            <label class="radio-label">
+                                <input type="radio" name="recommend" value="yes" checked>
+                                <span>👍 Sí, lo recomiendo</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="recommend" value="no">
+                                <span>👎 No lo recomiendo</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="review-form-actions">
+                        <button type="button" class="btn-secondary" onclick="closeModal(this)">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn-primary">
+                            📝 Publicar Reseña
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Agregar contador de caracteres
+    const commentTextarea = document.getElementById('review-comment');
+    const charCount = document.getElementById('char-count');
+    
+    commentTextarea.addEventListener('input', function() {
+        charCount.textContent = this.value.length;
+    });
+}
+
+// Establecer calificación en el formulario
+let currentRating = 0;
+
+function setRating(rating) {
+    currentRating = rating;
+    document.getElementById('review-rating').value = rating;
+    
+    // Actualizar visualización de estrellas
+    const stars = document.querySelectorAll('#rating-input .star');
+    stars.forEach((star, index) => {
+        if (index < rating) {
+            star.className = star.className.replace('empty', 'full');
+            star.textContent = '⭐';
+        } else {
+            star.className = star.className.replace('full', 'empty');
+            star.textContent = '☆';
+        }
+    });
+}
+
+// Enviar reseña
+function submitReview(event, productId) {
+    event.preventDefault();
+    
+    const formData = new FormData(event.target);
+    const rating = parseInt(formData.get('rating'));
+    const title = formData.get('title').trim();
+    const comment = formData.get('comment').trim();
+    const recommend = formData.get('recommend');
+    
+    // Validaciones
+    if (rating === 0) {
+        showNotification('Debes seleccionar una calificación', 'warning');
+        return;
+    }
+    
+    if (title.length < 10) {
+        showNotification('El título debe tener al menos 10 caracteres', 'warning');
+        return;
+    }
+    
+    if (comment.length < 20) {
+        showNotification('El comentario debe tener al menos 20 caracteres', 'warning');
+        return;
+    }
+    
+    const user = getCurrentUser();
+    
+    // Crear reseña
+    const newReview = {
+        id: `review_${productId}_${Date.now()}`,
+        userId: user.username,
+        username: user.username,
+        rating: rating,
+        title: title,
+        comment: comment,
+        date: Date.now(),
+        helpful: 0,
+        verified: hasUserPurchasedProduct(user.username, productId),
+        recommend: recommend === 'yes',
+        images: []
+    };
+    
+    // Agregar a la base de datos
+    if (!productReviews[productId]) {
+        productReviews[productId] = {
+            reviews: [],
+            averageRating: 0,
+            totalReviews: 0
+        };
+    }
+    
+    productReviews[productId].reviews.unshift(newReview); // Agregar al inicio
+    
+    // Recalcular estadísticas
+    const reviews = productReviews[productId].reviews;
+    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+    productReviews[productId].averageRating = parseFloat((totalRating / reviews.length).toFixed(1));
+    productReviews[productId].totalReviews = reviews.length;
+    
+    // Guardar en localStorage
+    saveReviewsToStorage();
+    
+    // Dar puntos al usuario
+    user.points += 15; // 15 puntos por escribir reseña
+    if (newReview.verified) {
+        user.points += 10; // 10 puntos extra por compra verificada
+    }
+    updateUserInStorage(user);
+    updateUserInfo();
+    
+    // Cerrar modal y mostrar notificación
+    closeModal(event.target);
+    showNotification('¡Reseña publicada exitosamente!', 'success');
+    
+    // Actualizar modal de reseñas si está abierto
+    const reviewsModal = document.querySelector('.reviews-modal');
+    if (reviewsModal) {
+        closeModal(reviewsModal.querySelector('.close-btn'));
+        setTimeout(() => openReviewsModal(productId), 500);
+    }
+    
+    // Mostrar puntos ganados
+    setTimeout(() => {
+        const pointsEarned = newReview.verified ? 25 : 15;
+        showNotification(`¡Has ganado ${pointsEarned} puntos por tu reseña!`, 'info');
+    }, 1500);
+}
+
+// Verificar si el usuario compró el producto
+function hasUserPurchasedProduct(username, productId) {
+    // Verificar en historial de compras (simulado)
+    const purchaseHistory = JSON.parse(localStorage.getItem(`purchase_history_${username}`)) || [];
+    return purchaseHistory.some(purchase => 
+        purchase.items && purchase.items.some(item => item.id === productId)
+    );
+}
+
+// Marcar reseña como útil
+function markReviewHelpful(reviewId) {
+    if (!isLoggedIn()) {
+        showNotification('Debes iniciar sesión para marcar reseñas como útiles', 'warning');
+        return;
+    }
+    
+    const user = getCurrentUser();
+    
+    // Verificar si ya marcó esta reseña
+    if (!user.helpfulReviews) {
+        user.helpfulReviews = [];
+    }
+    
+    if (user.helpfulReviews.includes(reviewId)) {
+        showNotification('Ya marcaste esta reseña como útil', 'info');
+        return;
+    }
+    
+    // Encontrar y actualizar la reseña
+    let reviewFound = false;
+    Object.keys(productReviews).forEach(productId => {
+        const review = productReviews[productId].reviews.find(r => r.id === reviewId);
+        if (review) {
+            review.helpful = (review.helpful || 0) + 1;
+            reviewFound = true;
+        }
+    });
+    
+    if (reviewFound) {
+        user.helpfulReviews.push(reviewId);
+        user.points += 1; // 1 punto por marcar como útil
+        
+        updateUserInStorage(user);
+        updateUserInfo();
+        saveReviewsToStorage();
+        
+        showNotification('¡Marcado como útil!', 'success');
+        
+        // Actualizar visualización
+        const reviewElement = document.querySelector(`[data-review-id="${reviewId}"]`);
+        if (reviewElement) {
+            const helpfulBtn = reviewElement.querySelector('.helpful');
+            const currentCount = parseInt(helpfulBtn.textContent.match(/\d+/)[0]);
+            helpfulBtn.innerHTML = `👍 Útil (${currentCount + 1})`;
+            helpfulBtn.disabled = true;
+            helpfulBtn.style.opacity = '0.6';
+        }
+    }
+}
+
+// Filtrar reseñas
+function filterReviews(productId, filterType) {
+    const reviews = productReviews[productId]?.reviews || [];
+    let sortedReviews = [...reviews];
+    
+    switch(filterType) {
+        case 'helpful':
+            sortedReviews.sort((a, b) => (b.helpful || 0) - (a.helpful || 0));
+            break;
+        case 'recent':
+            sortedReviews.sort((a, b) => b.date - a.date);
+            break;
+        case 'rating_high':
+            sortedReviews.sort((a, b) => b.rating - a.rating);
+            break;
+        case 'rating_low':
+            sortedReviews.sort((a, b) => a.rating - b.rating);
+            break;
+    }
+    
+    const reviewsList = document.getElementById(`reviews-list-${productId}`);
+    if (reviewsList) {
+        reviewsList.innerHTML = generateReviewsList(sortedReviews);
+    }
+}
+
+// Responder a reseña (función placeholder)
+function replyToReview(reviewId) {
+    showNotification('Función de respuesta próximamente disponible', 'info');
+}
+
+// Reportar reseña (función placeholder)
+function reportReview(reviewId) {
+    if (!isLoggedIn()) {
+        showNotification('Debes iniciar sesión para reportar reseñas', 'warning');
+        return;
+    }
+    
+    showNotification('Reseña reportada. Será revisada por nuestro equipo.', 'info');
+}
+
+// ===================== EVENT LISTENERS =====================
+document.addEventListener('DOMContentLoaded', function() {
+    // Event listeners para reseñas
+    const closeReviewsBtn = document.querySelector('.close-reviews');
+    const closeWriteReviewBtn = document.querySelector('.close-write-review');
+    const writeReviewBtn = document.querySelector('.write-review-btn');
+    const submitReviewBtn = document.querySelector('.submit-review');
+    
+    if (closeReviewsBtn) {
+        closeReviewsBtn.addEventListener('click', closeReviewsModal);
+    }
+    
+    if (closeWriteReviewBtn) {
+        closeWriteReviewBtn.addEventListener('click', closeWriteReviewModal);
+    }
+    
+    if (writeReviewBtn) {
+        writeReviewBtn.addEventListener('click', openWriteReviewModal);
+    }
+    
+    if (submitReviewBtn) {
+        submitReviewBtn.addEventListener('click', submitReview);
+    }
+
+    // Event listeners para chat de WhatsApp
+    const whatsappWidget = document.querySelector('.whatsapp-widget');
+    const whatsappChat = document.querySelector('.whatsapp-chat');
+    const closeWhatsappBtn = document.querySelector('.close-whatsapp');
+    const whatsappSendBtn = document.querySelector('.whatsapp-send');
+    const whatsappInput = document.querySelector('.whatsapp-input');
+    
+    if (whatsappWidget) {
+        whatsappWidget.addEventListener('click', () => {
+            whatsappChat.style.display = 'flex';
+            whatsappWidget.style.display = 'none';
+            playNotificationSound();
+            addGamerCoins(5, 'chat-opened');
+        });
+    }
+    
+    if (closeWhatsappBtn) {
+        closeWhatsappBtn.addEventListener('click', () => {
+            whatsappChat.style.display = 'none';
+            whatsappWidget.style.display = 'flex';
+        });
+    }
+    
+    if (whatsappSendBtn) {
+        whatsappSendBtn.addEventListener('click', () => {
+            const message = whatsappInput.value.trim();
+            if (message) {
+                sendWhatsAppMessage(message);
+                whatsappInput.value = '';
+            }
+        });
+    }
+    
+    if (whatsappInput) {
+        whatsappInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const message = whatsappInput.value.trim();
+                if (message) {
+                    sendWhatsAppMessage(message);
+                    whatsappInput.value = '';
+                }
+            }
+        });
+    }
+});
 
 // Llamar a soporte
