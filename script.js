@@ -1542,14 +1542,14 @@ function renderCurrentBenefits() {
   
   benefitsContainer.innerHTML = '';
   
-  currentLevel.benefits.forEach(benefit => {
-    const benefitElement = document.createElement('div');
+  currentLevel.benefits.forEach(function(benefit) {
+    var benefitElement = document.createElement('div');
     benefitElement.className = 'benefit-card';
-    benefitElement.innerHTML = `
-      <span class="benefit-icon">${benefit.icon}</span>
-      <div class="benefit-title">${benefit.title}</div>
-      <div class="benefit-description">${benefit.description}</div>
-    `;
+    var html = '';
+    html += '<span class="benefit-icon">' + benefit.icon + '</span>';
+    html += '<div class="benefit-title">' + benefit.title + '</div>';
+    html += '<div class="benefit-description">' + benefit.description + '</div>';
+    benefitElement.innerHTML = html;
     benefitsContainer.appendChild(benefitElement);
   });
 }
@@ -1562,16 +1562,16 @@ function renderAchievements() {
   
   achievementsGrid.innerHTML = '';
   
-  ACHIEVEMENTS.forEach(achievement => {
-    const isUnlocked = userAchievements.includes(achievement.id);
+  ACHIEVEMENTS.forEach(function(achievement) {
+    var isUnlocked = userAchievements.includes(achievement.id);
     
-    const achievementElement = document.createElement('div');
-    achievementElement.className = `achievement-card ${isUnlocked ? 'unlocked' : 'locked'}`;
-    achievementElement.innerHTML = `
-      <span class="achievement-icon">${achievement.icon}</span>
-      <div class="achievement-title">${achievement.title}</div>
-      <div class="achievement-description">${achievement.description}</div>
-    `;
+    var achievementElement = document.createElement('div');
+    achievementElement.className = 'achievement-card ' + (isUnlocked ? 'unlocked' : 'locked');
+    var html = '';
+    html += '<span class="achievement-icon">' + achievement.icon + '</span>';
+    html += '<div class="achievement-title">' + achievement.title + '</div>';
+    html += '<div class="achievement-description">' + achievement.description + '</div>';
+    achievementElement.innerHTML = html;
     
     achievementsGrid.appendChild(achievementElement);
   });
@@ -1585,32 +1585,32 @@ function renderChallenges() {
   
   challengesList.innerHTML = '';
   
-  CHALLENGES.forEach(challenge => {
-    const userChallenge = userChallenges.find(uc => uc.id === challenge.id) || challenge;
-    const progressPercentage = (userChallenge.progress / userChallenge.target) * 100;
+  CHALLENGES.forEach(function(challenge) {
+    var userChallenge = userChallenges.find(function(uc) { return uc.id === challenge.id; }) || challenge;
+    var progressPercentage = (userChallenge.progress / userChallenge.target) * 100;
     
-    const challengeElement = document.createElement('div');
+    var challengeElement = document.createElement('div');
     challengeElement.className = 'challenge-card';
-    challengeElement.innerHTML = `
-      <div class="challenge-header">
-        <div class="challenge-info">
-          <span class="challenge-icon">${challenge.icon}</span>
-          <div>
-            <div class="challenge-title">${challenge.title}</div>
-            <div class="challenge-description">${challenge.description}</div>
-          </div>
-        </div>
-        <div class="challenge-reward">+${challenge.reward} pts</div>
-      </div>
-      <div class="challenge-progress">
-        <div class="challenge-progress-bar">
-          <div class="challenge-progress-fill" style="width: ${progressPercentage}%"></div>
-        </div>
-        <div class="challenge-progress-text">
-          ${userChallenge.progress} / ${userChallenge.target}
-        </div>
-      </div>
-    `;
+    var html = '';
+    html += '<div class="challenge-header">';
+    html += '<div class="challenge-info">';
+    html += '<span class="challenge-icon">' + challenge.icon + '</span>';
+    html += '<div>';
+    html += '<div class="challenge-title">' + challenge.title + '</div>';
+    html += '<div class="challenge-description">' + challenge.description + '</div>';
+    html += '</div>';
+    html += '</div>';
+    html += '<div class="challenge-reward">+' + challenge.reward + ' pts</div>';
+    html += '</div>';
+    html += '<div class="challenge-progress">';
+    html += '<div class="challenge-progress-bar">';
+    html += '<div class="challenge-progress-fill" style="width: ' + progressPercentage + '%"></div>';
+    html += '</div>';
+    html += '<div class="challenge-progress-text">';
+    html += userChallenge.progress + ' / ' + userChallenge.target;
+    html += '</div>';
+    html += '</div>';
+    challengeElement.innerHTML = html;
     
     challengesList.appendChild(challengeElement);
   });
@@ -1639,9 +1639,13 @@ function addPoints(points, reason = '') {
   
   // Mostrar notificación
   if (newLevel.level > oldLevel.level) {
-    showNotification(`🎉 ¡Felicidades! Has subido al nivel ${newLevel.level}: ${newLevel.name} ${newLevel.icon}`, 5000);
+    showNotification('¡Felicidades! Has subido al nivel ' + newLevel.level + ': ' + newLevel.name + ' ' + newLevel.icon, 5000);
   } else if (points > 0) {
-    showNotification(`+${points} puntos LevelUp${reason ? ` (${reason})` : ''} 🎁`);
+    var message = '+' + points + ' puntos LevelUp';
+    if (reason) {
+      message += ' (' + reason + ')';
+    }
+    showNotification(message);
   }
   
   // Actualizar display si está visible
@@ -1662,9 +1666,9 @@ function unlockAchievement(achievementId) {
     userAchievements.push(achievementId);
     localStorage.setItem('levelup_achievements', JSON.stringify(userAchievements));
     
-    const achievement = ACHIEVEMENTS.find(a => a.id === achievementId);
+    const achievement = ACHIEVEMENTS.find(function(a) { return a.id === achievementId; });
     if (achievement) {
-      showNotification(`🏅 ¡Logro desbloqueado! ${achievement.title}`, 4000);
+      showNotification('¡Logro desbloqueado! ' + achievement.title, 4000);
       addPoints(achievement.points, 'Logro desbloqueado');
       return true;
     }
@@ -1691,7 +1695,7 @@ function updateChallenge(challengeId, increment = 1) {
   // Verificar si completó el desafío
   if (challenge.progress >= challenge.target && challenge.active) {
     challenge.active = false;
-    showNotification(`⚔️ ¡Desafío completado! ${challenge.title}`, 4000);
+    showNotification('¡Desafío completado! ' + challenge.title, 4000);
     addPoints(challenge.reward, 'Desafío completado');
   }
   
@@ -1713,17 +1717,24 @@ function initializeUserGamification(userData) {
   localStorage.setItem('levelup_user', JSON.stringify(userData));
   
   // Desbloquear logro de primer registro (simulado)
-  setTimeout(() => {
+  setTimeout(function() {
     unlockAchievement('first_purchase'); // Este se desbloqueará más tarde
     // Por ahora solo enviamos notificación de puntos de bienvenida
-    const totalWelcomePoints = welcomePoints + (userData.isDuocUser ? 25 : 0);
-    showNotification(`🎁 ¡${totalWelcomePoints} puntos LevelUp de bienvenida!`);
+    var totalWelcomePoints = welcomePoints + (userData.isDuocUser ? 25 : 0);
+    showNotification('¡' + totalWelcomePoints + ' puntos LevelUp de bienvenida!');
   }, 1000);
   
   // Inicializar desafíos activos
-  const initialChallenges = CHALLENGES.map(challenge => ({
-    ...challenge,
-    progress: 0,
+  var initialChallenges = CHALLENGES.map(function(challenge) {
+    return {
+      id: challenge.id,
+      title: challenge.title,
+      description: challenge.description,
+      target: challenge.target,
+      reward: challenge.reward,
+      icon: challenge.icon,
+      active: challenge.active,
+      progress: 0
     active: true
   }));
   localStorage.setItem('levelup_challenges', JSON.stringify(initialChallenges));
@@ -1751,8 +1762,8 @@ function openProductReviews(productId) {
   }
   
   // Cargar reseñas del localStorage (combinar con mock)
-  const savedReviews = JSON.parse(localStorage.getItem(`reviews_${productId}`) || '[]');
-  currentReviews = [...product.reviews, ...savedReviews];
+  var savedReviews = JSON.parse(localStorage.getItem('reviews_' + productId) || '[]');
+  currentReviews = product.reviews.concat(savedReviews);
   
   // Configurar modal
   setupReviewsModal(product);
@@ -1818,12 +1829,12 @@ function renderProductRating(stats) {
 function renderRatingDistribution(stats) {
   const maxCount = Math.max(...Object.values(stats.distribution));
   
-  [5, 4, 3, 2, 1].forEach(stars => {
-    const bar = document.querySelector(`[data-stars="${stars}"]`);
-    const count = stats.distribution[stars];
-    const percentage = maxCount > 0 ? (count / maxCount) * 100 : 0;
+  [5, 4, 3, 2, 1].forEach(function(stars) {
+    var bar = document.querySelector('[data-stars="' + stars + '"]');
+    var count = stats.distribution[stars];
+    var percentage = maxCount > 0 ? (count / maxCount) * 100 : 0;
     
-    bar.querySelector('.bar-fill').style.width = `${percentage}%`;
+    bar.querySelector('.bar-fill').style.width = percentage + '%';
     bar.querySelector('.bar-count').textContent = count;
   });
 }
