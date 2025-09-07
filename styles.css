@@ -396,6 +396,130 @@ button { font-family: inherit; }
 }
 
 /* ===================== MAIN CONTENT ===================== */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+.card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.tile {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.btn-icon {
+  transition: all 0.2s ease;
+}
+.btn-icon:active {
+  transform: scale(0.95);
+}
+.cart-panel {
+  background: linear-gradient(135deg, #181825 60%, #0f3460 100%);
+  border-radius: 18px;
+  box-shadow: 0 0 24px #1E90FF99;
+  color: #fff;
+  padding: 1.5rem 1rem;
+  margin: 2rem auto;
+  max-width: 420px;
+  font-family: 'Orbitron', 'Roboto', Arial, sans-serif;
+}
+.cart-panel h3 {
+  font-size: 1.2rem;
+  margin-bottom: .7rem;
+  color: #FFD700;
+}
+.cart-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+}
+.cart-item {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  margin-bottom: .5rem;
+  background: #222;
+  border-radius: 8px;
+  padding: .5rem .7rem;
+  box-shadow: 0 0 8px #1E90FF33;
+}
+.cart-icon {
+  font-size: 1.5rem;
+  text-shadow: 0 0 8px #39FF14;
+}
+.cart-name {
+  flex: 1;
+  font-weight: 700;
+}
+.cart-qty {
+  color: #39FF14;
+  font-weight: 700;
+}
+.cart-price {
+  color: #FFD700;
+  font-weight: 700;
+}
+.cart-remove {
+  background: none;
+  border: none;
+  color: #FF5555;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-left: .5rem;
+  transition: color 0.2s;
+}
+.cart-remove:hover {
+  color: #FFD700;
+}
+.cart-total {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #FFD700;
+  text-align: right;
+  margin-top: 1rem;
+}
+.cart-empty {
+  text-align: center;
+  color: #888;
+  font-size: 1.1rem;
+  margin: 1.5rem 0;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: .5rem;
+  margin: 2rem 0 1rem 0;
+}
+.pag-btn {
+  background: linear-gradient(90deg, #181825 0%, #1E90FF 100%);
+  color: #FFD700;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Orbitron', 'Roboto', Arial, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: .7rem 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 0 8px #39FF14;
+  transition: background 0.2s, color 0.2s;
+}
+.pag-btn.active {
+  background: linear-gradient(90deg, #FFD700 0%, #1E90FF 100%);
+  color: #181825;
+  box-shadow: 0 0 16px #FFD700;
+}
+.pag-btn:disabled {
+  background: #222;
+  color: #888;
+  cursor: not-allowed;
+  box-shadow: none;
+}
 .modal-overlay#product-detail-modal {
   position: fixed; top: 0; left: 0; right: 0; bottom: 0;
   background: rgba(0,0,0,0.7); z-index: 9999;
