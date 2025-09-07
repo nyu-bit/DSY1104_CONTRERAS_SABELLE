@@ -2963,4 +2963,675 @@ document.addEventListener('DOMContentLoaded', function() {
     updateLevelDisplay();
     loadReviews();
     updateProductDisplays();
+    loadNews();
+    initEvents();
 });
+
+// ===== Sistema de Noticias Gaming =====
+
+// Datos de noticias
+const newsData = [
+    {
+        id: 1,
+        title: "Nuevo RTX 5090 revoluciona el gaming en 8K",
+        excerpt: "NVIDIA presenta su nueva arquitectura Blackwell con capacidades nunca antes vistas para gaming en resoluciones extremas y ray tracing avanzado.",
+        content: `<p>NVIDIA ha presentado oficialmente su nueva tarjeta gráfica RTX 5090, que promete revolucionar el mundo del gaming con capacidades nunca antes vistas para jugar en resoluciones 8K.</p>
+        
+        <h3>Características principales:</h3>
+        <ul>
+            <li><strong>Arquitectura Blackwell:</strong> Nueva arquitectura de 3nm con 24,576 núcleos CUDA</li>
+            <li><strong>Memoria GDDR7:</strong> 32GB de VRAM con ancho de banda de 1.5TB/s</li>
+            <li><strong>Ray Tracing 4.0:</strong> Nueva generación de ray tracing en tiempo real</li>
+            <li><strong>DLSS 4.0:</strong> IA mejorada para upscaling hasta 8K nativos</li>
+        </ul>
+        
+        <p>Los benchmarks iniciales muestran un rendimiento 85% superior al RTX 4090 en resoluciones 4K, y es la primera GPU capaz de mantener 60 FPS estables en 8K con ray tracing activado.</p>
+        
+        <p>El precio de lanzamiento será de $1,999 USD y estará disponible a partir del 15 de octubre de 2025.</p>`,
+        category: "LANZAMIENTOS",
+        date: "2025-09-05",
+        image: "🚀",
+        views: 2500,
+        likes: 342,
+        featured: true
+    },
+    {
+        id: 2,
+        title: "Campeonato Mundial de LoL Chile 2025",
+        excerpt: "Se anuncian las fechas oficiales del torneo más importante de esports en Chile con premio de $100.000 USD.",
+        content: `<p>Riot Games Chile ha anunciado oficialmente las fechas del Campeonato Mundial de League of Legends Chile 2025, el torneo de esports más importante del país.</p>
+        
+        <h3>Detalles del torneo:</h3>
+        <ul>
+            <li><strong>Fechas:</strong> Del 15 de noviembre al 8 de diciembre de 2025</li>
+            <li><strong>Sede:</strong> Movistar Arena, Santiago</li>
+            <li><strong>Premio total:</strong> $100.000 USD</li>
+            <li><strong>Equipos participantes:</strong> 16 equipos clasificatorios</li>
+        </ul>
+        
+        <p>Las inscripciones ya están abiertas y se realizarán clasificatorias regionales en Valparaíso, Concepción y Antofagasta.</p>`,
+        category: "ESPORTS",
+        date: "2025-09-04",
+        image: "🎮",
+        views: 1800,
+        likes: 256,
+        featured: false
+    },
+    {
+        id: 3,
+        title: "AMD Ryzen 8000: El futuro del gaming",
+        excerpt: "Nuevos procesadores prometen 40% más rendimiento en juegos con arquitectura de 3nm y soporte DDR6.",
+        content: `<p>AMD ha revelado su nueva línea de procesadores Ryzen 8000, construidos con arquitectura Zen 5+ en proceso de 3nm, prometiendo un salto generacional en rendimiento gaming.</p>
+        
+        <h3>Innovaciones principales:</h3>
+        <ul>
+            <li><strong>Arquitectura Zen 5+:</strong> Nuevo diseño de núcleos con IPC mejorado en 25%</li>
+            <li><strong>Soporte DDR6:</strong> Primera plataforma en soportar memoria DDR6-6400</li>
+            <li><strong>Cache 3D V-Cache Gen 3:</strong> Hasta 192MB de cache L3</li>
+            <li><strong>Eficiencia energética:</strong> 40% menos consumo que generación anterior</li>
+        </ul>
+        
+        <p>El modelo tope de gama Ryzen 9 8950X3D promete superar al Intel Core i9-14900K en un 40% en gaming y 30% en productividad.</p>`,
+        category: "HARDWARE",
+        date: "2025-09-03",
+        image: "⚡",
+        views: 3100,
+        likes: 445,
+        featured: false
+    },
+    {
+        id: 4,
+        title: "Review: Steam Deck OLED 2025",
+        excerpt: "Analizamos la nueva versión de la consola portátil de Valve con pantalla OLED y mejor rendimiento.",
+        content: `<p>Valve ha lanzado la versión 2025 del Steam Deck con importantes mejoras, siendo la pantalla OLED su característica más destacada.</p>
+        
+        <h3>Mejoras principales:</h3>
+        <ul>
+            <li><strong>Pantalla OLED 7.4":</strong> 1200p con 120Hz y HDR10</li>
+            <li><strong>APU personalizada:</strong> Zen 4 + RDNA 3 con 50% más rendimiento</li>
+            <li><strong>Batería mejorada:</strong> 8-12 horas de autonomía</li>
+            <li><strong>Almacenamiento rápido:</strong> SSD NVMe de hasta 2TB</li>
+        </ul>
+        
+        <p>En nuestras pruebas, pudimos ejecutar Cyberpunk 2077 en configuración alta a 45-50 FPS estables, una mejora significativa respecto al modelo anterior.</p>
+        
+        <p><strong>Veredicto:</strong> 9/10 - La mejor consola portátil del mercado.</p>`,
+        category: "REVIEWS",
+        date: "2025-09-02",
+        image: "🎯",
+        views: 4200,
+        likes: 678,
+        featured: false
+    },
+    {
+        id: 5,
+        title: "Mega Sale Gaming: Hasta 70% descuento",
+        excerpt: "Steam, Epic y GOG se unen en la mayor venta del año con descuentos históricos en los mejores juegos.",
+        content: `<p>Las tres plataformas de gaming más importantes se han unido para ofrecer la mayor venta del año con descuentos de hasta 70% en miles de títulos.</p>
+        
+        <h3>Ofertas destacadas:</h3>
+        <ul>
+            <li><strong>Cyberpunk 2077:</strong> 60% descuento - $23.990</li>
+            <li><strong>Red Dead Redemption 2:</strong> 67% descuento - $19.990</li>
+            <li><strong>The Witcher 3 Complete:</strong> 70% descuento - $14.990</li>
+            <li><strong>Grand Theft Auto V:</strong> 65% descuento - $13.990</li>
+        </ul>
+        
+        <p>La venta estará disponible hasta el 15 de septiembre y incluye más de 5,000 títulos con descuentos especiales.</p>`,
+        category: "OFERTAS",
+        date: "2025-09-01",
+        image: "🔥",
+        views: 5700,
+        likes: 892,
+        featured: false
+    },
+    {
+        id: 6,
+        title: "The International 2025: Record de audiencia",
+        excerpt: "El torneo de Dota 2 supera los 3 millones de espectadores simultáneos y establece nuevo récord mundial.",
+        content: `<p>The International 2025, el torneo más importante de Dota 2, ha establecido un nuevo récord mundial de audiencia con más de 3.2 millones de espectadores simultáneos durante la gran final.</p>
+        
+        <h3>Datos del torneo:</h3>
+        <ul>
+            <li><strong>Prize pool:</strong> $47.8 millones USD</li>
+            <li><strong>Audiencia pico:</strong> 3.2 millones de espectadores</li>
+            <li><strong>Duración final:</strong> 5 horas y 23 minutos</li>
+            <li><strong>Campeón:</strong> Team Spirit (segundo título)</li>
+        </ul>
+        
+        <p>El evento superó todas las expectativas y consolida a Dota 2 como uno de los esports más importantes del mundo.</p>`,
+        category: "COMPETITIVO",
+        date: "2025-08-31",
+        image: "🏆",
+        views: 2900,
+        likes: 534,
+        featured: false
+    }
+];
+
+let currentNewsPage = 1;
+const newsPerPage = 6;
+
+// Cargar noticias
+function loadNews() {
+    displayNews();
+}
+
+// Mostrar noticias en la página
+function displayNews() {
+    const newsGrid = document.getElementById('news-grid');
+    if (!newsGrid) return;
+    
+    const startIndex = 0;
+    const endIndex = currentNewsPage * newsPerPage;
+    const newsToShow = newsData.slice(startIndex, endIndex);
+    
+    newsGrid.innerHTML = newsToShow.map(news => `
+        <article class="news-card ${news.featured ? 'featured-news' : ''}" onclick="openNewsDetail(${news.id})">
+            <div class="news-image">${news.image}</div>
+            <div class="news-content">
+                <div class="news-meta">
+                    <span class="news-category">${news.category}</span>
+                    <span class="news-date">${formatNewsDate(news.date)}</span>
+                </div>
+                <h3 class="news-title">${news.title}</h3>
+                <p class="news-excerpt">${news.excerpt}</p>
+                <div class="news-actions">
+                    <button class="read-more-btn" onclick="event.stopPropagation(); openNewsDetail(${news.id})">Leer más</button>
+                    <div class="news-stats">
+                        <span>👁️ ${formatNumber(news.views)}</span>
+                        <span>❤️ ${news.likes}</span>
+                    </div>
+                </div>
+            </div>
+        </article>
+    `).join('');
+    
+    // Mostrar/ocultar botón "Cargar más"
+    const loadMoreBtn = document.getElementById('load-more-news');
+    if (loadMoreBtn) {
+        loadMoreBtn.style.display = endIndex >= newsData.length ? 'none' : 'block';
+    }
+}
+
+// Cargar más noticias
+function loadMoreNews() {
+    currentNewsPage++;
+    displayNews();
+    
+    // Scroll suave a las nuevas noticias
+    const lastNewsCard = document.querySelector('.news-card:last-child');
+    if (lastNewsCard) {
+        lastNewsCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+// Abrir detalle de noticia
+function openNewsDetail(newsId) {
+    const news = newsData.find(n => n.id === newsId);
+    if (!news) return;
+    
+    // Crear modal de detalle de noticia
+    const modal = document.createElement('div');
+    modal.className = 'modal active';
+    modal.innerHTML = `
+        <div class="modal-content news-detail-modal">
+            <div class="modal-header">
+                <h2>${news.title}</h2>
+                <button class="close-btn" onclick="closeNewsDetail(this)">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="news-detail-meta">
+                    <span class="news-category">${news.category}</span>
+                    <span class="news-date">${formatNewsDate(news.date)}</span>
+                    <div class="news-stats">
+                        <span>👁️ ${formatNumber(news.views)}</span>
+                        <span>❤️ ${news.likes}</span>
+                    </div>
+                </div>
+                <div class="news-detail-image">${news.image}</div>
+                <div class="news-detail-content">
+                    ${news.content}
+                </div>
+                <div class="news-detail-actions">
+                    <button class="btn-primary" onclick="likeNews(${news.id})">
+                        ❤️ Me gusta (${news.likes})
+                    </button>
+                    <button class="btn-secondary" onclick="shareNews(${news.id})">
+                        📤 Compartir
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Incrementar vistas
+    news.views++;
+    displayNews();
+}
+
+// Cerrar detalle de noticia
+function closeNewsDetail(btn) {
+    const modal = btn.closest('.modal');
+    modal.remove();
+}
+
+// Dar like a noticia
+function likeNews(newsId) {
+    const news = newsData.find(n => n.id === newsId);
+    if (!news) return;
+    
+    news.likes++;
+    
+    // Actualizar contador en el modal
+    const likeBtn = document.querySelector(`button[onclick="likeNews(${newsId})"]`);
+    if (likeBtn) {
+        likeBtn.innerHTML = `❤️ Me gusta (${news.likes})`;
+    }
+    
+    // Actualizar vista principal
+    displayNews();
+    
+    showNotification('¡Te gusta esta noticia!', 'success');
+}
+
+// Compartir noticia
+function shareNews(newsId) {
+    const news = newsData.find(n => n.id === newsId);
+    if (!news) return;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: news.title,
+            text: news.excerpt,
+            url: window.location.href + `#news-${newsId}`
+        });
+    } else {
+        // Fallback: copiar al portapapeles
+        const url = window.location.href + `#news-${newsId}`;
+        navigator.clipboard.writeText(url).then(() => {
+            showNotification('Enlace copiado al portapapeles', 'success');
+        });
+    }
+}
+
+// Formatear fecha de noticia
+function formatNewsDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-CL', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+    });
+}
+
+// Formatear números grandes
+function formatNumber(num) {
+    if (num >= 1000) {
+        return (num / 1000).toFixed(1) + 'K';
+    }
+    return num.toString();
+}
+
+// ===== Sistema de Eventos Gaming =====
+
+// Datos de eventos
+const eventsData = [
+    {
+        id: 1,
+        title: "Championship Gaming Santiago",
+        description: "El torneo de esports más grande de Chile con múltiples categorías",
+        type: "tournament",
+        date: "2025-11-15",
+        endDate: "2025-11-17",
+        location: "Movistar Arena, Santiago",
+        prize: "$50.000 USD",
+        icon: "🏆",
+        details: "Torneo con categorías de LoL, CS2, Valorant y FIFA. Transmisión en vivo y premios para los primeros 3 lugares de cada categoría."
+    },
+    {
+        id: 2,
+        title: "GameCon Chile 2025",
+        description: "La convención de videojuegos más grande del país",
+        type: "convention",
+        date: "2025-11-22",
+        endDate: "2025-11-24",
+        location: "Centro de Convenciones, Valparaíso",
+        attendees: "5,000+ asistentes esperados",
+        icon: "🎮",
+        details: "Exposición de los últimos videojuegos, competencias, stands de marcas, cosplay contest y charlas con desarrolladores."
+    },
+    {
+        id: 3,
+        title: "Tekken 8 Regional Cup",
+        description: "Torneo regional de Tekken 8 con los mejores luchadores",
+        type: "tournament",
+        date: "2025-11-29",
+        location: "UC Gaming Center, Santiago",
+        prize: "$15.000 USD",
+        icon: "⚔️",
+        details: "Torneo eliminatorio con 64 participantes. Sistema de doble eliminación y transmisión profesional."
+    },
+    {
+        id: 4,
+        title: "Workshop: Desarrollo en Unity",
+        description: "Aprende a crear videojuegos desde cero con Unity",
+        type: "workshop",
+        date: "2025-12-05",
+        location: "Duoc UC, Viña del Mar",
+        duration: "8 horas académicas",
+        icon: "🎓",
+        details: "Taller práctico donde aprenderás los fundamentos de Unity, programación en C# y desarrollo de mecánicas básicas de juego."
+    },
+    {
+        id: 5,
+        title: "Retro Gaming Meetup",
+        description: "Encuentro de amantes de los videojuegos retro",
+        type: "meetup",
+        date: "2025-12-12",
+        location: "Café Gamer, Concepción",
+        attendees: "50 gamers máximo",
+        icon: "🤝",
+        details: "Tarde de juegos retro, intercambio de cartuchos, torneos de arcade y charlas sobre la historia del gaming."
+    },
+    {
+        id: 6,
+        title: "Anime & Gaming Expo Sur",
+        description: "La convención de anime y gaming del sur de Chile",
+        type: "convention",
+        date: "2025-12-20",
+        endDate: "2025-12-22",
+        location: "Centro de Eventos, Temuco",
+        special: "Invitados especiales de Japón",
+        icon: "🌟",
+        details: "Convención que combina anime y gaming con invitados especiales, concursos de cosplay, torneos y merchandise exclusivo."
+    }
+];
+
+// Inicializar eventos
+function initEvents() {
+    setupEventFilters();
+    setupViewToggle();
+    setupMapInteraction();
+}
+
+// Configurar filtros de eventos
+function setupEventFilters() {
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Remover active de todos los botones
+            filterBtns.forEach(b => b.classList.remove('active'));
+            // Agregar active al botón clickeado
+            btn.classList.add('active');
+            
+            const filter = btn.getAttribute('data-filter');
+            filterEvents(filter);
+        });
+    });
+}
+
+// Configurar toggle de vista
+function setupViewToggle() {
+    const viewBtns = document.querySelectorAll('.view-btn');
+    
+    viewBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Remover active de todos los botones
+            viewBtns.forEach(b => b.classList.remove('active'));
+            // Agregar active al botón clickeado
+            btn.classList.add('active');
+            
+            const view = btn.getAttribute('data-view');
+            toggleEventView(view);
+        });
+    });
+}
+
+// Configurar interacción del mapa
+function setupMapInteraction() {
+    const eventMarkers = document.querySelectorAll('.event-marker');
+    const tooltip = document.getElementById('tooltip');
+    
+    eventMarkers.forEach(marker => {
+        marker.addEventListener('mouseenter', (e) => {
+            const eventId = parseInt(marker.getAttribute('data-event'));
+            const event = eventsData.find(ev => ev.id === eventId);
+            
+            if (event) {
+                showEventTooltip(e, event, tooltip);
+            }
+        });
+        
+        marker.addEventListener('mouseleave', () => {
+            hideEventTooltip(tooltip);
+        });
+        
+        marker.addEventListener('click', () => {
+            const eventId = parseInt(marker.getAttribute('data-event'));
+            showEventDetail(eventId);
+        });
+    });
+}
+
+// Filtrar eventos
+function filterEvents(filter) {
+    const eventCards = document.querySelectorAll('.event-card');
+    const eventMarkers = document.querySelectorAll('.event-marker');
+    
+    eventCards.forEach(card => {
+        if (filter === 'all' || card.classList.contains(filter)) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+    
+    eventMarkers.forEach(marker => {
+        if (filter === 'all' || marker.classList.contains(filter)) {
+            marker.style.display = 'block';
+        } else {
+            marker.style.display = 'none';
+        }
+    });
+}
+
+// Cambiar vista (mapa/lista)
+function toggleEventView(view) {
+    const mapView = document.getElementById('map-view');
+    const listView = document.getElementById('list-view');
+    
+    if (view === 'map') {
+        mapView.style.display = 'block';
+        listView.style.display = 'none';
+    } else {
+        mapView.style.display = 'none';
+        listView.style.display = 'block';
+    }
+}
+
+// Mostrar tooltip del evento en el mapa
+function showEventTooltip(e, event, tooltip) {
+    const titleEl = tooltip.querySelector('.tooltip-title');
+    const dateEl = tooltip.querySelector('.tooltip-date');
+    const locationEl = tooltip.querySelector('.tooltip-location');
+    
+    titleEl.textContent = event.title;
+    dateEl.textContent = formatEventDate(event.date, event.endDate);
+    locationEl.textContent = event.location;
+    
+    tooltip.style.left = e.pageX + 10 + 'px';
+    tooltip.style.top = e.pageY - 10 + 'px';
+    tooltip.classList.add('show');
+}
+
+// Ocultar tooltip
+function hideEventTooltip(tooltip) {
+    tooltip.classList.remove('show');
+}
+
+// Mostrar detalle del evento
+function showEventDetail(eventId) {
+    const event = eventsData.find(e => e.id === eventId);
+    if (!event) return;
+    
+    const modal = document.createElement('div');
+    modal.className = 'modal active';
+    modal.innerHTML = `
+        <div class="modal-content event-detail-modal">
+            <div class="modal-header">
+                <h2>${event.icon} ${event.title}</h2>
+                <button class="close-btn" onclick="closeEventDetail(this)">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="event-detail-meta">
+                    <span class="event-type ${event.type}">${event.type.toUpperCase()}</span>
+                    <span class="event-date">${formatEventDate(event.date, event.endDate)}</span>
+                </div>
+                <div class="event-detail-content">
+                    <p><strong>📍 Ubicación:</strong> ${event.location}</p>
+                    ${event.prize ? `<p><strong>💰 Premio:</strong> ${event.prize}</p>` : ''}
+                    ${event.attendees ? `<p><strong>👥 Asistentes:</strong> ${event.attendees}</p>` : ''}
+                    ${event.duration ? `<p><strong>⏱️ Duración:</strong> ${event.duration}</p>` : ''}
+                    ${event.special ? `<p><strong>✨ Especial:</strong> ${event.special}</p>` : ''}
+                    
+                    <h3>Descripción</h3>
+                    <p>${event.description}</p>
+                    
+                    <h3>Detalles</h3>
+                    <p>${event.details}</p>
+                </div>
+                <div class="event-detail-actions">
+                    <button class="btn-primary" onclick="registerForEvent(${event.id})">
+                        ${getEventActionText(event.type)}
+                    </button>
+                    <button class="btn-secondary" onclick="shareEvent(${event.id})">
+                        📤 Compartir evento
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+// Cerrar detalle del evento
+function closeEventDetail(btn) {
+    const modal = btn.closest('.modal');
+    modal.remove();
+}
+
+// Obtener texto del botón según tipo de evento
+function getEventActionText(type) {
+    switch(type) {
+        case 'tournament': return '🏆 Inscribirse al torneo';
+        case 'convention': return '🎫 Comprar entrada';
+        case 'workshop': return '📚 Inscribirse al taller';
+        case 'meetup': return '🤝 Unirse al meetup';
+        default: return 'Participar';
+    }
+}
+
+// Formatear fecha de evento
+function formatEventDate(startDate, endDate) {
+    const start = new Date(startDate);
+    const options = { day: 'numeric', month: 'short', year: 'numeric' };
+    
+    if (endDate) {
+        const end = new Date(endDate);
+        if (start.getMonth() === end.getMonth()) {
+            return `${start.getDate()}-${end.getDate()} ${start.toLocaleDateString('es-CL', { month: 'short', year: 'numeric' })}`;
+        } else {
+            return `${start.toLocaleDateString('es-CL', options)} - ${end.toLocaleDateString('es-CL', options)}`;
+        }
+    }
+    
+    return start.toLocaleDateString('es-CL', options);
+}
+
+// Funciones para acciones de eventos
+function registerEvent(eventId) {
+    if (!isLoggedIn()) {
+        showNotification('Debes iniciar sesión para inscribirte', 'error');
+        showLogin();
+        return;
+    }
+    
+    showNotification('¡Inscripción exitosa! Te contactaremos pronto', 'success');
+    closeEventDetail(document.querySelector('.event-detail-modal .close-btn'));
+}
+
+function buyTicket(eventId) {
+    if (!isLoggedIn()) {
+        showNotification('Debes iniciar sesión para comprar entradas', 'error');
+        showLogin();
+        return;
+    }
+    
+    showNotification('Redirigiendo a la compra de entradas...', 'info');
+    closeEventDetail(document.querySelector('.event-detail-modal .close-btn'));
+}
+
+function registerWorkshop(eventId) {
+    if (!isLoggedIn()) {
+        showNotification('Debes iniciar sesión para inscribirte', 'error');
+        showLogin();
+        return;
+    }
+    
+    showNotification('¡Inscripción al workshop exitosa!', 'success');
+    closeEventDetail(document.querySelector('.event-detail-modal .close-btn'));
+}
+
+function joinMeetup(eventId) {
+    if (!isLoggedIn()) {
+        showNotification('Debes iniciar sesión para unirte', 'error');
+        showLogin();
+        return;
+    }
+    
+    showNotification('¡Te has unido al meetup!', 'success');
+    closeEventDetail(document.querySelector('.event-detail-modal .close-btn'));
+}
+
+function registerForEvent(eventId) {
+    const event = eventsData.find(e => e.id === eventId);
+    if (!event) return;
+    
+    switch(event.type) {
+        case 'tournament':
+            registerEvent(eventId);
+            break;
+        case 'convention':
+            buyTicket(eventId);
+            break;
+        case 'workshop':
+            registerWorkshop(eventId);
+            break;
+        case 'meetup':
+            joinMeetup(eventId);
+            break;
+    }
+}
+
+function shareEvent(eventId) {
+    const event = eventsData.find(e => e.id === eventId);
+    if (!event) return;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: event.title,
+            text: event.description,
+            url: window.location.href + `#event-${eventId}`
+        });
+    } else {
+        const url = window.location.href + `#event-${eventId}`;
+        navigator.clipboard.writeText(url).then(() => {
+            showNotification('Enlace del evento copiado al portapapeles', 'success');
+        });
+    }
+}
