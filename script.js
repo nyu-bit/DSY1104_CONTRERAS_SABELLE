@@ -43,6 +43,14 @@ document.addEventListener('DOMContentLoaded', function() {
   if (typeof initWhatsAppChat === 'function') {
     initWhatsAppChat();
   }
+  
+  // Inicializar sistema de semillas de productos
+  if (typeof showCatalogControls === 'function') {
+    setTimeout(() => {
+      showCatalogControls();
+      displayCatalogProducts();
+    }, 1000);
+  }
   initLogin();
   initProfile();
   initProductFiltersAndSearch();
@@ -2650,6 +2658,508 @@ const products = [
     { id: 6, name: 'Curved Gaming Monitor', price: 299990, icon: '🖥️', available: true }
 ];
 
+// ===== Sistema de Semillas de Productos Avanzados =====
+
+// Base de datos extendida de productos gaming
+const detailedProducts = [
+  {
+    id: 101,
+    name: 'GeForce RTX 4090',
+    price: 2500000,
+    category: 'Tarjetas Gráficas',
+    brand: 'NVIDIA',
+    icon: '🔥',
+    description: 'La tarjeta gráfica más potente del mercado para gaming en 4K',
+    image: 'https://via.placeholder.com/300x200?text=RTX+4090',
+    stock: 15,
+    rating: 4.9,
+    reviews: 127,
+    featured: true,
+    available: true,
+    specifications: {
+      memory: '24GB GDDR6X',
+      coreClock: '2230 MHz',
+      memorySpeed: '21 Gbps',
+      powerConsumption: '450W'
+    }
+  },
+  {
+    id: 102,
+    name: 'AMD Ryzen 9 7950X',
+    price: 800000,
+    category: 'Procesadores',
+    brand: 'AMD',
+    icon: '⚡',
+    description: 'Procesador de alto rendimiento para gaming extremo y creación de contenido',
+    image: 'https://via.placeholder.com/300x200?text=Ryzen+9',
+    stock: 8,
+    rating: 4.8,
+    reviews: 89,
+    featured: true,
+    available: true,
+    specifications: {
+      cores: '16 cores / 32 threads',
+      baseClock: '4.5 GHz',
+      boostClock: '5.7 GHz',
+      cache: '80MB'
+    }
+  },
+  {
+    id: 103,
+    name: 'Corsair Vengeance RGB Pro',
+    price: 180000,
+    category: 'Memoria RAM',
+    brand: 'Corsair',
+    icon: '💾',
+    description: 'Memoria RAM DDR4 con RGB personalizable y perfiles XMP',
+    image: 'https://via.placeholder.com/300x200?text=RAM+RGB',
+    stock: 25,
+    rating: 4.7,
+    reviews: 156,
+    featured: true,
+    available: true,
+    specifications: {
+      capacity: '32GB (2x16GB)',
+      speed: 'DDR4-3600',
+      timing: 'CL18',
+      voltage: '1.35V'
+    }
+  },
+  {
+    id: 104,
+    name: 'Samsung 980 PRO SSD',
+    price: 250000,
+    category: 'Almacenamiento',
+    brand: 'Samsung',
+    icon: '💿',
+    description: 'SSD NVMe de alta velocidad para carga instantánea de juegos',
+    image: 'https://via.placeholder.com/300x200?text=SSD+PRO',
+    stock: 20,
+    rating: 4.8,
+    reviews: 203,
+    featured: true,
+    available: true,
+    specifications: {
+      capacity: '2TB',
+      interface: 'PCIe 4.0 NVMe',
+      readSpeed: '7,000 MB/s',
+      writeSpeed: '6,900 MB/s'
+    }
+  },
+  {
+    id: 105,
+    name: 'Logitech G Pro X Superlight',
+    price: 150000,
+    category: 'Periféricos',
+    brand: 'Logitech',
+    icon: '🖱️',
+    description: 'Mouse gaming ultraliviano para competición profesional',
+    image: 'https://via.placeholder.com/300x200?text=Mouse+Pro',
+    stock: 30,
+    rating: 4.9,
+    reviews: 312,
+    featured: true,
+    available: true,
+    specifications: {
+      weight: '63g',
+      sensor: 'HERO 25K',
+      battery: '70+ horas',
+      connectivity: 'LIGHTSPEED Wireless'
+    }
+  },
+  {
+    id: 106,
+    name: 'HyperX Alloy Elite RGB',
+    price: 120000,
+    category: 'Periféricos',
+    brand: 'HyperX',
+    icon: '⌨️',
+    description: 'Teclado mecánico con switches Cherry MX y RGB per-key',
+    image: 'https://via.placeholder.com/300x200?text=Keyboard+RGB',
+    stock: 18,
+    rating: 4.6,
+    reviews: 98,
+    featured: true,
+    available: true,
+    specifications: {
+      switches: 'Cherry MX Red',
+      backlight: 'RGB personalizable',
+      layout: 'Full size',
+      connectivity: 'USB-C'
+    }
+  }
+];
+
+// Semillas de productos para expandir el catálogo
+const productSeeds = {
+  tarjetasGraficas: [
+    {
+      name: 'GeForce RTX 4080',
+      brand: 'NVIDIA',
+      price: 1800000,
+      icon: '🔥',
+      description: 'Tarjeta gráfica de alto rendimiento para gaming 4K',
+      specifications: {
+        memory: '16GB GDDR6X',
+        coreClock: '2205 MHz',
+        memorySpeed: '22.4 Gbps',
+        powerConsumption: '320W'
+      }
+    },
+    {
+      name: 'Radeon RX 7900 XTX',
+      brand: 'AMD',
+      price: 1600000,
+      icon: '🔥',
+      description: 'GPU AMD de última generación con arquitectura RDNA 3',
+      specifications: {
+        memory: '24GB GDDR6',
+        coreClock: '2300 MHz',
+        memorySpeed: '20 Gbps',
+        powerConsumption: '355W'
+      }
+    },
+    {
+      name: 'GeForce RTX 4070 Ti',
+      brand: 'NVIDIA',
+      price: 1200000,
+      icon: '🔥',
+      description: 'Tarjeta gráfica equilibrada para gaming 1440p',
+      specifications: {
+        memory: '12GB GDDR6X',
+        coreClock: '2310 MHz',
+        memorySpeed: '21 Gbps',
+        powerConsumption: '285W'
+      }
+    }
+  ],
+  
+  procesadores: [
+    {
+      name: 'Intel Core i9-13900K',
+      brand: 'Intel',
+      price: 750000,
+      icon: '⚡',
+      description: 'Procesador Intel de 13va generación para gaming extremo',
+      specifications: {
+        cores: '24 cores (8P+16E)',
+        baseClock: '3.0 GHz',
+        boostClock: '5.8 GHz',
+        cache: '36MB'
+      }
+    },
+    {
+      name: 'AMD Ryzen 7 7800X3D',
+      brand: 'AMD',
+      price: 650000,
+      icon: '⚡',
+      description: 'Procesador gaming con tecnología 3D V-Cache',
+      specifications: {
+        cores: '8 cores / 16 threads',
+        baseClock: '4.2 GHz',
+        boostClock: '5.0 GHz',
+        cache: '104MB (3D V-Cache)'
+      }
+    },
+    {
+      name: 'Intel Core i7-13700K',
+      brand: 'Intel',
+      price: 550000,
+      icon: '⚡',
+      description: 'Procesador Intel balanceado para gaming y productividad',
+      specifications: {
+        cores: '16 cores (8P+8E)',
+        baseClock: '3.4 GHz',
+        boostClock: '5.4 GHz',
+        cache: '30MB'
+      }
+    }
+  ],
+  
+  memoriaRAM: [
+    {
+      name: 'G.SKILL Trident Z5 RGB',
+      brand: 'G.SKILL',
+      price: 220000,
+      icon: '💾',
+      description: 'Memoria DDR5 premium con RGB y overclock',
+      specifications: {
+        capacity: '32GB (2x16GB)',
+        speed: 'DDR5-6000',
+        timing: 'CL36',
+        voltage: '1.35V'
+      }
+    },
+    {
+      name: 'Corsair Dominator Platinum',
+      brand: 'Corsair',
+      price: 280000,
+      icon: '💾',
+      description: 'Memoria RAM premium para entusiastas',
+      specifications: {
+        capacity: '64GB (2x32GB)',
+        speed: 'DDR5-5600',
+        timing: 'CL40',
+        voltage: '1.25V'
+      }
+    },
+    {
+      name: 'Kingston Fury Beast RGB',
+      brand: 'Kingston',
+      price: 150000,
+      icon: '💾',
+      description: 'Memoria gaming con RGB y perfil XMP',
+      specifications: {
+        capacity: '16GB (2x8GB)',
+        speed: 'DDR4-3200',
+        timing: 'CL16',
+        voltage: '1.35V'
+      }
+    }
+  ],
+  
+  almacenamiento: [
+    {
+      name: 'WD Black SN850X',
+      brand: 'Western Digital',
+      price: 180000,
+      icon: '💿',
+      description: 'SSD gaming de alta velocidad con heatsink',
+      specifications: {
+        capacity: '1TB',
+        interface: 'PCIe 4.0 NVMe',
+        readSpeed: '7,300 MB/s',
+        writeSpeed: '6,600 MB/s'
+      }
+    },
+    {
+      name: 'Crucial P5 Plus',
+      brand: 'Crucial',
+      price: 200000,
+      icon: '💿',
+      description: 'SSD NVMe con tecnología 3D NAND',
+      specifications: {
+        capacity: '2TB',
+        interface: 'PCIe 4.0 NVMe',
+        readSpeed: '6,600 MB/s',
+        writeSpeed: '5,000 MB/s'
+      }
+    },
+    {
+      name: 'Seagate FireCuda 530',
+      brand: 'Seagate',
+      price: 350000,
+      icon: '💿',
+      description: 'SSD premium para gaming y creación de contenido',
+      specifications: {
+        capacity: '4TB',
+        interface: 'PCIe 4.0 NVMe',
+        readSpeed: '7,300 MB/s',
+        writeSpeed: '6,900 MB/s'
+      }
+    }
+  ],
+  
+  perifericos: [
+    {
+      name: 'Razer DeathAdder V3 Pro',
+      brand: 'Razer',
+      price: 180000,
+      icon: '🖱️',
+      description: 'Mouse gaming inalámbrico con sensor Focus Pro 30K',
+      specifications: {
+        weight: '63g',
+        sensor: 'Focus Pro 30K',
+        battery: '90 horas',
+        connectivity: 'HyperSpeed Wireless'
+      }
+    },
+    {
+      name: 'SteelSeries Apex Pro TKL',
+      brand: 'SteelSeries',
+      price: 250000,
+      icon: '⌨️',
+      description: 'Teclado mecánico con switches ajustables OmniPoint',
+      specifications: {
+        switches: 'OmniPoint 2.0',
+        backlight: 'RGB per-key',
+        layout: 'Tenkeyless',
+        connectivity: 'USB-C + Wireless'
+      }
+    },
+    {
+      name: 'HyperX Cloud Alpha S',
+      brand: 'HyperX',
+      price: 120000,
+      icon: '🎧',
+      description: 'Audífonos gaming con sonido surround 7.1',
+      specifications: {
+        drivers: '50mm neodymium',
+        frequency: '13Hz-27kHz',
+        microphone: 'Desmontable',
+        connectivity: '3.5mm + USB'
+      }
+    }
+  ],
+  
+  monitores: [
+    {
+      name: 'ASUS ROG Swift PG279QM',
+      brand: 'ASUS',
+      price: 800000,
+      icon: '🖥️',
+      description: 'Monitor gaming 1440p 240Hz con G-SYNC',
+      specifications: {
+        size: '27 pulgadas',
+        resolution: '2560x1440',
+        refreshRate: '240Hz',
+        panel: 'Fast IPS'
+      }
+    },
+    {
+      name: 'Samsung Odyssey G7',
+      brand: 'Samsung',
+      price: 650000,
+      icon: '🖥️',
+      description: 'Monitor curvo gaming con HDR y QLED',
+      specifications: {
+        size: '32 pulgadas',
+        resolution: '2560x1440',
+        refreshRate: '240Hz',
+        panel: 'VA Curvo'
+      }
+    },
+    {
+      name: 'LG UltraGear 27GP950',
+      brand: 'LG',
+      price: 900000,
+      icon: '🖥️',
+      description: 'Monitor 4K gaming con Nano IPS y HDR600',
+      specifications: {
+        size: '27 pulgadas',
+        resolution: '3840x2160',
+        refreshRate: '144Hz',
+        panel: 'Nano IPS'
+      }
+    }
+  ]
+};
+
+// Función para generar productos desde semillas
+function generateProductsFromSeeds() {
+    let newProducts = [...detailedProducts]; // Incluir productos base
+    let productId = 200; // ID inicial para productos generados
+    
+    Object.keys(productSeeds).forEach(categoryKey => {
+        const categoryName = getCategoryDisplayName(categoryKey);
+        
+        productSeeds[categoryKey].forEach(seed => {
+            const newProduct = {
+                id: productId++,
+                name: seed.name,
+                price: seed.price,
+                category: categoryName,
+                brand: seed.brand,
+                icon: seed.icon,
+                description: seed.description,
+                image: `https://via.placeholder.com/300x200?text=${encodeURIComponent(seed.name)}`,
+                stock: Math.floor(Math.random() * 30) + 5,
+                rating: (Math.random() * 1.5 + 3.5).toFixed(1),
+                reviews: Math.floor(Math.random() * 200) + 20,
+                featured: Math.random() > 0.6, // 40% chance de ser destacado
+                available: true,
+                specifications: seed.specifications
+            };
+            
+            newProducts.push(newProduct);
+        });
+    });
+    
+    return newProducts;
+}
+
+// Función auxiliar para obtener nombre de categoría
+function getCategoryDisplayName(categoryKey) {
+    const categoryMap = {
+        'tarjetasGraficas': 'Tarjetas Gráficas',
+        'procesadores': 'Procesadores',
+        'memoriaRAM': 'Memoria RAM',
+        'almacenamiento': 'Almacenamiento',
+        'perifericos': 'Periféricos',
+        'monitores': 'Monitores'
+    };
+    
+    return categoryMap[categoryKey] || categoryKey;
+}
+
+// Variable global para productos expandidos
+let expandedProducts = [...detailedProducts];
+
+// Función para activar el sistema de semillas
+function activateProductSeeds() {
+    expandedProducts = generateProductsFromSeeds();
+    
+    // Actualizar localStorage
+    if (typeof(Storage) !== "undefined") {
+        localStorage.setItem('levelup_expanded_products', JSON.stringify(expandedProducts));
+    }
+    
+    // Actualizar productos básicos para compatibilidad con carrito
+    const basicProducts = expandedProducts.slice(0, 6).map((product, index) => ({
+        id: index + 1,
+        name: product.name.substring(0, 20) + (product.name.length > 20 ? '...' : ''),
+        price: Math.min(product.price, 999990), // Limitar precio para carrito básico
+        icon: product.icon,
+        available: true
+    }));
+    
+    // Reemplazar productos básicos
+    products.splice(0, products.length, ...basicProducts);
+    
+    showNotification(`¡Catálogo expandido! ${expandedProducts.length} productos disponibles`, 'success');
+    
+    // Dar puntos por activar catálogo expandido
+    if (isLoggedIn()) {
+        const user = getCurrentUser();
+        user.points += 10;
+        updateUserInStorage(user);
+        updateUserInfo();
+        showNotification('¡Has ganado 10 puntos por expandir el catálogo!', 'info');
+    }
+    
+    return expandedProducts.length;
+}
+
+// Función para obtener productos por categoría
+function getProductsByCategory(categoryName) {
+    return expandedProducts.filter(product => 
+        product.category.toLowerCase() === categoryName.toLowerCase()
+    );
+}
+
+// Función para obtener productos destacados
+function getFeaturedProducts() {
+    return expandedProducts.filter(product => product.featured);
+}
+
+// Función para buscar productos
+function searchProducts(query) {
+    const searchTerm = query.toLowerCase();
+    return expandedProducts.filter(product => 
+        product.name.toLowerCase().includes(searchTerm) ||
+        product.description.toLowerCase().includes(searchTerm) ||
+        product.brand.toLowerCase().includes(searchTerm) ||
+        product.category.toLowerCase().includes(searchTerm)
+    );
+}
+
+// Función para obtener productos por rango de precio
+function getProductsByPriceRange(minPrice, maxPrice) {
+    return expandedProducts.filter(product => 
+        product.price >= minPrice && product.price <= maxPrice
+    );
+}
+
 // Cargar datos del carrito al iniciar
 function initCart() {
     updateCartDisplay();
@@ -4143,3 +4653,293 @@ function callSupport() {
     window.location.href = `tel:${phoneNumber}`;
     showNotification('Iniciando llamada...', 'info');
 }
+
+// ===== Integración del Sistema de Semillas con la Interfaz =====
+
+// Función para mostrar productos en el catálogo
+function displayCatalogProducts(productsToShow = null) {
+    const productGrid = document.querySelector('#featured-grid') || document.querySelector('.products-grid');
+    if (!productGrid) return;
+    
+    const products = productsToShow || expandedProducts.slice(0, 12); // Mostrar primeros 12
+    
+    productGrid.innerHTML = products.map(product => `
+        <div class="product-card" data-product-id="${product.id}">
+            <div class="product-icon">${product.icon}</div>
+            <div class="product-info">
+                <h3 class="product-name">${product.name}</h3>
+                <p class="product-description">${product.description}</p>
+                <div class="product-specs">
+                    <span class="product-brand">${product.brand}</span>
+                    <span class="product-category">${product.category}</span>
+                </div>
+                <div class="product-rating">
+                    <span class="stars">${'⭐'.repeat(Math.floor(product.rating))}</span>
+                    <span class="rating-value">${product.rating}</span>
+                    <span class="reviews-count">(${product.reviews} reseñas)</span>
+                </div>
+                <div class="product-price">$${product.price.toLocaleString()}</div>
+                <div class="product-stock ${product.stock < 10 ? 'low-stock' : ''}">
+                    ${product.stock < 10 ? '⚠️ ' : '✅ '}${product.stock} disponibles
+                </div>
+            </div>
+            <div class="product-actions">
+                <button class="btn-primary add-to-cart" onclick="addAdvancedToCart(${product.id})">
+                    🛒 Agregar al Carrito
+                </button>
+                <button class="btn-secondary view-details" onclick="viewProductDetails(${product.id})">
+                    👁️ Ver Detalles
+                </button>
+                <button class="share-btn" onclick="shareProduct(${product.id})">
+                    📤 Compartir
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Función para agregar productos avanzados al carrito
+function addAdvancedToCart(productId) {
+    const product = expandedProducts.find(p => p.id === productId);
+    if (!product) {
+        showNotification('Producto no encontrado', 'error');
+        return;
+    }
+    
+    if (product.stock <= 0) {
+        showNotification('Producto sin stock', 'warning');
+        return;
+    }
+    
+    // Adaptar para carrito básico
+    const cartItem = {
+        id: productId,
+        name: product.name,
+        price: product.price,
+        icon: product.icon,
+        quantity: 1
+    };
+    
+    // Verificar si ya existe en el carrito
+    const existingItem = cart.find(item => item.id === productId);
+    
+    if (existingItem) {
+        existingItem.quantity += 1;
+        showNotification(`${product.name} (cantidad: ${existingItem.quantity})`, 'info');
+    } else {
+        cart.push(cartItem);
+        showNotification(`${product.name} agregado al carrito`, 'success');
+    }
+    
+    // Reducir stock
+    product.stock -= 1;
+    
+    // Actualizar localStorage
+    localStorage.setItem('levelUpCart', JSON.stringify(cart));
+    localStorage.setItem('levelup_expanded_products', JSON.stringify(expandedProducts));
+    
+    updateCartDisplay();
+    updateCartBadge();
+    
+    // Dar puntos por agregar al carrito
+    if (isLoggedIn()) {
+        const user = getCurrentUser();
+        user.points += 2;
+        updateUserInStorage(user);
+        updateUserInfo();
+    }
+}
+
+// Función para ver detalles del producto
+function viewProductDetails(productId) {
+    const product = expandedProducts.find(p => p.id === productId);
+    if (!product) {
+        showNotification('Producto no encontrado', 'error');
+        return;
+    }
+    
+    // Crear modal de detalles
+    const modal = document.createElement('div');
+    modal.className = 'modal active';
+    modal.innerHTML = `
+        <div class="modal-content product-details-modal">
+            <div class="modal-header">
+                <h2>${product.icon} ${product.name}</h2>
+                <button class="close-btn" onclick="closeModal(this)">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="product-detail-grid">
+                    <div class="product-main-info">
+                        <img src="${product.image}" alt="${product.name}" class="product-detail-image">
+                        <div class="product-detail-price">$${product.price.toLocaleString()}</div>
+                        <div class="product-detail-stock ${product.stock < 10 ? 'low-stock' : ''}">
+                            ${product.stock < 10 ? '⚠️ ' : '✅ '}${product.stock} en stock
+                        </div>
+                        <div class="product-rating-detailed">
+                            <div class="stars-large">${'⭐'.repeat(Math.floor(product.rating))}</div>
+                            <span class="rating-large">${product.rating}/5.0</span>
+                            <span class="reviews-large">(${product.reviews} reseñas)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="product-specifications">
+                        <h3>📋 Especificaciones</h3>
+                        <ul class="specs-list">
+                            ${Object.entries(product.specifications).map(([key, value]) => `
+                                <li><strong>${key}:</strong> ${value}</li>
+                            `).join('')}
+                        </ul>
+                        
+                        <div class="product-meta">
+                            <p><strong>Marca:</strong> ${product.brand}</p>
+                            <p><strong>Categoría:</strong> ${product.category}</p>
+                            <p><strong>Descripción:</strong> ${product.description}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-detail-actions">
+                    <button class="btn-primary btn-large" onclick="addAdvancedToCart(${product.id}); closeModal(this)">
+                        🛒 Agregar al Carrito - $${product.price.toLocaleString()}
+                    </button>
+                    <button class="btn-secondary" onclick="shareProduct(${product.id})">
+                        📤 Compartir Producto
+                    </button>
+                    <button class="btn-secondary" onclick="addToWishlist(${product.id})">
+                        💝 Agregar a Favoritos
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+// Función para cerrar modal genérico
+function closeModal(btn) {
+    const modal = btn.closest('.modal');
+    modal.remove();
+}
+
+// Función para filtrar productos por categoría
+function filterProductsByCategory(category) {
+    if (category === 'all') {
+        displayCatalogProducts();
+    } else {
+        const filteredProducts = getProductsByCategory(category);
+        displayCatalogProducts(filteredProducts);
+    }
+    
+    // Actualizar botones de filtro
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    const activeBtn = document.querySelector(`[data-category="${category}"]`);
+    if (activeBtn) {
+        activeBtn.classList.add('active');
+    }
+}
+
+// Función para agregar a lista de deseos
+function addToWishlist(productId) {
+    let wishlist = JSON.parse(localStorage.getItem('levelup_wishlist')) || [];
+    
+    if (wishlist.includes(productId)) {
+        showNotification('El producto ya está en tu lista de deseos', 'info');
+        return;
+    }
+    
+    wishlist.push(productId);
+    localStorage.setItem('levelup_wishlist', JSON.stringify(wishlist));
+    
+    showNotification('Producto agregado a favoritos', 'success');
+    
+    if (isLoggedIn()) {
+        const user = getCurrentUser();
+        user.points += 1;
+        updateUserInStorage(user);
+        updateUserInfo();
+    }
+}
+
+// Función para mostrar controles del catálogo
+function showCatalogControls() {
+    const controlsContainer = document.querySelector('.catalog-controls') || createCatalogControls();
+    
+    controlsContainer.innerHTML = `
+        <div class="catalog-header">
+            <h2>🎮 Catálogo Gaming Level-Up</h2>
+            <div class="catalog-stats">
+                <span>${expandedProducts.length} productos disponibles</span>
+                <button class="btn-secondary" onclick="activateProductSeeds()">
+                    🌱 Expandir Catálogo
+                </button>
+            </div>
+        </div>
+        
+        <div class="catalog-filters">
+            <button class="filter-btn active" data-category="all" onclick="filterProductsByCategory('all')">
+                🏠 Todos
+            </button>
+            <button class="filter-btn" data-category="Tarjetas Gráficas" onclick="filterProductsByCategory('Tarjetas Gráficas')">
+                🔥 GPUs
+            </button>
+            <button class="filter-btn" data-category="Procesadores" onclick="filterProductsByCategory('Procesadores')">
+                ⚡ CPUs
+            </button>
+            <button class="filter-btn" data-category="Memoria RAM" onclick="filterProductsByCategory('Memoria RAM')">
+                💾 RAM
+            </button>
+            <button class="filter-btn" data-category="Almacenamiento" onclick="filterProductsByCategory('Almacenamiento')">
+                💿 Storage
+            </button>
+            <button class="filter-btn" data-category="Periféricos" onclick="filterProductsByCategory('Periféricos')">
+                🖱️ Periféricos
+            </button>
+            <button class="filter-btn" data-category="Monitores" onclick="filterProductsByCategory('Monitores')">
+                🖥️ Monitores
+            </button>
+        </div>
+        
+        <div class="catalog-search">
+            <input type="text" id="product-search" placeholder="Buscar productos..." onkeyup="searchProductsCatalog(this.value)">
+            <button class="btn-primary" onclick="searchProductsCatalog(document.getElementById('product-search').value)">
+                🔍 Buscar
+            </button>
+        </div>
+    `;
+}
+
+function createCatalogControls() {
+    const container = document.createElement('div');
+    container.className = 'catalog-controls';
+    
+    const mainContent = document.querySelector('main') || document.body;
+    mainContent.insertBefore(container, mainContent.firstChild);
+    
+    return container;
+}
+
+// Función de búsqueda en tiempo real
+function searchProductsCatalog(query) {
+    if (query.trim() === '') {
+        displayCatalogProducts();
+        return;
+    }
+    
+    const results = searchProducts(query);
+    displayCatalogProducts(results);
+    
+    if (results.length === 0) {
+        document.querySelector('#featured-grid').innerHTML = `
+            <div class="no-results">
+                <h3>😔 No se encontraron productos</h3>
+                <p>Intenta con otros términos de búsqueda</p>
+            </div>
+        `;
+    }
+}
+
+// Llamar a soporte
