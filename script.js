@@ -477,6 +477,9 @@ function handleRegistration(e) {
     
     localStorage.setItem('levelup_user', JSON.stringify(userData));
     
+    // Inicializar gamificación para nuevo usuario
+    initializeUserGamification(userData);
+    
     // Mostrar mensaje de éxito
     let message = `¡Bienvenido ${name}! Tu cuenta ha sido creada exitosamente 🎮`;
     
@@ -506,6 +509,9 @@ function updateUserInterface(userData) {
   const registerButton = document.getElementById('register-button');
   registerButton.textContent = `👤 ${userData.name}`;
   registerButton.title = userData.isDuocUser ? 'Usuario Duoc UC - 20% descuento' : 'Usuario registrado';
+  
+  // Actualizar indicador de nivel en navegación
+  updateLevelDisplay(userData);
 }
 
 function showError(elementId, message) {
@@ -961,6 +967,9 @@ function loadUserProfile() {
   
   // Cargar datos de referidos
   loadReferralData(userData);
+  
+  // Cargar datos de gamificación
+  loadGamificationData(userData);
 }
 
 function saveProfile() {
@@ -1217,6 +1226,172 @@ function copyReferralLink() {
   });
 }
 
+// ===================== SISTEMA DE GAMIFICACIÓN =====================
+
+// Definición de niveles
+const LEVELS = [
+  {
+    level: 1,
+    name: "Novato",
+    icon: "🥉",
+    pointsRequired: 0,
+    pointsToNext: 100,
+    benefits: [
+      { icon: "🎮", title: "Bienvenida", description: "Acceso básico a la tienda" },
+      { icon: "📧", title: "Newsletter", description: "Noticias y ofertas por email" }
+    ]
+  },
+  {
+    level: 2,
+    name: "Explorador",
+    icon: "🥈",
+    pointsRequired: 100,
+    pointsToNext: 250,
+    benefits: [
+      { icon: "💰", title: "Descuento 5%", description: "5% de descuento en compras" },
+      { icon: "🚚", title: "Envío Express", description: "Envío prioritario gratis" },
+      { icon: "🔔", title: "Alertas", description: "Notificaciones de ofertas flash" }
+    ]
+  },
+  {
+    level: 3,
+    name: "Aventurero",
+    icon: "🏅",
+    pointsRequired: 350,
+    pointsToNext: 500,
+    benefits: [
+      { icon: "💰", title: "Descuento 10%", description: "10% de descuento en compras" },
+      { icon: "🎁", title: "Productos Exclusivos", description: "Acceso a productos beta" },
+      { icon: "🏆", title: "Soporte VIP", description: "Chat prioritario 24/7" }
+    ]
+  },
+  {
+    level: 4,
+    name: "Veterano",
+    icon: "🎖️",
+    pointsRequired: 850,
+    pointsToNext: 1000,
+    benefits: [
+      { icon: "💰", title: "Descuento 15%", description: "15% de descuento en compras" },
+      { icon: "🎮", title: "Early Access", description: "Acceso anticipado a lanzamientos" },
+      { icon: "🛡️", title: "Garantía Extendida", description: "Garantía extendida gratis" },
+      { icon: "🎫", title: "Eventos Exclusivos", description: "Invitaciones a eventos VIP" }
+    ]
+  },
+  {
+    level: 5,
+    name: "Maestro",
+    icon: "👑",
+    pointsRequired: 1850,
+    pointsToNext: 1500,
+    benefits: [
+      { icon: "💰", title: "Descuento 20%", description: "20% de descuento en compras" },
+      { icon: "🌟", title: "Asesor Personal", description: "Asesor gaming personal" },
+      { icon: "🎯", title: "Productos Personalizados", description: "Configuraciones a medida" },
+      { icon: "🏆", title: "Comunidad Elite", description: "Acceso a foro exclusivo" }
+    ]
+  },
+  {
+    level: 6,
+    name: "Leyenda",
+    icon: "💎",
+    pointsRequired: 3350,
+    pointsToNext: null,
+    benefits: [
+      { icon: "💰", title: "Descuento 25%", description: "25% de descuento permanente" },
+      { icon: "🎮", title: "Gaming Setup Gratis", description: "Setup gaming anual gratis" },
+      { icon: "🌍", title: "Embajador", description: "Programa de embajadores" },
+      { icon: "♾️", title: "Beneficios Ilimitados", description: "Acceso a todos los beneficios" }
+    ]
+  }
+];
+
+// Definición de logros
+const ACHIEVEMENTS = [
+  {
+    id: "first_purchase",
+    title: "Primera Compra",
+    description: "Realiza tu primera compra",
+    icon: "🛒",
+    points: 25,
+    unlocked: false
+  },
+  {
+    id: "referral_master",
+    title: "Maestro Referidor",
+    description: "Refiere a 5 amigos",
+    icon: "👥",
+    points: 100,
+    unlocked: false
+  },
+  {
+    id: "big_spender",
+    title: "Gran Comprador",
+    description: "Gasta más de $500.000",
+    icon: "💸",
+    points: 200,
+    unlocked: false
+  },
+  {
+    id: "loyalty_champion",
+    title: "Campeón de Lealtad",
+    description: "6 meses como cliente activo",
+    icon: "🏆",
+    points: 150,
+    unlocked: false
+  },
+  {
+    id: "review_writer",
+    title: "Crítico Experto",
+    description: "Escribe 10 reseñas",
+    icon: "✍️",
+    points: 75,
+    unlocked: false
+  },
+  {
+    id: "social_sharer",
+    title: "Influencer Social",
+    description: "Comparte 20 productos",
+    icon: "📱",
+    points: 50,
+    unlocked: false
+  }
+];
+
+// Definición de desafíos
+const CHALLENGES = [
+  {
+    id: "weekly_login",
+    title: "Conexión Semanal",
+    description: "Inicia sesión 7 días seguidos",
+    icon: "📅",
+    reward: 50,
+    progress: 0,
+    target: 7,
+    active: true
+  },
+  {
+    id: "monthly_purchase",
+    title: "Comprador Mensual",
+    description: "Realiza 3 compras este mes",
+    icon: "🛍️",
+    reward: 100,
+    progress: 0,
+    target: 3,
+    active: true
+  },
+  {
+    id: "review_challenge",
+    title: "Desafío de Reseñas",
+    description: "Escribe 5 reseñas esta semana",
+    icon: "⭐",
+    reward: 75,
+    progress: 0,
+    target: 5,
+    active: true
+  }
+];
+
 function checkReferralCode() {
   const urlParams = new URLSearchParams(window.location.search);
   const refCode = urlParams.get('ref');
@@ -1240,5 +1415,316 @@ function checkReferralCode() {
     // Limpiar la URL sin recargar la página
     const newUrl = window.location.origin + window.location.pathname;
     window.history.replaceState(null, '', newUrl);
+  }
+}
+
+// ===================== FUNCIONES DE GAMIFICACIÓN =====================
+
+function getUserLevel(points) {
+  for (let i = LEVELS.length - 1; i >= 0; i--) {
+    if (points >= LEVELS[i].pointsRequired) {
+      return LEVELS[i];
+    }
+  }
+  return LEVELS[0];
+}
+
+function getNextLevel(currentLevel) {
+  const currentIndex = LEVELS.findIndex(level => level.level === currentLevel.level);
+  return currentIndex < LEVELS.length - 1 ? LEVELS[currentIndex + 1] : null;
+}
+
+function calculateProgress(points, currentLevel, nextLevel) {
+  if (!nextLevel) return { current: points, needed: points, percentage: 100 };
+  
+  const pointsInLevel = points - currentLevel.pointsRequired;
+  const pointsNeededForNext = nextLevel.pointsRequired - currentLevel.pointsRequired;
+  const percentage = Math.min((pointsInLevel / pointsNeededForNext) * 100, 100);
+  
+  return {
+    current: pointsInLevel,
+    needed: pointsNeededForNext,
+    percentage: percentage
+  };
+}
+
+function updateLevelDisplay(userData) {
+  const points = userData.levelUpPoints || 0;
+  const currentLevel = getUserLevel(points);
+  const nextLevel = getNextLevel(currentLevel);
+  const progress = calculateProgress(points, currentLevel, nextLevel);
+  
+  // Actualizar elementos del perfil
+  document.getElementById('current-level-icon').textContent = currentLevel.icon;
+  document.getElementById('current-level-name').textContent = currentLevel.name;
+  document.getElementById('current-level-number').textContent = currentLevel.level;
+  document.getElementById('current-points').textContent = points;
+  
+  // Actualizar progreso
+  document.getElementById('progress-current').textContent = progress.current;
+  document.getElementById('progress-needed').textContent = progress.needed;
+  document.getElementById('progress-fill').style.width = `${progress.percentage}%`;
+  
+  if (nextLevel) {
+    document.getElementById('next-level-icon').textContent = nextLevel.icon;
+    document.getElementById('next-level-name').textContent = nextLevel.name;
+  } else {
+    document.getElementById('next-level-icon').textContent = '👑';
+    document.getElementById('next-level-name').textContent = 'Nivel Máximo';
+  }
+  
+  // Actualizar indicador de navegación
+  const levelIndicator = document.getElementById('level-indicator');
+  const navLevelIcon = document.getElementById('nav-level-icon');
+  const navLevelNumber = document.getElementById('nav-level-number');
+  const navLevelPoints = document.getElementById('nav-level-points');
+  
+  if (levelIndicator && navLevelIcon && navLevelNumber && navLevelPoints) {
+    navLevelIcon.textContent = currentLevel.icon;
+    navLevelNumber.textContent = currentLevel.level;
+    navLevelPoints.textContent = `${points} pts`;
+    levelIndicator.style.display = 'flex';
+  }
+}
+
+function renderLevelsGrid() {
+  const levelsGrid = document.getElementById('levels-grid');
+  if (!levelsGrid) return;
+  
+  const userData = JSON.parse(localStorage.getItem('levelup_user') || '{}');
+  const userPoints = userData.levelUpPoints || 0;
+  const currentLevel = getUserLevel(userPoints);
+  
+  levelsGrid.innerHTML = '';
+  
+  LEVELS.forEach(level => {
+    const isUnlocked = userPoints >= level.pointsRequired;
+    const isCurrent = level.level === currentLevel.level;
+    
+    const levelElement = document.createElement('div');
+    levelElement.className = `level-item ${isCurrent ? 'current' : isUnlocked ? 'unlocked' : 'locked'}`;
+    
+    const benefitsList = level.benefits.map(benefit => 
+      `<li>${benefit.title}</li>`
+    ).join('');
+    
+    levelElement.innerHTML = `
+      <div class="level-item-header">
+        <span class="level-item-icon">${level.icon}</span>
+        <div class="level-item-info">
+          <h5>${level.name}</h5>
+          <div class="level-item-points">
+            ${level.pointsRequired === 0 ? 'Inicial' : `${level.pointsRequired} puntos`}
+          </div>
+        </div>
+      </div>
+      <ul class="level-item-benefits">
+        ${benefitsList}
+      </ul>
+    `;
+    
+    levelsGrid.appendChild(levelElement);
+  });
+}
+
+function renderCurrentBenefits() {
+  const benefitsContainer = document.getElementById('current-benefits');
+  if (!benefitsContainer) return;
+  
+  const userData = JSON.parse(localStorage.getItem('levelup_user') || '{}');
+  const userPoints = userData.levelUpPoints || 0;
+  const currentLevel = getUserLevel(userPoints);
+  
+  benefitsContainer.innerHTML = '';
+  
+  currentLevel.benefits.forEach(benefit => {
+    const benefitElement = document.createElement('div');
+    benefitElement.className = 'benefit-card';
+    benefitElement.innerHTML = `
+      <span class="benefit-icon">${benefit.icon}</span>
+      <div class="benefit-title">${benefit.title}</div>
+      <div class="benefit-description">${benefit.description}</div>
+    `;
+    benefitsContainer.appendChild(benefitElement);
+  });
+}
+
+function renderAchievements() {
+  const achievementsGrid = document.getElementById('achievements-grid');
+  if (!achievementsGrid) return;
+  
+  const userAchievements = JSON.parse(localStorage.getItem('levelup_achievements') || '[]');
+  
+  achievementsGrid.innerHTML = '';
+  
+  ACHIEVEMENTS.forEach(achievement => {
+    const isUnlocked = userAchievements.includes(achievement.id);
+    
+    const achievementElement = document.createElement('div');
+    achievementElement.className = `achievement-card ${isUnlocked ? 'unlocked' : 'locked'}`;
+    achievementElement.innerHTML = `
+      <span class="achievement-icon">${achievement.icon}</span>
+      <div class="achievement-title">${achievement.title}</div>
+      <div class="achievement-description">${achievement.description}</div>
+    `;
+    
+    achievementsGrid.appendChild(achievementElement);
+  });
+}
+
+function renderChallenges() {
+  const challengesList = document.getElementById('challenges-list');
+  if (!challengesList) return;
+  
+  const userChallenges = JSON.parse(localStorage.getItem('levelup_challenges') || '[]');
+  
+  challengesList.innerHTML = '';
+  
+  CHALLENGES.forEach(challenge => {
+    const userChallenge = userChallenges.find(uc => uc.id === challenge.id) || challenge;
+    const progressPercentage = (userChallenge.progress / userChallenge.target) * 100;
+    
+    const challengeElement = document.createElement('div');
+    challengeElement.className = 'challenge-card';
+    challengeElement.innerHTML = `
+      <div class="challenge-header">
+        <div class="challenge-info">
+          <span class="challenge-icon">${challenge.icon}</span>
+          <div>
+            <div class="challenge-title">${challenge.title}</div>
+            <div class="challenge-description">${challenge.description}</div>
+          </div>
+        </div>
+        <div class="challenge-reward">+${challenge.reward} pts</div>
+      </div>
+      <div class="challenge-progress">
+        <div class="challenge-progress-bar">
+          <div class="challenge-progress-fill" style="width: ${progressPercentage}%"></div>
+        </div>
+        <div class="challenge-progress-text">
+          ${userChallenge.progress} / ${userChallenge.target}
+        </div>
+      </div>
+    `;
+    
+    challengesList.appendChild(challengeElement);
+  });
+}
+
+function loadGamificationData(userData) {
+  updateLevelDisplay(userData);
+  renderLevelsGrid();
+  renderCurrentBenefits();
+  renderAchievements();
+  renderChallenges();
+}
+
+function addPoints(points, reason = '') {
+  const userData = JSON.parse(localStorage.getItem('levelup_user') || '{}');
+  const currentPoints = userData.levelUpPoints || 0;
+  const newPoints = currentPoints + points;
+  
+  // Verificar si subió de nivel
+  const oldLevel = getUserLevel(currentPoints);
+  const newLevel = getUserLevel(newPoints);
+  
+  // Actualizar puntos del usuario
+  userData.levelUpPoints = newPoints;
+  localStorage.setItem('levelup_user', JSON.stringify(userData));
+  
+  // Mostrar notificación
+  if (newLevel.level > oldLevel.level) {
+    showNotification(`🎉 ¡Felicidades! Has subido al nivel ${newLevel.level}: ${newLevel.name} ${newLevel.icon}`, 5000);
+  } else if (points > 0) {
+    showNotification(`+${points} puntos LevelUp${reason ? ` (${reason})` : ''} 🎁`);
+  }
+  
+  // Actualizar display si está visible
+  if (document.getElementById('profile-modal').classList.contains('active')) {
+    loadGamificationData(userData);
+  }
+  
+  // Actualizar indicador de navegación
+  updateLevelDisplay(userData);
+  
+  return newLevel.level > oldLevel.level;
+}
+
+function unlockAchievement(achievementId) {
+  const userAchievements = JSON.parse(localStorage.getItem('levelup_achievements') || '[]');
+  
+  if (!userAchievements.includes(achievementId)) {
+    userAchievements.push(achievementId);
+    localStorage.setItem('levelup_achievements', JSON.stringify(userAchievements));
+    
+    const achievement = ACHIEVEMENTS.find(a => a.id === achievementId);
+    if (achievement) {
+      showNotification(`🏅 ¡Logro desbloqueado! ${achievement.title}`, 4000);
+      addPoints(achievement.points, 'Logro desbloqueado');
+      return true;
+    }
+  }
+  return false;
+}
+
+function updateChallenge(challengeId, increment = 1) {
+  const userChallenges = JSON.parse(localStorage.getItem('levelup_challenges') || '[]');
+  let challenge = userChallenges.find(c => c.id === challengeId);
+  
+  if (!challenge) {
+    const defaultChallenge = CHALLENGES.find(c => c.id === challengeId);
+    if (defaultChallenge) {
+      challenge = { ...defaultChallenge, progress: 0 };
+      userChallenges.push(challenge);
+    } else {
+      return false;
+    }
+  }
+  
+  challenge.progress = Math.min(challenge.progress + increment, challenge.target);
+  
+  // Verificar si completó el desafío
+  if (challenge.progress >= challenge.target && challenge.active) {
+    challenge.active = false;
+    showNotification(`⚔️ ¡Desafío completado! ${challenge.title}`, 4000);
+    addPoints(challenge.reward, 'Desafío completado');
+  }
+  
+  localStorage.setItem('levelup_challenges', JSON.stringify(userChallenges));
+  return true;
+}
+
+function initializeUserGamification(userData) {
+  // Puntos de bienvenida base (25 puntos)
+  const welcomePoints = 25;
+  userData.levelUpPoints = (userData.levelUpPoints || 0) + welcomePoints;
+  
+  // Puntos adicionales si es usuario Duoc UC
+  if (userData.isDuocUser) {
+    userData.levelUpPoints += 25; // 25 puntos extra por ser de Duoc UC
+  }
+  
+  // Actualizar localStorage
+  localStorage.setItem('levelup_user', JSON.stringify(userData));
+  
+  // Desbloquear logro de primer registro (simulado)
+  setTimeout(() => {
+    unlockAchievement('first_purchase'); // Este se desbloqueará más tarde
+    // Por ahora solo enviamos notificación de puntos de bienvenida
+    const totalWelcomePoints = welcomePoints + (userData.isDuocUser ? 25 : 0);
+    showNotification(`🎁 ¡${totalWelcomePoints} puntos LevelUp de bienvenida!`);
+  }, 1000);
+  
+  // Inicializar desafíos activos
+  const initialChallenges = CHALLENGES.map(challenge => ({
+    ...challenge,
+    progress: 0,
+    active: true
+  }));
+  localStorage.setItem('levelup_challenges', JSON.stringify(initialChallenges));
+  
+  // Actualizar display si el perfil está abierto
+  if (document.getElementById('profile-modal').classList.contains('active')) {
+    loadGamificationData(userData);
   }
 }

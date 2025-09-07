@@ -44,6 +44,11 @@
           <button class="btn-icon" type="button" aria-label="Abrir carrito" id="cart-button">
             🛒 <span class="badge" id="cart-count" aria-live="polite">0</span>
           </button>
+          <div class="level-indicator" id="level-indicator" style="display: none;">
+            <span class="level-icon" id="nav-level-icon">🥉</span>
+            <span class="level-text">Nivel <span id="nav-level-number">1</span></span>
+            <span class="level-points" id="nav-level-points">0 pts</span>
+          </div>
           <button class="btn-secondary" type="button" id="login-button">
             🔑 Iniciar Sesión
           </button>
@@ -369,6 +374,7 @@
         <div class="profile-tabs">
           <button class="tab-button active" data-tab="personal">👤 Información Personal</button>
           <button class="tab-button" data-tab="preferences">⚙️ Preferencias</button>
+          <button class="tab-button" data-tab="gamification">🏆 Niveles & Logros</button>
           <button class="tab-button" data-tab="referral">🎁 Referidos</button>
           <button class="tab-button" data-tab="security">🔒 Seguridad</button>
         </div>
@@ -549,6 +555,81 @@
                 </div>
               </div>
             </form>
+          </div>
+
+          <!-- Pestaña: Gamificación -->
+          <div class="tab-pane" id="gamification-tab">
+            <div class="profile-section">
+              <h3>🏆 Tu Progreso Gamer</h3>
+              <p>Gana puntos LevelUp comprando, refiriendo amigos y completando desafíos</p>
+              
+              <!-- Información del nivel actual -->
+              <div class="level-display">
+                <div class="level-card">
+                  <div class="level-info">
+                    <div class="level-badge">
+                      <span class="level-icon" id="current-level-icon">🥉</span>
+                      <div class="level-details">
+                        <span class="level-title" id="current-level-name">Novato</span>
+                        <span class="level-number">Nivel <span id="current-level-number">1</span></span>
+                      </div>
+                    </div>
+                    
+                    <div class="level-points">
+                      <span class="points-current" id="current-points">0</span>
+                      <span class="points-label">Puntos LevelUp</span>
+                    </div>
+                  </div>
+                  
+                  <!-- Barra de progreso al siguiente nivel -->
+                  <div class="level-progress">
+                    <div class="progress-info">
+                      <span>Progreso al siguiente nivel</span>
+                      <span><span id="progress-current">0</span> / <span id="progress-needed">100</span></span>
+                    </div>
+                    <div class="progress-bar">
+                      <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+                    </div>
+                    <div class="next-level-info">
+                      <span class="next-level-icon" id="next-level-icon">🥈</span>
+                      <span id="next-level-name">Explorador</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Lista de niveles disponibles -->
+              <div class="levels-list">
+                <h4>🎯 Todos los Niveles</h4>
+                <div class="levels-grid" id="levels-grid">
+                  <!-- Los niveles se generarán dinámicamente -->
+                </div>
+              </div>
+
+              <!-- Beneficios del nivel actual -->
+              <div class="level-benefits">
+                <h4>💎 Beneficios de tu Nivel</h4>
+                <div class="benefits-list" id="current-benefits">
+                  <!-- Los beneficios se cargarán dinámicamente -->
+                </div>
+              </div>
+
+              <!-- Logros desbloqueados -->
+              <div class="achievements">
+                <h4>🏅 Logros Desbloqueados</h4>
+                <div class="achievements-grid" id="achievements-grid">
+                  <!-- Los logros se generarán dinámicamente -->
+                </div>
+              </div>
+
+              <!-- Desafíos activos -->
+              <div class="challenges">
+                <h4>⚔️ Desafíos Activos</h4>
+                <div class="challenges-list" id="challenges-list">
+                  <!-- Los desafíos se generarán dinámicamente -->
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- Pestaña: Referidos -->
