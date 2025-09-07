@@ -95,6 +95,142 @@
       <button class="promo-arrow right" aria-label="Siguiente promoción">&#9654;</button>
     </div>
   </section>
+
+  <!-- Banner Promocional Dinámico -->
+  <section class="promotional-banner" id="promotional-banner">
+    <div class="banner-container">
+      <div class="banner-slide active" data-promo="1">
+        <div class="banner-content">
+          <div class="banner-badge">🔥 OFERTA ESPECIAL</div>
+          <h2 class="banner-title">¡BLACK FRIDAY GAMER!</h2>
+          <p class="banner-description">Descuentos de hasta 50% en tarjetas gráficas RTX y componentes gaming</p>
+          <div class="banner-price">
+            <span class="old-price">$2.500.000</span>
+            <span class="new-price">$1.250.000</span>
+            <span class="discount">-50%</span>
+          </div>
+          <button class="banner-cta" onclick="claimPromotion(1)">
+            ⚡ RECLAMAR OFERTA
+          </button>
+          <div class="banner-timer" id="timer-1">
+            <span class="timer-label">Termina en:</span>
+            <span class="timer-value">23:59:45</span>
+          </div>
+        </div>
+        <div class="banner-visual">
+          <div class="banner-icon">🎮</div>
+          <div class="banner-effects">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="banner-slide" data-promo="2">
+        <div class="banner-content">
+          <div class="banner-badge">💎 PREMIUM</div>
+          <h2 class="banner-title">SETUP GAMER COMPLETO</h2>
+          <p class="banner-description">PC Gaming + Monitor + Periféricos. Todo lo que necesitas para dominar</p>
+          <div class="banner-price">
+            <span class="old-price">$5.000.000</span>
+            <span class="new-price">$3.500.000</span>
+            <span class="discount">-30%</span>
+          </div>
+          <button class="banner-cta" onclick="claimPromotion(2)">
+            🚀 VER BUNDLE
+          </button>
+          <div class="banner-timer" id="timer-2">
+            <span class="timer-label">Termina en:</span>
+            <span class="timer-value">47:23:12</span>
+          </div>
+        </div>
+        <div class="banner-visual">
+          <div class="banner-icon">⚡</div>
+          <div class="banner-effects">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="banner-slide" data-promo="3">
+        <div class="banner-content">
+          <div class="banner-badge">🎁 REGALO</div>
+          <h2 class="banner-title">COMPRA Y GANA PUNTOS</h2>
+          <p class="banner-description">Por cada $100.000 en compras, obtén 500 puntos extra + juego gratis</p>
+          <div class="banner-price">
+            <span class="points-offer">+500 PUNTOS</span>
+            <span class="free-game">+ JUEGO GRATIS</span>
+          </div>
+          <button class="banner-cta" onclick="claimPromotion(3)">
+            🏆 ACTIVAR BONUS
+          </button>
+          <div class="banner-timer" id="timer-3">
+            <span class="timer-label">Válido por:</span>
+            <span class="timer-value">7 días</span>
+          </div>
+        </div>
+        <div class="banner-visual">
+          <div class="banner-icon">🏆</div>
+          <div class="banner-effects">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="banner-slide" data-promo="4">
+        <div class="banner-content">
+          <div class="banner-badge">⭐ NUEVO</div>
+          <h2 class="banner-title">RTX 4090 DISPONIBLE</h2>
+          <p class="banner-description">La GPU más potente del mundo. Rendimiento extremo para gaming 4K</p>
+          <div class="banner-price">
+            <span class="new-arrival">RECIÉN LLEGADO</span>
+            <span class="new-price">$2.500.000</span>
+          </div>
+          <button class="banner-cta" onclick="claimPromotion(4)">
+            🔥 PRE-ORDENAR
+          </button>
+          <div class="banner-timer" id="timer-4">
+            <span class="timer-label">Stock limitado:</span>
+            <span class="timer-value">15 unidades</span>
+          </div>
+        </div>
+        <div class="banner-visual">
+          <div class="banner-icon">🔥</div>
+          <div class="banner-effects">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controles del banner -->
+    <div class="banner-controls">
+      <button class="banner-nav prev" onclick="previousBanner()">❮</button>
+      <div class="banner-indicators">
+        <span class="indicator active" data-slide="0" onclick="goToBanner(0)"></span>
+        <span class="indicator" data-slide="1" onclick="goToBanner(1)"></span>
+        <span class="indicator" data-slide="2" onclick="goToBanner(2)"></span>
+        <span class="indicator" data-slide="3" onclick="goToBanner(3)"></span>
+      </div>
+      <button class="banner-nav next" onclick="nextBanner()">❯</button>
+    </div>
+
+    <!-- Banner de notificaciones -->
+    <div class="banner-notifications" id="banner-notifications">
+      <div class="notification-item">
+        <span class="notification-icon">🛒</span>
+        <span class="notification-text">Juan compró RTX 4080 hace 5 min</span>
+      </div>
+    </div>
+  </section>
+
     <!-- Panel de Acceso Rápido y Búsqueda -->
     <nav class="quick-access-panel" aria-label="Panel de acceso rápido">
       <ul class="quick-access-list">
@@ -189,12 +325,10 @@
         <div class="cards" id="featured-grid">
           <article class="card producto" data-id="1">
             <div class="card-image">🎮</div>
-            <div class="card-content">
-              <h3 class="card-title">Gaming Controller Pro</h3>
-              <div class="card-price">$89.990</div>
-              <p class="card-description">Control inalámbrico premium con retroalimentación háptica avanzada</p>
-              <button class="card-button" onclick="addToCart(1)">Agregar al Carrito</button>
-            </div>
+              <div class="card-actions">
+                <button class="card-button" onclick="addToCart(1)">Agregar al Carrito</button>
+                <button class="share-button" onclick="shareProduct(1)" title="Compartir producto">📤</button>
+              </div>
           </article>
 
           <article class="card" data-product-id="rtx-gpu">
@@ -216,6 +350,7 @@
               <div class="card-actions">
                 <button class="card-button" onclick="addToCart(2)">Agregar al Carrito</button>
                 <button class="reviews-button" onclick="openProductReviews('rtx-gpu')">Ver Reseñas</button>
+                <button class="share-button" onclick="shareProduct(2)" title="Compartir producto">📤</button>
               </div>
             </div>
           </article>
@@ -239,6 +374,7 @@
               <div class="card-actions">
                 <button class="card-button" onclick="addToCart(5)">Agregar al Carrito</button>
                 <button class="reviews-button" onclick="openProductReviews('headset-gaming')">Ver Reseñas</button>
+                <button class="share-button" onclick="shareProduct(5)" title="Compartir producto">📤</button>
               </div>
             </div>
           </article>
@@ -262,6 +398,7 @@
               <div class="card-actions">
                 <button class="card-button" onclick="addToCart(3)">Agregar al Carrito</button>
                 <button class="reviews-button" onclick="openProductReviews('keyboard-rgb')">Ver Reseñas</button>
+                <button class="share-button" onclick="shareProduct(3)" title="Compartir producto">📤</button>
               </div>
             </div>
           </article>
@@ -285,6 +422,7 @@
               <div class="card-actions">
                 <button class="card-button" onclick="addToCart(4)">Agregar al Carrito</button>
                 <button class="reviews-button" onclick="openProductReviews('mouse-ultra')">Ver Reseñas</button>
+                <button class="share-button" onclick="shareProduct(4)" title="Compartir producto">📤</button>
               </div>
             </div>
           </article>
@@ -308,6 +446,7 @@
               <div class="card-actions">
                 <button class="card-button" onclick="addToCart(6)">Agregar al Carrito</button>
                 <button class="reviews-button" onclick="openProductReviews('monitor-144hz')">Ver Reseñas</button>
+                <button class="share-button" onclick="shareProduct(6)" title="Compartir producto">📤</button>
               </div>
             </div>
           </article>
@@ -1581,6 +1720,79 @@
         </form>
       </div>
     </div>
+  </div>
+
+  <!-- Chat WhatsApp Flotante -->
+  <div id="whatsapp-chat" class="whatsapp-chat-widget">
+      <div class="whatsapp-chat-button" onclick="toggleWhatsAppChat()">
+          <span class="whatsapp-icon">💬</span>
+          <span class="whatsapp-text">Chat</span>
+          <div class="whatsapp-notification" id="whatsapp-notification">1</div>
+      </div>
+      
+      <div class="whatsapp-chat-modal" id="whatsapp-chat-modal">
+          <div class="whatsapp-chat-header">
+              <div class="whatsapp-chat-info">
+                  <div class="whatsapp-avatar">🎮</div>
+                  <div class="whatsapp-chat-details">
+                      <h4>Level-Up Gamer</h4>
+                      <span class="whatsapp-status online">En línea</span>
+                  </div>
+              </div>
+              <button class="whatsapp-close" onclick="toggleWhatsAppChat()">&times;</button>
+          </div>
+          
+          <div class="whatsapp-chat-body">
+              <div class="whatsapp-messages" id="whatsapp-messages">
+                  <div class="whatsapp-message received">
+                      <div class="message-content">
+                          ¡Hola! 👋 Soy el asistente virtual de Level-Up Gamer. ¿En qué puedo ayudarte hoy?
+                      </div>
+                      <div class="message-time">Ahora</div>
+                  </div>
+              </div>
+              
+              <div class="whatsapp-quick-responses">
+                  <button class="quick-response" onclick="sendQuickResponse('💰 Consultar precios')">
+                      💰 Consultar precios
+                  </button>
+                  <button class="quick-response" onclick="sendQuickResponse('📦 Estado de mi pedido')">
+                      📦 Estado de pedido
+                  </button>
+                  <button class="quick-response" onclick="sendQuickResponse('🎮 Recomendaciones')">
+                      🎮 Recomendaciones
+                  </button>
+                  <button class="quick-response" onclick="sendQuickResponse('🛠️ Soporte técnico')">
+                      🛠️ Soporte técnico
+                  </button>
+              </div>
+          </div>
+          
+          <div class="whatsapp-chat-footer">
+              <div class="whatsapp-input-container">
+                  <input 
+                      type="text" 
+                      id="whatsapp-input" 
+                      placeholder="Escribe tu mensaje..."
+                      onkeypress="handleWhatsAppEnter(event)"
+                  >
+                  <button class="whatsapp-send" onclick="sendWhatsAppMessage()">
+                      <span>📤</span>
+                  </button>
+              </div>
+              
+              <div class="whatsapp-actions">
+                  <button class="whatsapp-action" onclick="openWhatsAppDirect()">
+                      <span>📱</span>
+                      <span>Abrir WhatsApp</span>
+                  </button>
+                  <button class="whatsapp-action" onclick="callSupport()">
+                      <span>📞</span>
+                      <span>Llamar</span>
+                  </button>
+              </div>
+          </div>
+      </div>
   </div>
 
   <!-- ===================== JAVASCRIPT ===================== -->
