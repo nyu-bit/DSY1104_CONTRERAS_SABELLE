@@ -28,6 +28,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
   showSlide(current);
 });
+// ===================== FUNCIONES PARA MANEJO DE MODALES =====================
+function showModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden'; // Prevenir scroll
+    console.log(`✅ Modal abierto: ${modalId}`);
+  } else {
+    console.error(`❌ Modal no encontrado: ${modalId}`);
+  }
+}
+
+function hideModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = ''; // Restaurar scroll
+    console.log(`✅ Modal cerrado: ${modalId}`);
+  } else {
+    console.error(`❌ Modal no encontrado: ${modalId}`);
+  }
+}
+
 // ===================== FUNCIONES BÁSICAS PARA EL TEMA GAMER =====================
 document.addEventListener('DOMContentLoaded', function() {
   console.log('🚀 DOM Content Loaded - Iniciando aplicación...');
@@ -55,9 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Encontrar el modal padre
         const modal = button.closest('.modal-overlay');
         if (modal) {
-          modal.classList.remove('active');
-          modal.setAttribute('aria-hidden', 'true');
-          document.body.style.overflow = '';
+          hideModal(modal.id); // Usar la nueva función universal
           
           // Limpiar formularios si existen
           const forms = modal.querySelectorAll('form');
@@ -106,9 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         e.stopPropagation();
         
-        modal.classList.add('active');
-        modal.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden';
+        showModal('login-modal'); // Usar la nueva función universal
         
         console.log('✅ Modal de login abierto directamente');
       });
@@ -136,9 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         e.stopPropagation();
         
-        modal.classList.add('active');
-        modal.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden';
+        showModal('register-modal'); // Usar la nueva función universal
         
         // Enfocar el primer campo
         setTimeout(() => {
