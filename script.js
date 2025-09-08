@@ -696,21 +696,39 @@ document.addEventListener('DOMContentLoaded', checkExistingUser);
 function initLogin() {
   const loginButton = document.getElementById('login-button');
   const modal = document.getElementById('login-modal');
-  const closeButton = modal.querySelector('.modal-close');
+  const closeButton = modal?.querySelector('.modal-close');
   const cancelButton = document.getElementById('cancel-login');
   const form = document.getElementById('login-form');
   const switchToRegister = document.getElementById('switch-to-register');
   
+  // Verificar que todos los elementos existan
+  if (!loginButton || !modal || !form) {
+    console.error('❌ Error: Elementos del login no encontrados');
+    return;
+  }
+  
   // Abrir modal de login
   loginButton.addEventListener('click', () => {
+    console.log('🎮 Abriendo modal de login...');
     modal.classList.add('active');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
-    document.getElementById('login-email').focus();
+    
+    // Enfocar el primer campo
+    setTimeout(() => {
+      document.getElementById('login-email')?.focus();
+    }, 100);
+    
+    // Mostrar credenciales de prueba en consola
+    console.log('🎮 Credenciales de prueba disponibles:');
+    console.log('📧 angel@levelupgamer.cl | 🔑 123456');
+    console.log('📧 pro@levelupgamer.cl | 🔑 gamer123');
+    console.log('📧 test@duocuc.cl | 🔑 test123');
   });
   
   // Cerrar modal
   function closeLoginModal() {
+    console.log('🚪 Cerrando modal de login...');
     modal.classList.remove('active');
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
@@ -719,8 +737,14 @@ function initLogin() {
     hideUserPreview();
   }
   
-  closeButton.addEventListener('click', closeLoginModal);
-  cancelButton.addEventListener('click', closeLoginModal);
+  // Event listeners para cerrar
+  if (closeButton) {
+    closeButton.addEventListener('click', closeLoginModal);
+  }
+  
+  if (cancelButton) {
+    cancelButton.addEventListener('click', closeLoginModal);
+  }
   
   // Cerrar con ESC
   document.addEventListener('keydown', (e) => {
@@ -736,19 +760,28 @@ function initLogin() {
     }
   });
   
-  // Cambiar a registro
-  switchToRegister.addEventListener('click', (e) => {
-    e.preventDefault();
-    closeLoginModal();
-    document.getElementById('register-button').click();
-  });
+  // Cambiar a registro si el botón existe
+  if (switchToRegister) {
+    switchToRegister.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeLoginModal();
+      const registerBtn = document.getElementById('register-button');
+      if (registerBtn) {
+        registerBtn.click();
+      }
+    });
+  }
   
   // Validación en tiempo real
   const emailInput = document.getElementById('login-email');
-  emailInput.addEventListener('input', checkUserExists);
+  if (emailInput) {
+    emailInput.addEventListener('input', checkUserExists);
+  }
   
   // Submit del formulario
   form.addEventListener('submit', handleLogin);
+  
+  console.log('✅ Sistema de login inicializado correctamente');
 }
 
 function checkUserExists() {
@@ -831,52 +864,139 @@ function handleLogin(e) {
   submitButton.classList.add('loading');
   submitButton.disabled = true;
   
-  // Simular verificación de login (en una aplicación real sería una llamada a la API)
+  // Mostrar texto de carga
+  const btnText = submitButton.querySelector('.btn-text');
+  const btnLoading = submitButton.querySelector('.btn-loading');
+  btnText.style.display = 'none';
+  btnLoading.style.display = 'inline';
+  
+  // Usuarios de prueba predefinidos
+  const testUsers = [
+    {
+      name: 'Angel Sabelle',
+      email: 'angel@levelupgamer.cl',
+      password: '123456',
+      level: 25,
+      coins: 2500,
+      avatar: '🎮',
+      joinDate: '2024-01-15',
+      preferences: { theme: 'gaming', notifications: true }
+    },
+    {
+      name: 'Gaming Pro',
+      email: 'pro@levelupgamer.cl', 
+      password: 'gamer123',
+      level: 50,
+      coins: 5000,
+      avatar: '👾',
+      joinDate: '2023-12-01',
+      preferences: { theme: 'dark', notifications: true }
+    },
+    {
+      name: 'Test User',
+      email: 'test@duocuc.cl',
+      password: 'test123',
+      level: 10,
+      coins: 1000,
+      avatar: '🎯',
+      joinDate: '2024-02-01',
+      preferences: { theme: 'gaming', notifications: false }
+    }
+  ];
+  
+  // Simular verificación de login
   setTimeout(() => {
-    // Verificar si existe un usuario registrado
-    const existingUser = localStorage.getItem('levelup_user');
+    let loginSuccess = false;
+    let userData = null;
     
-    if (existingUser) {
-      const userData = JSON.parse(existingUser);
-      
-      if (userData.email.toLowerCase() === email) {
-        // Login exitoso
-        const sessionData = {
-          ...userData,
-          loginTime: new Date().toISOString(),
-          rememberMe: rememberMe,
-          sessionExpiry: rememberMe 
-            ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 días
-            : new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 1 día
-        };
-        
-        // Guardar sesión
-        localStorage.setItem('levelup_session', JSON.stringify(sessionData));
-        
-        // Mostrar mensaje de éxito
-        const message = `¡Bienvenido de vuelta, ${userData.name}! 🎮`;
-        showNotification(message);
-        
-        // Cerrar modal
-        document.getElementById('login-modal').classList.remove('active');
-        document.body.style.overflow = '';
-        
-        // Actualizar UI
-        updateLoginInterface(sessionData);
-        
-      } else {
-        // Credenciales incorrectas
-        showLoginError('login-password-error', 'Credenciales incorrectas');
-        document.getElementById('login-password').classList.add('error');
-      }
+    // Verificar usuarios de prueba primero
+    const testUser = testUsers.find(user => 
+      user.email.toLowerCase() === email && user.password === password
+    );
+    
+    if (testUser) {
+      loginSuccess = true;
+      userData = testUser;
     } else {
-      // Usuario no encontrado
-      showLoginError('login-email-error', 'Usuario no encontrado. ¿Quieres registrarte?');
-      document.getElementById('login-email').classList.add('error');
+      // Verificar usuario registrado en localStorage
+      const existingUser = localStorage.getItem('levelup_user');
+      
+      if (existingUser) {
+        const storedUser = JSON.parse(existingUser);
+        
+        if (storedUser.email.toLowerCase() === email && storedUser.password === password) {
+          loginSuccess = true;
+          userData = storedUser;
+        }
+      }
     }
     
+    if (loginSuccess && userData) {
+      // Login exitoso
+      const sessionData = {
+        ...userData,
+        loginTime: new Date().toISOString(),
+        lastLogin: new Date().toLocaleString('es-CL'),
+        rememberMe: rememberMe,
+        sessionExpiry: rememberMe 
+          ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 días
+          : new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 1 día
+      };
+      
+      // Guardar sesión
+      localStorage.setItem('levelup_session', JSON.stringify(sessionData));
+      
+      // Guardar usuario si es de prueba
+      if (testUser) {
+        localStorage.setItem('levelup_user', JSON.stringify(userData));
+      }
+      
+      // Mostrar mensaje de éxito
+      const message = `¡Bienvenido de vuelta, ${userData.name}! 🎮\n+10 GamerCoins por iniciar sesión`;
+      showNotification(message, 'success');
+      
+      // Agregar coins por login
+      addGamerCoins(10, 'daily-login');
+      
+      // Cerrar modal
+      document.getElementById('login-modal').classList.remove('active');
+      document.body.style.overflow = '';
+      
+      // Actualizar UI
+      updateLoginInterface(sessionData);
+      
+      // Limpiar formulario
+      document.getElementById('login-form').reset();
+      clearLoginErrors();
+      
+    } else {
+      // Credenciales incorrectas
+      if (email) {
+        // Si hay email, problema con contraseña
+        showLoginError('login-password-error', 'Contraseña incorrecta. Intenta de nuevo.');
+        document.getElementById('login-password').classList.add('error');
+        document.getElementById('login-password').focus();
+      } else {
+        // Problema con email
+        showLoginError('login-email-error', 'Email no válido o no encontrado.');
+        document.getElementById('login-email').classList.add('error');
+        document.getElementById('login-email').focus();
+      }
+      
+      // Mostrar credenciales de prueba en consola
+      console.log('🎮 Credenciales de prueba disponibles:');
+      testUsers.forEach(user => {
+        console.log(`📧 ${user.email} | 🔑 ${user.password} | 👤 ${user.name}`);
+      });
+      
+      showNotification('❌ Credenciales incorrectas. Revisa la consola para ver usuarios de prueba.', 'error');
+    }
+    
+    // Restaurar botón
     submitButton.classList.remove('loading');
     submitButton.disabled = false;
+    btnText.style.display = 'inline';
+    btnLoading.style.display = 'none';
   }, 1500);
 }
 
