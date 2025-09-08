@@ -30,8 +30,218 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 // ===================== FUNCIONES BÁSICAS PARA EL TEMA GAMER =====================
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('🚀 DOM Content Loaded - Iniciando aplicación...');
+  
   // Asegurar que el tema gamer esté aplicado
   document.documentElement.setAttribute('data-theme', 'gamer');
+  
+  // SOLUCION DIRECTA PARA BOTONES DE CERRAR MODALES
+  setTimeout(() => {
+    console.log('🔧 Configurando botones de cerrar modales...');
+    
+    // Buscar todos los botones de cerrar
+    const closeButtons = document.querySelectorAll('.modal-close');
+    console.log(`🔍 Encontrados ${closeButtons.length} botones de cerrar`);
+    
+    closeButtons.forEach((button, index) => {
+      console.log(`🎯 Configurando botón de cerrar ${index + 1}:`, button);
+      
+      // Función para cerrar el modal
+      function closeModal(e) {
+        console.log('🚪 Cerrando modal...', e);
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Encontrar el modal padre
+        const modal = button.closest('.modal-overlay');
+        if (modal) {
+          modal.classList.remove('active');
+          modal.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+          
+          // Limpiar formularios si existen
+          const forms = modal.querySelectorAll('form');
+          forms.forEach(form => form.reset());
+          
+          console.log('✅ Modal cerrado correctamente');
+        }
+      }
+      
+      // Limpiar listeners existentes clonando el botón
+      const newButton = button.cloneNode(true);
+      button.parentNode.replaceChild(newButton, button);
+      
+      // Agregar múltiples tipos de eventos
+      newButton.addEventListener('click', closeModal);
+      newButton.addEventListener('touchstart', closeModal);
+      newButton.addEventListener('mousedown', closeModal);
+      
+      // Forzar estilos para asegurar funcionalidad
+      newButton.style.cursor = 'pointer';
+      newButton.style.pointerEvents = 'auto';
+      newButton.style.zIndex = '10001';
+      newButton.style.background = 'transparent';
+      newButton.style.border = 'none';
+      
+      console.log(`✅ Botón de cerrar ${index + 1} configurado correctamente`);
+    });
+  }, 300);
+  
+  // PRUEBA DIRECTA DEL BOTÓN DE LOGIN
+  setTimeout(() => {
+    const loginButton = document.getElementById('login-button');
+    const modal = document.getElementById('login-modal');
+    
+    console.log('🔍 TEST DIRECTO LOGIN:', {
+      loginButton: !!loginButton,
+      modal: !!modal,
+      buttonDisplay: loginButton ? window.getComputedStyle(loginButton).display : 'N/A',
+      buttonVisibility: loginButton ? window.getComputedStyle(loginButton).visibility : 'N/A'
+    });
+    
+    if (loginButton && modal) {
+      // Agregar event listener directo
+      loginButton.addEventListener('click', function(e) {
+        console.log('🎯 ¡CLICK DIRECTO DETECTADO EN LOGIN!');
+        e.preventDefault();
+        e.stopPropagation();
+        
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        
+        console.log('✅ Modal de login abierto directamente');
+      });
+      
+      console.log('🎯 Event listener directo agregado al botón de login');
+    }
+  }, 500);
+  
+  // PRUEBA DIRECTA DEL BOTÓN DE REGISTRO
+  setTimeout(() => {
+    const registerButton = document.getElementById('register-button');
+    const modal = document.getElementById('register-modal');
+    
+    console.log('🔍 TEST DIRECTO REGISTRO:', {
+      registerButton: !!registerButton,
+      modal: !!modal,
+      buttonDisplay: registerButton ? window.getComputedStyle(registerButton).display : 'N/A',
+      buttonVisibility: registerButton ? window.getComputedStyle(registerButton).visibility : 'N/A'
+    });
+    
+    if (registerButton && modal) {
+      // Agregar event listener directo
+      registerButton.addEventListener('click', function(e) {
+        console.log('🎯 ¡CLICK DIRECTO DETECTADO EN REGISTRO!');
+        e.preventDefault();
+        e.stopPropagation();
+        
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        
+        // Enfocar el primer campo
+        setTimeout(() => {
+          const nameInput = document.getElementById('register-name');
+          if (nameInput) nameInput.focus();
+        }, 100);
+        
+        // CONFIGURAR BOTÓN DE CERRAR INMEDIATAMENTE DESPUÉS DE ABRIR
+        setTimeout(() => {
+          console.log('🔧 Configurando botón de cerrar después de abrir modal...');
+          const closeButton = modal.querySelector('.modal-close');
+          if (closeButton) {
+            // Función de cierre específica
+            function closeThisModal(e) {
+              console.log('🚪 Cerrando modal de registro...', e);
+              e.preventDefault();
+              e.stopPropagation();
+              
+              modal.classList.remove('active');
+              modal.setAttribute('aria-hidden', 'true');
+              document.body.style.overflow = '';
+              
+              const form = modal.querySelector('form');
+              if (form) form.reset();
+              
+              console.log('✅ Modal de registro cerrado');
+            }
+            
+            // Limpiar y agregar nuevo listener
+            const newCloseButton = closeButton.cloneNode(true);
+            closeButton.parentNode.replaceChild(newCloseButton, closeButton);
+            
+            newCloseButton.addEventListener('click', closeThisModal, true);
+            newCloseButton.addEventListener('mousedown', closeThisModal, true);
+            newCloseButton.addEventListener('touchstart', closeThisModal, true);
+            
+            console.log('✅ Botón de cerrar configurado para este modal');
+          }
+        }, 200);
+        
+        console.log('✅ Modal de registro abierto directamente');
+      });
+      
+      console.log('🎯 Event listener directo agregado al botón de registro');
+    }
+  }, 600);
+  
+  // CONFIGURACIÓN INMEDIATA DE BOTONES DE CERRAR
+  setTimeout(() => {
+    console.log('🔧 Configuración INMEDIATA de botones de cerrar...');
+    
+    // Función universal de cierre
+    function universalCloseModal(e) {
+      console.log('🚪 Cerrando modal universalmente...', e);
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      
+      // Encontrar el modal padre
+      const button = e.target;
+      const modal = button.closest('.modal-overlay') || button.closest('.modal');
+      
+      if (modal) {
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        
+        // Limpiar formularios
+        const forms = modal.querySelectorAll('form');
+        forms.forEach(form => form.reset());
+        
+        console.log('✅ Modal cerrado exitosamente');
+      }
+    }
+    
+    // Configurar TODOS los botones de cerrar existentes
+    const allCloseButtons = document.querySelectorAll('.modal-close, [aria-label="Cerrar modal"], .close');
+    console.log(`🔍 Encontrados ${allCloseButtons.length} botones de cerrar para configurar`);
+    
+    allCloseButtons.forEach((button, index) => {
+      console.log(`🎯 Configurando botón ${index + 1}:`, button);
+      
+      // Limpiar listeners existentes
+      const newButton = button.cloneNode(true);
+      button.parentNode.replaceChild(newButton, button);
+      
+      // Agregar event listeners robustos
+      newButton.addEventListener('click', universalCloseModal, true);
+      newButton.addEventListener('mousedown', universalCloseModal, true);
+      newButton.addEventListener('touchstart', universalCloseModal, true);
+      
+      // Forzar estilos
+      newButton.style.cursor = 'pointer';
+      newButton.style.pointerEvents = 'auto';
+      newButton.style.zIndex = '99999';
+      newButton.style.position = 'relative';
+      
+      console.log(`✅ Botón ${index + 1} configurado con event listeners universales`);
+    });
+    
+    console.log('🎉 Configuración de botones de cerrar COMPLETADA');
+  }, 800);
   
   // Inicializar funcionalidades
   initMobileMenu();
@@ -65,9 +275,13 @@ document.addEventListener('DOMContentLoaded', function() {
     initReviewSystem();
   }
   initLogin();
+  
+  // Verificar sesión activa después de inicializar el login
+  checkActiveSession();
+  
   initProfile();
   
-  console.log('Tema Level-Up Gamer cargado correctamente');
+  console.log('✅ Tema Level-Up Gamer cargado correctamente');
 });
 
 // ===================== MENÚ MÓVIL =====================
@@ -255,33 +469,114 @@ window.GameStore = {
 };
 
 // ===================== SISTEMA DE REGISTRO =====================
+// ===================== SISTEMA DE REGISTRO MEJORADO =====================
 function initRegistration() {
+  console.log('🔧 Iniciando sistema de registro...');
+  
   const registerButton = document.getElementById('register-button');
   const modal = document.getElementById('register-modal');
-  const closeButton = modal.querySelector('.modal-close');
-  const cancelButton = document.getElementById('cancel-register');
   const form = document.getElementById('register-form');
   
-  // Abrir modal
-  registerButton.addEventListener('click', () => {
-    modal.classList.add('active');
-    modal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-    document.getElementById('register-name').focus();
+  // Buscar botones de cerrar con múltiples selectores
+  let closeButton = null;
+  if (modal) {
+    closeButton = modal.querySelector('.modal-close') || 
+                  modal.querySelector('[aria-label="Cerrar modal"]') ||
+                  modal.querySelector('.close') ||
+                  modal.querySelector('button[type="button"]');
+  }
+  
+  const cancelButton = document.getElementById('cancel-register');
+  
+  console.log('🔍 Elementos de registro encontrados:', {
+    registerButton: !!registerButton,
+    modal: !!modal,
+    form: !!form,
+    closeButton: !!closeButton,
+    cancelButton: !!cancelButton
   });
   
-  // Cerrar modal
+  if (!registerButton || !modal || !form) {
+    console.error('❌ Error: Elementos esenciales del registro no encontrados');
+    console.error('registerButton:', registerButton);
+    console.error('modal:', modal);
+    console.error('form:', form);
+    return;
+  }
+  
+  // Forzar que el botón sea visible y clickeable
+  registerButton.style.display = 'inline-flex';
+  registerButton.style.pointerEvents = 'auto';
+  registerButton.style.visibility = 'visible';
+  
+  // Función para abrir el modal
+    function openRegisterModal(e) {
+      console.log('👤 ¡CLICK DETECTADO! Abriendo modal de registro...', e);
+    
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    
+      modal.classList.add('active');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => {
+        const nameInput = document.getElementById('register-name');
+        if (nameInput) {
+          nameInput.focus();
+        }
+      }, 100);
+      // Auto-llenar código de referido si hay uno pendiente
+      const pendingCode = sessionStorage.getItem('pending_referral_code');
+      if (pendingCode) {
+        const referralInput = document.getElementById('register-referral-code');
+        if (referralInput) {
+          referralInput.value = pendingCode;
+          if (typeof validateReferralCode === 'function') {
+            validateReferralCode();
+          }
+          sessionStorage.removeItem('pending_referral_code');
+        }
+      }
+    }
+  
+  // Agregar múltiples tipos de eventos
+  registerButton.addEventListener('click', openRegisterModal);
+  registerButton.addEventListener('touchstart', openRegisterModal);
+  registerButton.addEventListener('mousedown', openRegisterModal);
+  
+  console.log('✅ Event listeners agregados al botón de registro');
+  
+  // Configurar cierre del modal
   function closeModal() {
+    console.log('🚪 Cerrando modal de registro...');
     modal.classList.remove('active');
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
     form.reset();
-    clearErrors();
-    hideDiscountPreview();
+    
+    // Llamar funciones de limpieza si existen
+    if (typeof clearErrors === 'function') {
+      clearErrors();
+    }
+    if (typeof hideDiscountPreview === 'function') {
+      hideDiscountPreview();
+    }
   }
   
-  closeButton.addEventListener('click', closeModal);
-  cancelButton.addEventListener('click', closeModal);
+  // Event listeners para cerrar - con verificación
+  if (closeButton) {
+    closeButton.addEventListener('click', closeModal);
+    console.log('✅ Event listener agregado al botón de cerrar (X)');
+  } else {
+    console.error('❌ Botón de cerrar (X) no encontrado en modal de registro');
+  }
+  
+  if (cancelButton) {
+    cancelButton.addEventListener('click', closeModal);
+    console.log('✅ Event listener agregado al botón de cancelar');
+  }
   
   // Cerrar con ESC
   document.addEventListener('keydown', (e) => {
@@ -514,62 +809,143 @@ function checkExistingUser() {
 document.addEventListener('DOMContentLoaded', checkExistingUser);
 
 // ===================== SISTEMA DE LOGIN =====================
+// ===================== SISTEMA DE LOGIN SIMPLIFICADO =====================
+// Variable para evitar múltiples inicializaciones del login
+let loginInitialized = false;
+
 function initLogin() {
+  console.log('🔧 Iniciando sistema de login simplificado...');
+  
+  // Limpiar cualquier listener previo
+  if (loginInitialized) {
+    console.log('⚠️ Login ya inicializado, saltando...');
+    return;
+  }
+  
   const loginButton = document.getElementById('login-button');
   const modal = document.getElementById('login-modal');
-  const closeButton = modal.querySelector('.modal-close');
-  const cancelButton = document.getElementById('cancel-login');
-  const form = document.getElementById('login-form');
-  const switchToRegister = document.getElementById('switch-to-register');
   
-  // Abrir modal de login
-  loginButton.addEventListener('click', () => {
+  console.log('🔍 Elementos encontrados:', {
+    loginButton: !!loginButton,
+    modal: !!modal,
+    loginButtonVisible: loginButton ? window.getComputedStyle(loginButton).display !== 'none' : false
+  });
+  
+  if (!loginButton) {
+    console.error('❌ Error: Botón de login no encontrado');
+    return;
+  }
+  
+  if (!modal) {
+    console.error('❌ Error: Modal de login no encontrado');
+    return;
+  }
+  
+  // Forzar que el botón sea visible y clickeable
+  loginButton.style.display = 'inline-flex';
+  loginButton.style.pointerEvents = 'auto';
+  loginButton.style.visibility = 'visible';
+  
+  console.log('📌 Agregando event listener al botón de login...');
+  
+  // Función para abrir el modal
+  function openLoginModal(e) {
+    console.log('🎮 ¡CLICK DETECTADO! Abriendo modal de login...', e);
+    
+    // Prevenir cualquier comportamiento por defecto
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
+    // Abrir modal
     modal.classList.add('active');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
-    document.getElementById('login-email').focus();
-  });
+    
+    // Enfocar el primer campo
+    setTimeout(() => {
+      const emailInput = document.getElementById('login-email');
+      if (emailInput) {
+        emailInput.focus();
+      }
+    }, 100);
+    
+    // Mostrar credenciales de prueba en consola
+    console.log('🎮 Credenciales de prueba disponibles:');
+    console.log('📧 angel@levelupgamer.cl | 🔑 123456');
+    console.log('📧 pro@levelupgamer.cl | 🔑 gamer123');
+    console.log('📧 test@duocuc.cl | 🔑 test123');
+  }
   
-  // Cerrar modal
-  function closeLoginModal() {
+  // Agregar múltiples tipos de eventos para asegurar que funcione
+  loginButton.addEventListener('click', openLoginModal);
+  loginButton.addEventListener('touchstart', openLoginModal);
+  loginButton.addEventListener('mousedown', openLoginModal);
+  
+  console.log('✅ Event listeners agregados al botón de login');
+  
+  // Configurar cierre del modal
+  setupModalClose(modal);
+  
+  // Configurar el formulario de login
+  setupLoginForm();
+  
+  // Marcar como inicializado
+  loginInitialized = true;
+  console.log('✅ Sistema de login inicializado completamente');
+}
+
+function setupModalClose(modal) {
+  const closeButton = modal.querySelector('.modal-close');
+  const cancelButton = document.getElementById('cancel-login');
+  
+  function closeModal() {
+    console.log('🚪 Cerrando modal de login...');
     modal.classList.remove('active');
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
-    form.reset();
-    clearLoginErrors();
-    hideUserPreview();
+    
+    // Limpiar formulario
+    const form = document.getElementById('login-form');
+    if (form) {
+      form.reset();
+    }
   }
   
-  closeButton.addEventListener('click', closeLoginModal);
-  cancelButton.addEventListener('click', closeLoginModal);
+  // Event listeners para cerrar
+  if (closeButton) {
+    closeButton.addEventListener('click', closeModal);
+  }
+  
+  if (cancelButton) {
+    cancelButton.addEventListener('click', closeModal);
+  }
   
   // Cerrar con ESC
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && modal.classList.contains('active')) {
-      closeLoginModal();
+      closeModal();
     }
   });
   
   // Cerrar al hacer click fuera del modal
   modal.addEventListener('click', (e) => {
     if (e.target === modal) {
-      closeLoginModal();
+      closeModal();
     }
   });
+}
+
+function setupLoginForm() {
+  const form = document.getElementById('login-form');
+  if (!form) {
+    console.error('❌ Formulario de login no encontrado');
+    return;
+  }
   
-  // Cambiar a registro
-  switchToRegister.addEventListener('click', (e) => {
-    e.preventDefault();
-    closeLoginModal();
-    document.getElementById('register-button').click();
-  });
-  
-  // Validación en tiempo real
-  const emailInput = document.getElementById('login-email');
-  emailInput.addEventListener('input', checkUserExists);
-  
-  // Submit del formulario
   form.addEventListener('submit', handleLogin);
+  console.log('✅ Formulario de login configurado');
 }
 
 function checkUserExists() {
@@ -652,52 +1028,151 @@ function handleLogin(e) {
   submitButton.classList.add('loading');
   submitButton.disabled = true;
   
-  // Simular verificación de login (en una aplicación real sería una llamada a la API)
+  // Mostrar texto de carga
+  const btnText = submitButton.querySelector('.btn-text');
+  const btnLoading = submitButton.querySelector('.btn-loading');
+  btnText.style.display = 'none';
+  btnLoading.style.display = 'inline';
+  
+  // Usuarios de prueba predefinidos
+  const testUsers = [
+    {
+      name: 'Angel Sabelle',
+      email: 'angel@levelupgamer.cl',
+      password: '123456',
+      level: 25,
+      coins: 2500,
+      avatar: '🎮',
+      joinDate: '2024-01-15',
+      preferences: { theme: 'gaming', notifications: true }
+    },
+    {
+      name: 'Gaming Pro',
+      email: 'pro@levelupgamer.cl', 
+      password: 'gamer123',
+      level: 50,
+      coins: 5000,
+      avatar: '👾',
+      joinDate: '2023-12-01',
+      preferences: { theme: 'dark', notifications: true }
+    },
+    {
+      name: 'Test User',
+      email: 'test@duocuc.cl',
+      password: 'test123',
+      level: 10,
+      coins: 1000,
+      avatar: '🎯',
+      joinDate: '2024-02-01',
+      preferences: { theme: 'gaming', notifications: false }
+    }
+  ];
+  
+  // Simular verificación de login
   setTimeout(() => {
-    // Verificar si existe un usuario registrado
-    const existingUser = localStorage.getItem('levelup_user');
+    let loginSuccess = false;
+    let userData = null;
+    // Verificar usuarios de prueba primero
+    const testUser = testUsers.find(user => 
+      user.email.toLowerCase() === email && user.password === password
+    );
     
-    if (existingUser) {
-      const userData = JSON.parse(existingUser);
-      
-      if (userData.email.toLowerCase() === email) {
-        // Login exitoso
-        const sessionData = {
-          ...userData,
-          loginTime: new Date().toISOString(),
-          rememberMe: rememberMe,
-          sessionExpiry: rememberMe 
-            ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 días
-            : new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 1 día
-        };
-        
-        // Guardar sesión
-        localStorage.setItem('levelup_session', JSON.stringify(sessionData));
-        
-        // Mostrar mensaje de éxito
-  const message = '¡Bienvenido de vuelta, ' + userData.name + '! 🎮';
-        showNotification(message);
-        
-        // Cerrar modal
-        document.getElementById('login-modal').classList.remove('active');
-        document.body.style.overflow = '';
-        
-        // Actualizar UI
-        updateLoginInterface(sessionData);
-        
-      } else {
-        // Credenciales incorrectas
-        showLoginError('login-password-error', 'Credenciales incorrectas');
-        document.getElementById('login-password').classList.add('error');
-      }
+    if (testUser) {
+      loginSuccess = true;
+      userData = testUser;
     } else {
-      // Usuario no encontrado
-      showLoginError('login-email-error', 'Usuario no encontrado. ¿Quieres registrarte?');
-      document.getElementById('login-email').classList.add('error');
+      // Verificar usuario registrado en localStorage
+      const existingUser = localStorage.getItem('levelup_user');
+      
+      if (existingUser) {
+        const storedUser = JSON.parse(existingUser);
+        
+        if (storedUser.email.toLowerCase() === email && storedUser.password === password) {
+          loginSuccess = true;
+          userData = storedUser;
+        }
+      }
+    }
+    } else {
+      // Verificar usuario registrado en localStorage
+      const existingUser = localStorage.getItem('levelup_user');
+      
+      if (existingUser) {
+        const storedUser = JSON.parse(existingUser);
+        
+        if (storedUser.email.toLowerCase() === email && storedUser.password === password) {
+          loginSuccess = true;
+          userData = storedUser;
+        }
+      }
     }
     
+    if (loginSuccess && userData) {
+      // Login exitoso
+      const sessionData = {
+        ...userData,
+        loginTime: new Date().toISOString(),
+        lastLogin: new Date().toLocaleString('es-CL'),
+        rememberMe: rememberMe,
+        sessionExpiry: rememberMe 
+          ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 días
+          : new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 1 día
+      };
+      
+      // Guardar sesión
+      localStorage.setItem('levelup_session', JSON.stringify(sessionData));
+      
+      // Guardar usuario si es de prueba
+      if (testUser) {
+        localStorage.setItem('levelup_user', JSON.stringify(userData));
+      }
+      
+      // Mostrar mensaje de éxito
+      const message = `¡Bienvenido de vuelta, ${userData.name}! 🎮\n+10 GamerCoins por iniciar sesión`;
+      showNotification(message, 'success');
+      
+      // Agregar coins por login
+      addGamerCoins(10, 'daily-login');
+      
+      // Cerrar modal
+      document.getElementById('login-modal').classList.remove('active');
+      document.body.style.overflow = '';
+      
+      // Actualizar UI
+      updateLoginInterface(sessionData);
+      
+      // Limpiar formulario
+      document.getElementById('login-form').reset();
+      clearLoginErrors();
+      
+    } else {
+      // Credenciales incorrectas
+      if (email) {
+        // Si hay email, problema con contraseña
+        showLoginError('login-password-error', 'Contraseña incorrecta. Intenta de nuevo.');
+        document.getElementById('login-password').classList.add('error');
+        document.getElementById('login-password').focus();
+      } else {
+        // Problema con email
+        showLoginError('login-email-error', 'Email no válido o no encontrado.');
+        document.getElementById('login-email').classList.add('error');
+        document.getElementById('login-email').focus();
+      }
+      
+      // Mostrar credenciales de prueba en consola
+      console.log('🎮 Credenciales de prueba disponibles:');
+      testUsers.forEach(user => {
+        console.log(`📧 ${user.email} | 🔑 ${user.password} | 👤 ${user.name}`);
+      });
+      
+      showNotification('❌ Credenciales incorrectas. Revisa la consola para ver usuarios de prueba.', 'error');
+    }
+    
+    // Restaurar botón
     submitButton.classList.remove('loading');
     submitButton.disabled = false;
+    btnText.style.display = 'inline';
+    btnLoading.style.display = 'none';
   }, 1500);
 }
 
@@ -705,14 +1180,30 @@ function updateLoginInterface(sessionData) {
   const loginButton = document.getElementById('login-button');
   const registerButton = document.getElementById('register-button');
   
+<<<<<<< HEAD
   // Ocultar botones de login/registro y mostrar usuario logueado
   loginButton.style.display = 'none';
   registerButton.textContent = 'Usuario: ' + sessionData.name;
   registerButton.title = sessionData.isDuocUser 
     ? 'Usuario Duoc UC - 20% descuento' 
     : 'Usuario Level-Up Gamer';
+=======
+  // Cambiar el botón de login a mostrar perfil/logout
+  loginButton.textContent = `👤 ${sessionData.name}`;
+  loginButton.title = sessionData.isDuocUser 
+    ? 'Usuario Duoc UC - 20% descuento - Click para perfil' 
+    : 'Usuario Level-Up Gamer - Click para perfil';
+>>>>>>> origin/PruebaParcial1
   
-  // Cambiar funcionalidad del botón a logout/perfil
+  // Remover el event listener anterior y agregar nuevo para perfil
+  const newLoginButton = loginButton.cloneNode(true);
+  loginButton.parentNode.replaceChild(newLoginButton, loginButton);
+  
+  // Cambiar funcionalidad del botón login a mostrar perfil/logout
+  newLoginButton.addEventListener('click', () => showUserMenu(sessionData));
+  
+  // Ocultar botón de registro cuando hay sesión activa
+  registerButton.style.display = 'none';
   registerButton.onclick = () => showUserMenu(sessionData);
 }
 
@@ -756,11 +1247,40 @@ function logout() {
   // Restaurar interfaz original
   const loginButton = document.getElementById('login-button');
   const registerButton = document.getElementById('register-button');
+  const modal = document.getElementById('login-modal');
   
-  loginButton.style.display = 'inline-flex';
+  // Restaurar botón de login
+  loginButton.textContent = '🔑 Iniciar Sesión';
+  loginButton.title = '';
+  
+  // Remover event listener de perfil y restaurar el de login
+  const newLoginButton = loginButton.cloneNode(true);
+  loginButton.parentNode.replaceChild(newLoginButton, loginButton);
+  
+  // Agregar el event listener de login
+  newLoginButton.addEventListener('click', (e) => {
+    console.log('🎮 ¡Click detectado en botón de login tras logout!', e);
+    console.log('🎮 Abriendo modal de login...');
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    
+    // Enfocar el primer campo
+    setTimeout(() => {
+      document.getElementById('login-email')?.focus();
+    }, 100);
+    
+    // Mostrar credenciales de prueba en consola
+    console.log('🎮 Credenciales de prueba disponibles:');
+    console.log('📧 angel@levelupgamer.cl | 🔑 123456');
+    console.log('📧 pro@levelupgamer.cl | 🔑 gamer123');
+    console.log('📧 test@duocuc.cl | 🔑 test123');
+  });
+  
+  // Restaurar botón de registro
+  registerButton.style.display = 'inline-flex';
   registerButton.textContent = '👤 Registrarse';
   registerButton.title = '';
-  registerButton.onclick = null;
   
   showNotification('🚪 Sesión cerrada correctamente');
 }
@@ -798,9 +1318,6 @@ function checkActiveSession() {
     }
   }
 }
-
-// Verificar sesión al cargar la página
-document.addEventListener('DOMContentLoaded', checkActiveSession);
 
 // ===================== GESTIÓN DE PERFIL =====================
 function initProfile() {
@@ -7411,6 +7928,311 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// ===================== FUNCIÓN DE TEST DE EMERGENCIA =====================
+// Puedes ejecutar esta función desde la consola del navegador
+function testLoginButton() {
+  console.log('🧪 EJECUTANDO TEST DE EMERGENCIA DEL BOTÓN DE LOGIN...');
+  
+  const loginButton = document.getElementById('login-button');
+  const modal = document.getElementById('login-modal');
+  
+  console.log('📋 Estado actual LOGIN:');
+  console.log('- Botón encontrado:', !!loginButton);
+  console.log('- Modal encontrado:', !!modal);
+  
+  if (loginButton) {
+    const styles = window.getComputedStyle(loginButton);
+    console.log('- Display:', styles.display);
+    console.log('- Visibility:', styles.visibility);
+    console.log('- Pointer-events:', styles.pointerEvents);
+    console.log('- Z-index:', styles.zIndex);
+    console.log('- Position:', styles.position);
+    console.log('- Coordenadas:', loginButton.getBoundingClientRect());
+  }
+  
+  if (loginButton && modal) {
+    // Forzar estilos
+    loginButton.style.display = 'inline-flex';
+    loginButton.style.visibility = 'visible';
+    loginButton.style.pointerEvents = 'auto';
+    loginButton.style.zIndex = '9999';
+    
+    // Agregar event listener de emergencia
+    function emergencyLogin() {
+      console.log('🚨 CLICK DE EMERGENCIA DETECTADO EN LOGIN!');
+      modal.classList.add('active');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      
+      setTimeout(() => {
+        const emailInput = document.getElementById('login-email');
+        if (emailInput) emailInput.focus();
+      }, 100);
+    }
+    
+    // Remover listeners existentes y agregar el nuevo
+    const newButton = loginButton.cloneNode(true);
+    loginButton.parentNode.replaceChild(newButton, loginButton);
+    
+    newButton.addEventListener('click', emergencyLogin);
+    newButton.addEventListener('touchstart', emergencyLogin);
+    
+    console.log('✅ Test LOGIN completado - Botón debería funcionar ahora');
+    
+    return true;
+  } else {
+    console.error('❌ No se encontraron los elementos de LOGIN');
+    return false;
+  }
+}
+
+function testRegisterButton() {
+  console.log('🧪 EJECUTANDO TEST DE EMERGENCIA DEL BOTÓN DE REGISTRO...');
+  
+  const registerButton = document.getElementById('register-button');
+  const modal = document.getElementById('register-modal');
+  
+  console.log('� Estado actual REGISTRO:');
+  console.log('- Botón encontrado:', !!registerButton);
+  console.log('- Modal encontrado:', !!modal);
+  
+  if (registerButton) {
+    const styles = window.getComputedStyle(registerButton);
+    console.log('- Display:', styles.display);
+    console.log('- Visibility:', styles.visibility);
+    console.log('- Pointer-events:', styles.pointerEvents);
+    console.log('- Z-index:', styles.zIndex);
+    console.log('- Position:', styles.position);
+    console.log('- Coordenadas:', registerButton.getBoundingClientRect());
+  }
+  
+  if (registerButton && modal) {
+    // Forzar estilos
+    registerButton.style.display = 'inline-flex';
+    registerButton.style.visibility = 'visible';
+    registerButton.style.pointerEvents = 'auto';
+    registerButton.style.zIndex = '9999';
+    
+    // Agregar event listener de emergencia
+    function emergencyRegister() {
+      console.log('🚨 CLICK DE EMERGENCIA DETECTADO EN REGISTRO!');
+      modal.classList.add('active');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      
+      setTimeout(() => {
+        const nameInput = document.getElementById('register-name');
+        if (nameInput) nameInput.focus();
+      }, 100);
+    }
+    
+    // Remover listeners existentes y agregar el nuevo
+    const newButton = registerButton.cloneNode(true);
+    registerButton.parentNode.replaceChild(newButton, registerButton);
+    
+    newButton.addEventListener('click', emergencyRegister);
+    newButton.addEventListener('touchstart', emergencyRegister);
+    
+    console.log('✅ Test REGISTRO completado - Botón debería funcionar ahora');
+    
+    return true;
+  } else {
+    console.error('❌ No se encontraron los elementos de REGISTRO');
+    return false;
+  }
+}
+
+function testAllButtons() {
+  console.log('🧪 EJECUTANDO TEST COMPLETO DE TODOS LOS BOTONES...');
+  const loginResult = testLoginButton();
+  const registerResult = testRegisterButton();
+  
+  console.log('📊 RESULTADOS:');
+  console.log('- Login funcionando:', loginResult);
+  console.log('- Registro funcionando:', registerResult);
+  
+  return { login: loginResult, register: registerResult };
+}
+
+// Hacer las funciones disponibles globalmente para testing
+window.testLoginButton = testLoginButton;
+window.testRegisterButton = testRegisterButton;
+window.testAllButtons = testAllButtons;
+
+// ===================== TEST ESPECÍFICO PARA BOTÓN DE CERRAR =====================
+function testCloseButton() {
+  console.log('🧪 EJECUTANDO TEST DEL BOTÓN DE CERRAR REGISTRO...');
+  
+  const modal = document.getElementById('register-modal');
+  if (!modal) {
+    console.error('❌ Modal de registro no encontrado');
+    return false;
+  }
+  
+  // Buscar el botón de cerrar con múltiples métodos
+  let closeButton = modal.querySelector('.modal-close');
+  
+  console.log('🔍 Información del botón de cerrar:');
+  console.log('- Botón encontrado:', !!closeButton);
+  
+  if (closeButton) {
+    console.log('- Texto:', closeButton.textContent);
+    console.log('- HTML:', closeButton.outerHTML);
+    console.log('- Clases:', closeButton.className);
+    console.log('- Atributos:', Array.from(closeButton.attributes).map(a => `${a.name}="${a.value}"`));
+    
+    const styles = window.getComputedStyle(closeButton);
+    console.log('- Display:', styles.display);
+    console.log('- Visibility:', styles.visibility);
+    console.log('- Pointer-events:', styles.pointerEvents);
+    console.log('- Coordenadas:', closeButton.getBoundingClientRect());
+    
+    // Función de cierre de emergencia
+    function emergencyClose(e) {
+      console.log('🚨 CIERRE DE EMERGENCIA ACTIVADO!', e);
+      modal.classList.remove('active');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      console.log('✅ Modal cerrado exitosamente');
+    }
+    
+    // Limpiar listeners existentes y agregar nuevo
+    const newCloseButton = closeButton.cloneNode(true);
+    closeButton.parentNode.replaceChild(newCloseButton, closeButton);
+    
+    // Agregar múltiples tipos de eventos
+    newCloseButton.addEventListener('click', emergencyClose);
+    newCloseButton.addEventListener('touchstart', emergencyClose);
+    newCloseButton.addEventListener('mousedown', emergencyClose);
+    
+    // Forzar estilos para asegurar que sea clickeable
+    newCloseButton.style.pointerEvents = 'auto';
+    newCloseButton.style.cursor = 'pointer';
+    newCloseButton.style.zIndex = '10000';
+    
+    console.log('✅ Botón de cerrar reparado y listo para usar');
+    return true;
+  } else {
+    console.error('❌ No se pudo encontrar el botón de cerrar');
+    console.log('🔍 Elementos encontrados en el modal:');
+    const allButtons = modal.querySelectorAll('button');
+    allButtons.forEach((btn, index) => {
+      console.log(`- Botón ${index + 1}:`, btn.outerHTML);
+    });
+    return false;
+  }
+}
+
+// Hacer la función disponible globalmente
+window.testCloseButton = testCloseButton;
+
+// ===================== FUNCIÓN DE EMERGENCIA SIMPLE =====================
+function fixCloseButtons() {
+  console.log('🚨 REPARACIÓN DE EMERGENCIA - Configurando todos los botones de cerrar...');
+  
+  // Buscar todos los modales y sus botones de cerrar
+  const modals = document.querySelectorAll('.modal-overlay, .modal');
+  let buttonsFixed = 0;
+  
+  // Función universal de cierre mejorada
+  function universalClose(e) {
+    console.log('� CIERRE DE EMERGENCIA EJECUTADO', e);
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const button = e.currentTarget;
+    let modal = button.closest('.modal-overlay');
+    if (!modal) {
+      modal = button.closest('.modal');
+    }
+    if (!modal) {
+      // Buscar modal activo si no se encuentra el padre
+      modal = document.querySelector('.modal-overlay.active, .modal.active');
+    }
+    
+    if (modal) {
+      modal.classList.remove('active');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      
+      // Limpiar formularios
+      const forms = modal.querySelectorAll('form');
+      forms.forEach(form => form.reset());
+      
+      console.log('✅ Modal cerrado exitosamente:', modal.id || 'modal sin id');
+    } else {
+      console.error('❌ No se pudo encontrar el modal para cerrar');
+    }
+  }
+  
+  modals.forEach((modal, modalIndex) => {
+    console.log(`🔍 Procesando modal ${modalIndex + 1}:`, modal.id || modal.className);
+    
+    // Buscar botones de cerrar en este modal con más selectores
+    const closeButtons = modal.querySelectorAll(
+      '.modal-close, [aria-label="Cerrar modal"], .close, ' +
+      'button[class*="close"], button[class*="cerrar"], ' +
+      'button:contains("×"), button:contains("✕")'
+    );
+    
+    // También buscar por contenido
+    const allButtons = modal.querySelectorAll('button');
+    allButtons.forEach(btn => {
+      const text = btn.textContent.trim();
+      if (text === '×' || text === '✕' || text === 'X' || text.toLowerCase().includes('cerrar')) {
+        closeButtons.push(btn);
+      }
+    });
+    
+    console.log(`🔍 Encontrados ${closeButtons.length} botones de cerrar en modal ${modalIndex + 1}`);
+    
+    closeButtons.forEach((button, buttonIndex) => {
+      console.log(`🎯 Arreglando botón ${buttonIndex + 1} en modal ${modalIndex + 1}:`, button.outerHTML);
+      
+      // Remover todos los listeners existentes clonando
+      const newButton = button.cloneNode(true);
+      button.parentNode.replaceChild(newButton, button);
+      
+      // Agregar event listeners de emergencia con alta prioridad
+      newButton.addEventListener('click', universalClose, true);
+      newButton.addEventListener('mousedown', universalClose, true);
+      newButton.addEventListener('touchstart', universalClose, true);
+      
+      // Forzar estilos para asegurar funcionalidad
+      newButton.style.cursor = 'pointer';
+      newButton.style.pointerEvents = 'auto';
+      newButton.style.zIndex = '999999';
+      newButton.style.position = 'relative';
+      newButton.style.display = 'inline-block';
+      newButton.style.visibility = 'visible';
+      newButton.style.opacity = '1';
+      newButton.style.background = 'transparent';
+      newButton.style.border = 'none';
+      
+      buttonsFixed++;
+      console.log(`✅ Botón ${buttonIndex + 1} reparado completamente`);
+    });
+  });
+  
+  console.log(`🎉 REPARACIÓN COMPLETADA: ${buttonsFixed} botones configurados`);
+  
+  // Test inmediato
+  console.log('🧪 Realizando test inmediato...');
+  const testModal = document.querySelector('.modal-overlay.active, .modal.active');
+  if (testModal) {
+    const testButton = testModal.querySelector('.modal-close, button');
+    if (testButton) {
+      console.log('🎯 Botón de test encontrado:', testButton.outerHTML);
+      console.log('✅ Listo para probar - haz clic en el botón X');
+    }
+  }
+  
+  return buttonsFixed;
+}
+
+// Hacer la función disponible globalmente
+window.fixCloseButtons = fixCloseButtons;
 
 // Llamar a soporte
 // ...existing code...
