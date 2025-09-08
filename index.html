@@ -35,7 +35,6 @@
         
         <ul class="menu">
           <li><a href="#categorias">Categorías</a></li>
-          <li><a href="#productos">Productos</a></li>
           <li><a href="#destacados">Destacados</a></li>
           <li><a href="#noticias">Noticias</a></li>
           <li><a href="#eventos">Eventos</a></li>
@@ -43,10 +42,36 @@
           <li><a href="#contacto">Contacto</a></li>
         </ul>
         
+        <!-- Panel de Acceso Rápido y Búsqueda -->
+        <div class="quick-access-panel">
+          <div class="search-container">
+            <input type="search" 
+                   class="quick-search" 
+                   placeholder="🔍 Búsqueda rápida... (Ctrl+K)"
+                   aria-label="Búsqueda rápida de productos"
+                   id="quick-search">
+            <button class="search-btn" type="button" aria-label="Buscar">
+              🔍
+            </button>
+          </div>
+          
+          <div class="quick-actions">
+            <button class="quick-btn" type="button" title="Categorías" onclick="showQuickCategories()">
+              📂 <span>Categorías</span>
+            </button>
+            <button class="quick-btn" type="button" title="Ofertas" onclick="showQuickOffers()">
+              🏷️ <span>Ofertas</span>
+            </button>
+            <button class="quick-btn" type="button" title="Comparar" onclick="showQuickCompare()">
+              ⚖️ <span>Comparar</span>
+            </button>
+            <button class="quick-btn" type="button" title="Ayuda" onclick="showQuickHelp()">
+              ❓ <span>Ayuda</span>
+            </button>
+          </div>
+        </div>
+
         <div class="actions">
-          <button class="btn-icon nav-wishlist" type="button" aria-label="Ver lista de deseos" onclick="toggleWishlist()">
-            ♡ <span class="nav-count" style="display: none;">0</span>
-          </button>
           <button class="btn-icon" type="button" aria-label="Abrir carrito" onclick="showCart()">
             🛒 <span class="badge" id="cart-count" aria-live="polite">0</span>
           </button>
@@ -292,90 +317,247 @@
   <main class="main" id="contenido">
     <div class="container">
       
-      <!-- Categorías -->
-      <section id="categorias">
-  <h2 class="section-title">Categorías Gaming</h2>
-  <div class="tiles" id="tiles-categorias"></div>
-        <!-- Separador Gamer de Categorías y Subcategorías -->
-        <div class="category-separator" role="separator" aria-label="Separador de categorías y subcategorías">
-          <span class="separator-icon">
-            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-              <circle cx="20" cy="20" r="18" stroke="#39FF14" stroke-width="3"/>
-              <path d="M10 20h20" stroke="#1E90FF" stroke-width="3" stroke-linecap="round"/>
-              <path d="M20 10v20" stroke="#FFD700" stroke-width="3" stroke-linecap="round"/>
-            </svg>
-          </span>
-          <span class="separator-text">Subcategorías</span>
+      <!-- Categorías con Separadores Avanzados -->
+      <section id="categorias" class="categories-section">
+        <h2 class="section-title">🎮 Universo Gaming</h2>
+        
+        <!-- Categorías Principales -->
+        <div class="main-categories">
+          <h3 class="category-group-title">
+            <span class="category-icon">🔥</span>
+            Componentes Principales
+            <span class="category-count" id="main-components-count"></span>
+          </h3>
+          <div class="tiles" id="main-components-tiles"></div>
+        </div>
+
+        <!-- Separador Animado -->
+        <div class="advanced-separator">
+          <div class="separator-line">
+            <div class="separator-glow"></div>
+          </div>
+          <div class="separator-content">
+            <div class="separator-icon">⚡</div>
+            <span class="separator-text">LEVEL UP</span>
+            <div class="separator-icon">⚡</div>
+          </div>
+          <div class="separator-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+          </div>
+        </div>
+
+        <!-- Subcategorías Periféricos -->
+        <div class="sub-categories">
+          <h3 class="category-group-title">
+            <span class="category-icon">🖱️</span>
+            Periféricos & Gaming
+            <span class="category-count" id="peripherals-count"></span>
+          </h3>
+          <div class="tiles" id="peripherals-tiles"></div>
+        </div>
+
+        <!-- Separador Especializado -->
+        <div class="advanced-separator specialized">
+          <div class="separator-line">
+            <div class="separator-glow"></div>
+          </div>
+          <div class="separator-content">
+            <div class="separator-icon">🎯</div>
+            <span class="separator-text">ESPECIALIDADES</span>
+            <div class="separator-icon">🎯</div>
+          </div>
+        </div>
+
+        <!-- Subcategorías Especiales -->
+        <div class="special-categories">
+          <h3 class="category-group-title">
+            <span class="category-icon">⭐</span>
+            Ediciones Especiales
+            <span class="category-count" id="specials-count"></span>
+          </h3>
+          <div class="tiles" id="specials-tiles"></div>
         </div>
       </section>
 
       <!-- Productos Destacados -->
       <section id="destacados">
-        <!-- Comparador de Productos (LG-007) -->
-        <div class="product-comparator" id="product-comparator" style="display: none;">
-          <div class="comparator-header">
-            <h3>🔍 Comparador de Productos</h3>
-            <button class="close-comparator" onclick="closeComparator()" aria-label="Cerrar comparador">&times;</button>
+        <h2 class="section-title">🎮 Productos Destacados</h2>
+        
+        <!-- Filtros Avanzados de Disponibilidad y Retiro -->
+        <div class="advanced-filters-container">
+          <div class="filters-header">
+            <h3 class="filters-title">
+              <span class="filters-icon">🔧</span>
+              Filtros Avanzados
+            </h3>
+            <button class="reset-filters-btn" onclick="resetAllFilters()" title="Resetear filtros">
+              🔄 Resetear
+            </button>
           </div>
-          <div class="compare-grid" id="compare-grid">
-            <div class="compare-empty-state">
-              <div class="empty-icon">📊</div>
-              <p>Selecciona productos para comparar</p>
-              <small>Haz clic en "Comparar" en las tarjetas de productos</small>
+          
+          <form class="advanced-filters-panel" id="advanced-filters-panel" aria-label="Filtrar productos avanzado">
+            <!-- Filtros de Disponibilidad -->
+            <div class="filter-section">
+              <h4 class="filter-section-title">
+                <span class="section-icon">📦</span>
+                Disponibilidad
+              </h4>
+              <div class="filter-options availability-filters">
+                <label class="filter-option">
+                  <input type="radio" name="availability" value="all" checked>
+                  <span class="filter-label">
+                    <span class="option-icon">🌐</span>
+                    <span class="option-text">Todos los productos</span>
+                    <span class="option-count" id="all-count"></span>
+                  </span>
+                </label>
+                <label class="filter-option">
+                  <input type="radio" name="availability" value="in-stock">
+                  <span class="filter-label">
+                    <span class="option-icon">✅</span>
+                    <span class="option-text">En stock</span>
+                    <span class="option-count" id="in-stock-count"></span>
+                  </span>
+                </label>
+                <label class="filter-option">
+                  <input type="radio" name="availability" value="low-stock">
+                  <span class="filter-label">
+                    <span class="option-icon">⚠️</span>
+                    <span class="option-text">Stock bajo (< 10)</span>
+                    <span class="option-count" id="low-stock-count"></span>
+                  </span>
+                </label>
+                <label class="filter-option">
+                  <input type="radio" name="availability" value="out-of-stock">
+                  <span class="filter-label">
+                    <span class="option-icon">❌</span>
+                    <span class="option-text">Agotado</span>
+                    <span class="option-count" id="out-stock-count"></span>
+                  </span>
+                </label>
+              </div>
             </div>
-          </div>
-          <div class="comparator-actions">
-            <button class="btn-secondary" onclick="clearComparison()">Limpiar Comparación</button>
-            <button class="btn-primary" onclick="exportComparison()">Exportar Comparación</button>
+
+            <!-- Filtros de Retiro y Entrega -->
+            <div class="filter-section">
+              <h4 class="filter-section-title">
+                <span class="section-icon">🚚</span>
+                Opciones de Retiro
+              </h4>
+              <div class="filter-options delivery-filters">
+                <label class="filter-option delivery-option">
+                  <input type="checkbox" name="delivery" value="store-pickup" checked>
+                  <span class="filter-label">
+                    <span class="option-icon">🏪</span>
+                    <span class="option-text">Retiro en tienda</span>
+                    <span class="delivery-info">Gratis • Disponible hoy</span>
+                  </span>
+                </label>
+                <label class="filter-option delivery-option">
+                  <input type="checkbox" name="delivery" value="home-delivery" checked>
+                  <span class="filter-label">
+                    <span class="option-icon">🏠</span>
+                    <span class="option-text">Envío a domicilio</span>
+                    <span class="delivery-info">$5.990 • 1-3 días hábiles</span>
+                  </span>
+                </label>
+                <label class="filter-option delivery-option">
+                  <input type="checkbox" name="delivery" value="express-delivery">
+                  <span class="filter-label">
+                    <span class="option-icon">⚡</span>
+                    <span class="option-text">Envío express</span>
+                    <span class="delivery-info">$12.990 • Mismo día</span>
+                  </span>
+                </label>
+                <label class="filter-option delivery-option">
+                  <input type="checkbox" name="delivery" value="installation">
+                  <span class="filter-label">
+                    <span class="option-icon">🔧</span>
+                    <span class="option-text">Con instalación</span>
+                    <span class="delivery-info">+$25.000 • Técnico especializado</span>
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Filtros de Rango de Precio -->
+            <div class="filter-section">
+              <h4 class="filter-section-title">
+                <span class="section-icon">💰</span>
+                Rango de Precio
+              </h4>
+              <div class="price-range-container">
+                <div class="price-inputs">
+                  <input type="number" 
+                         id="min-price" 
+                         placeholder="Mín. $" 
+                         min="0" 
+                         class="price-input">
+                  <span class="price-separator">-</span>
+                  <input type="number" 
+                         id="max-price" 
+                         placeholder="Máx. $" 
+                         min="0" 
+                         class="price-input">
+                </div>
+                <div class="price-presets">
+                  <button type="button" class="price-preset" onclick="setPriceRange(0, 100000)">
+                    < $100k
+                  </button>
+                  <button type="button" class="price-preset" onclick="setPriceRange(100000, 500000)">
+                    $100k - $500k
+                  </button>
+                  <button type="button" class="price-preset" onclick="setPriceRange(500000, 1000000)">
+                    $500k - $1M
+                  </button>
+                  <button type="button" class="price-preset" onclick="setPriceRange(1000000, 999999999)">
+                    > $1M
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Filtros de Ubicación -->
+            <div class="filter-section">
+              <h4 class="filter-section-title">
+                <span class="section-icon">📍</span>
+                Ubicación de Retiro
+              </h4>
+              <div class="filter-options location-filters">
+                <select class="location-select" id="store-location">
+                  <option value="">Seleccionar tienda</option>
+                  <option value="santiago-centro">Santiago Centro</option>
+                  <option value="las-condes">Las Condes</option>
+                  <option value="providencia">Providencia</option>
+                  <option value="maipu">Maipú</option>
+                  <option value="puente-alto">Puente Alto</option>
+                </select>
+                <div class="location-info" id="location-info">
+                  <span class="location-status">📍 Selecciona una tienda para ver disponibilidad</span>
+                </div>
+              </div>
+            </div>
+          </form>
+          
+          <!-- Resultados de Filtros -->
+          <div class="filter-results">
+            <div class="results-summary">
+              <span class="results-count" id="filtered-results-count">Mostrando todos los productos</span>
+              <button class="view-map-btn" onclick="showStoreMap()" title="Ver mapa de tiendas">
+                🗺️ Ver Mapa
+              </button>
+            </div>
           </div>
         </div>
-        
-        <h2 class="section-title">Productos Destacados</h2>
-        <!-- Filtros de Disponibilidad y Retiro (LG-008) -->
-        <form class="filters-panel" id="filters-panel" aria-label="Filtrar productos">
-          <fieldset class="filter-group">
-            <legend>📦 Disponibilidad</legend>
-            <label><input type="radio" name="disponibilidad" value="todos" checked> Todos los productos</label>
-            <label><input type="radio" name="disponibilidad" value="stock"> ✅ Solo en stock</label>
-            <label><input type="radio" name="disponibilidad" value="agotado"> ❌ Solo agotados</label>
-            <label><input type="radio" name="disponibilidad" value="preventa"> 📅 En preventa</label>
-          </fieldset>
-          <fieldset class="filter-group">
-            <legend>🚚 Opciones de Retiro</legend>
-            <label><input type="checkbox" name="retiro" value="tienda" checked> 🏪 Retiro en tienda</label>
-            <label><input type="checkbox" name="retiro" value="envio" checked> 📦 Envío a domicilio</label>
-            <label><input type="checkbox" name="retiro" value="express"> ⚡ Envío express (24h)</label>
-            <label><input type="checkbox" name="retiro" value="gratis"> 🆓 Envío gratis</label>
-          </fieldset>
-          <div class="filter-actions">
-            <button type="button" class="btn-primary" onclick="applyAvailabilityFilters()">Aplicar Filtros</button>
-            <button type="button" class="btn-secondary" onclick="clearAvailabilityFilters()">Limpiar Filtros</button>
-            <button type="button" class="btn-text" onclick="toggleComparator()">🔍 Abrir Comparador</button>
-          </div>
-        </form>
         <div class="cards" id="featured-grid">
-          <article class="card producto" data-id="1" data-product-id="gaming-console">
+          <article class="card producto" data-id="1">
             <div class="card-image">🎮</div>
-            <div class="card-content">
-              <h3 class="card-title">Gaming Console Pro</h3>
-              <div class="card-rating">
-                <div class="stars">
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                </div>
-                <span class="rating-text">(4.9) 234 reseñas</span>
-              </div>
-              <div class="card-price">$899.990</div>
-              <p class="card-description">Consola de última generación con gráficos 4K y 120fps</p>
               <div class="card-actions">
                 <button class="card-button" onclick="addToCart(1)">Agregar al Carrito</button>
-                <button class="compare-button" onclick="addToComparison(1)" title="Comparar producto">🔍 Comparar</button>
                 <button class="share-button" onclick="shareProduct(1)" title="Compartir producto">📤</button>
               </div>
-            </div>
           </article>
 
           <article class="card" data-product-id="rtx-gpu">
@@ -397,7 +579,6 @@
               <div class="card-actions">
                 <button class="card-button" onclick="addToCart(2)">Agregar al Carrito</button>
                 <button class="reviews-button" onclick="openProductReviews('rtx-gpu')">Ver Reseñas</button>
-                <button class="compare-button" onclick="addToComparison(2)" title="Comparar producto">🔍 Comparar</button>
                 <button class="share-button" onclick="shareProduct(2)" title="Compartir producto">📤</button>
               </div>
             </div>
@@ -422,7 +603,6 @@
               <div class="card-actions">
                 <button class="card-button" onclick="addToCart(5)">Agregar al Carrito</button>
                 <button class="reviews-button" onclick="openProductReviews('headset-gaming')">Ver Reseñas</button>
-                <button class="compare-button" onclick="addToComparison(5)" title="Comparar producto">🔍 Comparar</button>
                 <button class="share-button" onclick="shareProduct(5)" title="Compartir producto">📤</button>
               </div>
             </div>
@@ -447,7 +627,6 @@
               <div class="card-actions">
                 <button class="card-button" onclick="addToCart(3)">Agregar al Carrito</button>
                 <button class="reviews-button" onclick="openProductReviews('keyboard-rgb')">Ver Reseñas</button>
-                <button class="compare-button" onclick="addToComparison(3)" title="Comparar producto">🔍 Comparar</button>
                 <button class="share-button" onclick="shareProduct(3)" title="Compartir producto">📤</button>
               </div>
             </div>
@@ -472,7 +651,6 @@
               <div class="card-actions">
                 <button class="card-button" onclick="addToCart(4)">Agregar al Carrito</button>
                 <button class="reviews-button" onclick="openProductReviews('mouse-ultra')">Ver Reseñas</button>
-                <button class="compare-button" onclick="addToComparison(4)" title="Comparar producto">🔍 Comparar</button>
                 <button class="share-button" onclick="shareProduct(4)" title="Compartir producto">📤</button>
               </div>
             </div>
@@ -497,186 +675,13 @@
               <div class="card-actions">
                 <button class="card-button" onclick="addToCart(6)">Agregar al Carrito</button>
                 <button class="reviews-button" onclick="openProductReviews('monitor-144hz')">Ver Reseñas</button>
-                <button class="compare-button" onclick="addToComparison(6)" title="Comparar producto">🔍 Comparar</button>
                 <button class="share-button" onclick="shareProduct(6)" title="Compartir producto">📤</button>
               </div>
             </div>
           </article>
         </div>
-  <!-- Panel Comparador de Productos -->
-  <div id="compare-panel" class="compare-panel" aria-live="polite" style="display:none;"></div>
-  <!-- Panel Carrito -->
-  <aside id="cart-panel" class="cart-panel" aria-label="Resumen de carrito"></aside>
-  <!-- Paginación del grid -->
-  <nav class="pagination" id="product-pagination" aria-label="Paginación de productos"></nav>
-      <!-- Modal de Detalle de Producto -->
-      <div class="modal-overlay" id="product-detail-modal" aria-hidden="true">
-        <div class="modal product-modal" role="dialog" aria-labelledby="product-detail-title" aria-describedby="product-detail-desc">
-          <div class="modal-header">
-            <h2 id="product-detail-title">Detalle de Producto</h2>
-            <button class="modal-close" aria-label="Cerrar modal">&times;</button>
-          </div>
-          <div class="modal-body" id="product-detail-body">
-            <!-- Aquí se renderiza el detalle dinámico -->
-          </div>
-        </div>
-      </div>
-      </section>
-
-      <!-- ============ SECCIÓN COMPLETA DE PRODUCTOS ============ -->
-      <section id="productos" class="products-section">
-          <div class="container">
-              <h2 class="section-title">Catálogo de Productos</h2>
-              
-              <!-- LG-021/LG-022: Filtros y Búsqueda -->
-              <div class="filters-section">
-                  <div class="filters-header">
-                      <h3 class="filters-title">Filtros</h3>
-                      <button class="filters-toggle">Mostrar/Ocultar</button>
-                  </div>
-                  
-                  <div class="search-filters">
-                      <div class="search-box">
-                          <span class="search-icon">🔍</span>
-                          <input type="text" id="searchInput" class="search-input" placeholder="Buscar productos...">
-                      </div>
-                      
-                      <div class="sort-controls">
-                          <select id="sortSelect" class="sort-select">
-                              <option value="name-asc">Nombre A-Z</option>
-                              <option value="name-desc">Nombre Z-A</option>
-                              <option value="price-asc">Precio: Menor a Mayor</option>
-                              <option value="price-desc">Precio: Mayor a Menor</option>
-                              <option value="rating-desc">Mejor Valorados</option>
-                              <option value="newest-desc">Más Nuevos</option>
-                          </select>
-                          
-                          <div class="view-toggle">
-                              <button class="view-btn active" data-view="grid">⚏</button>
-                              <button class="view-btn" data-view="list">☰</button>
-                          </div>
-                      </div>
-                  </div>
-                  
-                  <div class="filter-groups">
-                      <div class="filter-group">
-                          <h4>Categoría</h4>
-                          <div class="filter-options">
-                              <div class="filter-option">
-                                  <input type="radio" id="cat-all" name="category" value="">
-                                  <label for="cat-all">Todas</label>
-                              </div>
-                              <div class="filter-option">
-                                  <input type="radio" id="cat-juegos" name="category" value="Juegos">
-                                  <label for="cat-juegos">Juegos</label>
-                              </div>
-                              <div class="filter-option">
-                                  <input type="radio" id="cat-consolas" name="category" value="Consolas">
-                                  <label for="cat-consolas">Consolas</label>
-                              </div>
-                              <div class="filter-option">
-                                  <input type="radio" id="cat-accesorios" name="category" value="Accesorios">
-                                  <label for="cat-accesorios">Accesorios</label>
-                              </div>
-                          </div>
-                      </div>
-                      
-                      <div class="filter-group">
-                          <h4>Plataforma</h4>
-                          <div class="filter-options">
-                              <div class="filter-option">
-                                  <input type="checkbox" id="plat-pc" name="platform" value="PC">
-                                  <label for="plat-pc">PC</label>
-                              </div>
-                              <div class="filter-option">
-                                  <input type="checkbox" id="plat-ps5" name="platform" value="PlayStation 5">
-                                  <label for="plat-ps5">PlayStation 5</label>
-                              </div>
-                              <div class="filter-option">
-                                  <input type="checkbox" id="plat-xbox" name="platform" value="Xbox Series X">
-                                  <label for="plat-xbox">Xbox Series X</label>
-                              </div>
-                              <div class="filter-option">
-                                  <input type="checkbox" id="plat-switch" name="platform" value="Nintendo Switch">
-                                  <label for="plat-switch">Nintendo Switch</label>
-                              </div>
-                          </div>
-                      </div>
-                      
-                      <div class="filter-group">
-                          <h4>Precio</h4>
-                          <div class="filter-options">
-                              <div class="price-range">
-                                  <input type="number" name="priceMin" class="price-input" placeholder="Min">
-                                  <span>-</span>
-                                  <input type="number" name="priceMax" class="price-input" placeholder="Max">
-                              </div>
-                          </div>
-                      </div>
-                      
-                      <div class="filter-group">
-                          <h4>Disponibilidad</h4>
-                          <div class="filter-options">
-                              <div class="filter-option">
-                                  <input type="radio" id="avail-all" name="availability" value="all" checked>
-                                  <label for="avail-all">Todos</label>
-                              </div>
-                              <div class="filter-option">
-                                  <input type="radio" id="avail-stock" name="availability" value="available">
-                                  <label for="avail-stock">En Stock</label>
-                              </div>
-                              <div class="filter-option">
-                                  <input type="radio" id="avail-out" name="availability" value="out-of-stock">
-                                  <label for="avail-out">Agotado</label>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  
-                  <div class="filter-actions">
-                      <button id="clearFilters" class="btn-secondary">Limpiar Filtros</button>
-                      <button class="btn-primary">Aplicar Filtros</button>
-                  </div>
-              </div>
-              
-              <!-- Grid de productos -->
-              <div id="productsGrid" class="products-grid">
-                  <!-- Los productos se cargarán dinámicamente -->
-              </div>
-              
-              <!-- LG-023: Paginación -->
-              <div class="pagination-container">
-                  <div id="paginationContainer"></div>
-                  <div id="paginationInfo"></div>
-                  <div class="items-per-page">
-                      <label>Productos por página:</label>
-                      <select id="itemsPerPage">
-                          <option value="12">12</option>
-                          <option value="24">24</option>
-                          <option value="36">36</option>
-                          <option value="48">48</option>
-                      </select>
-                  </div>
-              </div>
-          </div>
-      </section>
-
-      <!-- ============ LG-031: LISTA DE DESEOS ============ -->
-      <section id="wishlist" class="wishlist-section" style="display: none;">
-          <div class="container">
-              <div class="wishlist-header">
-                  <h2 class="wishlist-title">Lista de Deseos</h2>
-                  <span class="wishlist-count">0</span>
-                  <div class="wishlist-actions">
-                      <button class="btn-secondary" onclick="wishlistManager.renderWishlist()">Actualizar</button>
-                      <button class="btn-primary" onclick="document.getElementById('productos').scrollIntoView()">Seguir Comprando</button>
-                  </div>
-              </div>
-              
-              <div id="wishlistGrid" class="wishlist-grid">
-                  <!-- Los productos de wishlist se cargarán dinámicamente -->
-              </div>
-          </div>
+        <!-- Panel Comparador de Productos -->
+        <div id="compare-panel" class="compare-panel" aria-live="polite" style="display:none;"></div>
       </section>
 
       <!-- ===================== SECCIÓN DE NOTICIAS GAMING ===================== -->
@@ -2024,73 +2029,280 @@
     - Actualiza #cart-count con el total del carrito y pon aria-live="polite".
   ================================================================ -->
 </body>
-  <!-- Widget flotante de Ayuda/FAQ -->
-  <button id="faq-widget-btn" class="faq-widget-btn" aria-label="Abrir ayuda y preguntas frecuentes">
-    <span class="faq-icon">❓</span>
-  </button>
-  <aside id="faq-panel" class="faq-panel" aria-label="Preguntas Frecuentes" tabindex="-1" style="display:none;">
-    <header class="faq-header">
-      <h2>Ayuda & FAQ</h2>
-      <button id="faq-close" class="faq-close" aria-label="Cerrar ayuda">✖</button>
-    </header>
-    <div class="faq-search">
-      <input type="search" id="faq-search" placeholder="Buscar pregunta..." aria-label="Buscar en FAQ">
-    </div>
-    <ul class="faq-list">
-      <li class="faq-item">
-        <button class="faq-question" aria-expanded="false">¿Cómo puedo comprar un producto?</button>
-        <div class="faq-answer" hidden>Selecciona el producto, agrégalo al carrito y sigue el proceso de pago.</div>
-      </li>
-      <li class="faq-item">
-        <button class="faq-question" aria-expanded="false">¿Qué métodos de retiro existen?</button>
-        <div class="faq-answer" hidden>Puedes retirar en tienda o solicitar envío a domicilio.</div>
-      </li>
-      <li class="faq-item">
-        <button class="faq-question" aria-expanded="false">¿Cómo sé si un producto está disponible?</button>
-        <div class="faq-answer" hidden>Los productos en stock se muestran con el filtro de disponibilidad.</div>
-      </li>
-      <li class="faq-item">
-        <button class="faq-question" aria-expanded="false">¿Puedo comparar productos?</button>
-        <div class="faq-answer" hidden>Sí, selecciona "Comparar" en los productos destacados.</div>
-      </li>
-      <li class="faq-item">
-        <button class="faq-question" aria-expanded="false">¿Cómo contacto soporte?</button>
-        <div class="faq-answer" hidden>Puedes escribirnos desde el formulario de contacto o por chat en línea.</div>
-      </li>
-    </ul>
-  </aside>
-
-  <!-- ============ CARRITO LATERAL ============ -->
-  <div id="cartOverlay" class="cart-overlay"></div>
-  <div id="cartSidebar" class="cart-sidebar">
-    <div class="cart-header">
-      <h3 class="cart-title">Mi Carrito</h3>
-      <button class="cart-close" aria-label="Cerrar carrito">×</button>
-    </div>
+  <!-- Widget Avanzado de Ayuda/FAQ -->
+  <div class="help-widget-container">
+    <button id="help-widget-btn" class="help-widget-btn" aria-label="Abrir centro de ayuda">
+      <div class="help-icon">
+        <span class="icon-main">🎮</span>
+        <span class="icon-notification" id="help-notification"></span>
+      </div>
+      <span class="help-text">Ayuda Gaming</span>
+    </button>
     
-    <div class="cart-content">
-      <!-- Reglas del carrito -->
-      <div id="cartRules"></div>
+    <!-- Panel de Ayuda Flotante -->
+    <div id="help-panel" class="help-panel" style="display: none;">
+      <div class="help-header">
+        <div class="help-title">
+          <h2>🎮 Centro de Ayuda Gaming</h2>
+          <div class="help-status">
+            <span class="status-indicator online"></span>
+            <span>Soporte Online</span>
+          </div>
+        </div>
+        <button id="help-close" class="help-close" aria-label="Cerrar ayuda">✕</button>
+      </div>
       
-      <!-- Items del carrito -->
-      <div id="cartItems" class="cart-items"></div>
+      <!-- Navegación de Categorías de Ayuda -->
+      <div class="help-navigation">
+        <button class="help-nav-btn active" data-category="faq" onclick="showHelpCategory('faq')">
+          ❓ FAQ
+        </button>
+        <button class="help-nav-btn" data-category="tutorials" onclick="showHelpCategory('tutorials')">
+          📚 Tutoriales
+        </button>
+        <button class="help-nav-btn" data-category="contact" onclick="showHelpCategory('contact')">
+          📞 Contacto
+        </button>
+        <button class="help-nav-btn" data-category="guides" onclick="showHelpCategory('guides')">
+          🎯 Guías Gaming
+        </button>
+      </div>
       
-      <!-- Sección de cupones -->
-      <div class="coupon-section">
-        <div class="coupon-input-group">
-          <input type="text" id="couponInput" class="coupon-input" placeholder="Código de cupón">
-          <button class="coupon-apply">Aplicar</button>
+      <!-- Búsqueda Inteligente -->
+      <div class="help-search-container">
+        <input type="search" 
+               id="help-search" 
+               placeholder="🔍 ¿En qué puedo ayudarte hoy?" 
+               aria-label="Buscar en centro de ayuda">
+        <div class="search-suggestions" id="search-suggestions"></div>
+      </div>
+      
+      <!-- Contenido de Ayuda -->
+      <div class="help-content">
+        
+        <!-- FAQ Section -->
+        <div class="help-section active" id="faq-section">
+          <div class="help-section-header">
+            <h3>❓ Preguntas Frecuentes</h3>
+            <span class="section-count" id="faq-count"></span>
+          </div>
+          <div class="faq-categories">
+            <button class="faq-category-btn active" onclick="filterFAQ('all')">
+              🌐 Todas
+            </button>
+            <button class="faq-category-btn" onclick="filterFAQ('shopping')">
+              🛒 Compras
+            </button>
+            <button class="faq-category-btn" onclick="filterFAQ('technical')">
+              🔧 Técnico
+            </button>
+            <button class="faq-category-btn" onclick="filterFAQ('gaming')">
+              🎮 Gaming
+            </button>
+          </div>
+          <div class="faq-list" id="faq-list">
+            <!-- FAQ items se generarán dinámicamente -->
+          </div>
+        </div>
+        
+        <!-- Tutorials Section -->
+        <div class="help-section" id="tutorials-section">
+          <div class="help-section-header">
+            <h3>📚 Tutoriales Gaming</h3>
+          </div>
+          <div class="tutorials-grid">
+            <div class="tutorial-card">
+              <div class="tutorial-icon">🔧</div>
+              <h4>Cómo armar tu PC Gaming</h4>
+              <p>Guía paso a paso para ensamblar tu setup perfecto</p>
+              <button class="tutorial-btn" onclick="openTutorial('pc-building')">Ver Tutorial</button>
+            </div>
+            <div class="tutorial-card">
+              <div class="tutorial-icon">⚡</div>
+              <h4>Optimizar Rendimiento</h4>
+              <p>Configura tu sistema para máximo FPS</p>
+              <button class="tutorial-btn" onclick="openTutorial('optimization')">Ver Tutorial</button>
+            </div>
+            <div class="tutorial-card">
+              <div class="tutorial-icon">🎯</div>
+              <h4>Elegir Componentes</h4>
+              <p>Encuentra los mejores componentes para tu presupuesto</p>
+              <button class="tutorial-btn" onclick="openTutorial('components')">Ver Tutorial</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Contact Section -->
+        <div class="help-section" id="contact-section">
+          <div class="help-section-header">
+            <h3>📞 Contacto Directo</h3>
+          </div>
+          <div class="contact-options">
+            <div class="contact-option">
+              <div class="contact-icon">💬</div>
+              <div class="contact-info">
+                <h4>Chat en Vivo</h4>
+                <p>Respuesta inmediata • Online ahora</p>
+                <button class="contact-btn primary" onclick="openLiveChat()">Iniciar Chat</button>
+              </div>
+            </div>
+            <div class="contact-option">
+              <div class="contact-icon">📞</div>
+              <div class="contact-info">
+                <h4>Soporte Telefónico</h4>
+                <p>+56 2 2800 GAME (4263)</p>
+                <button class="contact-btn" onclick="makePhoneCall()">Llamar Ahora</button>
+              </div>
+            </div>
+            <div class="contact-option">
+              <div class="contact-icon">📧</div>
+              <div class="contact-info">
+                <h4>Email Soporte</h4>
+                <p>Respuesta en 24 horas</p>
+                <button class="contact-btn" onclick="openEmailForm()">Enviar Email</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Gaming Guides Section -->
+        <div class="help-section" id="guides-section">
+          <div class="help-section-header">
+            <h3>🎯 Guías Gaming Especializadas</h3>
+          </div>
+          <div class="guides-list">
+            <div class="guide-item">
+              <div class="guide-category">🎮 Setup Gaming</div>
+              <h4>Configuración Perfecta para Esports</h4>
+              <p>Mouse, teclado, monitor: todo lo que necesitas para competir</p>
+              <div class="guide-meta">
+                <span>⏱️ 15 min</span>
+                <span>👁️ 1.2k vistas</span>
+              </div>
+            </div>
+            <div class="guide-item">
+              <div class="guide-category">🔥 Hardware</div>
+              <h4>RTX 4090 vs RTX 4080: ¿Cuál elegir?</h4>
+              <p>Comparación detallada para gaming en 4K</p>
+              <div class="guide-meta">
+                <span>⏱️ 12 min</span>
+                <span>👁️ 2.5k vistas</span>
+              </div>
+            </div>
+            <div class="guide-item">
+              <div class="guide-category">💰 Presupuesto</div>
+              <h4>PC Gaming por $500.000</h4>
+              <p>Build completa para 1080p gaming</p>
+              <div class="guide-meta">
+                <span>⏱️ 18 min</span>
+                <span>👁️ 3.1k vistas</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       
-      <!-- Resumen del carrito -->
-      <div id="cartSummary" class="cart-summary"></div>
-      
-      <!-- Acciones del carrito -->
-      <div class="cart-actions">
-        <button class="btn-checkout">Finalizar Compra</button>
-        <button class="btn-clear-cart">Vaciar Carrito</button>
+      <!-- Quick Actions -->
+      <div class="help-quick-actions">
+        <button class="quick-action-btn" onclick="requestCallback()">
+          📞 Solicitar Llamada
+        </button>
+        <button class="quick-action-btn" onclick="reportIssue()">
+          🐛 Reportar Problema
+        </button>
+        <button class="quick-action-btn" onclick="giveFeedback()">
+          ⭐ Dar Feedback
+        </button>
       </div>
     </div>
   </div>
+
+  <!-- Modal Comparador de Productos -->
+  <div class="modal" id="product-comparator-modal" aria-hidden="true">
+    <div class="modal-content comparator-modal">
+      <div class="modal-header">
+        <h2>⚖️ Comparador de Productos Gaming</h2>
+        <button class="modal-close" onclick="closeComparator()" aria-label="Cerrar comparador">✕</button>
+      </div>
+      
+      <div class="comparator-content">
+        <div class="comparator-controls">
+          <div class="comparison-slots">
+            <div class="slot-info">
+              <span>🎮 Productos seleccionados: <span id="comparison-count">0</span>/4</span>
+              <button class="btn-secondary clear-comparison" onclick="clearComparison()">
+                🗑️ Limpiar Todo
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="comparison-grid" id="comparison-grid">
+          <!-- Productos a comparar se llenarán dinámicamente -->
+        </div>
+        
+        <div class="comparison-actions">
+          <button class="btn-primary start-comparison" onclick="startComparison()" disabled>
+            🔍 Iniciar Comparación
+          </button>
+          <button class="btn-secondary add-more-products" onclick="showProductSelector()">
+            ➕ Agregar Productos
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Selector de Productos para Comparar -->
+  <div class="modal" id="product-selector-modal" aria-hidden="true">
+    <div class="modal-content selector-modal">
+      <div class="modal-header">
+        <h2>📦 Seleccionar Productos para Comparar</h2>
+        <button class="modal-close" onclick="closeProductSelector()" aria-label="Cerrar selector">✕</button>
+      </div>
+      
+      <div class="selector-content">
+        <div class="selector-filters">
+          <input type="search" 
+                 class="selector-search" 
+                 placeholder="🔍 Buscar productos..." 
+                 id="selector-search">
+          <select class="selector-category" id="selector-category">
+            <option value="">Todas las categorías</option>
+          </select>
+        </div>
+        
+        <div class="selector-grid" id="selector-grid">
+          <!-- Productos disponibles se llenarán dinámicamente -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Resultados de Comparación -->
+  <div class="modal" id="comparison-results-modal" aria-hidden="true">
+    <div class="modal-content results-modal">
+      <div class="modal-header">
+        <h2>📊 Resultados de Comparación</h2>
+        <button class="modal-close" onclick="closeComparisonResults()" aria-label="Cerrar resultados">✕</button>
+      </div>
+      
+      <div class="results-content">
+        <div class="comparison-table-container">
+          <table class="comparison-table" id="comparison-table">
+            <!-- Tabla de comparación se llenará dinámicamente -->
+          </table>
+        </div>
+        
+        <div class="comparison-insights">
+          <h3>🎯 Insights de Comparación</h3>
+          <div class="insights-grid" id="insights-grid">
+            <!-- Insights se generarán dinámicamente -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </html>
