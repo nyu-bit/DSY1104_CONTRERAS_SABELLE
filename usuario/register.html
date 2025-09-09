@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrarse | Level-Up Gamer</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="../index.html" class="logo">🎮 LEVEL-UP GAMER</a>
+                <ul class="nav-links">
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="../productos/">Productos</a></li>
+                    <li><a href="../carrito/">Carrito</a></li>
+                    <li><a href="../usuario/">Usuario</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main class="main">
+        <section class="section">
+            <div class="container">
+                <div class="auth-container">
+                    <div class="auth-form-container">
+                        <div class="auth-header">
+                            <h1>👤 Crear Cuenta</h1>
+                            <p>Únete a la comunidad Level-Up Gamer</p>
+                        </div>
+
+                        <!-- Formulario de registro -->
+                        <form class="auth-form" id="registerForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName">Nombre</label>
+                                    <input type="text" id="firstName" name="firstName" required 
+                                           placeholder="Tu nombre">
+                                    <div class="error-message" id="firstNameError"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="lastName">Apellido</label>
+                                    <input type="text" id="lastName" name="lastName" required 
+                                           placeholder="Tu apellido">
+                                    <div class="error-message" id="lastNameError"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Correo Electrónico</label>
+                                <input type="email" id="email" name="email" required 
+                                       placeholder="tu@email.com">
+                                <div class="form-hint">💡 Usa tu email de Duoc UC para descuentos especiales</div>
+                                <div class="error-message" id="emailError"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone">Teléfono (Opcional)</label>
+                                <input type="tel" id="phone" name="phone" 
+                                       placeholder="+56 9 1234 5678">
+                                <div class="error-message" id="phoneError"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="birthDate">Fecha de Nacimiento</label>
+                                <input type="date" id="birthDate" name="birthDate" required>
+                                <div class="form-hint">Debes ser mayor de 18 años</div>
+                                <div class="error-message" id="birthDateError"></div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="password">Contraseña</label>
+                                    <input type="password" id="password" name="password" required 
+                                           placeholder="Mínimo 8 caracteres">
+                                    <div class="error-message" id="passwordError"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="confirmPassword">Confirmar Contraseña</label>
+                                    <input type="password" id="confirmPassword" name="confirmPassword" required 
+                                           placeholder="Repite tu contraseña">
+                                    <div class="error-message" id="confirmPasswordError"></div>
+                                </div>
+                            </div>
+
+                            <!-- Preferencias gaming -->
+                            <div class="form-section">
+                                <h3>🎮 Preferencias Gaming</h3>
+                                
+                                <div class="form-group">
+                                    <label for="gamertag">Gamer Tag (Opcional)</label>
+                                    <input type="text" id="gamertag" name="gamertag" 
+                                           placeholder="Tu nombre gamer">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="platform">Plataforma Favorita</label>
+                                    <select id="platform" name="platform">
+                                        <option value="">Selecciona tu plataforma</option>
+                                        <option value="pc">PC</option>
+                                        <option value="playstation">PlayStation</option>
+                                        <option value="xbox">Xbox</option>
+                                        <option value="nintendo">Nintendo</option>
+                                        <option value="mobile">Mobile</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Géneros Favoritos</label>
+                                    <div class="checkbox-grid">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="genres" value="action">
+                                            <span class="checkmark"></span>
+                                            Acción
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="genres" value="rpg">
+                                            <span class="checkmark"></span>
+                                            RPG
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="genres" value="strategy">
+                                            <span class="checkmark"></span>
+                                            Estrategia
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="genres" value="sports">
+                                            <span class="checkmark"></span>
+                                            Deportes
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Términos y condiciones -->
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="acceptTerms" name="acceptTerms" required>
+                                    <span class="checkmark"></span>
+                                    Acepto los <a href="#" target="_blank">términos y condiciones</a>
+                                </label>
+                                <div class="error-message" id="termsError"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="acceptNewsletter" name="acceptNewsletter" checked>
+                                    <span class="checkmark"></span>
+                                    Quiero recibir ofertas y noticias gaming por email
+                                </label>
+                            </div>
+
+                            <button type="submit" class="cta-button">
+                                Crear Mi Cuenta Gamer
+                            </button>
+
+                            <div class="form-footer">
+                                <p>¿Ya tienes cuenta? <a href="login.html">Inicia sesión aquí</a></p>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Información de beneficios -->
+                    <div class="auth-info">
+                        <h3>🎁 Lo que obtienes al registrarte</h3>
+                        <ul class="benefits-list">
+                            <li>🎯 <strong>50 puntos de bienvenida</strong></li>
+                            <li>💰 <strong>Descuentos exclusivos</strong></li>
+                            <li>📦 <strong>Envío gratis</strong> en tu primera compra</li>
+                            <li>🎮 <strong>Acceso anticipado</strong> a nuevos productos</li>
+                            <li>🏆 <strong>Sistema de niveles</strong> y recompensas</li>
+                            <li>📱 <strong>Notificaciones</strong> de ofertas</li>
+                        </ul>
+
+                        <div class="special-offer">
+                            <h4>🎓 ¿Estudias en Duoc UC?</h4>
+                            <p>Obtén <strong>20% de descuento de por vida</strong> usando tu email institucional</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 Level-Up Gamer. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>

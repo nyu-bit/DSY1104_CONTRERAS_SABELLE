@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras | Level-Up Gamer</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="../index.html" class="logo">🎮 LEVEL-UP GAMER</a>
+                <ul class="nav-links">
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="../productos/">Productos</a></li>
+                    <li><a href="../usuario/">Usuario</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main class="main">
+        <section class="section">
+            <div class="container">
+                <h1 class="section-title">🛒 Tu Carrito de Compras</h1>
+                
+                <!-- Carrito de compras -->
+                <div class="cart-container" id="cartContainer">
+                    <div class="cart-items" id="cartItems">
+                        <!-- Los productos se cargarán dinámicamente -->
+                    </div>
+                    
+                    <div class="cart-summary">
+                        <h3>Resumen del Pedido</h3>
+                        <div class="summary-row">
+                            <span>Subtotal:</span>
+                            <span id="subtotal">$0.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Envío:</span>
+                            <span id="shipping">$5.99</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total:</span>
+                            <span id="total">$0.00</span>
+                        </div>
+                        
+                        <div class="cart-actions">
+                            <button class="product-button" onclick="clearCart()">Vaciar Carrito</button>
+                            <button class="cta-button" onclick="proceedToCheckout()">Proceder al Pago</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="empty-cart" id="emptyCart" style="display: none;">
+                    <div class="empty-cart-content">
+                        <div class="empty-cart-icon">🛒</div>
+                        <h2>Tu carrito está vacío</h2>
+                        <p>¡Agrega algunos productos increíbles!</p>
+                        <a href="../productos/" class="cta-button">Explorar Productos</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 Level-Up Gamer. Todos los derechos reservados.</p>
+                <p><a href="#" onclick="showTermsModal()" style="color: var(--primary-color);">Ver Términos y Condiciones</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../assets/js/products-database.js"></script>
+    <script src="../assets/js/cart.js"></script>
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>

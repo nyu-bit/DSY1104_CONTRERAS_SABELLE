@@ -1,2306 +1,376 @@
-<!doctype html>
-<html lang="es" data-theme="gamer">
+<!DOCTYPE html>
+<html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Game Store | Level-Up Gamer</title>
-
-  <!-- Tipografías para tema gamer: Orbitron para encabezados, Roboto para texto general -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-  
-  <!-- CSS externo -->
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level-Up Gamer - Tu Tienda Gaming Definitiva</title>
+    <meta name="description" content="Descubre los mejores productos gaming: consolas, videojuegos, accesorios y más. Precios increíbles y envío gratis.">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <a href="#contenido" class="sr-only">Saltar al contenido</a>
-  <style>
-    body {
-      font-family: 'Roboto', Arial, sans-serif;
-    }
-    h1, h2, h3, h4, h5, h6 {
-      font-family: 'Orbitron', 'Roboto', Arial, sans-serif;
-      font-weight: 700;
-    }
-  </style>
+    <!-- Notificaciones -->
+    <div class="notifications-container" id="notificationsContainer"></div>
 
-  <!-- ===================== HEADER ===================== -->
-  <header class="header">
-    <div class="container">
-      <nav class="nav">
-        <a class="logo" href="./" aria-label="Ir al inicio">
-          ⚡ GAME STORE
-        </a>
-        
-        <ul class="menu">
-          <li><a href="#categorias">Categorías</a></li>
-          <li><a href="#destacados">Destacados</a></li>
-          <li><a href="#noticias">Noticias</a></li>
-          <li><a href="#eventos">Eventos</a></li>
-          <li><a href="#ofertas">Ofertas</a></li>
-          <li><a href="#contacto">Contacto</a></li>
-        </ul>
-        
-        <!-- Panel de Acceso Rápido y Búsqueda -->
-        <div class="quick-access-panel">
-          <div class="search-container">
-            <input type="search" 
-                   class="quick-search" 
-                   placeholder="🔍 Búsqueda rápida... (Ctrl+K)"
-                   aria-label="Búsqueda rápida de productos"
-                   id="quick-search">
-            <button class="search-btn" type="button" aria-label="Buscar">
-              🔍
-            </button>
-          </div>
-          
-          <div class="quick-actions">
-            <button class="quick-btn" type="button" title="Categorías" onclick="showQuickCategories()">
-              📂 <span>Categorías</span>
-            </button>
-            <button class="quick-btn" type="button" title="Ofertas" onclick="showQuickOffers()">
-              🏷️ <span>Ofertas</span>
-            </button>
-            <button class="quick-btn" type="button" title="Comparar" onclick="showQuickCompare()">
-              ⚖️ <span>Comparar</span>
-            </button>
-            <button class="quick-btn" type="button" title="Ayuda" onclick="showQuickHelp()">
-              ❓ <span>Ayuda</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="actions">
-          <button class="btn-icon" type="button" aria-label="Abrir carrito" onclick="showCart()">
-            🛒 <span class="badge" id="cart-count" aria-live="polite">0</span>
-          </button>
-          <div class="level-indicator" id="level-indicator" style="display: none;">
-            <span class="level-icon" id="nav-level-icon">🥉</span>
-            <span class="level-text">Nivel <span id="nav-level-number">1</span></span>
-            <span class="level-points" id="nav-level-points">0 pts</span>
-          </div>
-          <button class="btn-secondary" type="button" id="login-button">
-            🔑 Iniciar Sesión
-          </button>
-          <button class="btn-secondary" type="button" id="register-button">
-            👤 Registrarse
-          </button>
-          <summary class="nav-toggle" role="button" aria-label="Abrir menú">☰</summary>
-        </div>
-      </nav>
-    </div>
-
-    <!-- Drawer móvil -->
-    <div class="drawer" id="mobile-drawer">
-      <ul class="menu">
-        <li><a href="#categorias">Categorías</a></li>
-        <li><a href="#destacados">Destacados</a></li>
-        <li><a href="#ofertas">Ofertas</a></li>
-        <li><a href="#contacto">Contacto</a></li>
-      </ul>
-    </div>
-  </header>
-
-  <!-- ===================== BANNER DE PROMOCIONES ===================== -->
-  <section class="promo-banner" aria-label="Promociones" tabindex="0">
-    <div class="promo-carousel">
-      <button class="promo-arrow left" aria-label="Anterior promoción">&#9664;</button>
-      <div class="promo-slide">
-        <span class="promo-icon">⚡</span>
-        <span class="promo-text">¡Semana Gamer! Hasta <strong>40% de descuento</strong> en accesorios y hardware</span>
-        <a href="#ofertas" class="promo-btn">Ver Ofertas</a>
-      </div>
-      <div class="promo-slide" style="display:none;">
-        <span class="promo-icon">🎮</span>
-        <span class="promo-text">Envío <strong>GRATIS</strong> por compras sobre $50.000</span>
-        <a href="#productos" class="promo-btn">Ver Productos</a>
-      </div>
-      <div class="promo-slide" style="display:none;">
-        <span class="promo-icon">🏆</span>
-        <span class="promo-text">Descuento <strong>20% de por vida</strong> para usuarios Duoc UC</span>
-        <a href="#register-modal" class="promo-btn">Regístrate</a>
-      </div>
-      <button class="promo-arrow right" aria-label="Siguiente promoción">&#9654;</button>
-    </div>
-  </section>
-
-  <!-- Banner Promocional Dinámico -->
-  <section class="promotional-banner" id="promotional-banner">
-    <div class="banner-container">
-      <div class="banner-slide active" data-promo="1">
-        <div class="banner-content">
-          <div class="banner-badge">🔥 OFERTA ESPECIAL</div>
-          <h2 class="banner-title">¡BLACK FRIDAY GAMER!</h2>
-          <p class="banner-description">Descuentos de hasta 50% en tarjetas gráficas RTX y componentes gaming</p>
-          <div class="banner-price">
-            <span class="old-price">$2.500.000</span>
-            <span class="new-price">$1.250.000</span>
-            <span class="discount">-50%</span>
-          </div>
-          <button class="banner-cta" onclick="claimPromotion(1)">
-            ⚡ RECLAMAR OFERTA
-          </button>
-          <div class="banner-timer" id="timer-1">
-            <span class="timer-label">Termina en:</span>
-            <span class="timer-value">23:59:45</span>
-          </div>
-        </div>
-        <div class="banner-visual">
-          <div class="banner-icon">🎮</div>
-          <div class="banner-effects">
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="banner-slide" data-promo="2">
-        <div class="banner-content">
-          <div class="banner-badge">💎 PREMIUM</div>
-          <h2 class="banner-title">SETUP GAMER COMPLETO</h2>
-          <p class="banner-description">PC Gaming + Monitor + Periféricos. Todo lo que necesitas para dominar</p>
-          <div class="banner-price">
-            <span class="old-price">$5.000.000</span>
-            <span class="new-price">$3.500.000</span>
-            <span class="discount">-30%</span>
-          </div>
-          <button class="banner-cta" onclick="claimPromotion(2)">
-            🚀 VER BUNDLE
-          </button>
-          <div class="banner-timer" id="timer-2">
-            <span class="timer-label">Termina en:</span>
-            <span class="timer-value">47:23:12</span>
-          </div>
-        </div>
-        <div class="banner-visual">
-          <div class="banner-icon">⚡</div>
-          <div class="banner-effects">
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="banner-slide" data-promo="3">
-        <div class="banner-content">
-          <div class="banner-badge">🎁 REGALO</div>
-          <h2 class="banner-title">COMPRA Y GANA PUNTOS</h2>
-          <p class="banner-description">Por cada $100.000 en compras, obtén 500 puntos extra + juego gratis</p>
-          <div class="banner-price">
-            <span class="points-offer">+500 PUNTOS</span>
-            <span class="free-game">+ JUEGO GRATIS</span>
-          </div>
-          <button class="banner-cta" onclick="claimPromotion(3)">
-            🏆 ACTIVAR BONUS
-          </button>
-          <div class="banner-timer" id="timer-3">
-            <span class="timer-label">Válido por:</span>
-            <span class="timer-value">7 días</span>
-          </div>
-        </div>
-        <div class="banner-visual">
-          <div class="banner-icon">🏆</div>
-          <div class="banner-effects">
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="banner-slide" data-promo="4">
-        <div class="banner-content">
-          <div class="banner-badge">⭐ NUEVO</div>
-          <h2 class="banner-title">RTX 4090 DISPONIBLE</h2>
-          <p class="banner-description">La GPU más potente del mundo. Rendimiento extremo para gaming 4K</p>
-          <div class="banner-price">
-            <span class="new-arrival">RECIÉN LLEGADO</span>
-            <span class="new-price">$2.500.000</span>
-          </div>
-          <button class="banner-cta" onclick="claimPromotion(4)">
-            🔥 PRE-ORDENAR
-          </button>
-          <div class="banner-timer" id="timer-4">
-            <span class="timer-label">Stock limitado:</span>
-            <span class="timer-value">15 unidades</span>
-          </div>
-        </div>
-        <div class="banner-visual">
-          <div class="banner-icon">🔥</div>
-          <div class="banner-effects">
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Controles del banner -->
-    <div class="banner-controls">
-      <button class="banner-nav prev" onclick="previousBanner()">❮</button>
-      <div class="banner-indicators">
-        <span class="indicator active" data-slide="0" onclick="goToBanner(0)"></span>
-        <span class="indicator" data-slide="1" onclick="goToBanner(1)"></span>
-        <span class="indicator" data-slide="2" onclick="goToBanner(2)"></span>
-        <span class="indicator" data-slide="3" onclick="goToBanner(3)"></span>
-      </div>
-      <button class="banner-nav next" onclick="nextBanner()">❯</button>
-    </div>
-
-    <!-- Banner de notificaciones -->
-    <div class="banner-notifications" id="banner-notifications">
-      <div class="notification-item">
-        <span class="notification-icon">🛒</span>
-        <span class="notification-text">Juan compró RTX 4080 hace 5 min</span>
-      </div>
-    </div>
-  </section>
-
-    <!-- Panel de Acceso Rápido y Búsqueda -->
-    <nav class="quick-access-panel" aria-label="Panel de acceso rápido">
-      <ul class="quick-access-list">
-        <li><button class="quick-btn" aria-label="Ir al carrito">
-          <span class="icon-svg">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM2 2h2l3.6 7.59-1.35 2.45A2 2 0 0 0 6 15h12v-2H7.42a.5.5 0 0 1-.49-.37L7 12h9.55a2 2 0 0 0 1.92-1.36l3.24-7.24A1 1 0 0 0 21 2H5.21l-.94-2H0v2z" fill="#39FF14"/></svg>
-          </span>
-          Carrito
-        </button></li>
-        <li><button class="quick-btn" aria-label="Ir al perfil">
-          <span class="icon-svg">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" fill="#1E90FF"/><path d="M4 20c0-4 8-4 8-4s8 0 8 4v2H4v-2z" fill="#39FF14"/></svg>
-          </span>
-          Perfil
-        </button></li>
-        <li><button class="quick-btn" aria-label="Ver categorías">
-          <span class="icon-svg">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="2" fill="#1E90FF"/><rect x="14" y="3" width="7" height="7" rx="2" fill="#39FF14"/><rect x="14" y="14" width="7" height="7" rx="2" fill="#1E90FF"/><rect x="3" y="14" width="7" height="7" rx="2" fill="#39FF14"/></svg>
-          </span>
-          Categorías
-        </button></li>
-        <li><button class="quick-btn" aria-label="Ver ofertas">
-          <span class="icon-svg">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.09 6.26L20 9.27l-5 4.87L16.18 21 12 17.77 7.82 21 9 14.14l-5-4.87 5.91-.91L12 2z" fill="#FFD700"/></svg>
-          </span>
-          Ofertas
-        </button></li>
-      </ul>
-      <form class="quick-search-form" role="search" aria-label="Buscar productos">
-        <input type="search" id="quick-search" name="quick-search" placeholder="Buscar productos..." aria-label="Buscar productos">
-        <button type="submit" class="search-btn" aria-label="Buscar">
-          <span class="icon-svg">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="#39FF14" stroke-width="2"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke="#1E90FF" stroke-width="2"/></svg>
-          </span>
-        </button>
-      </form>
-    </nav>
-  <!-- ===================== HERO ===================== -->
-  <section class="hero gamer-hero" aria-label="Bienvenida gamer" tabindex="0">
-    <div class="hero-bg-animated" aria-hidden="true"></div>
-    <div class="container hero-content" role="region" aria-labelledby="hero-title">
-      <h1 id="hero-title" class="hero-title">
-        <span class="hero-icon" style="color:#1E90FF;">⚡</span> <span style="color:#fff;">Level Up Your Gaming</span> <span class="hero-icon" style="color:#FFD700;">🎮</span>
-      </h1>
-      <p class="hero-desc" style="color:#fff;">Descubre los <strong style="color:#FFD700;">mejores juegos</strong>, <strong style="color:#1E90FF;">accesorios</strong> y <strong style="color:#FFD700;">hardware</strong> gaming al mejor precio.<br>
-        <span class="hero-highlight" style="color:#1E90FF;">¡Potencia tu experiencia gamer!</span>
-      </p>
-      <button class="cta-button hero-cta" style="color:#fff; border-color:#1E90FF; background:rgba(30,144,255,0.15);" onclick="document.getElementById('destacados').scrollIntoView()" aria-label="Explorar productos destacados">
-        <span class="cta-icon" style="color:#FFD700;">🚀</span> Explorar Productos
-      </button>
-    </div>
-  </section>
-
-  <!-- ===================== MAIN ===================== -->
-  <main class="main" id="contenido">
-    <div class="container">
-      
-      <!-- Categorías con Separadores Avanzados -->
-      <section id="categorias" class="categories-section">
-        <h2 class="section-title">🎮 Universo Gaming</h2>
-        
-        <!-- Categorías Principales -->
-        <div class="main-categories">
-          <h3 class="category-group-title">
-            <span class="category-icon">🔥</span>
-            Componentes Principales
-            <span class="category-count" id="main-components-count"></span>
-          </h3>
-          <div class="tiles" id="main-components-tiles"></div>
-        </div>
-
-        <!-- Separador Animado -->
-        <div class="advanced-separator">
-          <div class="separator-line">
-            <div class="separator-glow"></div>
-          </div>
-          <div class="separator-content">
-            <div class="separator-icon">⚡</div>
-            <span class="separator-text">LEVEL UP</span>
-            <div class="separator-icon">⚡</div>
-          </div>
-          <div class="separator-particles">
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-          </div>
-        </div>
-
-        <!-- Subcategorías Periféricos -->
-        <div class="sub-categories">
-          <h3 class="category-group-title">
-            <span class="category-icon">🖱️</span>
-            Periféricos & Gaming
-            <span class="category-count" id="peripherals-count"></span>
-          </h3>
-          <div class="tiles" id="peripherals-tiles"></div>
-        </div>
-
-        <!-- Separador Especializado -->
-        <div class="advanced-separator specialized">
-          <div class="separator-line">
-            <div class="separator-glow"></div>
-          </div>
-          <div class="separator-content">
-            <div class="separator-icon">🎯</div>
-            <span class="separator-text">ESPECIALIDADES</span>
-            <div class="separator-icon">🎯</div>
-          </div>
-        </div>
-
-        <!-- Subcategorías Especiales -->
-        <div class="special-categories">
-          <h3 class="category-group-title">
-            <span class="category-icon">⭐</span>
-            Ediciones Especiales
-            <span class="category-count" id="specials-count"></span>
-          </h3>
-          <div class="tiles" id="specials-tiles"></div>
-        </div>
-      </section>
-
-      <!-- Productos Destacados -->
-      <section id="destacados">
-        <h2 class="section-title">🎮 Productos Destacados</h2>
-        
-        <!-- Filtros Avanzados de Disponibilidad y Retiro -->
-        <div class="advanced-filters-container">
-          <div class="filters-header">
-            <h3 class="filters-title">
-              <span class="filters-icon">🔧</span>
-              Filtros Avanzados
-            </h3>
-            <button class="reset-filters-btn" onclick="resetAllFilters()" title="Resetear filtros">
-              🔄 Resetear
-            </button>
-          </div>
-          
-          <form class="advanced-filters-panel" id="advanced-filters-panel" aria-label="Filtrar productos avanzado">
-            <!-- Filtros de Disponibilidad -->
-            <div class="filter-section">
-              <h4 class="filter-section-title">
-                <span class="section-icon">📦</span>
-                Disponibilidad
-              </h4>
-              <div class="filter-options availability-filters">
-                <label class="filter-option">
-                  <input type="radio" name="availability" value="all" checked>
-                  <span class="filter-label">
-                    <span class="option-icon">🌐</span>
-                    <span class="option-text">Todos los productos</span>
-                    <span class="option-count" id="all-count"></span>
-                  </span>
-                </label>
-                <label class="filter-option">
-                  <input type="radio" name="availability" value="in-stock">
-                  <span class="filter-label">
-                    <span class="option-icon">✅</span>
-                    <span class="option-text">En stock</span>
-                    <span class="option-count" id="in-stock-count"></span>
-                  </span>
-                </label>
-                <label class="filter-option">
-                  <input type="radio" name="availability" value="low-stock">
-                  <span class="filter-label">
-                    <span class="option-icon">⚠️</span>
-                    <span class="option-text">Stock bajo (< 10)</span>
-                    <span class="option-count" id="low-stock-count"></span>
-                  </span>
-                </label>
-                <label class="filter-option">
-                  <input type="radio" name="availability" value="out-of-stock">
-                  <span class="filter-label">
-                    <span class="option-icon">❌</span>
-                    <span class="option-text">Agotado</span>
-                    <span class="option-count" id="out-stock-count"></span>
-                  </span>
-                </label>
-              </div>
-            </div>
-
-            <!-- Filtros de Retiro y Entrega -->
-            <div class="filter-section">
-              <h4 class="filter-section-title">
-                <span class="section-icon">🚚</span>
-                Opciones de Retiro
-              </h4>
-              <div class="filter-options delivery-filters">
-                <label class="filter-option delivery-option">
-                  <input type="checkbox" name="delivery" value="store-pickup" checked>
-                  <span class="filter-label">
-                    <span class="option-icon">🏪</span>
-                    <span class="option-text">Retiro en tienda</span>
-                    <span class="delivery-info">Gratis • Disponible hoy</span>
-                  </span>
-                </label>
-                <label class="filter-option delivery-option">
-                  <input type="checkbox" name="delivery" value="home-delivery" checked>
-                  <span class="filter-label">
-                    <span class="option-icon">🏠</span>
-                    <span class="option-text">Envío a domicilio</span>
-                    <span class="delivery-info">$5.990 • 1-3 días hábiles</span>
-                  </span>
-                </label>
-                <label class="filter-option delivery-option">
-                  <input type="checkbox" name="delivery" value="express-delivery">
-                  <span class="filter-label">
-                    <span class="option-icon">⚡</span>
-                    <span class="option-text">Envío express</span>
-                    <span class="delivery-info">$12.990 • Mismo día</span>
-                  </span>
-                </label>
-                <label class="filter-option delivery-option">
-                  <input type="checkbox" name="delivery" value="installation">
-                  <span class="filter-label">
-                    <span class="option-icon">🔧</span>
-                    <span class="option-text">Con instalación</span>
-                    <span class="delivery-info">+$25.000 • Técnico especializado</span>
-                  </span>
-                </label>
-              </div>
-            </div>
-
-            <!-- Filtros de Rango de Precio -->
-            <div class="filter-section">
-              <h4 class="filter-section-title">
-                <span class="section-icon">💰</span>
-                Rango de Precio
-              </h4>
-              <div class="price-range-container">
-                <div class="price-inputs">
-                  <input type="number" 
-                         id="min-price" 
-                         placeholder="Mín. $" 
-                         min="0" 
-                         class="price-input">
-                  <span class="price-separator">-</span>
-                  <input type="number" 
-                         id="max-price" 
-                         placeholder="Máx. $" 
-                         min="0" 
-                         class="price-input">
-                </div>
-                <div class="price-presets">
-                  <button type="button" class="price-preset" onclick="setPriceRange(0, 100000)">
-                    < $100k
-                  </button>
-                  <button type="button" class="price-preset" onclick="setPriceRange(100000, 500000)">
-                    $100k - $500k
-                  </button>
-                  <button type="button" class="price-preset" onclick="setPriceRange(500000, 1000000)">
-                    $500k - $1M
-                  </button>
-                  <button type="button" class="price-preset" onclick="setPriceRange(1000000, 999999999)">
-                    > $1M
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Filtros de Ubicación -->
-            <div class="filter-section">
-              <h4 class="filter-section-title">
-                <span class="section-icon">📍</span>
-                Ubicación de Retiro
-              </h4>
-              <div class="filter-options location-filters">
-                <select class="location-select" id="store-location">
-                  <option value="">Seleccionar tienda</option>
-                  <option value="santiago-centro">Santiago Centro</option>
-                  <option value="las-condes">Las Condes</option>
-                  <option value="providencia">Providencia</option>
-                  <option value="maipu">Maipú</option>
-                  <option value="puente-alto">Puente Alto</option>
-                </select>
-                <div class="location-info" id="location-info">
-                  <span class="location-status">📍 Selecciona una tienda para ver disponibilidad</span>
-                </div>
-              </div>
-            </div>
-          </form>
-          
-          <!-- Resultados de Filtros -->
-          <div class="filter-results">
-            <div class="results-summary">
-              <span class="results-count" id="filtered-results-count">Mostrando todos los productos</span>
-              <button class="view-map-btn" onclick="showStoreMap()" title="Ver mapa de tiendas">
-                🗺️ Ver Mapa
-              </button>
-            </div>
-          </div>
-        </div>
-        <div class="cards" id="featured-grid">
-          <article class="card producto" data-id="1">
-            <div class="card-image">🎮</div>
-              <div class="card-actions">
-                <button class="card-button" onclick="addToCart(1)">Agregar al Carrito</button>
-                <button class="share-button" onclick="shareProduct(1)" title="Compartir producto">📤</button>
-              </div>
-          </article>
-
-          <article class="card" data-product-id="rtx-gpu">
-            <div class="card-image">⚡</div>
-            <div class="card-content">
-              <h3 class="card-title">RTX Gaming GPU</h3>
-              <div class="card-rating">
-                <div class="stars">
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                </div>
-                <span class="rating-text">(4.8) 127 reseñas</span>
-              </div>
-              <div class="card-price">$599.990</div>
-              <p class="card-description">Tarjeta gráfica de última generación para gaming en 4K</p>
-              <div class="card-actions">
-                <button class="card-button" onclick="addToCart(2)">Agregar al Carrito</button>
-                <button class="reviews-button" onclick="openProductReviews('rtx-gpu')">Ver Reseñas</button>
-                <button class="share-button" onclick="shareProduct(2)" title="Compartir producto">📤</button>
-              </div>
-            </div>
-          </article>
-
-          <article class="card" data-product-id="headset-gaming">
-            <div class="card-image">🎧</div>
-            <div class="card-content">
-              <h3 class="card-title">Headset Gaming 7.1</h3>
-              <div class="card-rating">
-                <div class="stars">
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star half">★</span>
-                </div>
-                <span class="rating-text">(4.3) 89 reseñas</span>
-              </div>
-              <div class="card-price">$149.990</div>
-              <p class="card-description">Auriculares con sonido envolvente y micrófono de calidad profesional</p>
-              <div class="card-actions">
-                <button class="card-button" onclick="addToCart(5)">Agregar al Carrito</button>
-                <button class="reviews-button" onclick="openProductReviews('headset-gaming')">Ver Reseñas</button>
-                <button class="share-button" onclick="shareProduct(5)" title="Compartir producto">📤</button>
-              </div>
-            </div>
-          </article>
-
-          <article class="card" data-product-id="keyboard-rgb">
-            <div class="card-image">⌨️</div>
-            <div class="card-content">
-              <h3 class="card-title">Mechanical Keyboard RGB</h3>
-              <div class="card-rating">
-                <div class="stars">
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star">★</span>
-                </div>
-                <span class="rating-text">(4.2) 64 reseñas</span>
-              </div>
-              <div class="card-price">$129.990</div>
-              <p class="card-description">Teclado mecánico con switches Cherry MX e iluminación RGB personalizable</p>
-              <div class="card-actions">
-                <button class="card-button" onclick="addToCart(3)">Agregar al Carrito</button>
-                <button class="reviews-button" onclick="openProductReviews('keyboard-rgb')">Ver Reseñas</button>
-                <button class="share-button" onclick="shareProduct(3)" title="Compartir producto">📤</button>
-              </div>
-            </div>
-          </article>
-
-          <article class="card" data-product-id="mouse-ultra">
-            <div class="card-image">🖱️</div>
-            <div class="card-content">
-              <h3 class="card-title">Gaming Mouse Ultra</h3>
-              <div class="card-rating">
-                <div class="stars">
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star half">★</span>
-                </div>
-                <span class="rating-text">(4.6) 156 reseñas</span>
-              </div>
-              <div class="card-price">$79.990</div>
-              <p class="card-description">Ratón de alta precisión con 16000 DPI y 8 botones programables</p>
-              <div class="card-actions">
-                <button class="card-button" onclick="addToCart(4)">Agregar al Carrito</button>
-                <button class="reviews-button" onclick="openProductReviews('mouse-ultra')">Ver Reseñas</button>
-                <button class="share-button" onclick="shareProduct(4)" title="Compartir producto">📤</button>
-              </div>
-            </div>
-          </article>
-
-          <article class="card" data-product-id="monitor-144hz">
-            <div class="card-image">🖥️</div>
-            <div class="card-content">
-              <h3 class="card-title">Gaming Monitor 144Hz</h3>
-              <div class="card-rating">
-                <div class="stars">
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star filled">★</span>
-                  <span class="star">★</span>
-                </div>
-                <span class="rating-text">(4.1) 92 reseñas</span>
-              </div>
-              <div class="card-price">$299.990</div>
-              <p class="card-description">Monitor curvo de 27" con 144Hz y tecnología FreeSync para gaming fluido</p>
-              <div class="card-actions">
-                <button class="card-button" onclick="addToCart(6)">Agregar al Carrito</button>
-                <button class="reviews-button" onclick="openProductReviews('monitor-144hz')">Ver Reseñas</button>
-                <button class="share-button" onclick="shareProduct(6)" title="Compartir producto">📤</button>
-              </div>
-            </div>
-          </article>
-        </div>
-        <!-- Panel Comparador de Productos -->
-        <div id="compare-panel" class="compare-panel" aria-live="polite" style="display:none;"></div>
-      </section>
-
-      <!-- ===================== SECCIÓN DE NOTICIAS GAMING ===================== -->
-      <section id="noticias" class="section">
+    <!-- Header -->
+    <header class="header">
         <div class="container">
-          <h2 class="section-title">📰 Noticias Gaming</h2>
-          <div class="news-grid" id="news-grid">
-            
-            <article class="news-card featured-news">
-              <div class="news-image">🚀</div>
-              <div class="news-content">
-                <div class="news-meta">
-                  <span class="news-category">LANZAMIENTOS</span>
-                  <span class="news-date">5 Sep 2025</span>
-                </div>
-                <h3 class="news-title">Nuevo RTX 5090 revoluciona el gaming en 8K</h3>
-                <p class="news-excerpt">NVIDIA presenta su nueva arquitectura Blackwell con capacidades nunca antes vistas para gaming en resoluciones extremas y ray tracing avanzado.</p>
-                <div class="news-actions">
-                  <button class="read-more-btn" onclick="openNewsDetail(1)">Leer más</button>
-                  <div class="news-stats">
-                    <span>👁️ 2.5K</span>
-                    <span>❤️ 342</span>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-            <article class="news-card">
-              <div class="news-image">🎮</div>
-              <div class="news-content">
-                <div class="news-meta">
-                  <span class="news-category">ESPORTS</span>
-                  <span class="news-date">4 Sep 2025</span>
-                </div>
-                <h3 class="news-title">Campeonato Mundial de LoL Chile 2025</h3>
-                <p class="news-excerpt">Se anuncian las fechas oficiales del torneo más importante de esports en Chile con premio de $100.000 USD.</p>
-                <div class="news-actions">
-                  <button class="read-more-btn" onclick="openNewsDetail(2)">Leer más</button>
-                  <div class="news-stats">
-                    <span>👁️ 1.8K</span>
-                    <span>❤️ 256</span>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-            <article class="news-card">
-              <div class="news-image">⚡</div>
-              <div class="news-content">
-                <div class="news-meta">
-                  <span class="news-category">HARDWARE</span>
-                  <span class="news-date">3 Sep 2025</span>
-                </div>
-                <h3 class="news-title">AMD Ryzen 8000: El futuro del gaming</h3>
-                <p class="news-excerpt">Nuevos procesadores prometen 40% más rendimiento en juegos con arquitectura de 3nm y soporte DDR6.</p>
-                <div class="news-actions">
-                  <button class="read-more-btn" onclick="openNewsDetail(3)">Leer más</button>
-                  <div class="news-stats">
-                    <span>👁️ 3.1K</span>
-                    <span>❤️ 445</span>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-            <article class="news-card">
-              <div class="news-image">🎯</div>
-              <div class="news-content">
-                <div class="news-meta">
-                  <span class="news-category">REVIEWS</span>
-                  <span class="news-date">2 Sep 2025</span>
-                </div>
-                <h3 class="news-title">Review: Steam Deck OLED 2025</h3>
-                <p class="news-excerpt">Analizamos la nueva versión de la consola portátil de Valve con pantalla OLED y mejor rendimiento.</p>
-                <div class="news-actions">
-                  <button class="read-more-btn" onclick="openNewsDetail(4)">Leer más</button>
-                  <div class="news-stats">
-                    <span>👁️ 4.2K</span>
-                    <span>❤️ 678</span>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-            <article class="news-card">
-              <div class="news-image">🔥</div>
-              <div class="news-content">
-                <div class="news-meta">
-                  <span class="news-category">OFERTAS</span>
-                  <span class="news-date">1 Sep 2025</span>
-                </div>
-                <h3 class="news-title">Mega Sale Gaming: Hasta 70% descuento</h3>
-                <p class="news-excerpt">Steam, Epic y GOG se unen en la mayor venta del año con descuentos históricos en los mejores juegos.</p>
-                <div class="news-actions">
-                  <button class="read-more-btn" onclick="openNewsDetail(5)">Leer más</button>
-                  <div class="news-stats">
-                    <span>👁️ 5.7K</span>
-                    <span>❤️ 892</span>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-            <article class="news-card">
-              <div class="news-image">🏆</div>
-              <div class="news-content">
-                <div class="news-meta">
-                  <span class="news-category">COMPETITIVO</span>
-                  <span class="news-date">31 Ago 2025</span>
-                </div>
-                <h3 class="news-title">The International 2025: Record de audiencia</h3>
-                <p class="news-excerpt">El torneo de Dota 2 supera los 3 millones de espectadores simultáneos y establece nuevo récord mundial.</p>
-                <div class="news-actions">
-                  <button class="read-more-btn" onclick="openNewsDetail(6)">Leer más</button>
-                  <div class="news-stats">
-                    <span>👁️ 2.9K</span>
-                    <span>❤️ 534</span>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-          </div>
-          
-          <div class="news-pagination">
-            <button class="btn-secondary" id="load-more-news" onclick="loadMoreNews()">
-              📄 Cargar más noticias
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- ===================== MAPA DE EVENTOS GAMER ===================== -->
-      <section id="eventos" class="section">
-        <div class="container">
-          <h2 class="section-title">🗺️ Eventos Gaming Chile</h2>
-          
-          <div class="events-controls">
-            <div class="events-filters">
-              <button class="filter-btn active" data-filter="all">Todos</button>
-              <button class="filter-btn" data-filter="tournament">Torneos</button>
-              <button class="filter-btn" data-filter="convention">Convenciones</button>
-              <button class="filter-btn" data-filter="workshop">Talleres</button>
-              <button class="filter-btn" data-filter="meetup">Meetups</button>
-            </div>
-            <div class="view-toggle">
-              <button class="view-btn active" data-view="map">🗺️ Mapa</button>
-              <button class="view-btn" data-view="list">📋 Lista</button>
-            </div>
-          </div>
-
-          <!-- Vista de Mapa -->
-          <div class="events-map-container" id="map-view">
-            <div class="map-placeholder">
-              <div class="map-header">
-                <h3>🌎 Mapa Interactivo de Eventos Gaming</h3>
-                <div class="map-legend">
-                  <span class="legend-item"><span class="legend-dot tournament"></span> Torneos</span>
-                  <span class="legend-item"><span class="legend-dot convention"></span> Convenciones</span>
-                  <span class="legend-item"><span class="legend-dot workshop"></span> Talleres</span>
-                  <span class="legend-item"><span class="legend-dot meetup"></span> Meetups</span>
-                </div>
-              </div>
-              
-              <div class="map-content">
-                <!-- Mapa SVG simplificado de Chile con eventos -->
-                <div class="chile-map">
-                  <svg viewBox="0 0 300 800" class="map-svg">
-                    <!-- Chile shape simplificado -->
-                    <path d="M50 50 L80 50 L90 100 L95 200 L100 300 L95 400 L90 500 L85 600 L80 700 L75 750 L50 750 L45 700 L40 600 L35 500 L30 400 L35 300 L40 200 L45 100 Z" 
-                          fill="var(--card-bg)" stroke="var(--border)" stroke-width="2"/>
-                    
-                    <!-- Eventos en el mapa -->
-                    <circle cx="65" cy="150" r="8" class="event-marker tournament" data-event="1"/>
-                    <circle cx="70" cy="200" r="8" class="event-marker convention" data-event="2"/>
-                    <circle cx="75" cy="280" r="8" class="event-marker tournament" data-event="3"/>
-                    <circle cx="65" cy="350" r="8" class="event-marker workshop" data-event="4"/>
-                    <circle cx="60" cy="420" r="8" class="event-marker meetup" data-event="5"/>
-                    <circle cx="68" cy="500" r="8" class="event-marker convention" data-event="6"/>
-                  </svg>
-                  
-                  <!-- Tooltips de eventos -->
-                  <div class="event-tooltip" id="tooltip">
-                    <div class="tooltip-content">
-                      <h4 class="tooltip-title"></h4>
-                      <p class="tooltip-date"></p>
-                      <p class="tooltip-location"></p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Vista de Lista -->
-          <div class="events-list-container" id="list-view" style="display: none;">
-            <div class="events-grid">
-              
-              <div class="event-card tournament" data-event="1">
-                <div class="event-header">
-                  <div class="event-icon">🏆</div>
-                  <div class="event-meta">
-                    <span class="event-type">TORNEO</span>
-                    <span class="event-date">15-17 Nov 2025</span>
-                  </div>
-                </div>
-                <h3 class="event-title">Championship Gaming Santiago</h3>
-                <p class="event-description">El torneo de esports más grande de Chile con múltiples categorías</p>
-                <div class="event-details">
-                  <div class="event-location">📍 Movistar Arena, Santiago</div>
-                  <div class="event-prize">💰 Premio: $50.000 USD</div>
-                </div>
-                <div class="event-actions">
-                  <button class="btn-primary" onclick="registerEvent(1)">Inscribirse</button>
-                  <button class="btn-secondary" onclick="showEventDetail(1)">Ver detalles</button>
-                </div>
-              </div>
-
-              <div class="event-card convention" data-event="2">
-                <div class="event-header">
-                  <div class="event-icon">🎮</div>
-                  <div class="event-meta">
-                    <span class="event-type">CONVENCIÓN</span>
-                    <span class="event-date">22-24 Nov 2025</span>
-                  </div>
-                </div>
-                <h3 class="event-title">GameCon Chile 2025</h3>
-                <p class="event-description">La convención de videojuegos más grande del país</p>
-                <div class="event-details">
-                  <div class="event-location">📍 Centro de Convenciones, Valparaíso</div>
-                  <div class="event-attendees">👥 5,000+ asistentes esperados</div>
-                </div>
-                <div class="event-actions">
-                  <button class="btn-primary" onclick="buyTicket(2)">Comprar entrada</button>
-                  <button class="btn-secondary" onclick="showEventDetail(2)">Ver detalles</button>
-                </div>
-              </div>
-
-              <div class="event-card tournament" data-event="3">
-                <div class="event-header">
-                  <div class="event-icon">⚔️</div>
-                  <div class="event-meta">
-                    <span class="event-type">TORNEO</span>
-                    <span class="event-date">29 Nov 2025</span>
-                  </div>
-                </div>
-                <h3 class="event-title">Tekken 8 Regional Cup</h3>
-                <p class="event-description">Torneo regional de Tekken 8 con los mejores luchadores</p>
-                <div class="event-details">
-                  <div class="event-location">📍 UC Gaming Center, Santiago</div>
-                  <div class="event-prize">💰 Premio: $15.000 USD</div>
-                </div>
-                <div class="event-actions">
-                  <button class="btn-primary" onclick="registerEvent(3)">Inscribirse</button>
-                  <button class="btn-secondary" onclick="showEventDetail(3)">Ver detalles</button>
-                </div>
-              </div>
-
-              <div class="event-card workshop" data-event="4">
-                <div class="event-header">
-                  <div class="event-icon">🎓</div>
-                  <div class="event-meta">
-                    <span class="event-type">TALLER</span>
-                    <span class="event-date">5 Dic 2025</span>
-                  </div>
-                </div>
-                <h3 class="event-title">Workshop: Desarrollo en Unity</h3>
-                <p class="event-description">Aprende a crear videojuegos desde cero con Unity</p>
-                <div class="event-details">
-                  <div class="event-location">📍 Duoc UC, Viña del Mar</div>
-                  <div class="event-duration">⏱️ 8 horas académicas</div>
-                </div>
-                <div class="event-actions">
-                  <button class="btn-primary" onclick="registerWorkshop(4)">Inscribirse</button>
-                  <button class="btn-secondary" onclick="showEventDetail(4)">Ver detalles</button>
-                </div>
-              </div>
-
-              <div class="event-card meetup" data-event="5">
-                <div class="event-header">
-                  <div class="event-icon">🤝</div>
-                  <div class="event-meta">
-                    <span class="event-type">MEETUP</span>
-                    <span class="event-date">12 Dic 2025</span>
-                  </div>
-                </div>
-                <h3 class="event-title">Retro Gaming Meetup</h3>
-                <p class="event-description">Encuentro de amantes de los videojuegos retro</p>
-                <div class="event-details">
-                  <div class="event-location">📍 Café Gamer, Concepción</div>
-                  <div class="event-attendees">👥 50 gamers máximo</div>
-                </div>
-                <div class="event-actions">
-                  <button class="btn-primary" onclick="joinMeetup(5)">Unirse</button>
-                  <button class="btn-secondary" onclick="showEventDetail(5)">Ver detalles</button>
-                </div>
-              </div>
-
-              <div class="event-card convention" data-event="6">
-                <div class="event-header">
-                  <div class="event-icon">🌟</div>
-                  <div class="event-meta">
-                    <span class="event-type">CONVENCIÓN</span>
-                    <span class="event-date">20-22 Dic 2025</span>
-                  </div>
-                </div>
-                <h3 class="event-title">Anime & Gaming Expo Sur</h3>
-                <p class="event-description">La convención de anime y gaming del sur de Chile</p>
-                <div class="event-details">
-                  <div class="event-location">📍 Centro de Eventos, Temuco</div>
-                  <div class="event-special">✨ Invitados especiales de Japón</div>
-                </div>
-                <div class="event-actions">
-                  <button class="btn-primary" onclick="buyTicket(6)">Comprar entrada</button>
-                  <button class="btn-secondary" onclick="showEventDetail(6)">Ver detalles</button>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-  </main>
-
-  <!-- ===================== FOOTER ===================== -->
-  <footer class="footer">
-    <div class="container">
-      <p>&copy; 2025 Game Store - Level-Up Gamer Theme. Desarrollado con ❤️ para gamers.</p>
-    </div>
-  </footer>
-
-  <!-- ===================== MODAL DE REGISTRO ===================== -->
-  <div class="modal-overlay" id="register-modal" aria-hidden="true">
-    <div class="modal" role="dialog" aria-labelledby="register-title" aria-describedby="register-description">
-      <div class="modal-header">
-        <h2 id="register-title">🎮 Únete a Level-Up Gamer</h2>
-        <button class="modal-close" aria-label="Cerrar modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p id="register-description">Crea tu cuenta y accede a ofertas exclusivas</p>
-        
-        <form id="register-form" novalidate>
-          <div class="form-group">
-            <label for="register-name">Nombre Completo *</label>
-            <input type="text" id="register-name" name="name" required 
-                   aria-describedby="name-error" placeholder="Ingresa tu nombre completo">
-            <div class="error-message" id="name-error" aria-live="polite"></div>
-          </div>
-
-          <div class="form-group">
-            <label for="register-email">Correo Electrónico *</label>
-            <input type="email" id="register-email" name="email" required 
-                   aria-describedby="email-error email-hint" placeholder="ejemplo@duocuc.cl">
-            <div class="form-hint" id="email-hint">
-              💡 ¿Eres de Duoc UC? ¡Obtén 20% de descuento de por vida!
-            </div>
-            <div class="error-message" id="email-error" aria-live="polite"></div>
-          </div>
-
-          <div class="form-group">
-            <label for="register-birthdate">Fecha de Nacimiento *</label>
-            <input type="date" id="register-birthdate" name="birthdate" required 
-                   aria-describedby="birthdate-error birthdate-hint">
-            <div class="form-hint" id="birthdate-hint">
-              ⚠️ Debes ser mayor de 18 años para registrarte
-            </div>
-            <div class="error-message" id="birthdate-error" aria-live="polite"></div>
-          </div>
-
-          <div class="form-group">
-            <label for="register-password">Contraseña *</label>
-            <input type="password" id="register-password" name="password" required 
-                   aria-describedby="password-error" placeholder="Mínimo 8 caracteres">
-            <div class="error-message" id="password-error" aria-live="polite"></div>
-          </div>
-
-          <div class="form-group">
-            <label for="register-confirm-password">Confirmar Contraseña *</label>
-            <input type="password" id="register-confirm-password" name="confirmPassword" required 
-                   aria-describedby="confirm-password-error" placeholder="Repite tu contraseña">
-            <div class="error-message" id="confirm-password-error" aria-live="polite"></div>
-          </div>
-
-          <div class="form-group">
-            <label for="register-referral-code">Código de Referido (Opcional)</label>
-            <input type="text" id="register-referral-code" name="referralCode" 
-                   aria-describedby="referral-code-hint referral-code-success" 
-                   placeholder="Ingresa código de referido" maxlength="10">
-            <div class="form-hint" id="referral-code-hint">
-              🎁 Con un código válido obtienes 50 puntos LevelUp de bienvenida
-            </div>
-            <div class="success-message" id="referral-code-success" aria-live="polite" style="display: none;"></div>
-            <div class="error-message" id="referral-code-error" aria-live="polite"></div>
-          </div>
-
-          <div class="form-group checkbox-group">
-            <label class="checkbox-label">
-              <input type="checkbox" id="register-terms" name="terms" required>
-              <span class="checkmark"></span>
-              Acepto los <a href="#" class="link">términos y condiciones</a> *
-            </label>
-            <div class="error-message" id="terms-error" aria-live="polite"></div>
-          </div>
-
-          <div class="discount-preview" id="discount-preview" style="display: none;">
-            <div class="discount-badge">
-              🎉 ¡Felicidades! Tienes 20% de descuento de por vida por ser de Duoc UC
-            </div>
-          </div>
-
-          <div class="form-actions">
-            <button type="button" class="btn-secondary" id="cancel-register">Cancelar</button>
-            <button type="submit" class="btn-primary" id="submit-register">
-              <span class="btn-text">Crear Cuenta</span>
-              <span class="btn-loading" style="display: none;">⏳ Registrando...</span>
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===================== MODAL DE LOGIN ===================== -->
-  <div class="modal-overlay" id="login-modal" aria-hidden="true">
-    <div class="modal" role="dialog" aria-labelledby="login-title" aria-describedby="login-description">
-      <div class="modal-header">
-        <h2 id="login-title">🔑 Iniciar Sesión</h2>
-        <button class="modal-close" aria-label="Cerrar modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p id="login-description">Accede a tu cuenta gamer</p>
-        
-        <!-- Información de usuarios de prueba -->
-        <div class="test-users-info" style="background: rgba(0, 255, 127, 0.1); border: 1px solid rgba(0, 255, 127, 0.3); border-radius: 8px; padding: 12px; margin-bottom: 20px;">
-          <h4 style="color: #00ff88; margin: 0 0 8px 0; font-size: 0.9rem;">🎮 Usuarios de Prueba Disponibles:</h4>
-          <div style="font-size: 0.8rem; color: #ccc; line-height: 1.4;">
-            <p style="margin: 4px 0;"><strong>📧 angel@levelupgamer.cl</strong> | 🔑 123456</p>
-            <p style="margin: 4px 0;"><strong>📧 pro@levelupgamer.cl</strong> | 🔑 gamer123</p>
-            <p style="margin: 4px 0;"><strong>📧 test@duocuc.cl</strong> | 🔑 test123</p>
-          </div>
-        </div>
-        
-        <form id="login-form" novalidate>
-          <div class="form-group">
-            <label for="login-email">Correo Electrónico *</label>
-            <input type="email" id="login-email" name="email" required 
-                   aria-describedby="login-email-error" placeholder="ejemplo@duocuc.cl">
-            <div class="error-message" id="login-email-error" aria-live="polite"></div>
-          </div>
-
-          <div class="form-group">
-            <label for="login-password">Contraseña *</label>
-            <input type="password" id="login-password" name="password" required 
-                   aria-describedby="login-password-error" placeholder="Tu contraseña">
-            <div class="error-message" id="login-password-error" aria-live="polite"></div>
-          </div>
-
-          <div class="form-group checkbox-group">
-            <label class="checkbox-label">
-              <input type="checkbox" id="remember-me" name="rememberMe">
-              <span class="checkmark"></span>
-              Recordarme por 30 días
-            </label>
-          </div>
-
-          <div class="user-preview" id="user-preview" style="display: none;">
-            <div class="user-badge">
-              <div class="user-info">
-                <div class="user-name"></div>
-                <div class="user-benefits"></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-actions">
-            <button type="button" class="btn-secondary" id="cancel-login">Cancelar</button>
-            <button type="submit" class="btn-primary" id="submit-login">
-              <span class="btn-text">Iniciar Sesión</span>
-              <span class="btn-loading" style="display: none;">🔑 Verificando...</span>
-            </button>
-          </div>
-
-          <div class="login-footer">
-            <p>¿No tienes cuenta? <a href="#" class="link" id="switch-to-register">Regístrate aquí</a></p>
-            <a href="#" class="link forgot-password">¿Olvidaste tu contraseña?</a>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===================== MODAL DE PERFIL ===================== -->
-  <div class="modal-overlay" id="profile-modal" aria-hidden="true">
-    <div class="modal profile-modal" role="dialog" aria-labelledby="profile-title" aria-describedby="profile-description">
-      <div class="modal-header">
-        <h2 id="profile-title">🎮 Mi Perfil Gamer</h2>
-        <button class="modal-close" aria-label="Cerrar modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p id="profile-description">Gestiona tu información personal y preferencias de compra</p>
-        
-        <!-- Pestañas del perfil -->
-        <div class="profile-tabs">
-          <button class="tab-button active" data-tab="personal">👤 Información Personal</button>
-          <button class="tab-button" data-tab="preferences">⚙️ Preferencias</button>
-          <button class="tab-button" data-tab="gamification">🏆 Niveles & Logros</button>
-          <button class="tab-button" data-tab="referral">🎁 Referidos</button>
-          <button class="tab-button" data-tab="security">🔒 Seguridad</button>
-        </div>
-
-        <!-- Contenido de pestañas -->
-        <div class="tab-content">
-          
-          <!-- Pestaña: Información Personal -->
-          <div class="tab-pane active" id="personal-tab">
-            <form id="profile-form" novalidate>
-              <div class="profile-section">
-                <h3>Datos Básicos</h3>
+            <nav class="nav">
+                <a href="index.html" class="logo" aria-label="Level-Up Gamer - Inicio">
+                    🎮 LEVEL-UP GAMER
+                </a>
                 
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="profile-name">Nombre Completo *</label>
-                    <input type="text" id="profile-name" name="name" required>
-                    <div class="error-message" id="profile-name-error"></div>
-                  </div>
-                  
-                  <div class="form-group">
-                    <label for="profile-email">Correo Electrónico *</label>
-                    <input type="email" id="profile-email" name="email" required readonly>
-                    <div class="form-hint">El correo no se puede modificar</div>
-                  </div>
-                </div>
+                <button class="mobile-menu-toggle" aria-label="Abrir menú móvil" id="mobileMenuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
 
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="profile-phone">Teléfono</label>
-                    <input type="tel" id="profile-phone" name="phone" placeholder="+56 9 1234 5678">
-                    <div class="error-message" id="profile-phone-error"></div>
-                  </div>
-                  
-                  <div class="form-group">
-                    <label for="profile-birthdate">Fecha de Nacimiento</label>
-                    <input type="date" id="profile-birthdate" name="birthdate" readonly>
-                    <div class="form-hint">No se puede modificar después del registro</div>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label for="profile-address">Dirección de Envío</label>
-                  <textarea id="profile-address" name="address" rows="3" 
-                            placeholder="Ingresa tu dirección completa para entregas"></textarea>
-                </div>
-              </div>
-
-              <div class="profile-section">
-                <h3>Información Gamer</h3>
-                
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="profile-gamertag">Gamer Tag</label>
-                    <input type="text" id="profile-gamertag" name="gamertag" 
-                           placeholder="Tu nombre de usuario gamer">
-                  </div>
-                  
-                  <div class="form-group">
-                    <label for="profile-platform">Plataforma Favorita</label>
-                    <select id="profile-platform" name="platform">
-                      <option value="">Selecciona tu plataforma</option>
-                      <option value="pc">PC</option>
-                      <option value="playstation">PlayStation</option>
-                      <option value="xbox">Xbox</option>
-                      <option value="nintendo">Nintendo</option>
-                      <option value="mobile">Mobile</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label for="profile-genres">Géneros Favoritos</label>
-                  <div class="checkbox-grid">
-                    <label class="checkbox-label">
-                      <input type="checkbox" name="genres" value="action">
-                      <span class="checkmark"></span>
-                      Acción
-                    </label>
-                    <label class="checkbox-label">
-                      <input type="checkbox" name="genres" value="rpg">
-                      <span class="checkmark"></span>
-                      RPG
-                    </label>
-                    <label class="checkbox-label">
-                      <input type="checkbox" name="genres" value="strategy">
-                      <span class="checkmark"></span>
-                      Estrategia
-                    </label>
-                    <label class="checkbox-label">
-                      <input type="checkbox" name="genres" value="sports">
-                      <span class="checkmark"></span>
-                      Deportes
-                    </label>
-                    <label class="checkbox-label">
-                      <input type="checkbox" name="genres" value="racing">
-                      <span class="checkmark"></span>
-                      Carreras
-                    </label>
-                    <label class="checkbox-label">
-                      <input type="checkbox" name="genres" value="simulation">
-                      <span class="checkmark"></span>
-                      Simulación
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-
-          <!-- Pestaña: Preferencias -->
-          <div class="tab-pane" id="preferences-tab">
-            <form id="preferences-form">
-              <div class="profile-section">
-                <h3>Preferencias de Compra</h3>
-                
-                <div class="form-group">
-                  <label for="currency-preference">Moneda Preferida</label>
-                  <select id="currency-preference" name="currency">
-                    <option value="CLP">Peso Chileno (CLP)</option>
-                    <option value="USD">Dólar Americano (USD)</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="budget-range">Rango de Presupuesto Mensual</label>
-                  <select id="budget-range" name="budget">
-                    <option value="">No especificar</option>
-                    <option value="low">Hasta $50.000 CLP</option>
-                    <option value="medium">$50.000 - $150.000 CLP</option>
-                    <option value="high">$150.000 - $500.000 CLP</option>
-                    <option value="premium">Más de $500.000 CLP</option>
-                  </select>
-                </div>
-
-                <div class="checkbox-group">
-                  <label class="checkbox-label">
-                    <input type="checkbox" name="autoRecommendations" id="auto-recommendations">
-                    <span class="checkmark"></span>
-                    Recibir recomendaciones automáticas basadas en mis gustos
-                  </label>
-                </div>
-              </div>
-
-              <div class="profile-section">
-                <h3>Notificaciones</h3>
-                
-                <div class="checkbox-group">
-                  <label class="checkbox-label">
-                    <input type="checkbox" name="emailOffers" id="email-offers" checked>
-                    <span class="checkmark"></span>
-                    Ofertas y promociones por email
-                  </label>
-                </div>
-
-                <div class="checkbox-group">
-                  <label class="checkbox-label">
-                    <input type="checkbox" name="newProducts" id="new-products" checked>
-                    <span class="checkmark"></span>
-                    Notificaciones de nuevos productos
-                  </label>
-                </div>
-
-                <div class="checkbox-group">
-                  <label class="checkbox-label">
-                    <input type="checkbox" name="events" id="events-notifications" checked>
-                    <span class="checkmark"></span>
-                    Eventos y torneos Level-Up
-                  </label>
-                </div>
-
-                <div class="checkbox-group">
-                  <label class="checkbox-label">
-                    <input type="checkbox" name="orderUpdates" id="order-updates" checked>
-                    <span class="checkmark"></span>
-                    Actualizaciones de pedidos
-                  </label>
-                </div>
-              </div>
-            </form>
-          </div>
-
-          <!-- Pestaña: Gamificación -->
-          <div class="tab-pane" id="gamification-tab">
-            <div class="profile-section">
-              <h3>🏆 Tu Progreso Gamer</h3>
-              <p>Gana puntos LevelUp comprando, refiriendo amigos y completando desafíos</p>
-              
-              <!-- Información del nivel actual -->
-              <div class="level-display">
-                <div class="level-card">
-                  <div class="level-info">
-                    <div class="level-badge">
-                      <span class="level-icon" id="current-level-icon">🥉</span>
-                      <div class="level-details">
-                        <span class="level-title" id="current-level-name">Novato</span>
-                        <span class="level-number">Nivel <span id="current-level-number">1</span></span>
-                      </div>
-                    </div>
-                    
-                    <div class="level-points">
-                      <span class="points-current" id="current-points">0</span>
-                      <span class="points-label">Puntos LevelUp</span>
-                    </div>
-                  </div>
-                  
-                  <!-- Barra de progreso al siguiente nivel -->
-                  <div class="level-progress">
-                    <div class="progress-info">
-                      <span>Progreso al siguiente nivel</span>
-                      <span><span id="progress-current">0</span> / <span id="progress-needed">100</span></span>
-                    </div>
-                    <div class="progress-bar">
-                      <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
-                    </div>
-                    <div class="next-level-info">
-                      <span class="next-level-icon" id="next-level-icon">🥈</span>
-                      <span id="next-level-name">Explorador</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Lista de niveles disponibles -->
-              <div class="levels-list">
-                <h4>🎯 Todos los Niveles</h4>
-                <div class="levels-grid" id="levels-grid">
-                  <!-- Los niveles se generarán dinámicamente -->
-                </div>
-              </div>
-
-              <!-- Beneficios del nivel actual -->
-              <div class="level-benefits">
-                <h4>💎 Beneficios de tu Nivel</h4>
-                <div class="benefits-list" id="current-benefits">
-                  <!-- Los beneficios se cargarán dinámicamente -->
-                </div>
-              </div>
-
-              <!-- Logros desbloqueados -->
-              <div class="achievements">
-                <h4>🏅 Logros Desbloqueados</h4>
-                <div class="achievements-grid" id="achievements-grid">
-                  <!-- Los logros se generarán dinámicamente -->
-                </div>
-              </div>
-
-              <!-- Desafíos activos -->
-              <div class="challenges">
-                <h4>⚔️ Desafíos Activos</h4>
-                <div class="challenges-list" id="challenges-list">
-                  <!-- Los desafíos se generarán dinámicamente -->
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Pestaña: Referidos -->
-          <div class="tab-pane" id="referral-tab">
-            <div class="profile-section">
-              <h3>🎁 Tu Código de Referido</h3>
-              <p>Comparte tu código con amigos y gana puntos LevelUp por cada registro exitoso</p>
-              
-              <div class="referral-code-display">
-                <div class="referral-code-container">
-                  <span class="referral-code-label">Tu código único:</span>
-                  <div class="referral-code-value">
-                    <span id="user-referral-code">CARGANDO...</span>
-                    <button type="button" class="copy-button" id="copy-referral-code" title="Copiar código">
-                      📋
-                    </button>
-                  </div>
-                </div>
-                
-                <div class="referral-share">
-                  <p>💡 <strong>Compartir:</strong></p>
-                  <div class="share-buttons">
-                    <button type="button" class="share-btn" id="share-whatsapp">
-                      💬 WhatsApp
-                    </button>
-                    <button type="button" class="share-btn" id="share-email">
-                      📧 Email
-                    </button>
-                    <button type="button" class="share-btn" id="share-copy">
-                      🔗 Copiar Enlace
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="referral-stats">
-                <h4>📊 Estadísticas de Referidos</h4>
-                <div class="stats-grid">
-                  <div class="stat-card">
-                    <div class="stat-number" id="total-referrals">0</div>
-                    <div class="stat-label">Amigos referidos</div>
-                  </div>
-                  <div class="stat-card">
-                    <div class="stat-number" id="earned-points">0</div>
-                    <div class="stat-label">Puntos ganados</div>
-                  </div>
-                  <div class="stat-card">
-                    <div class="stat-number" id="current-points">0</div>
-                    <div class="stat-label">Puntos actuales</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="referral-info">
-                <h4>ℹ️ Cómo Funciona</h4>
-                <ul class="referral-rules">
-                  <li>Comparte tu código con amigos nuevos</li>
-                  <li>Ellos obtienen 50 puntos al registrarse</li>
-                  <li>Tú ganas 25 puntos por cada registro exitoso</li>
-                  <li>Los puntos se pueden canjear por descuentos</li>
-                  <li>No hay límite de referidos</li>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="index.html" aria-current="page">Inicio</a></li>
+                    <li><a href="productos/">Productos</a></li>
+                    <li><a href="carrito/">Carrito <span class="cart-count" id="cartCount">0</span></a></li>
+                    <li><a href="usuario/">Usuario</a></li>
+                    <li class="user-status" id="userStatus" style="display: none;">
+                        <div class="user-level-info">
+                            <span class="user-level" id="userLevelDisplay">Nivel 1: Noob</span>
+                            <span class="user-points" id="userPointsDisplay">0</span> pts
+                        </div>
+                    </li>
                 </ul>
-              </div>
-            </div>
-          </div>
+            </nav>
+        </div>
+    </header>
 
-          <!-- Pestaña: Seguridad -->
-          <div class="tab-pane" id="security-tab">
-            <form id="security-form">
-              <div class="profile-section">
-                <h3>Cambiar Contraseña</h3>
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        LEVEL-UP TU <span class="text-glow">EXPERIENCIA</span> GAMING
+                    </h1>
+                    <p class="hero-subtitle">
+                        Descubre los mejores productos gaming del mercado. Consolas, juegos, accesorios y más con la mejor calidad y precios increíbles.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="productos/" class="cta-button">
+                            Explorar Productos
+                        </a>
+                        <a href="#featured" class="hero-button">
+                            Ver Ofertas
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Categorías Destacadas -->
+        <section class="section" id="categories">
+            <div class="container">
+                <h2 class="section-title">🎯 Categorías Populares</h2>
+                <div class="categories-grid">
+                    <div class="category-card" data-category="juegos-mesa">
+                        <div class="category-icon">�</div>
+                        <h3>Juegos de Mesa</h3>
+                        <p>Diversión analógica para toda la familia</p>
+                        <span class="category-count">2+ productos</span>
+                    </div>
+                    <div class="category-card" data-category="accesorios">
+                        <div class="category-icon">🎮</div>
+                        <h3>Accesorios</h3>
+                        <p>Complementa tu setup gaming</p>
+                        <span class="category-count">10+ productos</span>
+                    </div>
+                    <div class="category-card" data-category="consolas">
+                        <div class="category-icon">🕹️</div>
+                        <h3>Consolas</h3>
+                        <p>Las mejores consolas del mercado</p>
+                        <span class="category-count">5+ productos</span>
+                    </div>
+                    <div class="category-card" data-category="computadores">
+                        <div class="category-icon">💻</div>
+                        <h3>Computadores Gamers</h3>
+                        <p>PCs de alto rendimiento</p>
+                        <span class="category-count">3+ productos</span>
+                    </div>
+                    <div class="category-card" data-category="sillas">
+                        <div class="category-icon">🪑</div>
+                        <h3>Sillas Gamers</h3>
+                        <p>Confort para largas sesiones</p>
+                        <span class="category-count">4+ productos</span>
+                    </div>
+                    <div class="category-card" data-category="mouse">
+                        <div class="category-icon">🖱️</div>
+                        <h3>Mouse</h3>
+                        <p>Precisión en cada click</p>
+                        <span class="category-count">8+ productos</span>
+                    </div>
+                    <div class="category-card" data-category="mousepad">
+                        <div class="category-icon">🟫</div>
+                        <h3>Mousepad</h3>
+                        <p>La superficie perfecta</p>
+                        <span class="category-count">6+ productos</span>
+                    </div>
+                    <div class="category-card" data-category="poleras">
+                        <div class="category-icon">�</div>
+                        <h3>Poleras Personalizadas</h3>
+                        <p>Expresa tu estilo gamer</p>
+                        <span class="category-count">5+ productos</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Productos Destacados -->
+        <section class="section" id="featured">
+            <div class="container">
+                <h2 class="section-title">⭐ Productos Destacados</h2>
+                <div class="products-grid" id="featuredProducts">
+                    <!-- Los productos se cargarán dinámicamente -->
+                </div>
+                <div class="section-actions">
+                    <a href="productos/" class="cta-button">Ver Todos los Productos</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ofertas Especiales -->
+        <section class="section offers-section">
+            <div class="container">
+                <h2 class="section-title">🔥 Ofertas Especiales</h2>
+                <div class="offers-grid">
+                    <div class="offer-card">
+                        <div class="offer-badge">-30%</div>
+                        <h3>Gaming Weekend</h3>
+                        <p>Descuentos en videojuegos seleccionados</p>
+                        <button class="offer-button" onclick="filterByCategory('juegos')">Ver Ofertas</button>
+                    </div>
+                    <div class="offer-card">
+                        <div class="offer-badge">Envío Gratis</div>
+                        <h3>Compras +$50.000</h3>
+                        <p>Envío gratuito en compras sobre $50.000</p>
+                        <button class="offer-button" onclick="goToProducts()">Comprar Ahora</button>
+                    </div>
+                    <div class="offer-card duoc-offer">
+                        <div class="offer-badge">-20%</div>
+                        <h3>Descuento Estudiantes</h3>
+                        <p>Estudiantes Duoc UC obtienen 20% de descuento</p>
+                        <button class="offer-button" onclick="showStudentInfo()">Más Info</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonios -->
+        <section class="section testimonials-section">
+            <div class="container">
+                <h2 class="section-title">💬 Lo que Dicen Nuestros Gamers</h2>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                        <p>"Excelente servicio y productos de calidad. Mi PlayStation 5 llegó perfecto y súper rápido."</p>
+                        <div class="testimonial-author">
+                            <strong>ProGamer2024</strong>
+                            <span>PlayStation Gamer</span>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                        <p>"Los precios son increíbles y la atención al cliente es genial. Definitivamente volveré a comprar."</p>
+                        <div class="testimonial-author">
+                            <strong>GamerElite</strong>
+                            <span>PC Master Race</span>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                        <p>"Como estudiante, el descuento del 20% me ayudó mucho. ¡Recomendado al 100%!"</p>
+                        <div class="testimonial-author">
+                            <strong>StudentGamer</strong>
+                            <span>Estudiante Duoc UC</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Level-Up Gamer</h3>
+                    <p>Tu tienda gaming de confianza con los mejores productos y precios del mercado.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook">📘</a>
+                        <a href="#" aria-label="Twitter">🐦</a>
+                        <a href="#" aria-label="Instagram">📷</a>
+                        <a href="#" aria-label="Twitch">🎮</a>
+                    </div>
+                </div>
                 
-                <div class="form-group">
-                  <label for="current-password">Contraseña Actual *</label>
-                  <input type="password" id="current-password" name="currentPassword">
-                  <div class="error-message" id="current-password-error"></div>
+                <div class="footer-section">
+                    <h4>Productos</h4>
+                    <ul>
+                        <li><a href="productos/?category=consolas">Consolas</a></li>
+                        <li><a href="productos/?category=juegos">Videojuegos</a></li>
+                        <li><a href="productos/?category=accesorios">Accesorios</a></li>
+                        <li><a href="productos/?category=pc">PC Gaming</a></li>
+                    </ul>
                 </div>
-
-                <div class="form-group">
-                  <label for="new-password">Nueva Contraseña *</label>
-                  <input type="password" id="new-password" name="newPassword" 
-                         placeholder="Mínimo 8 caracteres">
-                  <div class="error-message" id="new-password-error"></div>
-                </div>
-
-                <div class="form-group">
-                  <label for="confirm-new-password">Confirmar Nueva Contraseña *</label>
-                  <input type="password" id="confirm-new-password" name="confirmNewPassword">
-                  <div class="error-message" id="confirm-new-password-error"></div>
-                </div>
-
-                <button type="submit" class="btn-primary" id="change-password-btn">
-                  🔒 Cambiar Contraseña
-                </button>
-              </div>
-
-              <div class="profile-section">
-                <h3>Configuración de Sesión</h3>
                 
-                <div class="checkbox-group">
-                  <label class="checkbox-label">
-                    <input type="checkbox" name="twoFactor" id="two-factor">
-                    <span class="checkmark"></span>
-                    Habilitar autenticación de dos factores (próximamente)
-                  </label>
+                <div class="footer-section">
+                    <h4>Ayuda</h4>
+                    <ul>
+                        <li><a href="#" onclick="showContactModal()">Contacto</a></li>
+                        <li><a href="#" onclick="showShippingInfo()">Envíos</a></li>
+                        <li><a href="#" onclick="showReturnPolicy()">Devoluciones</a></li>
+                        <li><a href="#" onclick="showFAQ()">FAQ</a></li>
+                        <li><a href="#" onclick="showTermsModal()">Términos y Condiciones</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Mi Cuenta</h4>
+                    <ul>
+                        <li><a href="usuario/login.html">Iniciar Sesión</a></li>
+                        <li><a href="usuario/register.html">Registrarse</a></li>
+                        <li><a href="usuario/">Mi Perfil</a></li>
+                        <li><a href="carrito/">Mi Carrito</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Level-Up Gamer. Todos los derechos reservados.</p>
+                <p>Desarrollado con 💚 para la comunidad gamer</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal para información de estudiantes -->
+    <div class="modal" id="studentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🎓 Descuento Estudiantes Duoc UC</h3>
+                <button class="modal-close" onclick="closeModal('studentModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Los estudiantes de Duoc UC obtienen un <strong>20% de descuento</strong> en todos nuestros productos.</p>
+                <p>Para activar tu descuento:</p>
+                <ol>
+                    <li>Regístrate con tu email institucional (@duocuc.cl)</li>
+                    <li>El descuento se aplicará automáticamente</li>
+                    <li>¡Disfruta de tu gaming con descuento!</li>
+                </ol>
+                <div class="modal-actions">
+                    <a href="usuario/register.html" class="cta-button">Registrarse Ahora</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Términos y Condiciones -->
+    <div class="modal" id="termsModal">
+        <div class="modal-content terms-modal">
+            <div class="modal-header">
+                <h3>📋 Términos y Condiciones</h3>
+                <button class="modal-close" onclick="closeModal('termsModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="terms-image-container">
+                    <img src="data:image/jpeg;base64,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" alt="Términos y Condiciones" class="terms-hero-image">
+                </div>
+                <div class="terms-content">
+                    <h4>📝 Términos y Condiciones de Uso</h4>
+                    <p>¡Bienvenido a Level-Up Gamer! Al usar nuestra plataforma, aceptas los siguientes términos:</p>
+                    
+                    <div class="terms-section">
+                        <h5>🎮 Uso de la Plataforma</h5>
+                        <ul>
+                            <li>Debes ser mayor de 18 años o tener autorización parental</li>
+                            <li>Proporcionar información veraz durante el registro</li>
+                            <li>Usar la plataforma solo para fines legales</li>
+                            <li>No compartir credenciales de acceso</li>
+                        </ul>
+                    </div>
+
+                    <div class="terms-section">
+                        <h5>🛒 Compras y Pagos</h5>
+                        <ul>
+                            <li>Los precios incluyen IVA y pueden cambiar sin previo aviso</li>
+                            <li>Los productos están sujetos a disponibilidad</li>
+                            <li>El pago se procesa de forma segura</li>
+                            <li>Recibirás confirmación por email</li>
+                        </ul>
+                    </div>
+
+                    <div class="terms-section">
+                        <h5>🚚 Envíos y Entregas</h5>
+                        <ul>
+                            <li>Envío gratuito en compras superiores a $50.000</li>
+                            <li>Tiempo de entrega: 2-5 días hábiles</li>
+                            <li>Debes estar presente para recibir el producto</li>
+                            <li>Revisamos el estado del producto antes del envío</li>
+                        </ul>
+                    </div>
+
+                    <div class="terms-section">
+                        <h5>🔄 Devoluciones</h5>
+                        <ul>
+                            <li>30 días para devoluciones desde la entrega</li>
+                            <li>Productos deben estar en estado original</li>
+                            <li>Software digital no es reembolsable una vez descargado</li>
+                            <li>Reembolso procesado en 5-10 días hábiles</li>
+                        </ul>
+                    </div>
+
+                    <div class="terms-section">
+                        <h5>🎓 Descuento Estudiantes</h5>
+                        <ul>
+                            <li>20% de descuento para estudiantes de Duoc UC</li>
+                            <li>Válido solo con email institucional (@duocuc.cl)</li>
+                            <li>Verificación de estatus estudiantil requerida</li>
+                            <li>No acumulable con otras promociones</li>
+                        </ul>
+                    </div>
+
+                    <div class="terms-section">
+                        <h5>🔒 Privacidad y Datos</h5>
+                        <ul>
+                            <li>Protegemos tu información personal</li>
+                            <li>No compartimos datos con terceros sin autorización</li>
+                            <li>Usamos cookies para mejorar la experiencia</li>
+                            <li>Puedes solicitar eliminación de tu cuenta</li>
+                        </ul>
+                    </div>
+
+                    <div class="terms-footer">
+                        <p><strong>Última actualización:</strong> 8 de Septiembre, 2025</p>
+                        <p>Para consultas adicionales, contacta nuestro equipo de soporte.</p>
+                    </div>
                 </div>
 
-                <div class="security-info">
-                  <p><strong>Última sesión:</strong> <span id="last-login">Hoy</span></p>
-                  <p><strong>Sesiones activas:</strong> <span id="active-sessions">1 dispositivo</span></p>
+                <div class="modal-actions">
+                    <button class="cta-button" onclick="acceptTerms()">Acepto los Términos</button>
+                    <button class="product-button" onclick="closeModal('termsModal')">Cerrar</button>
                 </div>
-
-                <button type="button" class="btn-secondary" id="logout-all-sessions">
-                  🚪 Cerrar todas las sesiones
-                </button>
-              </div>
-            </form>
-          </div>
+            </div>
         </div>
-
-        <div class="profile-actions">
-          <button type="button" class="btn-secondary" id="cancel-profile">Cancelar</button>
-          <button type="button" class="btn-primary" id="save-profile">
-            <span class="btn-text">💾 Guardar Cambios</span>
-            <span class="btn-loading" style="display: none;">⏳ Guardando...</span>
-          </button>
-        </div>
-      </div>
     </div>
-  </div>
 
-  <!-- ===================== MODAL DE RESEÑAS ===================== -->
-  <div class="modal-overlay" id="reviews-modal" aria-hidden="true">
-    <div class="modal reviews-modal" role="dialog" aria-labelledby="reviews-title">
-      <div class="modal-header">
-        <h2 id="reviews-title">⭐ Reseñas del Producto</h2>
-        <button class="modal-close" aria-label="Cerrar modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <!-- Información del producto -->
-        <div class="product-info">
-          <div class="product-summary">
-            <div class="product-icon" id="review-product-icon">⚡</div>
-            <div class="product-details">
-              <h3 id="review-product-name">Producto</h3>
-              <div class="product-rating-summary">
-                <div class="rating-stars" id="review-product-stars">
-                  <!-- Estrellas generadas dinámicamente -->
-                </div>
-                <span class="rating-average" id="review-rating-average">4.5</span>
-                <span class="rating-count">(<span id="review-rating-count">0</span> reseñas)</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Distribución de calificaciones -->
-        <div class="rating-distribution">
-          <h4>📊 Distribución de Calificaciones</h4>
-          <div class="rating-bars">
-            <div class="rating-bar" data-stars="5">
-              <span class="bar-label">5 ★</span>
-              <div class="bar-fill-container">
-                <div class="bar-fill" style="width: 0%"></div>
-              </div>
-              <span class="bar-count">0</span>
-            </div>
-            <div class="rating-bar" data-stars="4">
-              <span class="bar-label">4 ★</span>
-              <div class="bar-fill-container">
-                <div class="bar-fill" style="width: 0%"></div>
-              </div>
-              <span class="bar-count">0</span>
-            </div>
-            <div class="rating-bar" data-stars="3">
-              <span class="bar-label">3 ★</span>
-              <div class="bar-fill-container">
-                <div class="bar-fill" style="width: 0%"></div>
-              </div>
-              <span class="bar-count">0</span>
-            </div>
-            <div class="rating-bar" data-stars="2">
-              <span class="bar-label">2 ★</span>
-              <div class="bar-fill-container">
-                <div class="bar-fill" style="width: 0%"></div>
-              </div>
-              <span class="bar-count">0</span>
-            </div>
-            <div class="rating-bar" data-stars="1">
-              <span class="bar-label">1 ★</span>
-              <div class="bar-fill-container">
-                <div class="bar-fill" style="width: 0%"></div>
-              </div>
-              <span class="bar-count">0</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Filtros y acciones -->
-        <div class="reviews-controls">
-          <div class="filters">
-            <select id="reviews-filter" class="filter-select">
-              <option value="all">Todas las reseñas</option>
-              <option value="5">5 estrellas</option>
-              <option value="4">4 estrellas</option>
-              <option value="3">3 estrellas</option>
-              <option value="2">2 estrellas</option>
-              <option value="1">1 estrella</option>
-            </select>
-            <select id="reviews-sort" class="filter-select">
-              <option value="newest">Más recientes</option>
-              <option value="oldest">Más antiguos</option>
-              <option value="highest">Mejor calificados</option>
-              <option value="lowest">Peor calificados</option>
-              <option value="helpful">Más útiles</option>
-            </select>
-          </div>
-          <button class="btn-primary" id="write-review-btn">✍️ Escribir Reseña</button>
-        </div>
-
-        <!-- Lista de reseñas -->
-        <div class="reviews-list" id="reviews-list">
-          <!-- Las reseñas se cargarán dinámicamente -->
-        </div>
-
-        <!-- Paginación -->
-        <div class="reviews-pagination" id="reviews-pagination" style="display: none;">
-          <button class="pagination-btn" id="prev-reviews">← Anterior</button>
-          <span class="pagination-info">Página <span id="current-page">1</span> de <span id="total-pages">1</span></span>
-          <button class="pagination-btn" id="next-reviews">Siguiente →</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===================== MODAL DE ESCRIBIR RESEÑA ===================== -->
-  <div class="modal-overlay" id="write-review-modal" aria-hidden="true">
-    <div class="modal write-review-modal" role="dialog" aria-labelledby="write-review-title">
-      <div class="modal-header">
-        <h2 id="write-review-title">✍️ Escribir Reseña</h2>
-        <button class="modal-close" aria-label="Cerrar modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <form id="review-form" novalidate>
-          <div class="review-product-info">
-            <div class="product-icon" id="write-review-product-icon">⚡</div>
-            <div class="product-details">
-              <h3 id="write-review-product-name">Producto</h3>
-              <p>Comparte tu experiencia con este producto</p>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="review-rating">Calificación *</label>
-            <div class="star-rating" id="review-rating">
-              <button type="button" class="star-btn" data-rating="1">★</button>
-              <button type="button" class="star-btn" data-rating="2">★</button>
-              <button type="button" class="star-btn" data-rating="3">★</button>
-              <button type="button" class="star-btn" data-rating="4">★</button>
-              <button type="button" class="star-btn" data-rating="5">★</button>
-            </div>
-            <div class="rating-label" id="rating-label">Selecciona una calificación</div>
-            <div class="error-message" id="rating-error"></div>
-          </div>
-
-          <div class="form-group">
-            <label for="review-title">Título de la reseña *</label>
-            <input type="text" id="review-title" name="title" required 
-                   placeholder="Resume tu experiencia en pocas palabras" maxlength="100">
-            <div class="error-message" id="title-error"></div>
-          </div>
-
-          <div class="form-group">
-            <label for="review-content">Reseña detallada *</label>
-            <textarea id="review-content" name="content" required rows="6"
-                      placeholder="Cuéntanos sobre tu experiencia con este producto. ¿Qué te gustó? ¿Qué mejorarías?" 
-                      maxlength="1000"></textarea>
-            <div class="char-count"><span id="char-count">0</span>/1000 caracteres</div>
-            <div class="error-message" id="content-error"></div>
-          </div>
-
-          <div class="form-group">
-            <label>¿Recomendarías este producto?</label>
-            <div class="radio-group">
-              <label class="radio-label">
-                <input type="radio" name="recommend" value="yes" checked>
-                <span class="radio-mark"></span>
-                👍 Sí, lo recomiendo
-              </label>
-              <label class="radio-label">
-                <input type="radio" name="recommend" value="no">
-                <span class="radio-mark"></span>
-                👎 No lo recomiendo
-              </label>
-            </div>
-          </div>
-
-          <div class="form-actions">
-            <button type="button" class="btn-secondary" id="cancel-review">Cancelar</button>
-            <button type="submit" class="btn-primary" id="submit-review">
-              <span class="btn-text">Publicar Reseña</span>
-              <span class="btn-loading" style="display: none;">⏳ Publicando...</span>
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===================== MODAL DE CARRITO ===================== -->
-  <div class="modal-overlay" id="cart-modal" aria-hidden="true">
-    <div class="modal cart-modal" role="dialog" aria-labelledby="cart-title">
-      <div class="modal-header">
-        <h2 id="cart-title">🛒 Tu Carrito de Compras</h2>
-        <button class="modal-close" aria-label="Cerrar modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <!-- Estado vacío -->
-        <div class="empty-cart" id="empty-cart" style="display: none;">
-          <div class="empty-cart-icon">🛒</div>
-          <h3>Tu carrito está vacío</h3>
-          <p>¡Agrega algunos productos increíbles y comienza tu experiencia gaming!</p>
-          <button class="btn-primary" onclick="closeCartModal()">Continuar Comprando</button>
-        </div>
-
-        <!-- Contenido del carrito -->
-        <div class="cart-content" id="cart-content">
-          <!-- Items del carrito -->
-          <div class="cart-items" id="cart-items">
-            <!-- Los items se cargarán dinámicamente -->
-          </div>
-
-          <!-- Resumen de descuentos -->
-          <div class="cart-discounts" id="cart-discounts" style="display: none;">
-            <h4>💰 Descuentos Aplicados</h4>
-            <div class="discount-list" id="discount-list">
-              <!-- Los descuentos se cargarán dinámicamente -->
-            </div>
-          </div>
-
-          <!-- Resumen de totales -->
-          <div class="cart-summary">
-            <div class="summary-row">
-              <span>Subtotal:</span>
-              <span id="cart-subtotal">$0</span>
-            </div>
-            <div class="summary-row discount" id="discount-row" style="display: none;">
-              <span>Descuento (<span id="discount-percentage">0</span>%):</span>
-              <span id="cart-discount">-$0</span>
-            </div>
-            <div class="summary-row shipping">
-              <span>Envío:</span>
-              <span id="cart-shipping">$0</span>
-            </div>
-            <div class="summary-row total">
-              <span>Total:</span>
-              <span id="cart-total">$0</span>
-            </div>
-            <div class="points-earned" id="points-earned" style="display: none;">
-              <span>🎁 Ganarás <strong><span id="points-amount">0</span> puntos LevelUp</strong> con esta compra</span>
-            </div>
-          </div>
-
-          <!-- Acciones del carrito -->
-          <div class="cart-actions">
-            <button class="btn-secondary" onclick="clearCart()">🗑️ Vaciar Carrito</button>
-            <button class="btn-primary" id="checkout-btn" onclick="initiateCheckout()">
-              💳 Proceder al Checkout
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===================== MODAL DE CHECKOUT ===================== -->
-  <div class="modal-overlay" id="checkout-modal" aria-hidden="true">
-    <div class="modal checkout-modal" role="dialog" aria-labelledby="checkout-title">
-      <div class="modal-header">
-        <h2 id="checkout-title">💳 Finalizar Compra</h2>
-        <button class="modal-close" aria-label="Cerrar modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <form id="checkout-form" novalidate>
-          <!-- Información de envío -->
-          <div class="checkout-section">
-            <h3>📦 Información de Envío</h3>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="shipping-name">Nombre completo *</label>
-                <input type="text" id="shipping-name" name="name" required>
-                <div class="error-message" id="shipping-name-error"></div>
-              </div>
-              <div class="form-group">
-                <label for="shipping-phone">Teléfono *</label>
-                <input type="tel" id="shipping-phone" name="phone" required>
-                <div class="error-message" id="shipping-phone-error"></div>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="shipping-address">Dirección completa *</label>
-              <textarea id="shipping-address" name="address" required rows="3" 
-                        placeholder="Calle, número, comuna, ciudad, región"></textarea>
-              <div class="error-message" id="shipping-address-error"></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="shipping-city">Ciudad *</label>
-                <input type="text" id="shipping-city" name="city" required>
-                <div class="error-message" id="shipping-city-error"></div>
-              </div>
-              <div class="form-group">
-                <label for="shipping-zipcode">Código postal</label>
-                <input type="text" id="shipping-zipcode" name="zipcode">
-              </div>
-            </div>
-          </div>
-
-          <!-- Método de pago -->
-          <div class="checkout-section">
-            <h3>💳 Método de Pago</h3>
-            <div class="payment-methods">
-              <label class="payment-method">
-                <input type="radio" name="payment" value="credit" checked>
-                <span class="payment-icon">💳</span>
-                <span class="payment-label">Tarjeta de Crédito/Débito</span>
-              </label>
-              <label class="payment-method">
-                <input type="radio" name="payment" value="transfer">
-                <span class="payment-icon">🏦</span>
-                <span class="payment-label">Transferencia Bancaria</span>
-              </label>
-              <label class="payment-method">
-                <input type="radio" name="payment" value="webpay">
-                <span class="payment-icon">🔒</span>
-                <span class="payment-label">WebPay Plus</span>
-              </label>
-            </div>
-          </div>
-
-          <!-- Información de pago (solo para tarjeta) -->
-          <div class="checkout-section" id="card-details">
-            <h3>💳 Detalles de la Tarjeta</h3>
-            <div class="form-group">
-              <label for="card-number">Número de tarjeta *</label>
-              <input type="text" id="card-number" name="cardNumber" 
-                     placeholder="1234 5678 9012 3456" maxlength="19">
-              <div class="error-message" id="card-number-error"></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="card-expiry">Vencimiento *</label>
-                <input type="text" id="card-expiry" name="cardExpiry" 
-                       placeholder="MM/AA" maxlength="5">
-                <div class="error-message" id="card-expiry-error"></div>
-              </div>
-              <div class="form-group">
-                <label for="card-cvv">CVV *</label>
-                <input type="text" id="card-cvv" name="cardCvv" 
-                       placeholder="123" maxlength="4">
-                <div class="error-message" id="card-cvv-error"></div>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="card-name">Nombre en la tarjeta *</label>
-              <input type="text" id="card-name" name="cardName">
-              <div class="error-message" id="card-name-error"></div>
-            </div>
-          </div>
-
-          <!-- Resumen de la orden -->
-          <div class="checkout-section">
-            <h3>📋 Resumen de tu Orden</h3>
-            <div class="order-summary" id="order-summary">
-              <!-- Se cargará dinámicamente -->
-            </div>
-          </div>
-
-          <!-- Términos y condiciones -->
-          <div class="checkbox-group">
-            <label class="checkbox-label">
-              <input type="checkbox" id="terms-checkout" name="terms" required>
-              <span class="checkmark"></span>
-              Acepto los <a href="#" class="link">términos y condiciones</a> y la <a href="#" class="link">política de privacidad</a> *
-            </label>
-            <div class="error-message" id="terms-checkout-error"></div>
-          </div>
-
-          <!-- Acciones del checkout -->
-          <div class="checkout-actions">
-            <button type="button" class="btn-secondary" onclick="closeCheckoutModal()">Volver al Carrito</button>
-            <button type="submit" class="btn-primary" id="place-order-btn">
-              <span class="btn-text">🚀 Confirmar Pedido</span>
-              <span class="btn-loading" style="display: none;">⏳ Procesando...</span>
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- Chat WhatsApp Flotante -->
-  <div id="whatsapp-chat" class="whatsapp-chat-widget">
-      <div class="whatsapp-chat-button" onclick="toggleWhatsAppChat()">
-          <span class="whatsapp-icon">💬</span>
-          <span class="whatsapp-text">Chat</span>
-          <div class="whatsapp-notification" id="whatsapp-notification">1</div>
-      </div>
-      
-      <div class="whatsapp-chat-modal" id="whatsapp-chat-modal">
-          <div class="whatsapp-chat-header">
-              <div class="whatsapp-chat-info">
-                  <div class="whatsapp-avatar">🎮</div>
-                  <div class="whatsapp-chat-details">
-                      <h4>Level-Up Gamer</h4>
-                      <span class="whatsapp-status online">En línea</span>
-                  </div>
-              </div>
-              <button class="whatsapp-close" onclick="toggleWhatsAppChat()">&times;</button>
-          </div>
-          
-          <div class="whatsapp-chat-body">
-              <div class="whatsapp-messages" id="whatsapp-messages">
-                  <div class="whatsapp-message received">
-                      <div class="message-content">
-                          ¡Hola! 👋 Soy el asistente virtual de Level-Up Gamer. ¿En qué puedo ayudarte hoy?
-                      </div>
-                      <div class="message-time">Ahora</div>
-                  </div>
-              </div>
-              
-              <div class="whatsapp-quick-responses">
-                  <button class="quick-response" onclick="sendQuickResponse('💰 Consultar precios')">
-                      💰 Consultar precios
-                  </button>
-                  <button class="quick-response" onclick="sendQuickResponse('📦 Estado de mi pedido')">
-                      📦 Estado de pedido
-                  </button>
-                  <button class="quick-response" onclick="sendQuickResponse('🎮 Recomendaciones')">
-                      🎮 Recomendaciones
-                  </button>
-                  <button class="quick-response" onclick="sendQuickResponse('🛠️ Soporte técnico')">
-                      🛠️ Soporte técnico
-                  </button>
-              </div>
-          </div>
-          
-          <div class="whatsapp-chat-footer">
-              <div class="whatsapp-input-container">
-                  <input 
-                      type="text" 
-                      id="whatsapp-input" 
-                      placeholder="Escribe tu mensaje..."
-                      onkeypress="handleWhatsAppEnter(event)"
-                  >
-                  <button class="whatsapp-send" onclick="sendWhatsAppMessage()">
-                      <span>📤</span>
-                  </button>
-              </div>
-              
-              <div class="whatsapp-actions">
-                  <button class="whatsapp-action" onclick="openWhatsAppDirect()">
-                      <span>📱</span>
-                      <span>Abrir WhatsApp</span>
-                  </button>
-                  <button class="whatsapp-action" onclick="callSupport()">
-                      <span>📞</span>
-                      <span>Llamar</span>
-                  </button>
-              </div>
-          </div>
-      </div>
-  </div>
-
-  <!-- ===================== JAVASCRIPT ===================== -->
-  <script src="script.js"></script>
-
-  <!-- ===================== NOTAS PARA TU EQUIPO =====================
-    - Tema fijo: Level-Up Gamer (oscuro con tipografía Orbitron)
-    - Reemplaza las tiles de categorías por un render dinámico desde tu JSON.
-    - Población de destacados:
-        document.querySelector('#featured-grid').innerHTML = productos.slice(0,6).map(...).join('');
-    - Actualiza #cart-count con el total del carrito y pon aria-live="polite".
-  ================================================================ -->
+    <!-- Scripts -->
+    <script src="assets/js/products-database.js"></script>
+    <script src="assets/js/gamification.js"></script>
+    <script src="assets/js/reviews.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/products.js"></script>
+    <script src="assets/js/cart.js"></script>
+    <script src="assets/js/auth.js"></script>
 </body>
-  <!-- Widget Avanzado de Ayuda/FAQ -->
-  <div class="help-widget-container">
-    <button id="help-widget-btn" class="help-widget-btn" aria-label="Abrir centro de ayuda">
-      <div class="help-icon">
-        <span class="icon-main">🎮</span>
-        <span class="icon-notification" id="help-notification"></span>
-      </div>
-      <span class="help-text">Ayuda Gaming</span>
-    </button>
-    
-    <!-- Panel de Ayuda Flotante -->
-    <div id="help-panel" class="help-panel" style="display: none;">
-      <div class="help-header">
-        <div class="help-title">
-          <h2>🎮 Centro de Ayuda Gaming</h2>
-          <div class="help-status">
-            <span class="status-indicator online"></span>
-            <span>Soporte Online</span>
-          </div>
-        </div>
-        <button id="help-close" class="help-close" aria-label="Cerrar ayuda">✕</button>
-      </div>
-      
-      <!-- Navegación de Categorías de Ayuda -->
-      <div class="help-navigation">
-        <button class="help-nav-btn active" data-category="faq" onclick="showHelpCategory('faq')">
-          ❓ FAQ
-        </button>
-        <button class="help-nav-btn" data-category="tutorials" onclick="showHelpCategory('tutorials')">
-          📚 Tutoriales
-        </button>
-        <button class="help-nav-btn" data-category="contact" onclick="showHelpCategory('contact')">
-          📞 Contacto
-        </button>
-        <button class="help-nav-btn" data-category="guides" onclick="showHelpCategory('guides')">
-          🎯 Guías Gaming
-        </button>
-      </div>
-      
-      <!-- Búsqueda Inteligente -->
-      <div class="help-search-container">
-        <input type="search" 
-               id="help-search" 
-               placeholder="🔍 ¿En qué puedo ayudarte hoy?" 
-               aria-label="Buscar en centro de ayuda">
-        <div class="search-suggestions" id="search-suggestions"></div>
-      </div>
-      
-      <!-- Contenido de Ayuda -->
-      <div class="help-content">
-        
-        <!-- FAQ Section -->
-        <div class="help-section active" id="faq-section">
-          <div class="help-section-header">
-            <h3>❓ Preguntas Frecuentes</h3>
-            <span class="section-count" id="faq-count"></span>
-          </div>
-          <div class="faq-categories">
-            <button class="faq-category-btn active" onclick="filterFAQ('all')">
-              🌐 Todas
-            </button>
-            <button class="faq-category-btn" onclick="filterFAQ('shopping')">
-              🛒 Compras
-            </button>
-            <button class="faq-category-btn" onclick="filterFAQ('technical')">
-              🔧 Técnico
-            </button>
-            <button class="faq-category-btn" onclick="filterFAQ('gaming')">
-              🎮 Gaming
-            </button>
-          </div>
-          <div class="faq-list" id="faq-list">
-            <!-- FAQ items se generarán dinámicamente -->
-          </div>
-        </div>
-        
-        <!-- Tutorials Section -->
-        <div class="help-section" id="tutorials-section">
-          <div class="help-section-header">
-            <h3>📚 Tutoriales Gaming</h3>
-          </div>
-          <div class="tutorials-grid">
-            <div class="tutorial-card">
-              <div class="tutorial-icon">🔧</div>
-              <h4>Cómo armar tu PC Gaming</h4>
-              <p>Guía paso a paso para ensamblar tu setup perfecto</p>
-              <button class="tutorial-btn" onclick="openTutorial('pc-building')">Ver Tutorial</button>
-            </div>
-            <div class="tutorial-card">
-              <div class="tutorial-icon">⚡</div>
-              <h4>Optimizar Rendimiento</h4>
-              <p>Configura tu sistema para máximo FPS</p>
-              <button class="tutorial-btn" onclick="openTutorial('optimization')">Ver Tutorial</button>
-            </div>
-            <div class="tutorial-card">
-              <div class="tutorial-icon">🎯</div>
-              <h4>Elegir Componentes</h4>
-              <p>Encuentra los mejores componentes para tu presupuesto</p>
-              <button class="tutorial-btn" onclick="openTutorial('components')">Ver Tutorial</button>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Contact Section -->
-        <div class="help-section" id="contact-section">
-          <div class="help-section-header">
-            <h3>📞 Contacto Directo</h3>
-          </div>
-          <div class="contact-options">
-            <div class="contact-option">
-              <div class="contact-icon">💬</div>
-              <div class="contact-info">
-                <h4>Chat en Vivo</h4>
-                <p>Respuesta inmediata • Online ahora</p>
-                <button class="contact-btn primary" onclick="openLiveChat()">Iniciar Chat</button>
-              </div>
-            </div>
-            <div class="contact-option">
-              <div class="contact-icon">📞</div>
-              <div class="contact-info">
-                <h4>Soporte Telefónico</h4>
-                <p>+56 2 2800 GAME (4263)</p>
-                <button class="contact-btn" onclick="makePhoneCall()">Llamar Ahora</button>
-              </div>
-            </div>
-            <div class="contact-option">
-              <div class="contact-icon">📧</div>
-              <div class="contact-info">
-                <h4>Email Soporte</h4>
-                <p>Respuesta en 24 horas</p>
-                <button class="contact-btn" onclick="openEmailForm()">Enviar Email</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Gaming Guides Section -->
-        <div class="help-section" id="guides-section">
-          <div class="help-section-header">
-            <h3>🎯 Guías Gaming Especializadas</h3>
-          </div>
-          <div class="guides-list">
-            <div class="guide-item">
-              <div class="guide-category">🎮 Setup Gaming</div>
-              <h4>Configuración Perfecta para Esports</h4>
-              <p>Mouse, teclado, monitor: todo lo que necesitas para competir</p>
-              <div class="guide-meta">
-                <span>⏱️ 15 min</span>
-                <span>👁️ 1.2k vistas</span>
-              </div>
-            </div>
-            <div class="guide-item">
-              <div class="guide-category">🔥 Hardware</div>
-              <h4>RTX 4090 vs RTX 4080: ¿Cuál elegir?</h4>
-              <p>Comparación detallada para gaming en 4K</p>
-              <div class="guide-meta">
-                <span>⏱️ 12 min</span>
-                <span>👁️ 2.5k vistas</span>
-              </div>
-            </div>
-            <div class="guide-item">
-              <div class="guide-category">💰 Presupuesto</div>
-              <h4>PC Gaming por $500.000</h4>
-              <p>Build completa para 1080p gaming</p>
-              <div class="guide-meta">
-                <span>⏱️ 18 min</span>
-                <span>👁️ 3.1k vistas</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Quick Actions -->
-      <div class="help-quick-actions">
-        <button class="quick-action-btn" onclick="requestCallback()">
-          📞 Solicitar Llamada
-        </button>
-        <button class="quick-action-btn" onclick="reportIssue()">
-          🐛 Reportar Problema
-        </button>
-        <button class="quick-action-btn" onclick="giveFeedback()">
-          ⭐ Dar Feedback
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal Comparador de Productos -->
-  <div class="modal" id="product-comparator-modal" aria-hidden="true">
-    <div class="modal-content comparator-modal">
-      <div class="modal-header">
-        <h2>⚖️ Comparador de Productos Gaming</h2>
-        <button class="modal-close" onclick="closeComparator()" aria-label="Cerrar comparador">✕</button>
-      </div>
-      
-      <div class="comparator-content">
-        <div class="comparator-controls">
-          <div class="comparison-slots">
-            <div class="slot-info">
-              <span>🎮 Productos seleccionados: <span id="comparison-count">0</span>/4</span>
-              <button class="btn-secondary clear-comparison" onclick="clearComparison()">
-                🗑️ Limpiar Todo
-              </button>
-            </div>
-          </div>
-        </div>
-        
-        <div class="comparison-grid" id="comparison-grid">
-          <!-- Productos a comparar se llenarán dinámicamente -->
-        </div>
-        
-        <div class="comparison-actions">
-          <button class="btn-primary start-comparison" onclick="startComparison()" disabled>
-            🔍 Iniciar Comparación
-          </button>
-          <button class="btn-secondary add-more-products" onclick="showProductSelector()">
-            ➕ Agregar Productos
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal Selector de Productos para Comparar -->
-  <div class="modal" id="product-selector-modal" aria-hidden="true">
-    <div class="modal-content selector-modal">
-      <div class="modal-header">
-        <h2>📦 Seleccionar Productos para Comparar</h2>
-        <button class="modal-close" onclick="closeProductSelector()" aria-label="Cerrar selector">✕</button>
-      </div>
-      
-      <div class="selector-content">
-        <div class="selector-filters">
-          <input type="search" 
-                 class="selector-search" 
-                 placeholder="🔍 Buscar productos..." 
-                 id="selector-search">
-          <select class="selector-category" id="selector-category">
-            <option value="">Todas las categorías</option>
-          </select>
-        </div>
-        
-        <div class="selector-grid" id="selector-grid">
-          <!-- Productos disponibles se llenarán dinámicamente -->
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal Resultados de Comparación -->
-  <div class="modal" id="comparison-results-modal" aria-hidden="true">
-    <div class="modal-content results-modal">
-      <div class="modal-header">
-        <h2>📊 Resultados de Comparación</h2>
-        <button class="modal-close" onclick="closeComparisonResults()" aria-label="Cerrar resultados">✕</button>
-      </div>
-      
-      <div class="results-content">
-        <div class="comparison-table-container">
-          <table class="comparison-table" id="comparison-table">
-            <!-- Tabla de comparación se llenará dinámicamente -->
-          </table>
-        </div>
-        
-        <div class="comparison-insights">
-          <h3>🎯 Insights de Comparación</h3>
-          <div class="insights-grid" id="insights-grid">
-            <!-- Insights se generarán dinámicamente -->
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </html>

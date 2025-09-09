@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos Gaming | Level-Up Gamer</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="../index.html" class="logo">🎮 LEVEL-UP GAMER</a>
+                <ul class="nav-links">
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="#" class="active">Productos</a></li>
+                    <li><a href="../carrito/">Carrito</a></li>
+                    <li><a href="../usuario/">Usuario</a></li>
+                </ul>
+                <button class="cart-icon" onclick="window.location.href='../carrito/'">
+                    🛒 Carrito
+                    <span class="cart-counter" id="cartCounter">0</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main class="main">
+        <!-- Hero de productos -->
+        <section class="hero" style="min-height: 50vh;">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Productos Gaming</h1>
+                    <p>Descubre nuestra amplia selección de productos gaming de alta calidad</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filtros y productos -->
+        <section class="section">
+            <div class="container">
+                <!-- Filtros -->
+                <div class="filters-container">
+                    <h2>Filtrar productos</h2>
+                    <div class="filters-grid">
+                        <div class="filter-group">
+                            <label>Categoría:</label>
+                            <select id="categoryFilter">
+                                <option value="">Todas las categorías</option>
+                                <option value="consolas">Consolas</option>
+                                <option value="juegos">Videojuegos</option>
+                                <option value="accesorios">Accesorios</option>
+                                <option value="pc">PC Gaming</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Precio:</label>
+                            <select id="priceFilter">
+                                <option value="">Todos los precios</option>
+                                <option value="0-100">$0 - $100</option>
+                                <option value="100-300">$100 - $300</option>
+                                <option value="300-500">$300 - $500</option>
+                                <option value="500+">Más de $500</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Ordenar por:</label>
+                            <select id="sortFilter">
+                                <option value="name">Nombre A-Z</option>
+                                <option value="price-low">Precio: Menor a Mayor</option>
+                                <option value="price-high">Precio: Mayor a Menor</option>
+                                <option value="newest">Más Nuevos</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grid de productos -->
+                <div class="products-grid" id="productsGrid">
+                    <!-- Los productos se cargarán dinámicamente -->
+                </div>
+
+                <!-- Paginación -->
+                <div class="pagination" id="pagination">
+                    <!-- La paginación se generará dinámicamente -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 Level-Up Gamer. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../assets/js/products.js"></script>
+    <script src="../assets/js/cart.js"></script>
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>
