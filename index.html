@@ -874,144 +874,276 @@
         </section>
 
         <!-- Comparador de Productos - LG-017 -->
-        <section class="section product-comparison-section" id="product-comparison">
+        <section class="section product-comparison-section" 
+                 id="product-comparison" 
+                 role="region" 
+                 aria-labelledby="comparison-section-title"
+                 aria-describedby="comparison-section-description">
             <div class="container">
                 <div class="section-header">
-                    <h2 class="section-title">⚖️ Comparador de Productos</h2>
-                    <p class="section-subtitle">Compara características, precios y especificaciones para tomar la mejor decisión</p>
+                    <h2 class="section-title" id="comparison-section-title">⚖️ Comparador de Productos</h2>
+                    <p class="section-subtitle" id="comparison-section-description">
+                        Compara características, precios y especificaciones para tomar la mejor decisión
+                    </p>
                 </div>
 
                 <!-- Panel de Control del Comparador -->
-                <div class="comparison-controls">
-                    <div class="comparison-search">
+                <div class="comparison-controls" 
+                     role="toolbar" 
+                     aria-label="Controles del comparador de productos"
+                     aria-describedby="comparison-instructions">
+                    <div class="comparison-search" role="search">
+                        <label for="comparisonSearch" class="visually-hidden">
+                            Buscar productos para comparar
+                        </label>
                         <input type="text" 
                                id="comparisonSearch" 
                                placeholder="Buscar productos para comparar..."
                                class="comparison-search-input"
-                               aria-label="Buscar productos para agregar al comparador">
-                        <button class="comparison-search-btn" id="comparisonSearchBtn">
-                            🔍 Buscar
+                               aria-label="Campo de búsqueda de productos para comparar"
+                               aria-describedby="search-help"
+                               autocomplete="off">
+                        <button class="comparison-search-btn" 
+                                id="comparisonSearchBtn"
+                                type="button"
+                                aria-label="Ejecutar búsqueda de productos">
+                            <span aria-hidden="true">🔍</span> Buscar
                         </button>
+                        <div id="search-help" class="visually-hidden">
+                            Escribe el nombre o categoría del producto que deseas buscar
+                        </div>
                     </div>
-                    <div class="comparison-actions">
-                        <span class="comparison-counter" id="comparisonCounter">0 productos seleccionados</span>
-                        <button class="clear-comparison-btn" id="clearComparisonBtn" disabled>
-                            🗑️ Limpiar
+                    <div class="comparison-actions" role="group" aria-label="Acciones del comparador">
+                        <div class="comparison-counter" 
+                             id="comparisonCounter" 
+                             aria-live="polite" 
+                             aria-atomic="true"
+                             role="status">
+                            0 productos seleccionados
+                        </div>
+                        <button class="clear-comparison-btn" 
+                                id="clearComparisonBtn" 
+                                type="button"
+                                disabled
+                                aria-label="Limpiar todos los productos seleccionados"
+                                aria-describedby="clear-help">
+                            <span aria-hidden="true">🗑️</span> Limpiar
                         </button>
-                        <button class="start-comparison-btn" id="startComparisonBtn" disabled>
-                            ⚖️ Comparar
+                        <button class="start-comparison-btn" 
+                                id="startComparisonBtn" 
+                                type="button"
+                                disabled
+                                aria-label="Iniciar comparación de productos seleccionados"
+                                aria-describedby="compare-help">
+                            <span aria-hidden="true">⚖️</span> Comparar
                         </button>
+                        <div id="clear-help" class="visually-hidden">
+                            Elimina todos los productos de la comparación actual
+                        </div>
+                        <div id="compare-help" class="visually-hidden">
+                            Inicia la comparación detallada de los productos seleccionados. Requiere al menos 2 productos.
+                        </div>
+                        <div id="comparison-instructions" class="visually-hidden">
+                            Para usar el comparador: 1) Busca o selecciona productos usando los checkboxes, 2) Selecciona al menos 2 productos, 3) Presiona el botón Comparar para ver la tabla detallada
+                        </div>
                     </div>
                 </div>
 
                 <!-- Productos Disponibles para Comparar -->
-                <div class="comparison-products-selector">
-                    <h3 class="selector-title">Productos Disponibles</h3>
-                    <div class="products-selector-grid" id="productsSelector">
+                <div class="comparison-products-selector" 
+                     role="region" 
+                     aria-labelledby="products-selector-title"
+                     aria-describedby="selector-instructions">
+                    <h3 class="selector-title" id="products-selector-title">Productos Disponibles</h3>
+                    <div id="selector-instructions" class="visually-hidden">
+                        Usa los checkboxes para seleccionar productos que deseas comparar. Puedes seleccionar entre 2 y 4 productos.
+                    </div>
+                    <div class="products-selector-grid" 
+                         id="productsSelector" 
+                         role="group" 
+                         aria-label="Lista de productos disponibles para comparar">
                         <!-- Producto 1 -->
-                        <div class="selector-product-card" data-product-id="comp-1">
+                        <div class="selector-product-card" 
+                             data-product-id="comp-1"
+                             role="option"
+                             aria-describedby="product-comp-1-details">
                             <input type="checkbox" 
                                    id="select-comp-1" 
                                    class="product-selector-checkbox"
-                                   aria-label="Seleccionar NVIDIA RTX 4080 para comparar">
-                            <label for="select-comp-1" class="selector-card-content">
+                                   aria-label="Seleccionar NVIDIA RTX 4080 Gaming para comparar"
+                                   aria-describedby="product-comp-1-details">
+                            <label for="select-comp-1" 
+                                   class="selector-card-content"
+                                   tabindex="0"
+                                   role="button"
+                                   aria-pressed="false">
                                 <div class="selector-image">
-                                    <img src="assets/images/rtx-4080.webp" alt="NVIDIA RTX 4080" loading="lazy">
+                                    <img src="assets/images/rtx-4080.webp" 
+                                         alt="Imagen de la tarjeta gráfica NVIDIA RTX 4080 Gaming" 
+                                         loading="lazy">
                                 </div>
                                 <div class="selector-info">
                                     <h4 class="selector-title">NVIDIA RTX 4080 Gaming</h4>
-                                    <span class="selector-price">$1.299.990</span>
-                                    <span class="selector-category">Tarjetas Gráficas</span>
+                                    <span class="selector-price" aria-label="Precio: $1.299.990">$1.299.990</span>
+                                    <span class="selector-category" aria-label="Categoría: Tarjetas Gráficas">Tarjetas Gráficas</span>
+                                </div>
+                                <div id="product-comp-1-details" class="visually-hidden">
+                                    Tarjeta gráfica NVIDIA RTX 4080 Gaming de $1.299.990 en categoría Tarjetas Gráficas. Presiona para seleccionar para comparación.
                                 </div>
                             </label>
                         </div>
 
                         <!-- Producto 2 -->
-                        <div class="selector-product-card" data-product-id="comp-2">
+                        <div class="selector-product-card" 
+                             data-product-id="comp-2"
+                             role="option"
+                             aria-describedby="product-comp-2-details">
                             <input type="checkbox" 
                                    id="select-comp-2" 
                                    class="product-selector-checkbox"
-                                   aria-label="Seleccionar NVIDIA RTX 4070 para comparar">
-                            <label for="select-comp-2" class="selector-card-content">
+                                   aria-label="Seleccionar NVIDIA RTX 4070 Super para comparar"
+                                   aria-describedby="product-comp-2-details">
+                            <label for="select-comp-2" 
+                                   class="selector-card-content"
+                                   tabindex="0"
+                                   role="button"
+                                   aria-pressed="false">
                                 <div class="selector-image">
-                                    <img src="assets/images/rtx-4070.webp" alt="NVIDIA RTX 4070" loading="lazy">
+                                    <img src="assets/images/rtx-4070.webp" 
+                                         alt="Imagen de la tarjeta gráfica NVIDIA RTX 4070 Super" 
+                                         loading="lazy">
                                 </div>
                                 <div class="selector-info">
                                     <h4 class="selector-title">NVIDIA RTX 4070 Super</h4>
-                                    <span class="selector-price">$899.990</span>
-                                    <span class="selector-category">Tarjetas Gráficas</span>
+                                    <span class="selector-price" aria-label="Precio: $899.990">$899.990</span>
+                                    <span class="selector-category" aria-label="Categoría: Tarjetas Gráficas">Tarjetas Gráficas</span>
+                                </div>
+                                <div id="product-comp-2-details" class="visually-hidden">
+                                    Tarjeta gráfica NVIDIA RTX 4070 Super de $899.990 en categoría Tarjetas Gráficas. Presiona para seleccionar para comparación.
                                 </div>
                             </label>
                         </div>
 
                         <!-- Producto 3 -->
-                        <div class="selector-product-card" data-product-id="comp-3">
+                        <div class="selector-product-card" 
+                             data-product-id="comp-3"
+                             role="option"
+                             aria-describedby="product-comp-3-details">
                             <input type="checkbox" 
                                    id="select-comp-3" 
                                    class="product-selector-checkbox"
-                                   aria-label="Seleccionar PlayStation 5 para comparar">
-                            <label for="select-comp-3" class="selector-card-content">
+                                   aria-label="Seleccionar PlayStation 5 Console para comparar"
+                                   aria-describedby="product-comp-3-details">
+                            <label for="select-comp-3" 
+                                   class="selector-card-content"
+                                   tabindex="0"
+                                   role="button"
+                                   aria-pressed="false">
                                 <div class="selector-image">
-                                    <img src="assets/images/ps5-console.webp" alt="PlayStation 5" loading="lazy">
+                                    <img src="assets/images/ps5-console.webp" 
+                                         alt="Imagen de la consola PlayStation 5" 
+                                         loading="lazy">
                                 </div>
                                 <div class="selector-info">
                                     <h4 class="selector-title">PlayStation 5 Console</h4>
-                                    <span class="selector-price">$649.990</span>
-                                    <span class="selector-category">Consolas</span>
+                                    <span class="selector-price" aria-label="Precio: $649.990">$649.990</span>
+                                    <span class="selector-category" aria-label="Categoría: Consolas">Consolas</span>
+                                </div>
+                                <div id="product-comp-3-details" class="visually-hidden">
+                                    Consola PlayStation 5 de $649.990 en categoría Consolas. Presiona para seleccionar para comparación.
                                 </div>
                             </label>
                         </div>
 
                         <!-- Producto 4 -->
-                        <div class="selector-product-card" data-product-id="comp-4">
+                        <div class="selector-product-card" 
+                             data-product-id="comp-4"
+                             role="option"
+                             aria-describedby="product-comp-4-details">
                             <input type="checkbox" 
                                    id="select-comp-4" 
                                    class="product-selector-checkbox"
-                                   aria-label="Seleccionar Xbox Series X para comparar">
-                            <label for="select-comp-4" class="selector-card-content">
+                                   aria-label="Seleccionar Xbox Series X Console para comparar"
+                                   aria-describedby="product-comp-4-details">
+                            <label for="select-comp-4" 
+                                   class="selector-card-content"
+                                   tabindex="0"
+                                   role="button"
+                                   aria-pressed="false">
                                 <div class="selector-image">
-                                    <img src="assets/images/xbox-series-x.webp" alt="Xbox Series X" loading="lazy">
+                                    <img src="assets/images/xbox-series-x.webp" 
+                                         alt="Imagen de la consola Xbox Series X" 
+                                         loading="lazy">
                                 </div>
                                 <div class="selector-info">
                                     <h4 class="selector-title">Xbox Series X Console</h4>
-                                    <span class="selector-price">$699.990</span>
-                                    <span class="selector-category">Consolas</span>
+                                    <span class="selector-price" aria-label="Precio: $699.990">$699.990</span>
+                                    <span class="selector-category" aria-label="Categoría: Consolas">Consolas</span>
+                                </div>
+                                <div id="product-comp-4-details" class="visually-hidden">
+                                    Consola Xbox Series X de $699.990 en categoría Consolas. Presiona para seleccionar para comparación.
                                 </div>
                             </label>
                         </div>
 
                         <!-- Producto 5 -->
-                        <div class="selector-product-card" data-product-id="comp-5">
+                        <div class="selector-product-card" 
+                             data-product-id="comp-5"
+                             role="option"
+                             aria-describedby="product-comp-5-details">
                             <input type="checkbox" 
                                    id="select-comp-5" 
                                    class="product-selector-checkbox"
-                                   aria-label="Seleccionar Silla Gaming para comparar">
-                            <label for="select-comp-5" class="selector-card-content">
+                                   aria-label="Seleccionar Silla Gaming Pro RGB para comparar"
+                                   aria-describedby="product-comp-5-details">
+                            <label for="select-comp-5" 
+                                   class="selector-card-content"
+                                   tabindex="0"
+                                   role="button"
+                                   aria-pressed="false">
                                 <div class="selector-image">
-                                    <img src="assets/images/gaming-chair.webp" alt="Silla Gaming" loading="lazy">
+                                    <img src="assets/images/gaming-chair.webp" 
+                                         alt="Imagen de la silla gaming con iluminación RGB" 
+                                         loading="lazy">
                                 </div>
                                 <div class="selector-info">
                                     <h4 class="selector-title">Silla Gaming Pro RGB</h4>
-                                    <span class="selector-price">$399.990</span>
-                                    <span class="selector-category">Accesorios</span>
+                                    <span class="selector-price" aria-label="Precio: $399.990">$399.990</span>
+                                    <span class="selector-category" aria-label="Categoría: Accesorios">Accesorios</span>
+                                </div>
+                                <div id="product-comp-5-details" class="visually-hidden">
+                                    Silla Gaming Pro RGB de $399.990 en categoría Accesorios. Presiona para seleccionar para comparación.
                                 </div>
                             </label>
                         </div>
 
                         <!-- Producto 6 -->
-                        <div class="selector-product-card" data-product-id="comp-6">
+                        <div class="selector-product-card" 
+                             data-product-id="comp-6"
+                             role="option"
+                             aria-describedby="product-comp-6-details">
                             <input type="checkbox" 
                                    id="select-comp-6" 
                                    class="product-selector-checkbox"
-                                   aria-label="Seleccionar Monitor Gaming para comparar">
-                            <label for="select-comp-6" class="selector-card-content">
+                                   aria-label="Seleccionar Monitor Gaming 32 pulgadas 4K para comparar"
+                                   aria-describedby="product-comp-6-details">
+                            <label for="select-comp-6" 
+                                   class="selector-card-content"
+                                   tabindex="0"
+                                   role="button"
+                                   aria-pressed="false">
                                 <div class="selector-image">
-                                    <img src="assets/images/monitor-gaming.webp" alt="Monitor Gaming" loading="lazy">
+                                    <img src="assets/images/monitor-gaming.webp" 
+                                         alt="Imagen del monitor gaming de 32 pulgadas 4K" 
+                                         loading="lazy">
                                 </div>
                                 <div class="selector-info">
                                     <h4 class="selector-title">Monitor Gaming 32" 4K</h4>
-                                    <span class="selector-price">$599.990</span>
-                                    <span class="selector-category">Monitores</span>
+                                    <span class="selector-price" aria-label="Precio: $599.990">$599.990</span>
+                                    <span class="selector-category" aria-label="Categoría: Monitores">Monitores</span>
+                                </div>
+                                <div id="product-comp-6-details" class="visually-hidden">
+                                    Monitor Gaming 32 pulgadas 4K de $599.990 en categoría Monitores. Presiona para seleccionar para comparación.
                                 </div>
                             </label>
                         </div>
@@ -1019,59 +1151,113 @@
                 </div>
 
                 <!-- Tabla de Comparación (Inicialmente Oculta) -->
-                <div class="comparison-table-container" id="comparisonTableContainer" style="display: none;">
+                <div class="comparison-table-container" 
+                     id="comparisonTableContainer" 
+                     style="display: none;"
+                     role="region"
+                     aria-labelledby="comparison-table-title"
+                     aria-describedby="comparison-table-description">
                     <div class="comparison-table-header">
-                        <h3 class="comparison-title">📊 Comparación Detallada</h3>
-                        <button class="close-comparison-btn" id="closeComparisonBtn">
-                            ✕ Cerrar Comparación
+                        <h3 class="comparison-title" id="comparison-table-title">📊 Comparación Detallada</h3>
+                        <button class="close-comparison-btn" 
+                                id="closeComparisonBtn"
+                                type="button"
+                                aria-label="Cerrar tabla de comparación y volver al selector">
+                            <span aria-hidden="true">✕</span> Cerrar Comparación
                         </button>
                     </div>
-                    <div class="comparison-table-wrapper">
-                        <table class="comparison-table" id="comparisonTable">
+                    <div id="comparison-table-description" class="visually-hidden">
+                        Tabla de comparación que muestra las características técnicas de los productos seleccionados lado a lado
+                    </div>
+                    <div class="comparison-table-wrapper" role="region" aria-label="Tabla de comparación de productos">
+                        <table class="comparison-table" 
+                               id="comparisonTable"
+                               role="table"
+                               aria-label="Comparación detallada de productos seleccionados"
+                               aria-describedby="table-navigation-help">
+                            <caption class="visually-hidden">
+                                Tabla comparativa de productos gaming con características técnicas, precios y especificaciones
+                            </caption>
                             <thead>
-                                <tr id="comparisonTableHeader">
-                                    <th class="feature-column">Características</th>
+                                <tr id="comparisonTableHeader" role="row">
+                                    <th class="feature-column" 
+                                        role="columnheader" 
+                                        scope="col"
+                                        aria-label="Columna de características">
+                                        Características
+                                    </th>
                                     <!-- Columnas de productos se generarán dinámicamente -->
                                 </tr>
                             </thead>
-                            <tbody id="comparisonTableBody">
+                            <tbody id="comparisonTableBody" role="rowgroup">
                                 <!-- Filas de comparación se generarán dinámicamente -->
                             </tbody>
                         </table>
+                        <div id="table-navigation-help" class="visually-hidden">
+                            Usa las teclas de flecha para navegar por la tabla. Cada fila muestra una característica específica comparada entre los productos.
+                        </div>
                     </div>
-                    <div class="comparison-actions-bottom">
-                        <button class="add-all-to-cart-btn" id="addAllToCartBtn">
-                            🛒 Agregar Todos al Carrito
+                    <div class="comparison-actions-bottom" 
+                         role="group" 
+                         aria-label="Acciones para los productos comparados">
+                        <button class="add-all-to-cart-btn" 
+                                id="addAllToCartBtn"
+                                type="button"
+                                aria-label="Agregar todos los productos comparados al carrito de compras">
+                            <span aria-hidden="true">🛒</span> Agregar Todos al Carrito
                         </button>
-                        <button class="print-comparison-btn" id="printComparisonBtn">
-                            🖨️ Imprimir Comparación
+                        <button class="print-comparison-btn" 
+                                id="printComparisonBtn"
+                                type="button"
+                                aria-label="Imprimir la tabla de comparación">
+                            <span aria-hidden="true">🖨️</span> Imprimir Comparación
                         </button>
-                        <button class="share-comparison-btn" id="shareComparisonBtn">
-                            📤 Compartir Comparación
+                        <button class="share-comparison-btn" 
+                                id="shareComparisonBtn"
+                                type="button"
+                                aria-label="Compartir enlace de esta comparación">
+                            <span aria-hidden="true">📤</span> Compartir Comparación
                         </button>
                     </div>
                 </div>
 
                 <!-- Sugerencias de Comparación -->
-                <div class="comparison-suggestions">
-                    <h3 class="suggestions-title">💡 Comparaciones Populares</h3>
-                    <div class="suggestions-grid">
-                        <button class="suggestion-card" onclick="loadPopularComparison('consoles')">
-                            <span class="suggestion-icon">🎮</span>
+                <div class="comparison-suggestions" 
+                     role="region" 
+                     aria-labelledby="suggestions-title"
+                     aria-describedby="suggestions-description">
+                    <h3 class="suggestions-title" id="suggestions-title">💡 Comparaciones Populares</h3>
+                    <div id="suggestions-description" class="visually-hidden">
+                        Selecciones rápidas de comparaciones populares entre productos gaming
+                    </div>
+                    <div class="suggestions-grid" 
+                         role="group" 
+                         aria-label="Lista de comparaciones populares predefinidas">
+                        <button class="suggestion-card" 
+                                onclick="loadPopularComparison('consoles')"
+                                type="button"
+                                aria-label="Cargar comparación entre PlayStation 5 y Xbox Series X">
+                            <span class="suggestion-icon" aria-hidden="true">🎮</span>
                             <div class="suggestion-info">
                                 <strong>PS5 vs Xbox Series X</strong>
                                 <span>Compara las consolas más populares</span>
                             </div>
                         </button>
-                        <button class="suggestion-card" onclick="loadPopularComparison('graphics')">
-                            <span class="suggestion-icon">🎯</span>
+                        <button class="suggestion-card" 
+                                onclick="loadPopularComparison('graphics')"
+                                type="button"
+                                aria-label="Cargar comparación entre NVIDIA RTX 4080 y RTX 4070">
+                            <span class="suggestion-icon" aria-hidden="true">🎯</span>
                             <div class="suggestion-info">
                                 <strong>RTX 4080 vs RTX 4070</strong>
                                 <span>Tarjetas gráficas de alta gama</span>
                             </div>
                         </button>
-                        <button class="suggestion-card" onclick="loadPopularComparison('setup')">
-                            <span class="suggestion-icon">⚙️</span>
+                        <button class="suggestion-card" 
+                                onclick="loadPopularComparison('setup')"
+                                type="button"
+                                aria-label="Cargar comparación de setup gaming completo con monitor y silla">
+                            <span class="suggestion-icon" aria-hidden="true">⚙️</span>
                             <div class="suggestion-info">
                                 <strong>Setup Gaming Completo</strong>
                                 <span>Monitor + Silla + Accesorios</span>

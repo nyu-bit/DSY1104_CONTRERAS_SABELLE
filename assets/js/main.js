@@ -3085,6 +3085,21 @@ function setupComparisonEventListeners() {
         checkbox.addEventListener('change', handleProductSelection);
     });
     
+    // Labels de productos para navegación por teclado
+    const labels = document.querySelectorAll('.selector-card-content');
+    labels.forEach(label => {
+        // Soporte para navegación por teclado
+        label.addEventListener('keydown', handleLabelKeydown);
+        
+        // Actualizar aria-pressed cuando cambia el checkbox
+        const checkbox = label.previousElementSibling;
+        if (checkbox) {
+            checkbox.addEventListener('change', () => {
+                label.setAttribute('aria-pressed', checkbox.checked.toString());
+            });
+        }
+    });
+    
     // Botón de limpiar comparación
     const clearBtn = document.getElementById('clearComparisonBtn');
     if (clearBtn) {
@@ -3111,6 +3126,7 @@ function setupComparisonEventListeners() {
         searchInput.addEventListener('input', handleComparisonSearch);
         searchInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
+                e.preventDefault();
                 handleComparisonSearch();
             }
         });
@@ -3128,6 +3144,9 @@ function setupComparisonEventListeners() {
     if (addAllBtn) addAllBtn.addEventListener('click', addAllComparedToCart);
     if (printBtn) printBtn.addEventListener('click', printComparison);
     if (shareBtn) shareBtn.addEventListener('click', shareComparison);
+    
+    // Configurar navegación por teclado en la tabla
+    setupTableKeyboardNavigation();
 }
 
 /**
@@ -3298,7 +3317,8 @@ function updateComparisonCounter() {
     const counter = document.getElementById('comparisonCounter');
     if (counter) {
         const count = window.comparisonProducts.length;
-        counter.textContent = `${count} producto${count !== 1 ? 's' : ''} seleccionado${count !== 1 ? 's' : ''}`;
+        const message = `${count} producto${count !== 1 ? 's' : ''} seleccionado${count !== 1 ? 's' : ''}`;
+        counter.textContent = message;
         
         // Cambiar color según la cantidad
         if (count === 0) {
@@ -3308,6 +3328,8 @@ function updateComparisonCounter() {
         } else {
             counter.style.color = '#10b981';
         }
+        
+        // El aria-live="polite" del contador anunciará automáticamente el cambio
     }
 }
 
@@ -3337,10 +3359,17 @@ function updateComparisonButtons() {
  * Limpia toda la selección de comparación
  */
 function clearComparison() {
+    const previousCount = window.comparisonProducts.length;
+    
     // Desmarcar todos los checkboxes
     const checkboxes = document.querySelectorAll('.product-selector-checkbox');
     checkboxes.forEach(checkbox => {
         checkbox.checked = false;
+        // Actualizar aria-pressed de los labels
+        const label = checkbox.nextElementSibling;
+        if (label) {
+            label.setAttribute('aria-pressed', 'false');
+        }
     });
     
     // Remover efectos visuales
@@ -3359,9 +3388,14 @@ function clearComparison() {
     // Ocultar tabla si está visible
     closeComparison();
     
+    // Anunciar cambio
+    if (previousCount > 0) {
+        announceToScreenReader(`Se eliminaron ${previousCount} productos de la comparación`);
+    }
+    
     // Tracking del evento
     trackEvent('comparison_cleared', {
-        products_cleared: window.comparisonProducts.length
+        products_cleared: previousCount
     });
     
     console.log('🗑️ Comparación limpiada');
@@ -3406,17 +3440,22 @@ function generateComparisonTable() {
     if (!table || !header || !body) return;
     
     // Limpiar contenido existente
-    header.innerHTML = '<th class="feature-column">Características</th>';
+    header.innerHTML = '<th class="feature-column" role="columnheader" scope="col" aria-label="Columna de características">Características</th>';
     body.innerHTML = '';
     
     // Generar headers de productos
-    window.comparisonProducts.forEach(product => {
+    window.comparisonProducts.forEach((product, index) => {
         const th = document.createElement('th');
+        th.setAttribute('role', 'columnheader');
+        th.setAttribute('scope', 'col');
+        th.setAttribute('aria-label', `Producto ${index + 1}: ${product.name}`);
         th.innerHTML = `
             <div class="comparison-product-header">
-                <img src="${product.image}" alt="${product.name}" class="comparison-product-image">
+                <img src="${product.image}" 
+                     alt="Imagen de ${product.name}" 
+                     class="comparison-product-image">
                 <div class="comparison-product-name">${product.name}</div>
-                <div class="comparison-product-price">${product.price}</div>
+                <div class="comparison-product-price" aria-label="Precio: ${product.price}">${product.price}</div>
             </div>
         `;
         header.appendChild(th);
@@ -3424,24 +3463,34 @@ function generateComparisonTable() {
     
     // Generar filas de características
     const features = getComparisonFeatures();
-    features.forEach(feature => {
+    features.forEach((feature, rowIndex) => {
         const tr = document.createElement('tr');
+        tr.setAttribute('role', 'row');
         
         // Celda de característica
         const featureTd = document.createElement('td');
         featureTd.className = 'feature-cell';
+        featureTd.setAttribute('role', 'rowheader');
+        featureTd.setAttribute('scope', 'row');
+        featureTd.setAttribute('aria-label', `Característica: ${feature.label}`);
         featureTd.textContent = feature.label;
         tr.appendChild(featureTd);
         
         // Celdas de valores para cada producto
-        window.comparisonProducts.forEach(product => {
+        window.comparisonProducts.forEach((product, colIndex) => {
             const valueTd = document.createElement('td');
+            valueTd.setAttribute('role', 'cell');
             const value = product[feature.key] || 'No especificado';
             valueTd.textContent = value;
+            
+            // Aria-label descriptivo
+            valueTd.setAttribute('aria-label', 
+                `${feature.label} de ${product.name}: ${value}`);
             
             // Agregar clase especial para valores destacados
             if (feature.highlight && value !== 'No especificado') {
                 valueTd.classList.add('highlight-value');
+                valueTd.setAttribute('aria-describedby', 'highlight-explanation');
             }
             
             tr.appendChild(valueTd);
@@ -3450,7 +3499,19 @@ function generateComparisonTable() {
         body.appendChild(tr);
     });
     
-    console.log('📊 Tabla de comparación generada');
+    // Agregar explicación oculta para valores destacados
+    if (!document.getElementById('highlight-explanation')) {
+        const explanation = document.createElement('div');
+        explanation.id = 'highlight-explanation';
+        explanation.className = 'visually-hidden';
+        explanation.textContent = 'Característica destacada importante para la comparación';
+        body.appendChild(explanation);
+    }
+    
+    // Anunciar que la tabla fue generada
+    announceToScreenReader('Tabla de comparación generada con ' + window.comparisonProducts.length + ' productos');
+    
+    console.log('📊 Tabla de comparación generada con accesibilidad completa');
 }
 
 /**
@@ -3924,4 +3985,123 @@ function closeShareModal() {
     if (modal) {
         modal.remove();
     }
+}
+
+/**
+ * Maneja la navegación por teclado en los labels de productos
+ * @param {KeyboardEvent} event - Evento de teclado
+ */
+function handleLabelKeydown(event) {
+    if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        const checkbox = event.target.previousElementSibling;
+        if (checkbox && checkbox.type === 'checkbox') {
+            checkbox.checked = !checkbox.checked;
+            checkbox.dispatchEvent(new Event('change'));
+        }
+    }
+}
+
+/**
+ * Configura la navegación por teclado en la tabla de comparación
+ */
+function setupTableKeyboardNavigation() {
+    // Esta función se llamará cuando se genere la tabla
+    const setupTableNavigation = () => {
+        const table = document.getElementById('comparisonTable');
+        if (!table) return;
+        
+        const cells = table.querySelectorAll('td, th');
+        cells.forEach((cell, index) => {
+            cell.setAttribute('tabindex', index === 0 ? '0' : '-1');
+            cell.addEventListener('keydown', handleTableKeydown);
+        });
+    };
+    
+    // Observar cuando se muestre la tabla
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                const tableContainer = document.getElementById('comparisonTableContainer');
+                if (tableContainer && tableContainer.style.display !== 'none') {
+                    setupTableNavigation();
+                }
+            }
+        });
+    });
+    
+    const tableContainer = document.getElementById('comparisonTableContainer');
+    if (tableContainer) {
+        observer.observe(tableContainer, { attributes: true });
+    }
+}
+
+/**
+ * Maneja la navegación por teclado en la tabla
+ * @param {KeyboardEvent} event - Evento de teclado
+ */
+function handleTableKeydown(event) {
+    const currentCell = event.target;
+    const table = currentCell.closest('table');
+    const cells = Array.from(table.querySelectorAll('td, th'));
+    const currentIndex = cells.indexOf(currentCell);
+    const columnsCount = table.querySelector('tr').children.length;
+    
+    let nextIndex = currentIndex;
+    
+    switch (event.key) {
+        case 'ArrowRight':
+            event.preventDefault();
+            nextIndex = currentIndex + 1;
+            if (nextIndex >= cells.length) nextIndex = currentIndex;
+            break;
+        case 'ArrowLeft':
+            event.preventDefault();
+            nextIndex = currentIndex - 1;
+            if (nextIndex < 0) nextIndex = currentIndex;
+            break;
+        case 'ArrowDown':
+            event.preventDefault();
+            nextIndex = currentIndex + columnsCount;
+            if (nextIndex >= cells.length) nextIndex = currentIndex;
+            break;
+        case 'ArrowUp':
+            event.preventDefault();
+            nextIndex = currentIndex - columnsCount;
+            if (nextIndex < 0) nextIndex = currentIndex;
+            break;
+        case 'Home':
+            event.preventDefault();
+            nextIndex = 0;
+            break;
+        case 'End':
+            event.preventDefault();
+            nextIndex = cells.length - 1;
+            break;
+    }
+    
+    if (nextIndex !== currentIndex) {
+        currentCell.setAttribute('tabindex', '-1');
+        cells[nextIndex].setAttribute('tabindex', '0');
+        cells[nextIndex].focus();
+    }
+}
+
+/**
+ * Anuncia mensajes a lectores de pantalla
+ * @param {string} message - Mensaje a anunciar
+ */
+function announceToScreenReader(message) {
+    const announcement = document.createElement('div');
+    announcement.setAttribute('aria-live', 'polite');
+    announcement.setAttribute('aria-atomic', 'true');
+    announcement.className = 'visually-hidden';
+    announcement.textContent = message;
+    
+    document.body.appendChild(announcement);
+    
+    // Remover después de un momento
+    setTimeout(() => {
+        document.body.removeChild(announcement);
+    }, 1000);
 }
