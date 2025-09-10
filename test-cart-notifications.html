@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="gamer">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test: Notificaciones del Carrito LG-043</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Región aria-live será creada automáticamente por el script -->
+    
+    <div class="container" style="padding: 2rem; max-width: 1200px; margin: 0 auto;">
+        <h1>🔔 Test: LG-043 Notificaciones del Carrito</h1>
+        
+        <!-- Panel de información -->
+        <div class="info-panel" style="background: #1a1a2e; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; border-left: 4px solid var(--primary-color);">
+            <h3>📋 Características de las Notificaciones</h3>
+            <ul style="color: #cccccc; line-height: 1.6;">
+                <li>✅ <strong>aria-live="polite"</strong> para accesibilidad</li>
+                <li>✅ <strong>Sonidos específicos</strong> por tipo de notificación</li>
+                <li>✅ <strong>Animaciones visuales</strong> atractivas</li>
+                <li>✅ <strong>Acciones interactivas</strong> (Deshacer, Ver carrito)</li>
+                <li>✅ <strong>Auto-cierre</strong> temporizado</li>
+                <li>✅ <strong>Badge del carrito</strong> actualizado automáticamente</li>
+                <li>✅ <strong>Responsive design</strong> para móviles</li>
+            </ul>
+        </div>
+
+        <!-- Estado del carrito -->
+        <div class="cart-status" style="background: #16213e; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+            <h3>🛒 Estado Actual del Carrito</h3>
+            <div id="cartStatus" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                <div>Productos: <span id="itemCount" style="color: var(--primary-color); font-weight: bold;">0</span></div>
+                <div>Subtotal: <span id="subtotalDisplay" style="color: var(--primary-color); font-weight: bold;">$0</span></div>
+                <div>Total: <span id="totalDisplay" style="color: var(--primary-color); font-weight: bold;">$0</span></div>
+                <div>Badge: <span class="cart-badge" id="cartBadge" style="background: var(--accent-color); color: white; padding: 4px 8px; border-radius: 50%; font-size: 0.8rem; min-width: 20px; text-align: center; display: none;">0</span></div>
+            </div>
+        </div>
+
+        <!-- Controles de prueba de notificaciones -->
+        <div class="test-controls" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 2rem 0;">
+            
+            <!-- Notificaciones de Éxito -->
+            <div class="control-group" style="background: #0d4a0d; padding: 1rem; border-radius: 8px; border-left: 4px solid var(--success-color);">
+                <h4 style="color: var(--success-color); margin-top: 0;">✅ Notificaciones de Éxito</h4>
+                <button onclick="testProductAdded()" class="btn btn-success" style="width: 100%; margin: 0.25rem 0;">
+                    ➕ Producto Agregado
+                </button>
+                <button onclick="testDiscountApplied()" class="btn btn-success" style="width: 100%; margin: 0.25rem 0;">
+                    🎫 Descuento Aplicado
+                </button>
+                <button onclick="testFreeShipping()" class="btn btn-success" style="width: 100%; margin: 0.25rem 0;">
+                    🚚 Envío Gratis
+                </button>
+                <button onclick="testCheckoutSuccess()" class="btn btn-success" style="width: 100%; margin: 0.25rem 0;">
+                    🎉 Checkout Exitoso
+                </button>
+            </div>
+
+            <!-- Notificaciones de Error -->
+            <div class="control-group" style="background: #4a0d0d; padding: 1rem; border-radius: 8px; border-left: 4px solid #ff4444;">
+                <h4 style="color: #ff6666; margin-top: 0;">❌ Notificaciones de Error</h4>
+                <button onclick="testStockError()" class="btn btn-error" style="width: 100%; margin: 0.25rem 0;">
+                    📦 Error de Stock
+                </button>
+                <button onclick="testValidationError()" class="btn btn-error" style="width: 100%; margin: 0.25rem 0;">
+                    ⚠️ Error de Validación
+                </button>
+                <button onclick="testPaymentError()" class="btn btn-error" style="width: 100%; margin: 0.25rem 0;">
+                    💳 Error de Pago
+                </button>
+            </div>
+
+            <!-- Notificaciones de Advertencia -->
+            <div class="control-group" style="background: #4a3d0d; padding: 1rem; border-radius: 8px; border-left: 4px solid #ffaa00;">
+                <h4 style="color: #ffcc00; margin-top: 0;">⚠️ Notificaciones de Advertencia</h4>
+                <button onclick="testAlmostFreeShipping()" class="btn btn-warning" style="width: 100%; margin: 0.25rem 0;">
+                    🚛 Casi Envío Gratis
+                </button>
+                <button onclick="testLowStock()" class="btn btn-warning" style="width: 100%; margin: 0.25rem 0;">
+                    📉 Stock Bajo
+                </button>
+                <button onclick="testSessionExpiring()" class="btn btn-warning" style="width: 100%; margin: 0.25rem 0;">
+                    ⏰ Sesión Expirando
+                </button>
+            </div>
+
+            <!-- Notificaciones Informativas -->
+            <div class="control-group" style="background: #0d4a3d; padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary-color);">
+                <h4 style="color: var(--primary-color); margin-top: 0;">ℹ️ Notificaciones Informativas</h4>
+                <button onclick="testProductRemoved()" class="btn btn-info" style="width: 100%; margin: 0.25rem 0;">
+                    🗑️ Producto Eliminado
+                </button>
+                <button onclick="testQuantityChanged()" class="btn btn-info" style="width: 100%; margin: 0.25rem 0;">
+                    🔢 Cantidad Cambiada
+                </button>
+                <button onclick="testCartCleared()" class="btn btn-info" style="width: 100%; margin: 0.25rem 0;">
+                    🛒 Carrito Vaciado
+                </button>
+                <button onclick="testCartSaved()" class="btn btn-info" style="width: 100%; margin: 0.25rem 0;">
+                    💾 Carrito Guardado
+                </button>
+            </div>
+        </div>
+
+        <!-- Controles adicionales -->
+        <div class="additional-controls" style="display: flex; gap: 1rem; margin: 1rem 0; flex-wrap: wrap;">
+            <button onclick="testNotificationWithActions()" class="btn btn-primary">
+                🔗 Notificación con Acciones
+            </button>
+            <button onclick="testPersistentNotification()" class="btn btn-secondary">
+                📌 Notificación Persistente
+            </button>
+            <button onclick="testAssertiveNotification()" class="btn btn-warning">
+                🔊 Notificación Assertiva
+            </button>
+            <button onclick="clearAllNotifications()" class="btn btn-secondary">
+                🧹 Limpiar Notificaciones
+            </button>
+        </div>
+
+        <!-- Log de eventos -->
+        <div id="eventLog" style="background: #0f0f23; padding: 1rem; border-radius: 8px; margin: 1rem 0; font-family: monospace; max-height: 300px; overflow-y: auto;">
+            <h3>📜 Log de Eventos de Accesibilidad</h3>
+            <div id="logOutput" style="color: #cccccc; font-size: 0.9rem;"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/products-database.js"></script>
+    <script src="assets/js/cart.js"></script>
+    <script src="assets/js/main.js"></script>
+    
+    <script>
+        // Funciones de prueba para LG-043
+        let testCounter = 0;
+        
+        function log(message, type = 'info') {
+            const output = document.getElementById('logOutput');
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'color: #ff6666' : 
+                             type === 'success' ? 'color: #00ff80' : 
+                             type === 'warning' ? 'color: #ffaa00' : 'color: #cccccc';
+            
+            output.innerHTML += `<div style="${className}">[${timestamp}] ${message}</div>`;
+            output.scrollTop = output.scrollHeight;
+        }
+        
+        function updateCartStatus() {
+            const itemCount = cartState?.itemCount || 0;
+            const subtotal = cartState?.subtotal || 0;
+            const total = cartState?.total || 0;
+            
+            document.getElementById('itemCount').textContent = itemCount;
+            document.getElementById('subtotalDisplay').textContent = formatPrice ? formatPrice(subtotal) : '$' + subtotal;
+            document.getElementById('totalDisplay').textContent = formatPrice ? formatPrice(total) : '$' + total;
+            document.getElementById('cartBadge').textContent = itemCount;
+            document.getElementById('cartBadge').style.display = itemCount > 0 ? 'inline-block' : 'none';
+        }
+        
+        // Tests de notificaciones de éxito
+        function testProductAdded() {
+            testCounter++;
+            const product = { 
+                id: `test-${testCounter}`, 
+                name: `Producto Gaming ${testCounter}`,
+                price: 25000 
+            };
+            notifyProductAdded(product, Math.floor(Math.random() * 3) + 1);
+            log('✅ Notificación: Producto agregado', 'success');
+        }
+        
+        function testDiscountApplied() {
+            notifyDiscountApplied('GAMER20', 15000);
+            log('✅ Notificación: Descuento aplicado', 'success');
+        }
+        
+        function testFreeShipping() {
+            notifyFreeShipping();
+            log('✅ Notificación: Envío gratis', 'success');
+        }
+        
+        function testCheckoutSuccess() {
+            notifyCheckoutSuccess(125000, 3);
+            log('✅ Notificación: Checkout exitoso', 'success');
+        }
+        
+        // Tests de notificaciones de error
+        function testStockError() {
+            const product = { name: 'RTX 4080 Gaming' };
+            notifyStockError(product, 5, 2);
+            log('❌ Notificación: Error de stock', 'error');
+        }
+        
+        function testValidationError() {
+            notifyValidationError(['Cantidad mínima es 1', 'Monto mínimo $5.000']);
+            log('❌ Notificación: Error de validación', 'error');
+        }
+        
+        function testPaymentError() {
+            showCartNotification('Error al procesar el pago. Verifica tu tarjeta.', 'error', {
+                ariaLevel: 'assertive',
+                duration: 6000
+            });
+            log('❌ Notificación: Error de pago', 'error');
+        }
+        
+        // Tests de notificaciones de advertencia
+        function testAlmostFreeShipping() {
+            notifyAlmostFreeShipping(15000);
+            log('⚠️ Notificación: Casi envío gratis', 'warning');
+        }
+        
+        function testLowStock() {
+            showCartNotification('Solo quedan 2 unidades de este producto', 'warning');
+            log('⚠️ Notificación: Stock bajo', 'warning');
+        }
+        
+        function testSessionExpiring() {
+            showCartNotification('Tu sesión expirará en 5 minutos', 'warning', {
+                persistent: true
+            });
+            log('⚠️ Notificación: Sesión expirando', 'warning');
+        }
+        
+        // Tests de notificaciones informativas
+        function testProductRemoved() {
+            const product = { id: 'test-removed', name: 'Mouse Gaming RGB' };
+            notifyProductRemoved(product, false);
+            log('ℹ️ Notificación: Producto eliminado', 'info');
+        }
+        
+        function testQuantityChanged() {
+            const product = { name: 'Teclado Mecánico' };
+            notifyQuantityChanged(product, 1, 3);
+            log('ℹ️ Notificación: Cantidad cambiada', 'info');
+        }
+        
+        function testCartCleared() {
+            notifyCartCleared(5);
+            log('ℹ️ Notificación: Carrito vaciado', 'info');
+        }
+        
+        function testCartSaved() {
+            showCartNotification('Carrito guardado automáticamente', 'info');
+            log('ℹ️ Notificación: Carrito guardado', 'info');
+        }
+        
+        // Tests especiales
+        function testNotificationWithActions() {
+            showCartNotification('Producto agregado al carrito', 'success', {
+                actions: [
+                    { text: 'Ver carrito', label: 'Ir al carrito', handler: 'alert("Ver carrito")' },
+                    { text: 'Seguir comprando', label: 'Continuar', handler: 'alert("Seguir comprando")' }
+                ]
+            });
+            log('🔗 Notificación con acciones', 'info');
+        }
+        
+        function testPersistentNotification() {
+            showCartNotification('Esta notificación no se cierra automáticamente', 'info', {
+                persistent: true
+            });
+            log('📌 Notificación persistente', 'info');
+        }
+        
+        function testAssertiveNotification() {
+            showCartNotification('¡ATENCIÓN! Esta es una notificación assertiva', 'warning', {
+                ariaLevel: 'assertive',
+                sound: true
+            });
+            log('🔊 Notificación assertiva (aria-live="assertive")', 'warning');
+        }
+        
+        function clearAllNotifications() {
+            const container = document.getElementById('cart-notifications-container');
+            if (container) {
+                container.innerHTML = '';
+            }
+            log('🧹 Todas las notificaciones eliminadas', 'info');
+        }
+        
+        // Monitorear cambios en aria-live
+        function monitorAriaLive() {
+            const ariaRegion = document.getElementById('cart-aria-live');
+            if (ariaRegion) {
+                const observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        if (mutation.type === 'childList' || mutation.type === 'characterData') {
+                            const content = ariaRegion.textContent.trim();
+                            if (content) {
+                                log(`🔊 ARIA-LIVE anunciado: "${content}"`, 'success');
+                            }
+                        }
+                    });
+                });
+                
+                observer.observe(ariaRegion, {
+                    childList: true,
+                    characterData: true,
+                    subtree: true
+                });
+            }
+        }
+        
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🚀 Sistema de pruebas LG-043 iniciado', 'success');
+            log('🔧 Configurando monitoreo de accesibilidad...', 'info');
+            
+            // Crear aria-live region si no existe
+            setTimeout(() => {
+                monitorAriaLive();
+                log('✅ Monitor de ARIA-LIVE configurado', 'success');
+            }, 1000);
+            
+            updateCartStatus();
+            
+            // Actualizar estado cada segundo
+            setInterval(updateCartStatus, 1000);
+        });
+    </script>
+</body>
+</html>

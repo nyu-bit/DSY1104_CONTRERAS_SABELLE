@@ -10,7 +10,34 @@ const CART_CONFIG = {
     minQuantity: 1,
     shippingThreshold: 50000, // CLP
     shippingCost: 2990, // CLP
-    autoSaveDelay: 500 // ms
+    autoSaveDelay: 500, // ms
+    
+    // LG-042: Reglas mínimas del carrito
+    validation: {
+        minItemsForCheckout: 1,
+        maxItemsPerProduct: 10,
+        minOrderAmount: 5000, // CLP - mínimo $5.000
+        maxOrderAmount: 5000000, // CLP - máximo $5.000.000
+        allowEmptyCart: true,
+        requireTermsAcceptance: true,
+        validateStock: true,
+        maxCartItems: 50 // máximo 50 productos diferentes en el carrito
+    },
+    
+    // Mensajes de error personalizados
+    errorMessages: {
+        emptyCart: 'Tu carrito está vacío. Agrega productos antes de continuar.',
+        minQuantity: 'La cantidad mínima es 1 unidad.',
+        maxQuantity: 'La cantidad máxima es 99 unidades por producto.',
+        maxCartItems: 'Has alcanzado el límite máximo de 50 productos diferentes.',
+        minOrderAmount: 'El monto mínimo de compra es $5.000.',
+        maxOrderAmount: 'El monto máximo de compra es $5.000.000.',
+        insufficientStock: 'No hay suficiente stock disponible.',
+        invalidQuantity: 'Por favor ingresa una cantidad válida.',
+        maxItemsPerProduct: 'Máximo 10 unidades de este producto.',
+        productNotFound: 'Producto no encontrado.',
+        checkoutValidation: 'Revisa los errores antes de continuar.'
+    }
 };
 
 // Estado global del carrito
@@ -117,29 +144,42 @@ function addToCart(productData, quantity = 1, options = {}) {
         // Normalizar datos del producto
         const product = normalizeProductData(productData);
         if (!product) {
-            throw new Error('Producto no válido');
+            throw new Error(CART_CONFIG.errorMessages.productNotFound);
         }
         
-        // Validar cantidad
-        if (!isValidQuantity(quantity)) {
-            throw new Error('Cantidad no válida');
+        // LG-042: Validar cantidad con nuevas reglas
+        const quantityValidation = validateQuantity(quantity, product);
+        if (!quantityValidation.valid) {
+            showValidationErrors([quantityValidation.error]);
+            return false;
+        }
+        
+        // LG-042: Validar número máximo de productos diferentes
+        const existingItemIndex = findCartItemIndex(product.id, options);
+        if (existingItemIndex === -1) {
+            const maxItemsValidation = validateMaxCartItems();
+            if (!maxItemsValidation.valid) {
+                showValidationErrors([maxItemsValidation.error]);
+                return false;
+            }
         }
         
         // Verificar stock disponible
         if (!checkStock(product.id, quantity)) {
-            throw new Error('Stock insuficiente');
+            showValidationErrors([CART_CONFIG.errorMessages.insufficientStock]);
+            return false;
         }
-        
-        // Buscar si el producto ya existe en el carrito
-        const existingItemIndex = findCartItemIndex(product.id, options);
         
         if (existingItemIndex !== -1) {
             // UPDATE: Actualizar cantidad del producto existente
             const existingItem = cartState.items[existingItemIndex];
             const newQuantity = existingItem.quantity + quantity;
             
-            if (newQuantity > CART_CONFIG.maxQuantity) {
-                throw new Error(`Cantidad máxima permitida: ${CART_CONFIG.maxQuantity}`);
+            // Validar nueva cantidad total
+            const newQuantityValidation = validateQuantity(newQuantity, product);
+            if (!newQuantityValidation.valid) {
+                showValidationErrors([newQuantityValidation.error]);
+                return false;
             }
             
             existingItem.quantity = newQuantity;
@@ -168,6 +208,9 @@ function addToCart(productData, quantity = 1, options = {}) {
         updateCartState();
         saveCartToStorage();
         updateAllCartDisplays();
+        
+        // Mostrar confirmación con notificación específica
+        notifyProductAdded(product, quantity);
         
         // Analytics tracking
         trackCartEvent('add_to_cart', {
@@ -214,28 +257,33 @@ function getCartItems(productId = null) {
  */
 function updateQuantity(productId, newQuantity, options = {}) {
     try {
-        // Validar cantidad
-        if (!isValidQuantity(newQuantity)) {
-            throw new Error('Cantidad no válida');
+        // LG-042: Validar cantidad con nuevas reglas
+        const product = getProductById(productId);
+        const quantityValidation = validateQuantity(newQuantity, product);
+        if (!quantityValidation.valid) {
+            showValidationErrors([quantityValidation.error]);
+            return false;
         }
         
         // Buscar el producto en el carrito
         const itemIndex = findCartItemIndex(productId, options);
         if (itemIndex === -1) {
-            throw new Error('Producto no encontrado en el carrito');
+            showValidationErrors([CART_CONFIG.errorMessages.productNotFound]);
+            return false;
         }
         
         const item = cartState.items[itemIndex];
         
         // Verificar stock disponible
         if (!checkStock(productId, newQuantity)) {
-            throw new Error('Stock insuficiente');
+            showValidationErrors([CART_CONFIG.errorMessages.insufficientStock]);
+            return false;
         }
         
         // Si la cantidad es 0, eliminar el producto
         if (newQuantity === 0) {
             removeFromCart(productId, options);
-            return;
+            return true;
         }
         
         // Actualizar cantidad
@@ -248,12 +296,18 @@ function updateQuantity(productId, newQuantity, options = {}) {
         saveCartToStorage();
         updateAllCartDisplays();
         
-        // Feedback al usuario
-        const action = newQuantity > oldQuantity ? 'aumentada' : 'reducida';
-        showCartNotification(
-            `Cantidad ${action}: ${item.name} (${newQuantity})`,
-            'info'
-        );
+        // Feedback al usuario con notificación específica
+        notifyQuantityChanged(product, oldQuantity, newQuantity);
+        
+        // Emitir evento de actualización
+        emitCartEvent('updated', {
+            action: 'quantity_updated',
+            product: product,
+            oldQuantity: oldQuantity,
+            newQuantity: newQuantity
+        });
+        
+        return true;
         
         // Analytics tracking
         trackCartEvent('update_quantity', {
@@ -1195,9 +1249,11 @@ function removeDiscountCode() {
 // ================================
 
 function proceedToCheckout() {
-    if (cartState.items.length === 0) {
-        showCartNotification('Tu carrito está vacío', 'error');
-        return;
+    // LG-042: Validaciones completas antes del checkout
+    const validation = validateCartForCheckout();
+    if (!validation.valid) {
+        showValidationErrors(validation.errors);
+        return false;
     }
 
     // Verificar si el usuario está logueado
@@ -1207,9 +1263,12 @@ function proceedToCheckout() {
         setTimeout(() => {
             window.location.href = '../usuario/';
         }, 1500);
-        return;
+        return false;
     }
 
+    // Mostrar resumen final antes de proceder
+    showCheckoutSummary();
+    
     // Simular proceso de checkout exitoso
     showCartNotification('Procesando compra...', 'info');
     
@@ -1220,15 +1279,61 @@ function proceedToCheckout() {
             window.gamificationSystem.addPoints('purchase', pointsToAdd);
         }
         
-        // Limpiar carrito después de la compra
-        cartState.items = [];
-        cartState.discountCode = null;
-        saveCartToStorage();
-        calculateCartTotals();
-        updateCartDisplay();
+        // Limpiar carrito después de compra exitosa
+        clearCart();
         
-        showCartNotification('¡Compra realizada exitosamente! 🎉', 'success');
+        showCartNotification('¡Compra realizada exitosamente!', 'success');
+        
+        // Tracking de compra exitosa
+        trackCartEvent('purchase_completed', {
+            total: cartState.total,
+            items: cartState.itemCount
+        });
+        
     }, 2000);
+    
+    return true;
+}
+
+/**
+ * LG-042: Mostrar resumen detallado del checkout
+ */
+function showCheckoutSummary() {
+    const validation = validateCartForCheckout();
+    
+    let summaryHTML = `
+        <div class="checkout-summary">
+            <h3>🛒 Resumen de tu Compra</h3>
+            <div class="summary-items">
+                <p><strong>Productos:</strong> ${cartState.itemCount} unidades</p>
+                <p><strong>Subtotal:</strong> ${formatPrice(cartState.subtotal)}</p>
+                <p><strong>Envío:</strong> ${cartState.shipping === 0 ? 'GRATIS' : formatPrice(cartState.shipping)}</p>
+                ${cartState.discount > 0 ? `<p><strong>Descuento:</strong> -${formatPrice(cartState.discount)}</p>` : ''}
+                <p class="total-line"><strong>Total a pagar:</strong> ${formatPrice(cartState.total)}</p>
+            </div>
+    `;
+    
+    if (!validation.valid) {
+        summaryHTML += `
+            <div class="validation-errors">
+                <h4>⚠️ Problemas detectados:</h4>
+                <ul>
+                    ${validation.errors.map(error => `<li>${error}</li>`).join('')}
+                </ul>
+            </div>
+        `;
+    } else {
+        summaryHTML += `
+            <div class="validation-success">
+                <p>✅ Tu carrito está listo para el checkout</p>
+            </div>
+        `;
+    }
+    
+    summaryHTML += `</div>`;
+    
+    console.log('Resumen del checkout:', summaryHTML);
+    return validation.valid;
 }
 
 // ================================
@@ -1293,27 +1398,436 @@ function formatPriceNumber(price) {
     }).format(Math.round(price));
 }
 
-function showCartNotification(message, type = 'info') {
-    if (window.levelUpGamer && window.levelUpGamer.showNotification) {
-        window.levelUpGamer.showNotification(message, type);
-    } else {
-        // Fallback visual
-        const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        notification.textContent = message;
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 12px 20px;
-            background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
-            color: white;
-            border-radius: 4px;
-            z-index: 10000;
-        `;
-        document.body.appendChild(notification);
-        setTimeout(() => notification.remove(), 3000);
+// ========================================
+// LG-043: MENSAJES Y NOTIFICACIONES DEL CARRITO
+// ========================================
+
+/**
+ * Sistema de notificaciones del carrito con accesibilidad
+ * @param {string} message - Mensaje a mostrar
+ * @param {string} type - Tipo: 'success', 'error', 'warning', 'info'
+ * @param {Object} options - Opciones adicionales
+ */
+function showCartNotification(message, type = 'info', options = {}) {
+    const config = {
+        duration: options.duration || (type === 'error' ? 5000 : 3000),
+        persistent: options.persistent || false,
+        sound: options.sound !== false,
+        ariaLevel: options.ariaLevel || 'polite', // 'polite' | 'assertive'
+        showCounter: options.showCounter !== false,
+        actions: options.actions || null
+    };
+    
+    // Crear o obtener container de notificaciones
+    let notificationsContainer = document.getElementById('cart-notifications-container');
+    if (!notificationsContainer) {
+        notificationsContainer = createNotificationsContainer();
     }
+    
+    // Crear región aria-live si no existe
+    let ariaLiveRegion = document.getElementById('cart-aria-live');
+    if (!ariaLiveRegion) {
+        ariaLiveRegion = createAriaLiveRegion();
+    }
+    
+    // Crear notificación visual
+    const notification = createNotificationElement(message, type, config);
+    
+    // Agregar al container
+    notificationsContainer.appendChild(notification);
+    
+    // Anunciar a lectores de pantalla
+    announceToScreenReader(message, type, ariaLiveRegion, config.ariaLevel);
+    
+    // Reproducir sonido si está habilitado
+    if (config.sound) {
+        playNotificationSound(type);
+    }
+    
+    // Actualizar contador del carrito
+    if (config.showCounter) {
+        updateCartBadge();
+    }
+    
+    // Auto-remover si no es persistente
+    if (!config.persistent) {
+        setTimeout(() => {
+            removeNotification(notification);
+        }, config.duration);
+    }
+    
+    // Tracking del evento
+    trackNotificationEvent(message, type);
+    
+    // Log para debugging
+    console.log(`🔔 Notificación ${type.toUpperCase()}: ${message}`);
+    
+    return notification;
+}
+
+/**
+ * Crear container principal de notificaciones
+ */
+function createNotificationsContainer() {
+    const container = document.createElement('div');
+    container.id = 'cart-notifications-container';
+    container.className = 'cart-notifications-container';
+    container.setAttribute('role', 'status');
+    container.setAttribute('aria-label', 'Notificaciones del carrito de compras');
+    
+    // Insertar al inicio del body
+    document.body.insertBefore(container, document.body.firstChild);
+    
+    return container;
+}
+
+/**
+ * Crear región aria-live para accesibilidad
+ */
+function createAriaLiveRegion() {
+    const region = document.createElement('div');
+    region.id = 'cart-aria-live';
+    region.className = 'sr-only'; // Solo para lectores de pantalla
+    region.setAttribute('aria-live', 'polite');
+    region.setAttribute('aria-atomic', 'true');
+    region.setAttribute('aria-label', 'Anuncios del carrito');
+    
+    document.body.appendChild(region);
+    
+    return region;
+}
+
+/**
+ * Crear elemento de notificación visual
+ */
+function createNotificationElement(message, type, config) {
+    const notification = document.createElement('div');
+    notification.className = `cart-notification cart-notification-${type}`;
+    notification.setAttribute('role', 'alert');
+    notification.setAttribute('tabindex', '-1');
+    
+    // Icono según el tipo
+    const icons = {
+        success: '✅',
+        error: '❌',
+        warning: '⚠️',
+        info: 'ℹ️'
+    };
+    
+    const icon = icons[type] || icons.info;
+    
+    notification.innerHTML = `
+        <div class="notification-content">
+            <div class="notification-icon" aria-hidden="true">${icon}</div>
+            <div class="notification-message">${message}</div>
+            ${config.actions ? createNotificationActions(config.actions) : ''}
+        </div>
+        <button type="button" class="notification-close" aria-label="Cerrar notificación">
+            <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+    `;
+    
+    // Event listener para cerrar
+    const closeBtn = notification.querySelector('.notification-close');
+    closeBtn.addEventListener('click', () => removeNotification(notification));
+    
+    // Animación de entrada
+    notification.style.transform = 'translateX(100%)';
+    notification.style.opacity = '0';
+    
+    requestAnimationFrame(() => {
+        notification.style.transform = 'translateX(0)';
+        notification.style.opacity = '1';
+    });
+    
+    return notification;
+}
+
+/**
+ * Crear acciones para notificaciones (ej: "Deshacer")
+ */
+function createNotificationActions(actions) {
+    return `
+        <div class="notification-actions">
+            ${actions.map(action => `
+                <button type="button" 
+                        class="notification-action-btn" 
+                        onclick="${action.handler}"
+                        aria-label="${action.label}">
+                    ${action.text}
+                </button>
+            `).join('')}
+        </div>
+    `;
+}
+
+/**
+ * Anunciar mensaje a lectores de pantalla
+ */
+function announceToScreenReader(message, type, ariaRegion, level) {
+    // Cambiar nivel de aria-live según urgencia
+    if (type === 'error' || level === 'assertive') {
+        ariaRegion.setAttribute('aria-live', 'assertive');
+    } else {
+        ariaRegion.setAttribute('aria-live', 'polite');
+    }
+    
+    // Prefijo según tipo para mayor claridad
+    const prefixes = {
+        success: 'Éxito: ',
+        error: 'Error: ',
+        warning: 'Advertencia: ',
+        info: 'Información: '
+    };
+    
+    const prefix = prefixes[type] || '';
+    const fullMessage = `${prefix}${message}`;
+    
+    // Limpiar y establecer mensaje
+    ariaRegion.textContent = '';
+    setTimeout(() => {
+        ariaRegion.textContent = fullMessage;
+    }, 100);
+    
+    // Limpiar después de un tiempo para evitar spam
+    setTimeout(() => {
+        if (ariaRegion.textContent === fullMessage) {
+            ariaRegion.textContent = '';
+        }
+    }, 5000);
+}
+
+/**
+ * Reproducir sonido de notificación
+ */
+function playNotificationSound(type) {
+    try {
+        // Solo si el usuario ha interactuado con la página
+        if (document.hasFocus()) {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            // Frecuencias según tipo
+            const frequencies = {
+                success: 800,
+                error: 300,
+                warning: 600,
+                info: 500
+            };
+            
+            oscillator.frequency.setValueAtTime(frequencies[type] || 500, audioContext.currentTime);
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.2);
+        }
+    } catch (error) {
+        // Fallar silenciosamente si no hay soporte de audio
+        console.warn('No se pudo reproducir sonido de notificación:', error);
+    }
+}
+
+/**
+ * Remover notificación con animación
+ */
+function removeNotification(notification) {
+    if (!notification || !notification.parentNode) return;
+    
+    notification.style.transform = 'translateX(100%)';
+    notification.style.opacity = '0';
+    
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 300);
+}
+
+/**
+ * Actualizar badge del carrito
+ */
+function updateCartBadge() {
+    const badge = document.querySelector('.cart-badge, .cart-counter, .nav-cart-count');
+    if (badge && cartState) {
+        const itemCount = cartState.itemCount || 0;
+        badge.textContent = itemCount > 99 ? '99+' : itemCount.toString();
+        badge.style.display = itemCount > 0 ? 'block' : 'none';
+        
+        // Animar badge
+        badge.style.transform = 'scale(1.2)';
+        setTimeout(() => {
+            badge.style.transform = 'scale(1)';
+        }, 200);
+    }
+}
+
+/**
+ * Tracking de eventos de notificación
+ */
+function trackNotificationEvent(message, type) {
+    if (window.gtag) {
+        gtag('event', 'cart_notification', {
+            event_category: 'Cart',
+            event_label: type,
+            value: message.length
+        });
+    }
+}
+
+// ========================================
+// NOTIFICACIONES ESPECÍFICAS DEL CARRITO
+// ========================================
+
+/**
+ * Notificación al agregar producto
+ */
+function notifyProductAdded(product, quantity) {
+    const message = `${product.name} ${quantity > 1 ? `(${quantity} unidades)` : ''} agregado al carrito`;
+    showCartNotification(message, 'success', {
+        actions: [{
+            text: 'Ver carrito',
+            label: 'Ir al carrito de compras',
+            handler: 'window.location.href="../carrito/"'
+        }]
+    });
+}
+
+/**
+ * Notificación al eliminar producto
+ */
+function notifyProductRemoved(product, wasLastItem = false) {
+    const message = wasLastItem 
+        ? `${product.name} eliminado del carrito`
+        : `${product.name} eliminado del carrito. ${cartState.itemCount} productos restantes`;
+    
+    showCartNotification(message, 'info', {
+        actions: [{
+            text: 'Deshacer',
+            label: 'Volver a agregar producto',
+            handler: `addToCart('${product.id}', 1)`
+        }]
+    });
+}
+
+/**
+ * Notificación al cambiar cantidad
+ */
+function notifyQuantityChanged(product, oldQuantity, newQuantity) {
+    const action = newQuantity > oldQuantity ? 'aumentada' : 'reducida';
+    const message = `Cantidad ${action}: ${product.name} (${newQuantity} ${newQuantity === 1 ? 'unidad' : 'unidades'})`;
+    
+    showCartNotification(message, 'info', {
+        duration: 2000
+    });
+}
+
+/**
+ * Notificación al vaciar carrito
+ */
+function notifyCartCleared(itemCount) {
+    const message = `Carrito vaciado completamente. ${itemCount} ${itemCount === 1 ? 'producto eliminado' : 'productos eliminados'}`;
+    
+    showCartNotification(message, 'info', {
+        persistent: true,
+        actions: [{
+            text: 'Deshacer',
+            label: 'Restaurar carrito',
+            handler: 'restoreLastCartState()'
+        }]
+    });
+}
+
+/**
+ * Notificación de error de stock
+ */
+function notifyStockError(product, requestedQuantity, availableStock) {
+    const message = availableStock === 0 
+        ? `${product.name} no está disponible`
+        : `Solo ${availableStock} ${availableStock === 1 ? 'unidad disponible' : 'unidades disponibles'} de ${product.name}`;
+    
+    showCartNotification(message, 'warning', {
+        duration: 4000,
+        ariaLevel: 'assertive'
+    });
+}
+
+/**
+ * Notificación de descuento aplicado
+ */
+function notifyDiscountApplied(discountCode, discountAmount) {
+    const message = `¡Descuento aplicado! Código "${discountCode}" - Ahorras ${formatPrice(discountAmount)}`;
+    
+    showCartNotification(message, 'success', {
+        duration: 4000,
+        sound: true
+    });
+}
+
+/**
+ * Notificación de envío gratis
+ */
+function notifyFreeShipping() {
+    const message = '🎉 ¡Felicidades! Tienes envío gratis en tu pedido';
+    
+    showCartNotification(message, 'success', {
+        duration: 3000,
+        sound: true
+    });
+}
+
+/**
+ * Notificación para completar envío gratis
+ */
+function notifyAlmostFreeShipping(remaining) {
+    const message = `¡Casi tienes envío gratis! Agrega ${formatPrice(remaining)} más para obtenerlo`;
+    
+    showCartNotification(message, 'info', {
+        duration: 5000,
+        actions: [{
+            text: 'Ver productos',
+            label: 'Explorar productos para agregar',
+            handler: 'window.location.href="../productos/"'
+        }]
+    });
+}
+
+/**
+ * Notificación de checkout exitoso
+ */
+function notifyCheckoutSuccess(orderTotal, itemCount) {
+    const message = `¡Compra realizada exitosamente! Total: ${formatPrice(orderTotal)} - ${itemCount} ${itemCount === 1 ? 'producto' : 'productos'}`;
+    
+    showCartNotification(message, 'success', {
+        persistent: true,
+        sound: true,
+        ariaLevel: 'assertive'
+    });
+}
+
+/**
+ * Notificación de error de validación
+ */
+function notifyValidationError(errors) {
+    const message = errors.length === 1 
+        ? errors[0]
+        : `${errors.length} problemas encontrados. Revisa tu carrito.`;
+    
+    showCartNotification(message, 'error', {
+        duration: 6000,
+        ariaLevel: 'assertive',
+        actions: [{
+            text: 'Ver detalles',
+            label: 'Ver errores de validación',
+            handler: 'showValidationErrors(' + JSON.stringify(errors) + ')'
+        }]
+    });
 }
 
 // Exponer funciones para uso global
@@ -1727,12 +2241,224 @@ function showCartNotification(message, type = 'info') {
 }
 
 // ================================
-// FUNCIONES AUXILIARES
-// ================================
+// ========================================
+// LG-042: VALIDACIONES DEL CARRITO
+// ========================================
 
-function validateQuantity(quantity) {
+/**
+ * Validar cantidad de producto
+ * @param {number} quantity - Cantidad a validar
+ * @param {Object} product - Producto para validar stock
+ * @returns {Object} - {valid: boolean, error: string}
+ */
+function validateQuantity(quantity, product = null) {
     const num = parseInt(quantity);
-    return !isNaN(num) && num >= 1 && num <= 99;
+    
+    // Validar que sea un número válido
+    if (isNaN(num)) {
+        return {
+            valid: false,
+            error: CART_CONFIG.errorMessages.invalidQuantity
+        };
+    }
+    
+    // Validar cantidad mínima
+    if (num < CART_CONFIG.minQuantity) {
+        return {
+            valid: false,
+            error: CART_CONFIG.errorMessages.minQuantity
+        };
+    }
+    
+    // Validar cantidad máxima
+    if (num > CART_CONFIG.maxQuantity) {
+        return {
+            valid: false,
+            error: CART_CONFIG.errorMessages.maxQuantity
+        };
+    }
+    
+    // Validar máximo por producto específico
+    if (num > CART_CONFIG.validation.maxItemsPerProduct) {
+        return {
+            valid: false,
+            error: CART_CONFIG.errorMessages.maxItemsPerProduct
+        };
+    }
+    
+    // Validar stock si el producto está disponible
+    if (product && CART_CONFIG.validation.validateStock) {
+        if (product.stock && num > product.stock) {
+            return {
+                valid: false,
+                error: `Solo quedan ${product.stock} unidades disponibles.`
+            };
+        }
+    }
+    
+    return { valid: true, error: null };
+}
+
+/**
+ * Validar si el carrito está vacío
+ * @returns {Object} - {valid: boolean, error: string}
+ */
+function validateCartNotEmpty() {
+    if (cartState.items.length === 0) {
+        return {
+            valid: false,
+            error: CART_CONFIG.errorMessages.emptyCart
+        };
+    }
+    
+    return { valid: true, error: null };
+}
+
+/**
+ * Validar monto mínimo del pedido
+ * @returns {Object} - {valid: boolean, error: string}
+ */
+function validateMinOrderAmount() {
+    if (cartState.subtotal < CART_CONFIG.validation.minOrderAmount) {
+        return {
+            valid: false,
+            error: `${CART_CONFIG.errorMessages.minOrderAmount} Necesitas ${formatPrice(CART_CONFIG.validation.minOrderAmount - cartState.subtotal)} más.`
+        };
+    }
+    
+    return { valid: true, error: null };
+}
+
+/**
+ * Validar monto máximo del pedido
+ * @returns {Object} - {valid: boolean, error: string}
+ */
+function validateMaxOrderAmount() {
+    if (cartState.total > CART_CONFIG.validation.maxOrderAmount) {
+        return {
+            valid: false,
+            error: CART_CONFIG.errorMessages.maxOrderAmount
+        };
+    }
+    
+    return { valid: true, error: null };
+}
+
+/**
+ * Validar número máximo de productos diferentes en el carrito
+ * @returns {Object} - {valid: boolean, error: string}
+ */
+function validateMaxCartItems() {
+    if (cartState.items.length >= CART_CONFIG.validation.maxCartItems) {
+        return {
+            valid: false,
+            error: CART_CONFIG.errorMessages.maxCartItems
+        };
+    }
+    
+    return { valid: true, error: null };
+}
+
+/**
+ * Validación completa del carrito para checkout
+ * @returns {Object} - {valid: boolean, errors: Array}
+ */
+function validateCartForCheckout() {
+    const errors = [];
+    
+    // Validar carrito no vacío
+    const emptyValidation = validateCartNotEmpty();
+    if (!emptyValidation.valid) {
+        errors.push(emptyValidation.error);
+    }
+    
+    // Validar monto mínimo
+    const minAmountValidation = validateMinOrderAmount();
+    if (!minAmountValidation.valid) {
+        errors.push(minAmountValidation.error);
+    }
+    
+    // Validar monto máximo
+    const maxAmountValidation = validateMaxOrderAmount();
+    if (!maxAmountValidation.valid) {
+        errors.push(maxAmountValidation.error);
+    }
+    
+    // Validar cantidades de cada producto
+    cartState.items.forEach(item => {
+        const product = getProductById(item.id);
+        const quantityValidation = validateQuantity(item.quantity, product);
+        if (!quantityValidation.valid) {
+            errors.push(`${item.name}: ${quantityValidation.error}`);
+        }
+    });
+    
+    return {
+        valid: errors.length === 0,
+        errors: errors
+    };
+}
+
+/**
+ * Mostrar errores de validación al usuario
+ * @param {Array} errors - Array de mensajes de error
+ */
+function showValidationErrors(errors) {
+    if (!errors || errors.length === 0) return;
+    
+    // Mostrar notificación principal
+    const errorMessage = errors.length === 1 
+        ? errors[0] 
+        : `Se encontraron ${errors.length} problemas:\n• ${errors.join('\n• ')}`;
+    
+    showCartNotification(errorMessage, 'error');
+    
+    // Crear o actualizar panel de errores en el DOM
+    let errorPanel = document.getElementById('cart-validation-errors');
+    if (!errorPanel) {
+        errorPanel = document.createElement('div');
+        errorPanel.id = 'cart-validation-errors';
+        errorPanel.className = 'validation-errors-panel';
+        
+        // Insertar al inicio del container del carrito
+        const cartContainer = document.getElementById('cartContainer') || document.querySelector('.cart-container');
+        if (cartContainer) {
+            cartContainer.insertBefore(errorPanel, cartContainer.firstChild);
+        }
+    }
+    
+    errorPanel.innerHTML = `
+        <div class="error-header">
+            <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+            <span>Problemas en tu carrito:</span>
+            <button type="button" class="close-errors-btn" onclick="hideValidationErrors()" aria-label="Cerrar errores">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
+        <ul class="error-list">
+            ${errors.map(error => `<li>${error}</li>`).join('')}
+        </ul>
+    `;
+    
+    errorPanel.style.display = 'block';
+    
+    // Auto-ocultar después de 10 segundos
+    setTimeout(() => {
+        hideValidationErrors();
+    }, 10000);
+    
+    // También mostrar en consola para debugging
+    console.error('Errores de validación del carrito:', errors);
+}
+
+/**
+ * Ocultar panel de errores de validación
+ */
+function hideValidationErrors() {
+    const errorPanel = document.getElementById('cart-validation-errors');
+    if (errorPanel) {
+        errorPanel.style.display = 'none';
+    }
 }
 
 // Exponer funciones para uso global
@@ -2255,3 +2981,79 @@ setupCartEventListeners();
 
 console.log('�🛒 Sistema CRUD de carrito inicializado completamente');
 console.log('📊 Estado inicial del carrito:', getCartState());
+
+// ========================================
+// LG-043: NOTIFICACIONES ESPECÍFICAS DEL CARRITO
+// ========================================
+
+/**
+ * Notificación cuando se agrega un producto al carrito
+ */
+function notifyProductAdded(product, quantity = 1) {
+    const message = `🛒 ${product.name} agregado al carrito (${quantity} ${quantity === 1 ? "unidad" : "unidades"})`;
+    showCartNotification(message, "success", {
+        duration: 2500,
+        ariaLevel: "polite",
+        sound: true
+    });
+}
+
+/**
+ * Notificación cuando se elimina un producto del carrito
+ */
+function notifyProductRemoved(product) {
+    const message = `🗑️ ${product.name} eliminado del carrito`;
+    showCartNotification(message, "info", {
+        duration: 2000,
+        ariaLevel: "polite",
+        sound: false
+    });
+}
+
+/**
+ * Notificación cuando se actualiza la cantidad de un producto
+ */
+function notifyQuantityUpdated(product, oldQuantity, newQuantity) {
+    const action = newQuantity > oldQuantity ? "aumentada" : "reducida";
+    const message = `📊 Cantidad ${action}: ${product.name} (${newQuantity} ${newQuantity === 1 ? "unidad" : "unidades"})`;
+    showCartNotification(message, "info", {
+        duration: 2000,
+        ariaLevel: "polite",
+        sound: false
+    });
+}
+
+/**
+ * Notificación cuando se vacía el carrito
+ */
+function notifyCartCleared() {
+    const message = "🗑️ Carrito vaciado completamente";
+    showCartNotification(message, "info", {
+        duration: 2500,
+        ariaLevel: "polite",
+        sound: false
+    });
+}
+
+/**
+ * Notificación de compra exitosa
+ */
+function notifyPurchaseSuccess(total, itemCount) {
+    const message = `🎉 ¡Compra exitosa! ${itemCount} ${itemCount === 1 ? "producto" : "productos"} por ${formatPrice(total)}`;
+    showCartNotification(message, "success", {
+        duration: 5000,
+        ariaLevel: "assertive",
+        sound: true,
+        persistent: false
+    });
+}
+
+// Exportar funciones de notificación globalmente
+window.cartNotifications = {
+    notifyProductAdded,
+    notifyProductRemoved,
+    notifyQuantityUpdated,
+    notifyCartCleared,
+    notifyPurchaseSuccess
+};
+

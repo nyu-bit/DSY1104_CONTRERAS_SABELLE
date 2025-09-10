@@ -4908,6 +4908,499 @@ a:hover {
   100% { transform: translateX(100%); }
 }
 
+/* ========================================
+   LG-042: VALIDACIONES DEL CARRITO
+   ======================================== */
+
+/* Panel de errores de validación */
+.validation-errors-panel {
+    background: linear-gradient(135deg, #ff4444, #cc0000);
+    border: 2px solid #ff6666;
+    border-radius: 8px;
+    margin: 1rem 0;
+    padding: 1rem;
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 68, 68, 0.3);
+    animation: slideInFromTop 0.3s ease-out;
+    display: none;
+}
+
+.validation-errors-panel .error-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+.validation-errors-panel .close-errors-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-left: auto;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.validation-errors-panel .close-errors-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.validation-errors-panel .error-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.validation-errors-panel .error-list li {
+    padding: 0.25rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.validation-errors-panel .error-list li::before {
+    content: "⚠️";
+    position: absolute;
+    left: 0;
+    top: 0.25rem;
+}
+
+/* Panel de validación exitosa */
+.validation-success {
+    background: linear-gradient(135deg, var(--success-color), #00cc66);
+    border: 2px solid #00ff80;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+    color: white;
+    text-align: center;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0, 255, 119, 0.3);
+}
+
+/* Animación para panel de errores */
+@keyframes slideInFromTop {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mejoras adicionales para el carrito */
+.cart-item.error {
+    border: 2px solid #ff4444;
+    background-color: rgba(255, 68, 68, 0.1);
+}
+
+.quantity-input.error {
+    border-color: #ff4444;
+    background-color: rgba(255, 68, 68, 0.1);
+}
+
+.cart-summary .error-message {
+    color: #ff6666;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background-color: rgba(255, 68, 68, 0.1);
+    border-radius: 4px;
+    border-left: 3px solid #ff4444;
+}
+
+/* ========================================
+   LG-043: NOTIFICACIONES DEL CARRITO
+   ======================================== */
+
+/* Container principal de notificaciones */
+.cart-notifications-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 400px;
+    pointer-events: none;
+}
+
+/* Notificación individual */
+.cart-notification {
+    background: rgba(0, 0, 0, 0.9);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border-left: 4px solid;
+    pointer-events: auto;
+    transform: translateX(100%);
+    opacity: 0;
+    animation: slideInNotification 0.3s ease-out forwards;
+    backdrop-filter: blur(10px);
+}
+
+/* Tipos de notificaciones */
+.cart-notification-success {
+    border-left-color: var(--success-color);
+    background: linear-gradient(135deg, rgba(0, 255, 119, 0.1), rgba(0, 204, 102, 0.1));
+}
+
+.cart-notification-error {
+    border-left-color: #ff4444;
+    background: linear-gradient(135deg, rgba(255, 68, 68, 0.1), rgba(204, 0, 0, 0.1));
+}
+
+.cart-notification-warning {
+    border-left-color: #ffaa00;
+    background: linear-gradient(135deg, rgba(255, 170, 0, 0.1), rgba(255, 136, 0, 0.1));
+}
+
+.cart-notification-info {
+    border-left-color: var(--primary-color);
+    background: linear-gradient(135deg, rgba(0, 255, 119, 0.1), rgba(26, 255, 146, 0.1));
+}
+
+/* Contenido de la notificación */
+.notification-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: white;
+}
+
+.notification-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.notification-message {
+    flex: 1;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    font-weight: 500;
+}
+
+.notification-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.notification-action {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.notification-action:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.close-notification {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: color 0.3s ease;
+    margin-left: 0.5rem;
+}
+
+.close-notification:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Región aria-live (oculta visualmente) */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Animaciones */
+@keyframes slideInNotification {
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutNotification {
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.cart-notification.removing {
+    animation: slideOutNotification 0.3s ease-in forwards;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    .cart-notifications-container {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+    
+    .cart-notification {
+        padding: 0.75rem;
+    }
+    
+    .notification-message {
+        font-size: 0.85rem;
+    }
+}
+
+/* Modo de alto contraste */
+@media (prefers-contrast: high) {
+    .cart-notification {
+        background: #000;
+        border: 2px solid;
+    }
+    
+    .cart-notification-success {
+        border-color: #00ff00;
+    }
+    
+    .cart-notification-error {
+        border-color: #ff0000;
+    }
+    
+    .cart-notification-warning {
+        border-color: #ffff00;
+    }
+    
+    .cart-notification-info {
+        border-color: #00ffff;
+    }
+}
+
+/* Preferencia de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+    .cart-notification {
+        animation: none;
+        transform: translateX(0);
+        opacity: 1;
+    }
+    
+    .cart-notification.removing {
+        animation: none;
+        opacity: 0;
+    }
+}
+
+/* ========================================
+   LG-043: NOTIFICACIONES DEL CARRITO
+   ======================================== */
+
+/* Container principal de notificaciones */
+.cart-notifications-container {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 10000;
+    max-width: 400px;
+    pointer-events: none;
+}
+
+/* Elementos de notificación */
+.cart-notification {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    padding: 16px;
+    color: white;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    pointer-events: auto;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Tipos de notificación */
+.cart-notification-success {
+    border-color: var(--success-color);
+    background: linear-gradient(135deg, #1a2e1a, #0d4a0d);
+}
+
+.cart-notification-error {
+    border-color: #ff4444;
+    background: linear-gradient(135deg, #2e1a1a, #4a0d0d);
+}
+
+.cart-notification-warning {
+    border-color: #ffaa00;
+    background: linear-gradient(135deg, #2e2a1a, #4a3d0d);
+}
+
+.cart-notification-info {
+    border-color: var(--primary-color);
+    background: linear-gradient(135deg, #1a2e2a, #0d4a3d);
+}
+
+/* Contenido de notificación */
+.notification-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.notification-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.notification-message {
+    flex: 1;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    font-weight: 500;
+}
+
+/* Botón de cerrar */
+.notification-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.notification-close:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+/* Acciones de notificación */
+.notification-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.notification-action-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.notification-action-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+/* Animaciones de entrada/salida */
+.cart-notification {
+    animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Efectos hover en notificaciones */
+.cart-notification:hover {
+    transform: translateX(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Clase para lectores de pantalla */
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* Badge del carrito animado */
+.cart-badge, .cart-counter, .nav-cart-count {
+    transition: all 0.2s ease;
+}
+
+.cart-badge.updated, .cart-counter.updated, .nav-cart-count.updated {
+    animation: badgePulse 0.6s ease;
+}
+
+@keyframes badgePulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+/* Responsividad para móviles */
+@media (max-width: 768px) {
+    .cart-notifications-container {
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+    
+    .cart-notification {
+        margin-bottom: 8px;
+        padding: 12px;
+    }
+    
+    .notification-message {
+        font-size: 0.9rem;
+    }
+}
+
 @keyframes slideInRight {
   from {
     opacity: 0;
