@@ -4405,3 +4405,441 @@ function initPeriodicStatsUpdate() {
 
 // Inicializar actualizaciones periódicas si se desea (comentado por defecto)
 // document.addEventListener('DOMContentLoaded', initPeriodicStatsUpdate);
+
+// =====================================
+// LG-019: SUSCRIPCIÓN A NEWSLETTER
+// =====================================
+
+/**
+ * Funcionalidad para el newsletter gamer
+ * Incluye validación de formulario, envío y feedback
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    initNewsletterForm();
+});
+
+function initNewsletterForm() {
+    const form = document.getElementById('newsletterForm');
+    if (!form) return;
+    
+    const emailInput = document.getElementById('newsletter-email');
+    const nameInput = document.getElementById('newsletter-name');
+    const termsCheckbox = document.getElementById('newsletter-terms');
+    const submitBtn = form.querySelector('.newsletter-submit-btn');
+    
+    // Configurar validación en tiempo real
+    setupRealTimeValidation(emailInput, nameInput, termsCheckbox);
+    
+    // Manejar envío del formulario
+    form.addEventListener('submit', handleFormSubmit);
+    
+    // Mejorar accesibilidad
+    setupAccessibility(form);
+    
+    // Inicializar contador de suscriptores animado
+    initSubscriberCounter();
+}
+
+/**
+ * Configurar validación en tiempo real
+ */
+function setupRealTimeValidation(emailInput, nameInput, termsCheckbox) {
+    // Validación del email
+    emailInput.addEventListener('input', function() {
+        validateEmail(this);
+    });
+    
+    emailInput.addEventListener('blur', function() {
+        validateEmail(this, true);
+    });
+    
+    // Validación del nombre
+    nameInput.addEventListener('input', function() {
+        validateName(this);
+    });
+    
+    // Validación de términos
+    termsCheckbox.addEventListener('change', function() {
+        validateTerms(this);
+    });
+    
+    // Validar formulario completo al cambiar cualquier campo
+    [emailInput, nameInput, termsCheckbox].forEach(input => {
+        input.addEventListener('change', updateFormValidation);
+    });
+}
+
+/**
+ * Validar campo de email
+ */
+function validateEmail(input, showError = false) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const value = input.value.trim();
+    const errorElement = document.getElementById('email-error');
+    
+    let isValid = true;
+    let errorMessage = '';
+    
+    if (!value) {
+        isValid = false;
+        errorMessage = 'El email es obligatorio';
+    } else if (!emailRegex.test(value)) {
+        isValid = false;
+        errorMessage = 'Por favor, introduce un email válido';
+    } else if (value.length > 100) {
+        isValid = false;
+        errorMessage = 'El email es demasiado largo';
+    }
+    
+    // Actualizar UI
+    input.classList.toggle('error', !isValid && showError);
+    errorElement.textContent = showError ? errorMessage : '';
+    errorElement.classList.toggle('show', !isValid && showError);
+    
+    // Anunciar error a lectores de pantalla
+    if (!isValid && showError) {
+        announceToScreenReader(`Error en email: ${errorMessage}`);
+    }
+    
+    return isValid;
+}
+
+/**
+ * Validar campo de nombre
+ */
+function validateName(input) {
+    const value = input.value.trim();
+    
+    // El nombre es opcional, pero si se introduce debe ser válido
+    if (value && value.length < 2) {
+        input.classList.add('warning');
+        return false;
+    } else if (value && value.length > 50) {
+        input.classList.add('error');
+        return false;
+    } else {
+        input.classList.remove('warning', 'error');
+        return true;
+    }
+}
+
+/**
+ * Validar checkbox de términos
+ */
+function validateTerms(checkbox) {
+    const errorElement = document.getElementById('terms-error');
+    const isValid = checkbox.checked;
+    
+    if (!isValid) {
+        errorElement.textContent = 'Debes aceptar recibir nuestras promociones';
+        errorElement.classList.add('show');
+        announceToScreenReader('Error: Debes aceptar los términos para continuar');
+    } else {
+        errorElement.textContent = '';
+        errorElement.classList.remove('show');
+    }
+    
+    return isValid;
+}
+
+/**
+ * Actualizar validación del formulario completo
+ */
+function updateFormValidation() {
+    const emailInput = document.getElementById('newsletter-email');
+    const termsCheckbox = document.getElementById('newsletter-terms');
+    const submitBtn = document.querySelector('.newsletter-submit-btn');
+    
+    const isEmailValid = validateEmail(emailInput);
+    const areTermsValid = validateTerms(termsCheckbox);
+    
+    const isFormValid = isEmailValid && areTermsValid;
+    
+    submitBtn.disabled = !isFormValid;
+    submitBtn.setAttribute('aria-disabled', !isFormValid);
+}
+
+/**
+ * Manejar envío del formulario
+ */
+async function handleFormSubmit(event) {
+    event.preventDefault();
+    
+    const form = event.target;
+    const emailInput = document.getElementById('newsletter-email');
+    const nameInput = document.getElementById('newsletter-name');
+    const termsCheckbox = document.getElementById('newsletter-terms');
+    const submitBtn = form.querySelector('.newsletter-submit-btn');
+    const statusElement = document.getElementById('submit-status');
+    
+    // Validar todos los campos antes del envío
+    const isEmailValid = validateEmail(emailInput, true);
+    const isNameValid = validateName(nameInput);
+    const areTermsValid = validateTerms(termsCheckbox);
+    
+    if (!isEmailValid || !areTermsValid) {
+        announceToScreenReader('Por favor, corrige los errores en el formulario');
+        return;
+    }
+    
+    // Mostrar estado de carga
+    setLoadingState(submitBtn, true);
+    hideStatus(statusElement);
+    
+    try {
+        // Simular envío del formulario
+        const formData = {
+            email: emailInput.value.trim(),
+            name: nameInput.value.trim(),
+            timestamp: new Date().toISOString(),
+            source: 'website_newsletter'
+        };
+        
+        // Simular llamada a API
+        await simulateAPICall(formData);
+        
+        // Mostrar éxito
+        showSuccessState(form, statusElement);
+        
+        // Actualizar contador de suscriptores
+        incrementSubscriberCounter();
+        
+        // Analytics tracking
+        trackNewsletterSubscription(formData);
+        
+        announceToScreenReader('¡Suscripción exitosa! Bienvenido al newsletter de Level-Up Gamer');
+        
+    } catch (error) {
+        console.error('Error al enviar formulario:', error);
+        showErrorState(statusElement, error.message);
+        announceToScreenReader(`Error al suscribirse: ${error.message}`);
+    } finally {
+        setLoadingState(submitBtn, false);
+    }
+}
+
+/**
+ * Simular llamada a API
+ */
+function simulateAPICall(formData) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            // Simular diferentes escenarios
+            const random = Math.random();
+            
+            if (random > 0.9) {
+                // 10% de probabilidad de error
+                reject(new Error('Error del servidor. Por favor, intenta más tarde.'));
+            } else if (formData.email.includes('test@error.com')) {
+                // Email específico para testing de errores
+                reject(new Error('Este email ya está suscrito a nuestro newsletter.'));
+            } else {
+                // Éxito
+                resolve({
+                    success: true,
+                    message: 'Suscripción exitosa',
+                    subscriberId: Math.random().toString(36).substr(2, 9)
+                });
+            }
+        }, 2000); // 2 segundos de delay para simular red
+    });
+}
+
+/**
+ * Establecer estado de carga
+ */
+function setLoadingState(button, isLoading) {
+    button.classList.toggle('loading', isLoading);
+    button.disabled = isLoading;
+    button.setAttribute('aria-disabled', isLoading);
+    
+    if (isLoading) {
+        button.setAttribute('aria-label', 'Enviando suscripción...');
+    } else {
+        button.setAttribute('aria-label', 'Suscribirme al newsletter');
+    }
+}
+
+/**
+ * Mostrar estado de éxito
+ */
+function showSuccessState(form, statusElement) {
+    statusElement.className = 'submit-status success show';
+    statusElement.innerHTML = `
+        <i class="fas fa-check-circle" aria-hidden="true"></i>
+        <strong>¡Suscripción exitosa!</strong> 
+        Revisa tu email para confirmar tu suscripción al newsletter.
+    `;
+    
+    // Resetear formulario después de un momento
+    setTimeout(() => {
+        form.reset();
+        updateFormValidation();
+    }, 3000);
+    
+    // Ocultar mensaje después de 10 segundos
+    setTimeout(() => {
+        hideStatus(statusElement);
+    }, 10000);
+}
+
+/**
+ * Mostrar estado de error
+ */
+function showErrorState(statusElement, message) {
+    statusElement.className = 'submit-status error show';
+    statusElement.innerHTML = `
+        <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+        <strong>Error:</strong> ${message}
+    `;
+    
+    // Ocultar mensaje después de 8 segundos
+    setTimeout(() => {
+        hideStatus(statusElement);
+    }, 8000);
+}
+
+/**
+ * Ocultar mensaje de estado
+ */
+function hideStatus(statusElement) {
+    statusElement.classList.remove('show');
+}
+
+/**
+ * Configurar accesibilidad adicional
+ */
+function setupAccessibility(form) {
+    // Navegación por teclado mejorada
+    const inputs = form.querySelectorAll('input, button');
+    
+    inputs.forEach((input, index) => {
+        input.addEventListener('keydown', function(e) {
+            // Permitir navegación con flechas
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                const nextIndex = (index + 1) % inputs.length;
+                inputs[nextIndex].focus();
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                const prevIndex = index === 0 ? inputs.length - 1 : index - 1;
+                inputs[prevIndex].focus();
+            }
+        });
+    });
+    
+    // Anunciar información del formulario al enfocar
+    form.addEventListener('focusin', function(e) {
+        if (e.target.tagName === 'INPUT') {
+            const label = form.querySelector(`label[for="${e.target.id}"]`);
+            const help = document.getElementById(e.target.getAttribute('aria-describedby'));
+            
+            if (label && help) {
+                setTimeout(() => {
+                    announceToScreenReader(`${label.textContent.trim()}. ${help.textContent.trim()}`);
+                }, 100);
+            }
+        }
+    });
+}
+
+/**
+ * Inicializar contador de suscriptores animado
+ */
+function initSubscriberCounter() {
+    const counter = document.getElementById('subscribers-count');
+    if (!counter) return;
+    
+    // Usar Intersection Observer para activar animación
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateSubscriberCounter(entry.target);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    observer.observe(counter);
+}
+
+/**
+ * Animar contador de suscriptores
+ */
+function animateSubscriberCounter(element) {
+    const target = 25847;
+    const duration = 2000;
+    const increment = target / (duration / 16);
+    let current = 0;
+    
+    const timer = setInterval(() => {
+        current += increment;
+        
+        if (current >= target) {
+            current = target;
+            clearInterval(timer);
+        }
+        
+        element.textContent = Math.floor(current).toLocaleString('es-ES');
+    }, 16);
+}
+
+/**
+ * Incrementar contador de suscriptores
+ */
+function incrementSubscriberCounter() {
+    const counter = document.getElementById('subscribers-count');
+    if (!counter) return;
+    
+    const currentValue = parseInt(counter.textContent.replace(/[^\d]/g, ''));
+    const newValue = currentValue + 1;
+    
+    // Animar el incremento
+    counter.style.transform = 'scale(1.1)';
+    counter.style.color = '#10b981';
+    
+    setTimeout(() => {
+        counter.textContent = newValue.toLocaleString('es-ES');
+        
+        setTimeout(() => {
+            counter.style.transform = 'scale(1)';
+            counter.style.color = '';
+        }, 300);
+    }, 150);
+}
+
+/**
+ * Tracking de suscripción al newsletter
+ */
+function trackNewsletterSubscription(formData) {
+    // Simular envío de analytics
+    console.log('Newsletter Subscription Tracked:', formData);
+    
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'newsletter_signup', {
+            email_provided: !!formData.email,
+            name_provided: !!formData.name,
+            source: formData.source
+        });
+    }
+    
+    // Simular otros tracking (Facebook Pixel, etc.)
+    if (typeof fbq !== 'undefined') {
+        fbq('track', 'Subscribe', {
+            source: 'newsletter'
+        });
+    }
+}
+
+// Función adicional para admin: exportar suscriptores (simulado)
+function exportNewsletterSubscribers() {
+    // Solo para testing/demo
+    const mockData = [
+        { email: 'gamer1@email.com', name: 'Alex', date: '2024-01-15' },
+        { email: 'pro.player@email.com', name: 'Maria', date: '2024-01-16' },
+        { email: 'levelup@email.com', name: '', date: '2024-01-17' }
+    ];
+    
+    console.log('Exported Newsletter Subscribers:', mockData);
+    return mockData;
+}
