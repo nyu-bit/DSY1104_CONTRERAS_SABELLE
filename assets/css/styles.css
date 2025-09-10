@@ -306,36 +306,62 @@ a:hover {
   gap: var(--spacing-md);
 }
 
+/* ================================================
+   LG-015: BUSCADOR RÁPIDO CON SUGERENCIAS DINÁMICAS
+   ================================================ */
+
+/* Contenedor principal de búsqueda */
 .search-container {
   position: relative;
   display: flex;
   align-items: center;
+  z-index: var(--z-dropdown);
 }
 
+/* Wrapper del input con botones */
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+/* Input de búsqueda */
 .search-input {
   background: var(--color-surface);
   border: 1px solid rgba(57, 255, 20, 0.3);
   border-radius: var(--border-radius-md);
-  padding: var(--spacing-sm) var(--spacing-xl) var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-sm) 80px var(--spacing-sm) var(--spacing-md);
   color: var(--color-text-primary);
   font-size: var(--font-size-sm);
-  width: 250px;
+  width: 320px;
   transition: var(--transition-normal);
+  font-family: var(--font-family-base);
 }
 
 .search-input:focus {
   border-color: var(--color-secondary);
-  box-shadow: var(--shadow-glow);
+  box-shadow: 
+    var(--shadow-glow),
+    0 0 0 3px rgba(57, 255, 20, 0.1);
   background: var(--color-surface-variant);
+  outline: none;
+}
+
+.search-input[data-search-active="true"] {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-color: transparent;
 }
 
 .search-input::placeholder {
   color: var(--color-text-muted);
 }
 
+/* Botón de búsqueda */
 .search-btn {
   position: absolute;
-  right: var(--spacing-sm);
+  right: 40px;
   background: none;
   border: none;
   color: var(--color-text-secondary);
@@ -343,11 +369,294 @@ a:hover {
   padding: var(--spacing-xs);
   border-radius: var(--border-radius-sm);
   transition: var(--transition-fast);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.search-btn:hover {
+.search-btn:hover,
+.search-btn:focus {
   color: var(--color-secondary);
   transform: scale(1.1);
+  background: rgba(57, 255, 20, 0.1);
+}
+
+/* Botón de limpiar */
+.search-clear {
+  position: absolute;
+  right: var(--spacing-sm);
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius-sm);
+  transition: var(--transition-fast);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-clear:hover,
+.search-clear:focus {
+  color: var(--color-accent);
+  background: rgba(255, 69, 58, 0.1);
+  transform: scale(1.1);
+}
+
+/* Indicador de carga */
+.search-loading {
+  position: absolute;
+  right: 45px;
+  color: var(--color-secondary);
+  opacity: 0;
+  transition: var(--transition-normal);
+  pointer-events: none;
+}
+
+.search-loading[aria-hidden="false"] {
+  opacity: 1;
+}
+
+/* Panel de sugerencias */
+.search-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--gradient-surface);
+  border: 1px solid rgba(57, 255, 20, 0.3);
+  border-top: none;
+  border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+  box-shadow: var(--shadow-xl);
+  backdrop-filter: blur(20px);
+  max-height: 400px;
+  overflow-y: auto;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+}
+
+.search-suggestions[aria-hidden="false"] {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Secciones de sugerencias */
+.suggestions-section {
+  padding: var(--spacing-md) 0;
+  border-bottom: 1px solid rgba(57, 255, 20, 0.1);
+}
+
+.suggestions-section:last-child {
+  border-bottom: none;
+}
+
+.suggestions-section:empty {
+  display: none;
+}
+
+/* Headers de secciones */
+.suggestions-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.suggestions-header i {
+  color: var(--color-secondary);
+}
+
+/* Lista de sugerencias */
+.suggestions-list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Items de sugerencias */
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  border: none;
+  background: none;
+  text-align: left;
+  width: 100%;
+  color: var(--color-text-primary);
+  position: relative;
+}
+
+.suggestion-item:hover,
+.suggestion-item:focus,
+.suggestion-item[aria-selected="true"] {
+  background: rgba(57, 255, 20, 0.1);
+  color: var(--color-secondary);
+}
+
+.suggestion-item[aria-selected="true"]::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--color-secondary);
+}
+
+/* Iconos de sugerencias */
+.suggestion-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(57, 255, 20, 0.1);
+  border-radius: var(--border-radius-sm);
+  color: var(--color-secondary);
+  font-size: var(--font-size-xs);
+  flex-shrink: 0;
+}
+
+/* Contenido de sugerencias */
+.suggestion-content {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.suggestion-title {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.suggestion-meta {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+/* Precio en sugerencias */
+.suggestion-price {
+  color: var(--color-secondary);
+  font-weight: 600;
+}
+
+/* Marca destacada en búsqueda */
+.suggestion-highlight {
+  background: rgba(57, 255, 20, 0.2);
+  color: var(--color-secondary);
+  font-weight: 600;
+  padding: 1px 2px;
+  border-radius: 2px;
+}
+
+/* Estado vacío */
+.suggestions-empty {
+  text-align: center;
+  padding: var(--spacing-xl);
+  color: var(--color-text-muted);
+}
+
+.suggestions-empty i {
+  font-size: var(--font-size-2xl);
+  color: var(--color-text-muted);
+  margin-bottom: var(--spacing-md);
+}
+
+.suggestions-empty p {
+  font-size: var(--font-size-base);
+  margin-bottom: var(--spacing-sm);
+}
+
+.suggestions-empty small {
+  font-size: var(--font-size-xs);
+}
+
+/* Footer de sugerencias */
+.suggestions-footer {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-top: 1px solid rgba(57, 255, 20, 0.1);
+  background: rgba(25, 25, 35, 0.5);
+}
+
+.search-view-all {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  width: 100%;
+  background: var(--gradient-glow);
+  color: var(--color-bg);
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-normal);
+}
+
+.search-view-all:hover,
+.search-view-all:focus {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+  filter: brightness(1.1);
+}
+
+/* Estados de foco */
+.search-container:focus-within {
+  z-index: calc(var(--z-dropdown) + 1);
+}
+
+.search-container:focus-within .search-input {
+  border-color: var(--color-secondary);
+  box-shadow: 
+    var(--shadow-glow),
+    0 0 0 3px rgba(57, 255, 20, 0.1);
+}
+
+/* Indicadores de estado */
+.search-input[data-has-results="true"] {
+  border-color: var(--color-secondary);
+}
+
+.search-input[data-has-results="false"] {
+  border-color: var(--color-accent);
+}
+
+/* Animaciones personalizadas */
+@keyframes searchPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.search-btn[data-searching="true"] {
+  animation: searchPulse 1s infinite;
 }
 
 /* Carrito */
@@ -2518,8 +2827,37 @@ a:hover {
     gap: var(--spacing-sm);
   }
   
+  /* Buscador responsive para mobile */
   .search-container {
-    display: none;
+    display: none; /* Oculto en mobile, se puede activar con toggle */
+  }
+  
+  /* Cuando está activo en mobile */
+  .search-container.mobile-active {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: var(--z-modal);
+    background: var(--color-bg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-xl);
+  }
+  
+  .search-container.mobile-active .search-input {
+    width: 100%;
+    font-size: var(--font-size-base);
+    padding: var(--spacing-md) 100px var(--spacing-md) var(--spacing-md);
+  }
+  
+  .search-container.mobile-active .search-suggestions {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    right: 0;
+    max-height: calc(100vh - 80px);
+    border-radius: 0;
   }
   
   /* Hero responsive para mobile */
@@ -2800,6 +3138,24 @@ a:hover {
     width: 50px;
     height: 50px;
     font-size: var(--font-size-xl);
+  }
+  
+  /* Buscador responsive para tablet */
+  .search-input {
+    width: 280px;
+    font-size: var(--font-size-sm);
+  }
+  
+  .search-suggestions {
+    max-height: 350px;
+  }
+  
+  .suggestion-item {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+  
+  .suggestion-title {
+    font-size: var(--font-size-sm);
   }
   
   /* Categorías responsive para tablet */

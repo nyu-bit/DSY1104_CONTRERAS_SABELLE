@@ -1367,6 +1367,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initCategoriesTiles();
     initPromoCarousel();
     initQuickAccessPanel();
+    initQuickSearch();
     
     // Animar entrada de categorías con delay
     setTimeout(animateCategoriesEntrance, 500);
@@ -2030,4 +2031,535 @@ function initQuickAccessPanel() {
     
     // Inicialización
     updateActiveStates();
+}
+
+// ================================================
+// LG-015: BUSCADOR RÁPIDO CON SUGERENCIAS DINÁMICAS
+// ================================================
+
+/**
+ * Inicializa el buscador rápido con sugerencias
+ */
+function initQuickSearch() {
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const searchClear = document.getElementById('searchClear');
+    const searchLoading = document.getElementById('searchLoading');
+    const searchSuggestions = document.getElementById('searchSuggestions');
+    
+    if (!searchInput || !searchSuggestions) return;
+    
+    let searchTimeout;
+    let currentQuery = '';
+    let selectedIndex = -1;
+    let suggestionItems = [];
+    let isOpen = false;
+    
+    // Datos de muestra para sugerencias (en una app real vendría de una API)
+    const sampleProducts = [
+        { id: 1, name: 'PlayStation 5 Console', category: 'Consolas', price: '$699.990', image: 'ps5.jpg' },
+        { id: 2, name: 'Xbox Series X', category: 'Consolas', price: '$599.990', image: 'xbox.jpg' },
+        { id: 3, name: 'Nintendo Switch OLED', category: 'Consolas', price: '$399.990', image: 'switch.jpg' },
+        { id: 4, name: 'RTX 4090 Graphics Card', category: 'PC Gaming', price: '$1.999.990', image: 'rtx4090.jpg' },
+        { id: 5, name: 'Gaming Mechanical Keyboard', category: 'Accesorios', price: '$149.990', image: 'keyboard.jpg' },
+        { id: 6, name: 'Gaming Mouse RGB', category: 'Accesorios', price: '$89.990', image: 'mouse.jpg' },
+        { id: 7, name: 'Gaming Headset 7.1', category: 'Accesorios', price: '$199.990', image: 'headset.jpg' },
+        { id: 8, name: 'Call of Duty MW3', category: 'Videojuegos', price: '$69.990', image: 'cod.jpg' },
+        { id: 9, name: 'FIFA 24', category: 'Videojuegos', price: '$59.990', image: 'fifa.jpg' },
+        { id: 10, name: 'Cyberpunk 2077', category: 'Videojuegos', price: '$39.990', image: 'cyberpunk.jpg' }
+    ];
+    
+    const categories = [
+        { name: 'Consolas', count: 15, slug: 'consolas' },
+        { name: 'PC Gaming', count: 25, slug: 'pc-gaming' },
+        { name: 'Accesorios', count: 30, slug: 'accesorios' },
+        { name: 'Videojuegos', count: 50, slug: 'videojuegos' }
+    ];
+    
+    const popularSearches = [
+        'PlayStation 5', 'RTX 4090', 'Gaming Setup', 'Cyberpunk 2077',
+        'Xbox Series X', 'Nintendo Switch', 'Mechanical Keyboard', 'Gaming Chair'
+    ];
+    
+    /**
+     * Realiza búsqueda y muestra sugerencias
+     * @param {string} query - Término de búsqueda
+     */
+    function performSearch(query) {
+        if (query.length < 3) {
+            hideSuggestions();
+            return;
+        }
+        
+        // Mostrar loading
+        showLoading(true);
+        currentQuery = query;
+        
+        // Simular delay de API
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            const results = getSearchResults(query);
+            displaySuggestions(results, query);
+            showLoading(false);
+        }, 300);
+    }
+    
+    /**
+     * Obtiene resultados de búsqueda
+     * @param {string} query - Término de búsqueda
+     * @returns {Object} Resultados organizados
+     */
+    function getSearchResults(query) {
+        const queryLower = query.toLowerCase();
+        
+        // Filtrar productos
+        const products = sampleProducts.filter(product =>
+            product.name.toLowerCase().includes(queryLower) ||
+            product.category.toLowerCase().includes(queryLower)
+        ).slice(0, 5);
+        
+        // Filtrar categorías
+        const matchedCategories = categories.filter(category =>
+            category.name.toLowerCase().includes(queryLower)
+        );
+        
+        // Filtrar búsquedas populares
+        const popular = popularSearches.filter(search =>
+            search.toLowerCase().includes(queryLower)
+        ).slice(0, 3);
+        
+        return {
+            products,
+            categories: matchedCategories,
+            popular,
+            total: products.length + matchedCategories.length + popular.length
+        };
+    }
+    
+    /**
+     * Muestra las sugerencias en el panel
+     * @param {Object} results - Resultados de búsqueda
+     * @param {string} query - Término de búsqueda
+     */
+    function displaySuggestions(results, query) {
+        const productSection = document.getElementById('productSuggestions');
+        const categorySection = document.getElementById('categorySuggestions');
+        const popularSection = document.getElementById('popularSuggestions');
+        const noResults = document.getElementById('noResults');
+        const viewAllBtn = document.getElementById('searchViewAll');
+        
+        // Limpiar contenido anterior
+        productSection.querySelector('.suggestions-list').innerHTML = '';
+        categorySection.querySelector('.suggestions-list').innerHTML = '';
+        popularSection.querySelector('.suggestions-list').innerHTML = '';
+        
+        let hasResults = false;
+        
+        // Mostrar productos
+        if (results.products.length > 0) {
+            hasResults = true;
+            productSection.style.display = 'block';
+            results.products.forEach(product => {
+                const item = createProductSuggestion(product, query);
+                productSection.querySelector('.suggestions-list').appendChild(item);
+            });
+        } else {
+            productSection.style.display = 'none';
+        }
+        
+        // Mostrar categorías
+        if (results.categories.length > 0) {
+            hasResults = true;
+            categorySection.style.display = 'block';
+            results.categories.forEach(category => {
+                const item = createCategorySuggestion(category, query);
+                categorySection.querySelector('.suggestions-list').appendChild(item);
+            });
+        } else {
+            categorySection.style.display = 'none';
+        }
+        
+        // Mostrar búsquedas populares
+        if (results.popular.length > 0) {
+            hasResults = true;
+            popularSection.style.display = 'block';
+            results.popular.forEach(search => {
+                const item = createPopularSuggestion(search, query);
+                popularSection.querySelector('.suggestions-list').appendChild(item);
+            });
+        } else {
+            popularSection.style.display = 'none';
+        }
+        
+        // Mostrar/ocultar estados
+        if (hasResults) {
+            noResults.style.display = 'none';
+            viewAllBtn.querySelector('span').textContent = `Ver todos los resultados (${results.total})`;
+        } else {
+            noResults.style.display = 'block';
+        }
+        
+        // Actualizar lista de items para navegación
+        suggestionItems = searchSuggestions.querySelectorAll('.suggestion-item');
+        selectedIndex = -1;
+        
+        // Mostrar panel
+        showSuggestions();
+        
+        // Tracking
+        trackSearchQuery(query, results.total);
+    }
+    
+    /**
+     * Crea elemento de sugerencia de producto
+     * @param {Object} product - Datos del producto
+     * @param {string} query - Término de búsqueda
+     * @returns {HTMLElement} Elemento DOM
+     */
+    function createProductSuggestion(product, query) {
+        const item = document.createElement('button');
+        item.className = 'suggestion-item';
+        item.setAttribute('role', 'option');
+        item.setAttribute('data-type', 'product');
+        item.setAttribute('data-id', product.id);
+        
+        const highlightedName = highlightMatch(product.name, query);
+        
+        item.innerHTML = `
+            <div class="suggestion-icon">
+                <i class="fas fa-box"></i>
+            </div>
+            <div class="suggestion-content">
+                <div class="suggestion-title">${highlightedName}</div>
+                <div class="suggestion-meta">
+                    <span>${product.category}</span>
+                    <span class="suggestion-price">${product.price}</span>
+                </div>
+            </div>
+        `;
+        
+        item.addEventListener('click', () => selectSuggestion('product', product));
+        
+        return item;
+    }
+    
+    /**
+     * Crea elemento de sugerencia de categoría
+     * @param {Object} category - Datos de la categoría
+     * @param {string} query - Término de búsqueda
+     * @returns {HTMLElement} Elemento DOM
+     */
+    function createCategorySuggestion(category, query) {
+        const item = document.createElement('button');
+        item.className = 'suggestion-item';
+        item.setAttribute('role', 'option');
+        item.setAttribute('data-type', 'category');
+        item.setAttribute('data-slug', category.slug);
+        
+        const highlightedName = highlightMatch(category.name, query);
+        
+        item.innerHTML = `
+            <div class="suggestion-icon">
+                <i class="fas fa-th-large"></i>
+            </div>
+            <div class="suggestion-content">
+                <div class="suggestion-title">${highlightedName}</div>
+                <div class="suggestion-meta">
+                    <span>${category.count} productos</span>
+                </div>
+            </div>
+        `;
+        
+        item.addEventListener('click', () => selectSuggestion('category', category));
+        
+        return item;
+    }
+    
+    /**
+     * Crea elemento de sugerencia popular
+     * @param {string} search - Término popular
+     * @param {string} query - Término de búsqueda
+     * @returns {HTMLElement} Elemento DOM
+     */
+    function createPopularSuggestion(search, query) {
+        const item = document.createElement('button');
+        item.className = 'suggestion-item';
+        item.setAttribute('role', 'option');
+        item.setAttribute('data-type', 'popular');
+        item.setAttribute('data-search', search);
+        
+        const highlightedSearch = highlightMatch(search, query);
+        
+        item.innerHTML = `
+            <div class="suggestion-icon">
+                <i class="fas fa-fire"></i>
+            </div>
+            <div class="suggestion-content">
+                <div class="suggestion-title">${highlightedSearch}</div>
+                <div class="suggestion-meta">
+                    <span>Búsqueda popular</span>
+                </div>
+            </div>
+        `;
+        
+        item.addEventListener('click', () => selectSuggestion('popular', { search }));
+        
+        return item;
+    }
+    
+    /**
+     * Resalta coincidencias en el texto
+     * @param {string} text - Texto original
+     * @param {string} query - Término a resaltar
+     * @returns {string} Texto con marcado HTML
+     */
+    function highlightMatch(text, query) {
+        const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
+        return text.replace(regex, '<span class="suggestion-highlight">$1</span>');
+    }
+    
+    /**
+     * Escapa caracteres especiales para regex
+     * @param {string} string - Cadena a escapar
+     * @returns {string} Cadena escapada
+     */
+    function escapeRegex(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+    
+    /**
+     * Maneja la selección de una sugerencia
+     * @param {string} type - Tipo de sugerencia
+     * @param {Object} data - Datos del item
+     */
+    function selectSuggestion(type, data) {
+        hideSuggestions();
+        
+        switch (type) {
+            case 'product':
+                searchInput.value = data.name;
+                navigateToProduct(data.id);
+                break;
+            case 'category':
+                searchInput.value = data.name;
+                navigateToCategory(data.slug);
+                break;
+            case 'popular':
+                searchInput.value = data.search;
+                performFullSearch(data.search);
+                break;
+        }
+        
+        // Tracking
+        trackSuggestionClick(type, data);
+    }
+    
+    /**
+     * Funciones de navegación
+     */
+    function navigateToProduct(productId) {
+        window.location.href = `productos/detalle.html?id=${productId}`;
+    }
+    
+    function navigateToCategory(categorySlug) {
+        window.location.href = `productos/?categoria=${categorySlug}`;
+    }
+    
+    function performFullSearch(query) {
+        window.location.href = `productos/?buscar=${encodeURIComponent(query)}`;
+    }
+    
+    /**
+     * Muestra el panel de sugerencias
+     */
+    function showSuggestions() {
+        isOpen = true;
+        searchSuggestions.setAttribute('aria-hidden', 'false');
+        searchInput.setAttribute('aria-expanded', 'true');
+        searchInput.setAttribute('data-search-active', 'true');
+    }
+    
+    /**
+     * Oculta el panel de sugerencias
+     */
+    function hideSuggestions() {
+        isOpen = false;
+        searchSuggestions.setAttribute('aria-hidden', 'true');
+        searchInput.setAttribute('aria-expanded', 'false');
+        searchInput.setAttribute('data-search-active', 'false');
+        selectedIndex = -1;
+        updateSelection();
+    }
+    
+    /**
+     * Muestra/oculta el indicador de carga
+     * @param {boolean} show - Mostrar o no
+     */
+    function showLoading(show) {
+        searchLoading.setAttribute('aria-hidden', !show);
+        searchBtn.setAttribute('data-searching', show);
+    }
+    
+    /**
+     * Actualiza la selección visual
+     */
+    function updateSelection() {
+        suggestionItems.forEach((item, index) => {
+            item.setAttribute('aria-selected', index === selectedIndex);
+        });
+    }
+    
+    /**
+     * Navega por las sugerencias con teclado
+     * @param {number} direction - Dirección (-1 arriba, 1 abajo)
+     */
+    function navigateSuggestions(direction) {
+        if (!isOpen || suggestionItems.length === 0) return;
+        
+        selectedIndex += direction;
+        
+        if (selectedIndex < -1) {
+            selectedIndex = suggestionItems.length - 1;
+        } else if (selectedIndex >= suggestionItems.length) {
+            selectedIndex = -1;
+        }
+        
+        updateSelection();
+        
+        // Scroll al elemento si es necesario
+        if (selectedIndex >= 0) {
+            suggestionItems[selectedIndex].scrollIntoView({
+                block: 'nearest',
+                behavior: 'smooth'
+            });
+        }
+    }
+    
+    /**
+     * Limpia la búsqueda
+     */
+    function clearSearch() {
+        searchInput.value = '';
+        searchInput.focus();
+        hideSuggestions();
+        updateClearButton();
+        
+        // Tracking
+        trackSearchAction('clear');
+    }
+    
+    /**
+     * Actualiza la visibilidad del botón limpiar
+     */
+    function updateClearButton() {
+        const hasValue = searchInput.value.length > 0;
+        searchClear.style.display = hasValue ? 'block' : 'none';
+    }
+    
+    /**
+     * Tracking de analytics
+     */
+    function trackSearchQuery(query, resultCount) {
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'search', {
+                'search_term': query,
+                'result_count': resultCount,
+                'location': 'navbar_search'
+            });
+        }
+        
+        // Guardar en historial local
+        const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+        searchHistory.unshift({ query, timestamp: Date.now(), results: resultCount });
+        // Mantener solo los últimos 10
+        localStorage.setItem('searchHistory', JSON.stringify(searchHistory.slice(0, 10)));
+    }
+    
+    function trackSuggestionClick(type, data) {
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'suggestion_click', {
+                'suggestion_type': type,
+                'suggestion_data': JSON.stringify(data),
+                'location': 'navbar_search'
+            });
+        }
+    }
+    
+    function trackSearchAction(action) {
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'search_action', {
+                'action': action,
+                'location': 'navbar_search'
+            });
+        }
+    }
+    
+    // Event Listeners
+    
+    // Input de búsqueda
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.trim();
+        performSearch(query);
+        updateClearButton();
+    });
+    
+    // Navegación por teclado
+    searchInput.addEventListener('keydown', (e) => {
+        switch (e.key) {
+            case 'ArrowDown':
+                e.preventDefault();
+                navigateSuggestions(1);
+                break;
+            case 'ArrowUp':
+                e.preventDefault();
+                navigateSuggestions(-1);
+                break;
+            case 'Enter':
+                e.preventDefault();
+                if (selectedIndex >= 0 && suggestionItems[selectedIndex]) {
+                    suggestionItems[selectedIndex].click();
+                } else {
+                    const query = searchInput.value.trim();
+                    if (query.length >= 3) {
+                        performFullSearch(query);
+                    }
+                }
+                break;
+            case 'Escape':
+                hideSuggestions();
+                searchInput.blur();
+                break;
+        }
+    });
+    
+    // Botón de búsqueda
+    searchBtn.addEventListener('click', () => {
+        const query = searchInput.value.trim();
+        if (query.length >= 3) {
+            performFullSearch(query);
+        } else {
+            searchInput.focus();
+        }
+    });
+    
+    // Botón limpiar
+    searchClear.addEventListener('click', clearSearch);
+    
+    // Ver todos los resultados
+    document.getElementById('searchViewAll').addEventListener('click', () => {
+        const query = searchInput.value.trim();
+        if (query.length >= 3) {
+            performFullSearch(query);
+        }
+    });
+    
+    // Cerrar al hacer click fuera
+    document.addEventListener('click', (e) => {
+        if (!searchInput.closest('.search-container').contains(e.target)) {
+            hideSuggestions();
+        }
+    });
+    
+    // Inicialización
+    updateClearButton();
 }

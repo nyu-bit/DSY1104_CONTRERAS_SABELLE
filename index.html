@@ -62,22 +62,106 @@
 
                 <!-- Área de acciones: búsqueda, carrito y usuario -->
                 <div class="nav-actions">
-                    <!-- Búsqueda -->
-                    <div class="search-container" role="search">
-                        <label for="searchInput" class="sr-only">Buscar productos</label>
+                <!-- LG-015: Búsqueda rápida con sugerencias dinámicas -->
+                <div class="search-container" role="search">
+                    <label for="searchInput" class="sr-only">Buscar productos gaming</label>
+                    <div class="search-input-wrapper">
                         <input type="search" 
                                class="search-input" 
                                placeholder="Buscar productos gaming..." 
-                               aria-label="Buscar productos"
+                               aria-label="Buscar productos gaming"
+                               aria-describedby="searchHelp"
+                               aria-expanded="false"
+                               aria-autocomplete="list"
+                               aria-controls="searchSuggestions"
                                id="searchInput"
                                autocomplete="off"
-                               spellcheck="false">
-                        <button type="button" class="search-btn" aria-label="Realizar búsqueda" id="searchBtn">
+                               spellcheck="false"
+                               minlength="3"
+                               data-search-active="false">
+                        
+                        <!-- Botón de búsqueda -->
+                        <button type="button" 
+                                class="search-btn" 
+                                aria-label="Realizar búsqueda" 
+                                id="searchBtn">
                             <i class="fas fa-search" aria-hidden="true"></i>
                         </button>
+                        
+                        <!-- Botón de limpiar búsqueda -->
+                        <button type="button" 
+                                class="search-clear" 
+                                aria-label="Limpiar búsqueda" 
+                                id="searchClear"
+                                style="display: none;">
+                            <i class="fas fa-times" aria-hidden="true"></i>
+                        </button>
+                        
+                        <!-- Indicador de carga -->
+                        <div class="search-loading" id="searchLoading" aria-hidden="true">
+                            <i class="fas fa-spinner fa-spin" aria-hidden="true"></i>
+                        </div>
                     </div>
-
-                    <!-- Carrito de compras -->
+                    
+                    <!-- Panel de sugerencias -->
+                    <div class="search-suggestions" 
+                         id="searchSuggestions" 
+                         role="listbox" 
+                         aria-label="Sugerencias de búsqueda"
+                         aria-hidden="true">
+                        
+                        <!-- Sugerencias de productos -->
+                        <div class="suggestions-section" id="productSuggestions">
+                            <div class="suggestions-header">
+                                <i class="fas fa-box" aria-hidden="true"></i>
+                                <span>Productos</span>
+                            </div>
+                            <div class="suggestions-list" role="group"></div>
+                        </div>
+                        
+                        <!-- Sugerencias de categorías -->
+                        <div class="suggestions-section" id="categorySuggestions">
+                            <div class="suggestions-header">
+                                <i class="fas fa-th-large" aria-hidden="true"></i>
+                                <span>Categorías</span>
+                            </div>
+                            <div class="suggestions-list" role="group"></div>
+                        </div>
+                        
+                        <!-- Búsquedas populares -->
+                        <div class="suggestions-section" id="popularSuggestions">
+                            <div class="suggestions-header">
+                                <i class="fas fa-fire" aria-hidden="true"></i>
+                                <span>Búsquedas populares</span>
+                            </div>
+                            <div class="suggestions-list" role="group"></div>
+                        </div>
+                        
+                        <!-- Sin resultados -->
+                        <div class="suggestions-empty" id="noResults" style="display: none;">
+                            <i class="fas fa-search" aria-hidden="true"></i>
+                            <p>No se encontraron sugerencias</p>
+                            <small>Intenta con otros términos de búsqueda</small>
+                        </div>
+                        
+                        <!-- Footer con acciones -->
+                        <div class="suggestions-footer">
+                            <button type="button" 
+                                    class="search-view-all" 
+                                    id="searchViewAll"
+                                    aria-label="Ver todos los resultados">
+                                <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                                <span>Ver todos los resultados</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Texto de ayuda para lectores de pantalla -->
+                    <div id="searchHelp" class="sr-only">
+                        Escribe al menos 3 caracteres para ver sugerencias. 
+                        Usa las flechas para navegar y Enter para seleccionar.
+                    </div>
+                </div>                    <!-- Carrito de compras -->
                     <a href="carrito/" class="cart-link" aria-label="Ver carrito de compras - 0 productos" id="cartLink">
                         <i class="fas fa-shopping-cart" aria-hidden="true"></i>
                         <span class="cart-text">Carrito</span>
