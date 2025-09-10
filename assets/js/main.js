@@ -1366,6 +1366,7 @@ function animateCategoriesEntrance() {
 document.addEventListener('DOMContentLoaded', () => {
     initCategoriesTiles();
     initPromoCarousel();
+    initQuickAccessPanel();
     
     // Animar entrada de categorías con delay
     setTimeout(animateCategoriesEntrance, 500);
@@ -1645,4 +1646,388 @@ function initPromoCarousel() {
             setTimeout(() => startAutoPlay(), 1000);
         }
     });
+}
+
+// ================================================
+// LG-014: PANEL DE ACCESO RÁPIDO FLOTANTE
+// ================================================
+
+/**
+ * Inicializa el panel de acceso rápido
+ */
+function initQuickAccessPanel() {
+    const panel = document.getElementById('quickAccessPanel');
+    const toggle = document.getElementById('quickAccessToggle');
+    const menu = document.getElementById('quickAccessMenu');
+    const overlay = document.getElementById('quickAccessOverlay');
+    const items = document.querySelectorAll('.quick-access-item');
+    
+    if (!panel || !toggle || !menu) return;
+    
+    let isOpen = false;
+    let hideTimeout;
+    
+    /**
+     * Abre el panel de acceso rápido
+     */
+    function openPanel() {
+        isOpen = true;
+        toggle.setAttribute('aria-expanded', 'true');
+        toggle.setAttribute('aria-label', 'Cerrar panel de acceso rápido');
+        menu.setAttribute('aria-hidden', 'false');
+        overlay.setAttribute('aria-hidden', 'false');
+        
+        // Foco en el primer item
+        const firstItem = menu.querySelector('.quick-access-item:not(.quick-access-secondary)');
+        if (firstItem) {
+            setTimeout(() => firstItem.focus(), 100);
+        }
+        
+        // Actualizar tabindex
+        items.forEach(item => item.setAttribute('tabindex', '0'));
+        
+        // Tracking
+        trackQuickAccessAction('panel_opened');
+        
+        // Auto-close después de 10s sin interacción
+        resetAutoClose();
+    }
+    
+    /**
+     * Cierra el panel de acceso rápido
+     */
+    function closePanel() {
+        isOpen = false;
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Abrir panel de acceso rápido');
+        menu.setAttribute('aria-hidden', 'true');
+        overlay.setAttribute('aria-hidden', 'true');
+        
+        // Restaurar tabindex
+        items.forEach(item => item.setAttribute('tabindex', '-1'));
+        
+        // Limpiar timeout
+        clearTimeout(hideTimeout);
+        
+        // Foco de vuelta al toggle
+        toggle.focus();
+        
+        // Tracking
+        trackQuickAccessAction('panel_closed');
+    }
+    
+    /**
+     * Toggle del panel
+     */
+    function togglePanel() {
+        if (isOpen) {
+            closePanel();
+        } else {
+            openPanel();
+        }
+    }
+    
+    /**
+     * Resetea el auto-close timer
+     */
+    function resetAutoClose() {
+        clearTimeout(hideTimeout);
+        hideTimeout = setTimeout(() => {
+            if (isOpen) closePanel();
+        }, 10000);
+    }
+    
+    /**
+     * Maneja las acciones de los items del menú
+     * @param {string} action - Acción a ejecutar
+     */
+    function handleQuickAction(action) {
+        // Tracking de la acción
+        trackQuickAccessAction('item_clicked', action);
+        
+        // Cerrar panel después de acción
+        setTimeout(() => closePanel(), 150);
+        
+        switch (action) {
+            case 'cart':
+                openCart();
+                break;
+            case 'profile':
+                navigateToProfile();
+                break;
+            case 'categories':
+                scrollToCategories();
+                break;
+            case 'offers':
+                scrollToOffers();
+                break;
+            case 'support':
+                openSupport();
+                break;
+            case 'favorites':
+                showFavorites();
+                break;
+            default:
+                console.warn('Acción no reconocida:', action);
+        }
+    }
+    
+    /**
+     * Funciones de navegación específicas
+     */
+    function openCart() {
+        const cartButton = document.querySelector('.cart-button');
+        if (cartButton) {
+            cartButton.click();
+        } else {
+            window.location.href = 'carrito/';
+        }
+    }
+    
+    function navigateToProfile() {
+        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        if (isLoggedIn) {
+            window.location.href = 'usuario/';
+        } else {
+            window.location.href = 'usuario/login.html';
+        }
+    }
+    
+    function scrollToCategories() {
+        const categoriesSection = document.getElementById('categories');
+        if (categoriesSection) {
+            const navbar = document.querySelector('.header');
+            const navbarHeight = navbar ? navbar.offsetHeight : 80;
+            const targetPosition = categoriesSection.offsetTop - navbarHeight - 20;
+            
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+        }
+    }
+    
+    function scrollToOffers() {
+        const offersSection = document.getElementById('promociones');
+        if (offersSection) {
+            const navbar = document.querySelector('.header');
+            const navbarHeight = navbar ? navbar.offsetHeight : 80;
+            const targetPosition = offersSection.offsetTop - navbarHeight - 20;
+            
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+        } else {
+            // Si no hay sección de ofertas, ir a productos con filtro
+            window.location.href = 'productos/?filter=ofertas';
+        }
+    }
+    
+    function openSupport() {
+        window.location.href = 'soporte/';
+    }
+    
+    function showFavorites() {
+        // Mostrar modal de favoritos o navegar a página
+        const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+        if (favorites.length > 0) {
+            window.location.href = 'productos/?filter=favoritos';
+        } else {
+            alert('No tienes productos favoritos aún. ¡Explora nuestro catálogo!');
+        }
+    }
+    
+    /**
+     * Actualiza los contadores del panel
+     */
+    function updatePanelCounters() {
+        // Actualizar badge del carrito
+        const cartBadge = document.getElementById('cartBadge');
+        const cartCount = getCartItemCount();
+        if (cartBadge) {
+            cartBadge.textContent = cartCount;
+            cartBadge.setAttribute('data-count', cartCount);
+        }
+        
+        // Actualizar contador de favoritos
+        const favoritesCount = document.getElementById('favoritesCount');
+        const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+        if (favoritesCount) {
+            favoritesCount.textContent = favorites.length;
+            favoritesCount.setAttribute('data-count', favorites.length);
+        }
+        
+        // Marcar items activos según el contexto
+        updateActiveStates();
+    }
+    
+    /**
+     * Actualiza estados activos de los items
+     */
+    function updateActiveStates() {
+        const currentPage = window.location.pathname;
+        
+        items.forEach(item => {
+            const action = item.dataset.action;
+            let isActive = false;
+            
+            switch (action) {
+                case 'cart':
+                    isActive = currentPage.includes('carrito');
+                    break;
+                case 'profile':
+                    isActive = currentPage.includes('usuario');
+                    break;
+                case 'categories':
+                    // Activo si estamos en la sección de categorías
+                    isActive = window.location.hash === '#categories';
+                    break;
+                case 'offers':
+                    isActive = currentPage.includes('ofertas') || window.location.hash === '#promociones';
+                    break;
+                case 'support':
+                    isActive = currentPage.includes('soporte');
+                    break;
+            }
+            
+            item.setAttribute('data-active', isActive);
+        });
+    }
+    
+    /**
+     * Obtiene el número de items en el carrito
+     */
+    function getCartItemCount() {
+        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        return cart.reduce((total, item) => total + (item.quantity || 1), 0);
+    }
+    
+    /**
+     * Tracking de analytics para el panel
+     */
+    function trackQuickAccessAction(action, detail = null) {
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'quick_access_interaction', {
+                'action': action,
+                'detail': detail,
+                'location': 'quick_access_panel'
+            });
+        }
+        
+        // Tracking local
+        const quickStats = JSON.parse(localStorage.getItem('quickAccessStats') || '{}');
+        const key = detail ? `${action}_${detail}` : action;
+        quickStats[key] = (quickStats[key] || 0) + 1;
+        quickStats.lastUsed = Date.now();
+        localStorage.setItem('quickAccessStats', JSON.stringify(quickStats));
+    }
+    
+    /**
+     * Manejo de teclado
+     */
+    function handleKeyboard(event) {
+        if (!isOpen) return;
+        
+        switch (event.key) {
+            case 'Escape':
+                event.preventDefault();
+                closePanel();
+                break;
+            case 'Tab':
+                // Mantener foco dentro del panel
+                if (event.shiftKey) {
+                    // Tab hacia atrás
+                    if (document.activeElement === items[0]) {
+                        event.preventDefault();
+                        toggle.focus();
+                    }
+                } else {
+                    // Tab hacia adelante
+                    if (document.activeElement === toggle) {
+                        event.preventDefault();
+                        items[0].focus();
+                    }
+                }
+                break;
+            case 'ArrowDown':
+                event.preventDefault();
+                focusNextItem();
+                break;
+            case 'ArrowUp':
+                event.preventDefault();
+                focusPrevItem();
+                break;
+        }
+    }
+    
+    function focusNextItem() {
+        const current = document.activeElement;
+        const currentIndex = Array.from(items).indexOf(current);
+        const nextIndex = (currentIndex + 1) % items.length;
+        items[nextIndex].focus();
+    }
+    
+    function focusPrevItem() {
+        const current = document.activeElement;
+        const currentIndex = Array.from(items).indexOf(current);
+        const prevIndex = (currentIndex - 1 + items.length) % items.length;
+        items[prevIndex].focus();
+    }
+    
+    // Event Listeners
+    
+    // Toggle del panel
+    toggle.addEventListener('click', togglePanel);
+    
+    // Items del menú
+    items.forEach(item => {
+        item.addEventListener('click', () => {
+            const action = item.dataset.action;
+            handleQuickAction(action);
+        });
+        
+        // Enter/Space en items
+        item.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                const action = item.dataset.action;
+                handleQuickAction(action);
+            }
+        });
+    });
+    
+    // Overlay para cerrar
+    if (overlay) {
+        overlay.addEventListener('click', closePanel);
+    }
+    
+    // Teclado global
+    document.addEventListener('keydown', handleKeyboard);
+    
+    // Cerrar al hacer click fuera
+    document.addEventListener('click', (event) => {
+        if (isOpen && !panel.contains(event.target)) {
+            closePanel();
+        }
+    });
+    
+    // Resetear auto-close en interacción
+    panel.addEventListener('mouseenter', () => {
+        if (isOpen) resetAutoClose();
+    });
+    
+    panel.addEventListener('mouseleave', () => {
+        if (isOpen) resetAutoClose();
+    });
+    
+    // Actualizar contadores periódicamente
+    updatePanelCounters();
+    setInterval(updatePanelCounters, 2000);
+    
+    // Actualizar estados en cambios de hash
+    window.addEventListener('hashchange', updateActiveStates);
+    
+    // Inicialización
+    updateActiveStates();
 }

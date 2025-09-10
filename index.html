@@ -915,6 +915,124 @@
         </div>
     </div>
 
+    <!-- LG-014: Panel de acceso rápido flotante -->
+    <nav class="quick-access-panel" 
+         role="navigation" 
+         aria-label="Panel de acceso rápido"
+         id="quickAccessPanel">
+        
+        <!-- Botón de toggle del panel -->
+        <button class="quick-access-toggle" 
+                id="quickAccessToggle"
+                aria-label="Abrir panel de acceso rápido"
+                aria-expanded="false"
+                aria-controls="quickAccessMenu"
+                type="button">
+            <div class="toggle-icon">
+                <span class="toggle-line"></span>
+                <span class="toggle-line"></span>
+                <span class="toggle-line"></span>
+            </div>
+            <span class="toggle-text">Menú</span>
+        </button>
+        
+        <!-- Menú de acciones rápidas -->
+        <div class="quick-access-menu" 
+             id="quickAccessMenu"
+             role="menu"
+             aria-hidden="true">
+            
+            <!-- Botón 1: Carrito -->
+            <button class="quick-access-item" 
+                    data-action="cart"
+                    role="menuitem"
+                    aria-label="Abrir carrito de compras"
+                    tabindex="-1">
+                <div class="quick-item-icon">
+                    <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+                    <span class="cart-badge" id="cartBadge">0</span>
+                </div>
+                <span class="quick-item-text">Carrito</span>
+                <div class="quick-item-glow"></div>
+            </button>
+            
+            <!-- Botón 2: Perfil -->
+            <button class="quick-access-item" 
+                    data-action="profile"
+                    role="menuitem"
+                    aria-label="Ir a perfil de usuario"
+                    tabindex="-1">
+                <div class="quick-item-icon">
+                    <i class="fas fa-user-circle" aria-hidden="true"></i>
+                </div>
+                <span class="quick-item-text">Perfil</span>
+                <div class="quick-item-glow"></div>
+            </button>
+            
+            <!-- Botón 3: Categorías -->
+            <button class="quick-access-item" 
+                    data-action="categories"
+                    role="menuitem"
+                    aria-label="Ver categorías de productos"
+                    tabindex="-1">
+                <div class="quick-item-icon">
+                    <i class="fas fa-th-large" aria-hidden="true"></i>
+                </div>
+                <span class="quick-item-text">Categorías</span>
+                <div class="quick-item-glow"></div>
+            </button>
+            
+            <!-- Botón 4: Ofertas -->
+            <button class="quick-access-item" 
+                    data-action="offers"
+                    role="menuitem"
+                    aria-label="Ver ofertas especiales"
+                    tabindex="-1">
+                <div class="quick-item-icon">
+                    <i class="fas fa-fire" aria-hidden="true"></i>
+                    <span class="offers-pulse"></span>
+                </div>
+                <span class="quick-item-text">Ofertas</span>
+                <div class="quick-item-glow"></div>
+            </button>
+            
+            <!-- Separador -->
+            <div class="quick-access-separator" role="separator"></div>
+            
+            <!-- Botón 5: Soporte -->
+            <button class="quick-access-item quick-access-secondary" 
+                    data-action="support"
+                    role="menuitem"
+                    aria-label="Contactar soporte técnico"
+                    tabindex="-1">
+                <div class="quick-item-icon">
+                    <i class="fas fa-headset" aria-hidden="true"></i>
+                </div>
+                <span class="quick-item-text">Soporte</span>
+                <div class="quick-item-glow"></div>
+            </button>
+            
+            <!-- Botón 6: Favoritos -->
+            <button class="quick-access-item quick-access-secondary" 
+                    data-action="favorites"
+                    role="menuitem"
+                    aria-label="Ver productos favoritos"
+                    tabindex="-1">
+                <div class="quick-item-icon">
+                    <i class="fas fa-heart" aria-hidden="true"></i>
+                    <span class="favorites-count" id="favoritesCount">0</span>
+                </div>
+                <span class="quick-item-text">Favoritos</span>
+                <div class="quick-item-glow"></div>
+            </button>
+        </div>
+        
+        <!-- Overlay para cerrar en mobile -->
+        <div class="quick-access-overlay" 
+             id="quickAccessOverlay"
+             aria-hidden="true"></div>
+    </nav>
+
     <!-- Scripts -->
     <script src="assets/js/products-database.js"></script>
     <script src="assets/js/gamification.js"></script>
