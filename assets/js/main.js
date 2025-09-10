@@ -1081,4 +1081,162 @@ document.addEventListener('DOMContentLoaded', function() {
     initNavbar();
     initStickyNavbar();
     updateCartCounter();
+    initHero();
 });
+
+// ================================
+// LG-011: FUNCIONALIDADES DEL HERO
+// ================================
+
+// Inicializar funcionalidades del hero
+function initHero() {
+    // Agregar event listeners para el scroll indicator
+    const scrollIndicator = document.querySelector('.scroll-indicator');
+    if (scrollIndicator) {
+        scrollIndicator.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                scrollToFeatured();
+            }
+        });
+    }
+    
+    // Inicializar animaciones de entrada si AOS está disponible
+    if (typeof AOS !== 'undefined') {
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    }
+}
+
+// Función principal para scroll suave a productos destacados
+function scrollToFeatured() {
+    const featuredSection = document.getElementById('featured');
+    const exploreCatalogBtn = document.getElementById('exploreCatalogBtn');
+    
+    if (!featuredSection) {
+        console.error('Sección de productos destacados no encontrada');
+        showNotification('Error: No se pudo encontrar la sección de productos', 'error');
+        return;
+    }
+    
+    // Agregar efecto visual al botón
+    if (exploreCatalogBtn) {
+        exploreCatalogBtn.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            exploreCatalogBtn.style.transform = '';
+        }, 150);
+    }
+    
+    // Calcular posición considerando el navbar fijo
+    const navbar = document.querySelector('.header');
+    const navbarHeight = navbar ? navbar.offsetHeight : 80;
+    const targetPosition = featuredSection.offsetTop - navbarHeight - 20;
+    
+    // Scroll suave con animación personalizada
+    smoothScrollTo(targetPosition, 1000);
+    
+    // Feedback visual en la sección de destino
+    setTimeout(() => {
+        highlightFeaturedSection();
+    }, 1000);
+    
+    // Analytics/tracking (opcional)
+    trackCTAClick('explore_catalog', 'hero_section');
+}
+
+// Función de scroll suave personalizada
+function smoothScrollTo(targetPosition, duration) {
+    const startPosition = window.pageYOffset;
+    const distance = targetPosition - startPosition;
+    let startTime = null;
+    
+    function animation(currentTime) {
+        if (startTime === null) startTime = currentTime;
+        const timeElapsed = currentTime - startTime;
+        const progress = Math.min(timeElapsed / duration, 1);
+        
+        // Easing function (ease-in-out)
+        const easeInOutCubic = progress < 0.5 
+            ? 4 * progress * progress * progress 
+            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+        
+        window.scrollTo(0, startPosition + distance * easeInOutCubic);
+        
+        if (timeElapsed < duration) {
+            requestAnimationFrame(animation);
+        }
+    }
+    
+    requestAnimationFrame(animation);
+}
+
+// Destacar visualmente la sección de productos cuando se llega
+function highlightFeaturedSection() {
+    const featuredSection = document.getElementById('featured');
+    const sectionTitle = featuredSection?.querySelector('.section-title');
+    
+    if (sectionTitle) {
+        // Agregar clase de animación
+        sectionTitle.classList.add('highlight-animation');
+        
+        // Remover la clase después de la animación
+        setTimeout(() => {
+            sectionTitle.classList.remove('highlight-animation');
+        }, 2000);
+    }
+    
+    // Mostrar notificación de llegada
+    showNotification('¡Explora nuestros productos destacados! 🎮', 'success');
+}
+
+// Función de tracking para analytics (implementación básica)
+function trackCTAClick(action, section) {
+    // Aquí se podría integrar con Google Analytics, Adobe Analytics, etc.
+    console.log('CTA Click Tracked:', {
+        action: action,
+        section: section,
+        timestamp: new Date().toISOString(),
+        page: window.location.pathname
+    });
+    
+    // Ejemplo de integración con Google Analytics
+    if (typeof gtag !== 'undefined') {
+        gtag('event', action, {
+            'event_category': 'CTA',
+            'event_label': section,
+            'value': 1
+        });
+    }
+}
+
+// Función auxiliar para mostrar el scroll indicator solo cuando sea relevante
+function initScrollIndicator() {
+    const scrollIndicator = document.querySelector('.scroll-indicator');
+    const featuredSection = document.getElementById('featured');
+    
+    if (!scrollIndicator || !featuredSection) return;
+    
+    function updateScrollIndicatorVisibility() {
+        const scrollPosition = window.pageYOffset;
+        const featuredPosition = featuredSection.offsetTop;
+        const windowHeight = window.innerHeight;
+        
+        // Ocultar el indicador si ya estamos cerca de la sección featured
+        if (scrollPosition + windowHeight > featuredPosition - 200) {
+            scrollIndicator.style.opacity = '0';
+            scrollIndicator.style.pointerEvents = 'none';
+        } else {
+            scrollIndicator.style.opacity = '1';
+            scrollIndicator.style.pointerEvents = 'auto';
+        }
+    }
+    
+    // Verificar visibilidad en scroll
+    window.addEventListener('scroll', updateScrollIndicatorVisibility);
+    
+    // Verificar inicialmente
+    updateScrollIndicatorVisibility();
+}

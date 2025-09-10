@@ -138,66 +138,104 @@
     </header>
 
     <!-- Main Content -->
-    <main class="main">
-        <!-- Hero Section - PC Factory Style -->
-        <section class="hero-pcfactory">
+    <main class="main" id="main">
+        <!-- LG-011: Hero con CTA "Explorar catálogo" -->
+        <section class="hero" id="hero" role="banner">
+            <div class="hero-background">
+                <div class="hero-particles"></div>
+            </div>
+            
             <div class="container">
-                <!-- Banners principales -->
-                <div class="hero-banners">
-                    <!-- Banner principal -->
-                    <div class="main-banner">
-                        <div class="banner-overlay"></div>
-                        <div class="banner-content">
-                            <div class="banner-badge">🎮 NUEVO</div>
-                            <h1 class="banner-title">
-                                LEVEL-UP TU <span class="text-glow">EXPERIENCIA</span> GAMING
-                            </h1>
-                            <p class="banner-subtitle">
-                                Los mejores productos gaming al mejor precio. Consolas, juegos, accesorios y más.
-                            </p>
-                            <div class="banner-actions">
-                                <a href="productos/" class="btn-primary">
-                                    🎯 Explorar Productos
-                                </a>
-                                <a href="#featured" class="btn-secondary">
-                                    🔥 Ver Ofertas
-                                </a>
-                            </div>
+                <div class="hero-content">
+                    <!-- Eslogan principal -->
+                    <div class="hero-badge" data-aos="fade-down">
+                        <i class="fas fa-rocket" aria-hidden="true"></i>
+                        <span>¡Nueva experiencia gaming!</span>
+                    </div>
+                    
+                    <h1 class="hero-title" data-aos="fade-up" data-aos-delay="200">
+                        LEVEL-UP TU <span class="text-glow">EXPERIENCIA</span> GAMING
+                    </h1>
+                    
+                    <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="400">
+                        Descubre los mejores productos gaming: consolas next-gen, videojuegos épicos, 
+                        accesorios pro y componentes de alta gama. Todo lo que necesitas para dominar.
+                    </p>
+                    
+                    <!-- CTA Principal que hace scroll a destacados -->
+                    <div class="hero-actions" data-aos="fade-up" data-aos-delay="600">
+                        <button class="cta-button" 
+                                id="exploreCatalogBtn" 
+                                onclick="scrollToFeatured()" 
+                                aria-label="Explorar catálogo de productos destacados">
+                            <i class="fas fa-gamepad" aria-hidden="true"></i>
+                            <span>Explorar Catálogo</span>
+                            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                        </button>
+                        
+                        <a href="productos/" 
+                           class="hero-button" 
+                           aria-label="Ver todos los productos">
+                            <i class="fas fa-store" aria-hidden="true"></i>
+                            <span>Ver Todos</span>
+                        </a>
+                    </div>
+                    
+                    <!-- Features destacadas -->
+                    <div class="hero-features" data-aos="fade-up" data-aos-delay="800">
+                        <div class="feature-item">
+                            <i class="fas fa-shipping-fast" aria-hidden="true"></i>
+                            <span>Envío Gratis</span>
                         </div>
-                        <div class="banner-image">
-                            <div class="floating-elements">
-                                <div class="floating-icon">🎮</div>
-                                <div class="floating-icon">🖱️</div>
-                                <div class="floating-icon">⌨️</div>
-                            </div>
+                        <div class="feature-item">
+                            <i class="fas fa-shield-alt" aria-hidden="true"></i>
+                            <span>Garantía Extendida</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-headset" aria-hidden="true"></i>
+                            <span>Soporte 24/7</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-medal" aria-hidden="true"></i>
+                            <span>Productos Premium</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Elementos visuales gaming -->
+                <div class="hero-visual" data-aos="fade-left" data-aos-delay="400">
+                    <div class="gaming-elements">
+                        <div class="floating-element" style="--delay: 0s;">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <div class="floating-element" style="--delay: 1s;">
+                            <i class="fas fa-headphones"></i>
+                        </div>
+                        <div class="floating-element" style="--delay: 2s;">
+                            <i class="fas fa-keyboard"></i>
+                        </div>
+                        <div class="floating-element" style="--delay: 1.5s;">
+                            <i class="fas fa-mouse"></i>
+                        </div>
+                        <div class="floating-element" style="--delay: 0.5s;">
+                            <i class="fas fa-microchip"></i>
                         </div>
                     </div>
                     
-                    <!-- Banners laterales -->
-                    <div class="side-banners">
-                        <!-- Descuento Duoc UC -->
-                        <div class="side-banner duoc-banner">
-                            <div class="side-banner-content">
-                                <div class="discount-badge">20% OFF</div>
-                                <h3>🎓 Estudiantes Duoc UC</h3>
-                                <p>Descuento especial con tu correo @duocuc.cl</p>
-                                <button class="btn-small" onclick="openDuocModal()">
-                                    Obtener Descuento
-                                </button>
-                            </div>
+                    <!-- Indicador de scroll -->
+                    <div class="scroll-indicator" 
+                         onclick="scrollToFeatured()" 
+                         aria-label="Desplazarse a productos destacados"
+                         role="button"
+                         tabindex="0">
+                        <div class="scroll-arrow">
+                            <i class="fas fa-chevron-down" aria-hidden="true"></i>
                         </div>
-                        
-                        <!-- Sistema de Referidos -->
-                        <div class="side-banner referral-banner">
-                            <div class="side-banner-content">
-                                <h3>👥 Refiere y Gana</h3>
-                                <p><strong>$5.000</strong> por cada amigo</p>
-                                <button class="btn-small" onclick="openReferralModal()">
-                                    Referir Amigo
-                                </button>
-                            </div>
-                        </div>
+                        <span class="scroll-text">Descubre más</span>
                     </div>
+                </div>
+            </div>
+        </section>
                 </div>
                 
                 <!-- Barra de beneficios -->
