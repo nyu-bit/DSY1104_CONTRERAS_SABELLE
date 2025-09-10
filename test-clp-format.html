@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="gamer">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Formato CLP - Carrito</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container" style="max-width: 800px; margin: 50px auto; padding: 20px;">
+        <h1>🧪 Test Formato CLP - Carrito LEVEL-UP</h1>
+        
+        <!-- Test del carrito -->
+        <div class="cart-container" style="display: grid; grid-template-columns: 1fr 350px; gap: 30px;">
+            <!-- Items del carrito -->
+            <div class="cart-items" id="cartItems">
+                <!-- Se llenarán dinámicamente -->
+            </div>
+            
+            <!-- Resumen del carrito -->
+            <div class="cart-summary">
+                <h3>📋 Resumen del Pedido</h3>
+                
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span id="subtotal">$0</span>
+                </div>
+                
+                <div class="summary-row" id="discountRow" style="display: none;">
+                    <span>Descuento:</span>
+                    <span id="discount" class="discount-amount">$0</span>
+                </div>
+                
+                <div class="summary-row">
+                    <span>Envío:</span>
+                    <span id="shipping">$5.990</span>
+                </div>
+                
+                <div class="summary-divider"></div>
+                
+                <div class="summary-row total">
+                    <span><strong>Total a Pagar:</strong></span>
+                    <span id="total" class="total-amount"><strong>$0</strong></span>
+                </div>
+                
+                <div class="shipping-message" id="shippingMessage"></div>
+                
+                <div class="cart-actions">
+                    <button class="product-button secondary" onclick="testClearCart()">
+                        🗑️ Vaciar Carrito
+                    </button>
+                    <button class="cta-button primary" onclick="testCheckout()">
+                        💳 Proceder al Pago
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Botones de prueba -->
+        <div style="margin-top: 30px; text-align: center;">
+            <h3>🔧 Controles de Prueba</h3>
+            <button onclick="testAddProduct1()" class="cta-button">Agregar RTX 4080</button>
+            <button onclick="testAddProduct2()" class="cta-button">Agregar PS5</button>
+            <button onclick="testAddProduct3()" class="cta-button">Agregar Silla Gaming</button>
+            <button onclick="testApplyDiscount()" class="product-button">Aplicar Descuento 10%</button>
+        </div>
+        
+        <!-- Log de formato -->
+        <div style="margin-top: 30px; background: rgba(0,0,0,0.7); padding: 20px; border-radius: 8px;">
+            <h3 style="color: var(--primary-color);">📊 Log de Formato CLP</h3>
+            <div id="formatLog" style="color: white; font-family: monospace; font-size: 0.9rem;"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/products-database.js"></script>
+    <script src="assets/js/cart.js"></script>
+    <script src="assets/js/main.js"></script>
+    
+    <script>
+        // Test del formato CLP
+        function logFormat(description, value, formatted) {
+            const log = document.getElementById('formatLog');
+            const timestamp = new Date().toLocaleTimeString();
+            log.innerHTML += `
+                <div style="margin: 5px 0; padding: 8px; background: rgba(255,255,255,0.1); border-radius: 4px;">
+                    <strong>[${timestamp}]</strong> ${description}<br>
+                    Valor: ${value} → Formateado: <span style="color: var(--accent-color)">${formatted}</span>
+                </div>
+            `;
+            log.scrollTop = log.scrollHeight;
+        }
+
+        // Test agregar productos
+        function testAddProduct1() {
+            if (typeof addToCart === 'function' && window.PRODUCT_DATABASE) {
+                const product = window.PRODUCT_DATABASE['offer-1'];
+                if (product) {
+                    addToCart(product, 1);
+                    logFormat('Agregar RTX 4080', product.price, formatPrice(product.price));
+                }
+            }
+        }
+
+        function testAddProduct2() {
+            if (typeof addToCart === 'function' && window.PRODUCT_DATABASE) {
+                const product = window.PRODUCT_DATABASE['offer-2'];
+                if (product) {
+                    addToCart(product, 1);
+                    logFormat('Agregar PS5', product.price, formatPrice(product.price));
+                }
+            }
+        }
+
+        function testAddProduct3() {
+            if (typeof addToCart === 'function' && window.PRODUCT_DATABASE) {
+                const product = window.PRODUCT_DATABASE['offer-3'];
+                if (product) {
+                    addToCart(product, 1);
+                    logFormat('Agregar Silla Gaming', product.price, formatPrice(product.price));
+                }
+            }
+        }
+
+        function testApplyDiscount() {
+            if (typeof applyDiscountCode === 'function') {
+                applyDiscountCode('GAMER10');
+                logFormat('Aplicar descuento', '10%', 'GAMER10');
+            }
+        }
+
+        function testClearCart() {
+            if (typeof clearCart === 'function') {
+                clearCart();
+                logFormat('Vaciar carrito', 'all items', 'Cart cleared');
+            }
+        }
+
+        function testCheckout() {
+            if (typeof proceedToCheckout === 'function') {
+                proceedToCheckout();
+                logFormat('Checkout', cartState.total, formatPrice(cartState.total));
+            }
+        }
+
+        // Inicializar cuando se cargue
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('🧪 Iniciando test de formato CLP...');
+            logFormat('Sistema iniciado', 'Ready', 'Formato CLP activado');
+            
+            // Test de valores de ejemplo
+            const testValues = [714995, 422494, 199995, 50000, 1299990];
+            testValues.forEach(value => {
+                logFormat(`Test valor ${value}`, value, formatPrice(value));
+            });
+        });
+    </script>
+</body>
+</html>

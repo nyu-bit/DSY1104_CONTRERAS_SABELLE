@@ -5728,8 +5728,65 @@ a:hover {
   padding-top: var(--spacing-md);
   border-top: 2px solid rgba(168, 85, 247, 0.3);
   font-size: 1.2rem;
+}
+
+/* Formato CLP mejorado */
+.cart-summary .summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
+}
+
+.cart-summary .summary-row.total {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 2px solid rgba(168, 85, 247, 0.5);
+  border-bottom: none;
+  font-size: 1.3rem;
   font-weight: bold;
-  color: white;
+  color: var(--primary-color);
+}
+
+.cart-summary .total-amount {
+  color: var(--accent-color);
+  font-weight: bold;
+  font-size: 1.4rem;
+  text-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+}
+
+.cart-summary .discount-amount {
+  color: var(--success-color);
+  font-weight: 600;
+}
+
+.cart-summary .summary-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.5), transparent);
+  margin: 16px 0;
+}
+
+.shipping-message {
+  margin: 16px 0;
+  padding: 12px;
+  border-radius: var(--border-radius);
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.shipping-message.success {
+  background: rgba(76, 175, 80, 0.2);
+  color: var(--success-color);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.shipping-message.info {
+  background: rgba(33, 150, 243, 0.2);
+  color: var(--info-color);
+  border: 1px solid rgba(33, 150, 243, 0.3);
 }
 
 .summary-line.discount {

@@ -924,7 +924,7 @@ function updateCartItems() {
             
             <div class="item-details">
                 <h3 class="item-name">${item.name}</h3>
-                <p class="item-price">$${formatPrice(item.price)} c/u</p>
+                <p class="item-price">${formatPrice(item.price)} c/u</p>
                 <p class="item-sku">Código: ${item.sku}</p>
                 <p class="item-category">${item.category}</p>
                 ${Object.keys(item.options).length > 0 ? `
@@ -995,20 +995,20 @@ function updateCartSummary() {
     // Actualizar subtotal
     const subtotalElement = document.getElementById('subtotal');
     if (subtotalElement) {
-        subtotalElement.textContent = `$${formatPrice(cartState.subtotal)}`;
+        subtotalElement.textContent = formatPrice(cartState.subtotal);
     }
 
     // Actualizar envío
     const shippingElement = document.getElementById('shipping');
     if (shippingElement) {
-        shippingElement.textContent = cartState.shipping === 0 ? 'GRATIS' : `$${formatPrice(cartState.shipping)}`;
+        shippingElement.textContent = cartState.shipping === 0 ? 'GRATIS' : formatPrice(cartState.shipping);
     }
 
     // Actualizar descuento
     const discountElement = document.getElementById('discount');
     if (discountElement) {
         if (cartState.discount > 0) {
-            discountElement.textContent = `-$${formatPrice(cartState.discount)}`;
+            discountElement.textContent = `-${formatPrice(cartState.discount)}`;
             discountElement.parentElement.style.display = 'flex';
         } else {
             discountElement.parentElement.style.display = 'none';
@@ -1018,7 +1018,7 @@ function updateCartSummary() {
     // Actualizar total
     const totalElement = document.getElementById('total');
     if (totalElement) {
-        totalElement.textContent = `$${formatPrice(cartState.total)}`;
+        totalElement.textContent = formatPrice(cartState.total);
     }
 
     // Mostrar mensaje de envío gratis
@@ -1034,7 +1034,7 @@ function updateShippingMessage() {
         shippingMessage.className = 'shipping-message success';
     } else {
         const remaining = 50000 - cartState.subtotal;
-        shippingMessage.innerHTML = `📦 Agrega $${formatPrice(remaining)} más para envío gratis`;
+        shippingMessage.innerHTML = `📦 Agrega ${formatPrice(remaining)} más para envío gratis`;
         shippingMessage.className = 'shipping-message info';
     }
 }
@@ -1263,8 +1263,34 @@ function getProductById(productId) {
     return window.PRODUCT_DATABASE ? window.PRODUCT_DATABASE[productId] : null;
 }
 
+/**
+ * Formatear precio en formato CLP (Peso Chileno)
+ * @param {number} price - Precio a formatear
+ * @returns {string} - Precio formateado en CLP
+ */
 function formatPrice(price) {
-    return new Intl.NumberFormat('es-CL').format(Math.round(price));
+    if (!price || isNaN(price)) return '$0';
+    
+    return new Intl.NumberFormat('es-CL', {
+        style: 'currency',
+        currency: 'CLP',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    }).format(Math.round(price));
+}
+
+/**
+ * Formatear precio sin símbolo de moneda (solo números)
+ * @param {number} price - Precio a formatear
+ * @returns {string} - Precio formateado sin símbolo
+ */
+function formatPriceNumber(price) {
+    if (!price || isNaN(price)) return '0';
+    
+    return new Intl.NumberFormat('es-CL', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    }).format(Math.round(price));
 }
 
 function showCartNotification(message, type = 'info') {
@@ -1704,10 +1730,6 @@ function showCartNotification(message, type = 'info') {
 // FUNCIONES AUXILIARES
 // ================================
 
-function formatPrice(price) {
-    return `$${price.toFixed(2)}`;
-}
-
 function validateQuantity(quantity) {
     const num = parseInt(quantity);
     return !isNaN(num) && num >= 1 && num <= 99;
@@ -1757,7 +1779,7 @@ function updateCartItemsDisplay(container) {
             
             <div class="item-details">
                 <h3 class="item-name">${item.name}</h3>
-                <p class="item-price">$${formatPrice(item.price)}</p>
+                <p class="item-price">${formatPrice(item.price)}</p>
                 ${item.sku ? `<p class="item-sku">SKU: ${item.sku}</p>` : ''}
                 ${generateOptionsDisplay(item.options)}
             </div>
@@ -1793,7 +1815,7 @@ function updateCartItemsDisplay(container) {
             </div>
             
             <div class="item-total">
-                <span class="total-price">$${formatPrice(item.price * item.quantity)}</span>
+                <span class="total-price">${formatPrice(item.price * item.quantity)}</span>
             </div>
             
             <div class="item-actions">
@@ -1827,33 +1849,33 @@ function updateCartSummaryDisplay(container) {
             
             <div class="summary-line">
                 <span>Subtotal (${cartState.itemCount} productos):</span>
-                <span>$${formatPrice(cartState.subtotal)}</span>
+                <span>${formatPrice(cartState.subtotal)}</span>
             </div>
             
             ${cartState.discount > 0 ? `
                 <div class="summary-line discount">
                     <span>Descuento (${cartState.discountCode.description}):</span>
-                    <span class="discount-amount">-$${formatPrice(cartState.discount)}</span>
+                    <span class="discount-amount">-${formatPrice(cartState.discount)}</span>
                 </div>
             ` : ''}
             
             <div class="summary-line">
                 <span>Envío:</span>
                 <span class="${cartState.shipping === 0 ? 'free-shipping' : ''}">
-                    ${cartState.shipping === 0 ? 'GRATIS' : '$' + formatPrice(cartState.shipping)}
+                    ${cartState.shipping === 0 ? 'GRATIS' : formatPrice(cartState.shipping)}
                 </span>
             </div>
             
             ${cartState.shipping === 0 && cartState.subtotal < CART_CONFIG.shippingThreshold ? `
                 <div class="shipping-info">
                     <i class="fas fa-info-circle" aria-hidden="true"></i>
-                    Envío gratis por compras sobre $${formatPrice(CART_CONFIG.shippingThreshold)}
+                    Envío gratis por compras sobre ${formatPrice(CART_CONFIG.shippingThreshold)}
                 </div>
             ` : ''}
             
             <div class="summary-line total">
                 <span>Total:</span>
-                <span class="total-amount">$${formatPrice(cartState.total)}</span>
+                <span class="total-amount">${formatPrice(cartState.total)}</span>
             </div>
             
             ${generateDiscountSection()}
@@ -1963,7 +1985,7 @@ function applyDiscountCode() {
     
     if (cartState.subtotal < discountData.minAmount) {
         showCartNotification(
-            `Compra mínima para este código: $${formatPrice(discountData.minAmount)}`,
+            `Compra mínima para este código: ${formatPrice(discountData.minAmount)}`,
             'warning'
         );
         return;
@@ -2011,16 +2033,6 @@ function removeDiscountCode() {
 // ========================================
 // UTILIDADES
 // ========================================
-
-/**
- * Formatear precio para mostrar
- */
-function formatPrice(price) {
-    return new Intl.NumberFormat('es-CL', {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0
-    }).format(Math.round(price));
-}
 
 /**
  * Mostrar notificación del carrito

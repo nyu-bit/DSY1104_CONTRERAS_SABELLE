@@ -34,23 +34,39 @@
                     </div>
                     
                     <div class="cart-summary">
-                        <h3>Resumen del Pedido</h3>
+                        <h3>📋 Resumen del Pedido</h3>
+                        
                         <div class="summary-row">
                             <span>Subtotal:</span>
-                            <span id="subtotal">$0.00</span>
-                        </div>
-                        <div class="summary-row">
-                            <span>Envío:</span>
-                            <span id="shipping">$5.99</span>
-                        </div>
-                        <div class="summary-row total">
-                            <span>Total:</span>
-                            <span id="total">$0.00</span>
+                            <span id="subtotal">$0</span>
                         </div>
                         
+                        <div class="summary-row" id="discountRow" style="display: none;">
+                            <span>Descuento:</span>
+                            <span id="discount" class="discount-amount">$0</span>
+                        </div>
+                        
+                        <div class="summary-row">
+                            <span>Envío:</span>
+                            <span id="shipping">$5.990</span>
+                        </div>
+                        
+                        <div class="summary-divider"></div>
+                        
+                        <div class="summary-row total">
+                            <span><strong>Total a Pagar:</strong></span>
+                            <span id="total" class="total-amount"><strong>$0</strong></span>
+                        </div>
+                        
+                        <div class="shipping-message" id="shippingMessage"></div>
+                        
                         <div class="cart-actions">
-                            <button class="product-button" onclick="clearCart()">Vaciar Carrito</button>
-                            <button class="cta-button" onclick="proceedToCheckout()">Proceder al Pago</button>
+                            <button class="product-button secondary" onclick="clearCart()">
+                                🗑️ Vaciar Carrito
+                            </button>
+                            <button class="cta-button primary" onclick="proceedToCheckout()">
+                                💳 Proceder al Pago
+                            </button>
                         </div>
                     </div>
                 </div>
