@@ -237,13 +237,13 @@
                     </p>
                     
                     <div class="hero-actions-gamer" data-aos="fade-up" data-aos-delay="400">
-                        <button class="btn-primary-gamer" 
+                        <button class="btn-primary-gamer btn-gamer" 
                                 onclick="scrollToFeatured()" 
                                 aria-label="Explorar catálogo completo de productos gaming">
                             🎮 Explorar Catálogo
                         </button>
                         
-                        <button class="btn-secondary-gamer" 
+                        <button class="btn-secondary-gamer btn-gamer" 
                                 onclick="showCommunityModal()" 
                                 aria-label="Únete a nuestra comunidad gamer">
                             ✨ Únete a la Comunidad
@@ -667,7 +667,7 @@
         <section class="section" id="featured">
             <div class="container">
                 <h2 class="section-title">⭐ Productos Destacados</h2>
-                <div class="products-grid" id="featuredProducts">
+                <div class="products-grid grid-responsive" id="featuredProducts">
                     <!-- Los productos se cargarán dinámicamente -->
                 </div>
                 <div class="section-actions">
@@ -685,7 +685,7 @@
                 </div>
                 <div class="special-offers-grid" id="specialOffersGrid">
                     <!-- Producto en oferta 1 -->
-                    <article class="offer-product-card" data-product-id="offer-1">
+                    <article class="offer-product-card card-gamer" data-product-id="offer-1">
                         <div class="offer-badge-wrapper">
                             <span class="offer-badge primary">OFERTA</span>
                             <span class="discount-badge">-45%</span>
@@ -725,7 +725,7 @@
                     </article>
 
                     <!-- Producto en oferta 2 -->
-                    <article class="offer-product-card" data-product-id="offer-2">
+                    <article class="offer-product-card card-gamer" data-product-id="offer-2">
                         <div class="offer-badge-wrapper">
                             <span class="offer-badge primary">OFERTA</span>
                             <span class="discount-badge">-35%</span>
@@ -765,7 +765,7 @@
                     </article>
 
                     <!-- Producto en oferta 3 -->
-                    <article class="offer-product-card" data-product-id="offer-3">
+                    <article class="offer-product-card card-gamer" data-product-id="offer-3">
                         <div class="offer-badge-wrapper">
                             <span class="offer-badge primary">OFERTA</span>
                             <span class="discount-badge">-50%</span>
@@ -1590,68 +1590,84 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
+    <!-- LG-007: Footer Gamer -->
+    <footer class="footer-gamer">
+        <div class="layout-container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3>Level-Up Gamer</h3>
-                    <p>Tu tienda gaming de confianza con los mejores productos y precios del mercado.</p>
-                    <div class="social-links">
+                    <h3>🎮 Level-Up Gamer</h3>
+                    <p>Tu tienda gaming de confianza con los mejores productos y precios del mercado. Únete a nuestra comunidad gamer.</p>
+                    <div class="footer-social">
                         <a href="https://facebook.com/levelupgamer" 
                            target="_blank" 
                            rel="noopener noreferrer" 
-                           aria-label="Visitar página de Facebook de Level-Up Gamer">📘</a>
+                           aria-label="Visitar página de Facebook">
+                            <i class="fab fa-facebook-f" aria-hidden="true"></i>
+                        </a>
                         <a href="https://twitter.com/levelupgamer" 
                            target="_blank" 
                            rel="noopener noreferrer" 
-                           aria-label="Seguir en Twitter a Level-Up Gamer">🐦</a>
+                           aria-label="Seguir en Twitter">
+                            <i class="fab fa-twitter" aria-hidden="true"></i>
+                        </a>
                         <a href="https://instagram.com/levelupgamer" 
                            target="_blank" 
                            rel="noopener noreferrer" 
-                           aria-label="Ver perfil de Instagram de Level-Up Gamer">📷</a>
+                           aria-label="Ver perfil de Instagram">
+                            <i class="fab fa-instagram" aria-hidden="true"></i>
+                        </a>
                         <a href="https://twitch.tv/levelupgamer" 
                            target="_blank" 
                            rel="noopener noreferrer" 
-                           aria-label="Ver canal de Twitch de Level-Up Gamer">🎮</a>
+                           aria-label="Ver canal de Twitch">
+                            <i class="fab fa-twitch" aria-hidden="true"></i>
+                        </a>
+                        <a href="https://discord.gg/levelupgamer" 
+                           target="_blank" 
+                           rel="noopener noreferrer" 
+                           aria-label="Unirse a Discord">
+                            <i class="fab fa-discord" aria-hidden="true"></i>
+                        </a>
                     </div>
                 </div>
                 
                 <div class="footer-section">
-                    <h4>Productos</h4>
-                    <ul>
-                        <li><a href="productos/?category=consolas">Consolas</a></li>
-                        <li><a href="productos/?category=juegos">Videojuegos</a></li>
-                        <li><a href="productos/?category=accesorios">Accesorios</a></li>
-                        <li><a href="productos/?category=pc">PC Gaming</a></li>
+                    <h3>🛍️ Productos</h3>
+                    <ul class="footer-links">
+                        <li><a href="productos/?category=consolas">Consolas de Videojuegos</a></li>
+                        <li><a href="productos/?category=juegos">Videojuegos Premium</a></li>
+                        <li><a href="productos/?category=accesorios">Accesorios Gaming</a></li>
+                        <li><a href="productos/?category=pc">PC Gaming Pro</a></li>
+                        <li><a href="productos/?category=ofertas">Ofertas Especiales</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-section">
-                    <h4>Ayuda</h4>
-                    <ul>
-                        <li><a href="#" onclick="showContactModal()">Contacto</a></li>
-                        <li><a href="#" onclick="showShippingInfo()">Envíos</a></li>
-                        <li><a href="#" onclick="showReturnPolicy()">Devoluciones</a></li>
-                        <li><a href="#" onclick="showFAQ()">FAQ</a></li>
+                    <h3>🛡️ Soporte</h3>
+                    <ul class="footer-links">
+                        <li><a href="soporte/" aria-label="Ir a centro de soporte">Centro de Ayuda</a></li>
+                        <li><a href="#" onclick="showContactModal()">Contactar Soporte</a></li>
+                        <li><a href="#" onclick="showShippingInfo()">Información de Envíos</a></li>
+                        <li><a href="#" onclick="showReturnPolicy()">Política de Devoluciones</a></li>
                         <li><a href="#" onclick="showTermsModal()">Términos y Condiciones</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-section">
-                    <h4>Mi Cuenta</h4>
-                    <ul>
+                    <h3>👤 Mi Cuenta</h3>
+                    <ul class="footer-links">
                         <li><a href="usuario/login.html">Iniciar Sesión</a></li>
-                        <li><a href="usuario/register.html">Registrarse</a></li>
-                        <li><a href="usuario/">Mi Perfil</a></li>
-                        <li><a href="carrito/">Mi Carrito</a></li>
+                        <li><a href="usuario/register.html">Crear Cuenta Nueva</a></li>
+                        <li><a href="usuario/">Panel de Usuario</a></li>
+                        <li><a href="carrito/">Ver Mi Carrito</a></li>
+                        <li><a href="#" onclick="showOrderHistory()">Historial de Pedidos</a></li>
                     </ul>
                 </div>
             </div>
             
             <div class="footer-bottom">
                 <p>&copy; 2025 Level-Up Gamer. Todos los derechos reservados.</p>
-                <p>Desarrollado con 💚 para la comunidad gamer</p>
+                <p>Desarrollado con 💚 para la comunidad gamer chilena</p>
             </div>
         </div>
     </footer>
@@ -1934,6 +1950,7 @@
     <script src="assets/js/reviews.js"></script>
     <script src="assets/js/accessibility.js"></script>
     <script src="assets/js/responsive.js"></script>
+    <script src="assets/js/ui-components.js"></script>
     <script src="assets/js/main.js"></script>
     <script src="assets/js/products.js"></script>
     <script src="assets/js/auth.js"></script>
