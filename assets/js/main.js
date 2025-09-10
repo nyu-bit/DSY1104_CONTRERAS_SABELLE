@@ -451,6 +451,12 @@ function loadHomePage() {
     if (specialOffersSection) {
         initSpecialOffers();
     }
+    
+    // Inicializar comparador de productos
+    const comparisonSection = document.getElementById('product-comparison');
+    if (comparisonSection) {
+        initProductComparison();
+    }
 }
 
 function loadProductsPage() {
@@ -3045,3 +3051,877 @@ offerStyles.textContent = `
 `;
 
 document.head.appendChild(offerStyles);
+
+// ================================================
+// LG-017: COMPARADOR DE PRODUCTOS
+// ================================================
+
+/**
+ * Inicializa el comparador de productos
+ */
+function initProductComparison() {
+    console.log('⚖️ Inicializando comparador de productos...');
+    
+    // Variables globales del comparador
+    window.comparisonProducts = [];
+    window.maxComparisonProducts = 4;
+    
+    // Configurar event listeners
+    setupComparisonEventListeners();
+    
+    // Cargar datos de productos para comparación
+    loadComparisonProductData();
+    
+    console.log('✅ Comparador de productos inicializado correctamente');
+}
+
+/**
+ * Configura los event listeners del comparador
+ */
+function setupComparisonEventListeners() {
+    // Checkboxes de selección de productos
+    const checkboxes = document.querySelectorAll('.product-selector-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', handleProductSelection);
+    });
+    
+    // Botón de limpiar comparación
+    const clearBtn = document.getElementById('clearComparisonBtn');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', clearComparison);
+    }
+    
+    // Botón de iniciar comparación
+    const startBtn = document.getElementById('startComparisonBtn');
+    if (startBtn) {
+        startBtn.addEventListener('click', startComparison);
+    }
+    
+    // Botón de cerrar comparación
+    const closeBtn = document.getElementById('closeComparisonBtn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeComparison);
+    }
+    
+    // Búsqueda de productos
+    const searchInput = document.getElementById('comparisonSearch');
+    const searchBtn = document.getElementById('comparisonSearchBtn');
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', handleComparisonSearch);
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleComparisonSearch();
+            }
+        });
+    }
+    
+    if (searchBtn) {
+        searchBtn.addEventListener('click', handleComparisonSearch);
+    }
+    
+    // Botones de acciones de la tabla
+    const addAllBtn = document.getElementById('addAllToCartBtn');
+    const printBtn = document.getElementById('printComparisonBtn');
+    const shareBtn = document.getElementById('shareComparisonBtn');
+    
+    if (addAllBtn) addAllBtn.addEventListener('click', addAllComparedToCart);
+    if (printBtn) printBtn.addEventListener('click', printComparison);
+    if (shareBtn) shareBtn.addEventListener('click', shareComparison);
+}
+
+/**
+ * Maneja la selección/deselección de productos
+ * @param {Event} event - Evento del checkbox
+ */
+function handleProductSelection(event) {
+    const checkbox = event.target;
+    const productId = checkbox.id.replace('select-', '');
+    const productCard = checkbox.closest('.selector-product-card');
+    
+    if (checkbox.checked) {
+        // Verificar límite máximo
+        if (window.comparisonProducts.length >= window.maxComparisonProducts) {
+            checkbox.checked = false;
+            showComparisonAlert(`Máximo ${window.maxComparisonProducts} productos para comparar`);
+            return;
+        }
+        
+        // Agregar producto a la comparación
+        addProductToComparison(productId, productCard);
+    } else {
+        // Remover producto de la comparación
+        removeProductFromComparison(productId);
+    }
+    
+    updateComparisonCounter();
+    updateComparisonButtons();
+    
+    // Tracking del evento
+    trackEvent('product_comparison_selection', {
+        product_id: productId,
+        action: checkbox.checked ? 'add' : 'remove',
+        total_selected: window.comparisonProducts.length
+    });
+}
+
+/**
+ * Agrega un producto a la lista de comparación
+ * @param {string} productId - ID del producto
+ * @param {Element} productCard - Elemento de la tarjeta del producto
+ */
+function addProductToComparison(productId, productCard) {
+    const productData = {
+        id: productId,
+        name: productCard.querySelector('.selector-title').textContent,
+        price: productCard.querySelector('.selector-price').textContent,
+        category: productCard.querySelector('.selector-category').textContent,
+        image: productCard.querySelector('.selector-image img').src,
+        // Datos adicionales para comparación
+        ...getProductComparisonData(productId)
+    };
+    
+    window.comparisonProducts.push(productData);
+    
+    // Efecto visual
+    productCard.classList.add('selected');
+    
+    console.log(`✅ Producto ${productData.name} agregado a comparación`);
+}
+
+/**
+ * Remueve un producto de la lista de comparación
+ * @param {string} productId - ID del producto
+ */
+function removeProductFromComparison(productId) {
+    const index = window.comparisonProducts.findIndex(p => p.id === productId);
+    if (index > -1) {
+        const removedProduct = window.comparisonProducts.splice(index, 1)[0];
+        console.log(`❌ Producto ${removedProduct.name} removido de comparación`);
+    }
+    
+    // Remover efecto visual
+    const productCard = document.querySelector(`[data-product-id="${productId}"]`);
+    if (productCard) {
+        productCard.classList.remove('selected');
+    }
+}
+
+/**
+ * Obtiene datos específicos para comparación de un producto
+ * @param {string} productId - ID del producto
+ * @returns {Object} Datos del producto para comparación
+ */
+function getProductComparisonData(productId) {
+    const comparisonData = {
+        'comp-1': {
+            brand: 'NVIDIA',
+            model: 'RTX 4080',
+            memory: '16GB GDDR6X',
+            coreClock: '2.2 GHz',
+            memorySpeed: '22.4 Gbps',
+            powerConsumption: '320W',
+            rayTracing: 'Sí',
+            dlss: 'DLSS 3',
+            warranty: '3 años',
+            connectivity: 'HDMI 2.1, DisplayPort 1.4a'
+        },
+        'comp-2': {
+            brand: 'NVIDIA',
+            model: 'RTX 4070 Super',
+            memory: '12GB GDDR6X',
+            coreClock: '2.0 GHz',
+            memorySpeed: '21 Gbps',
+            powerConsumption: '220W',
+            rayTracing: 'Sí',
+            dlss: 'DLSS 3',
+            warranty: '3 años',
+            connectivity: 'HDMI 2.1, DisplayPort 1.4a'
+        },
+        'comp-3': {
+            brand: 'Sony',
+            model: 'PlayStation 5',
+            cpu: 'AMD Zen 2 8-core',
+            gpu: 'AMD RDNA 2',
+            memory: '16GB GDDR6',
+            storage: '825GB SSD',
+            rayTracing: 'Sí',
+            resolution: '4K @ 120fps',
+            warranty: '1 año',
+            connectivity: 'HDMI 2.1, USB, Ethernet'
+        },
+        'comp-4': {
+            brand: 'Microsoft',
+            model: 'Xbox Series X',
+            cpu: 'AMD Zen 2 8-core',
+            gpu: 'AMD RDNA 2',
+            memory: '16GB GDDR6',
+            storage: '1TB SSD',
+            rayTracing: 'Sí',
+            resolution: '4K @ 120fps',
+            warranty: '1 año',
+            connectivity: 'HDMI 2.1, USB, Ethernet'
+        },
+        'comp-5': {
+            brand: 'Gaming Pro',
+            model: 'RGB Chair',
+            material: 'Cuero PU + Malla',
+            adjustment: 'Altura, respaldo, reposabrazos',
+            lighting: 'RGB personalizable',
+            maxWeight: '150kg',
+            wheels: 'Ruedas silenciosas 360°',
+            ergonomics: 'Soporte lumbar ajustable',
+            warranty: '2 años',
+            connectivity: 'USB para RGB'
+        },
+        'comp-6': {
+            brand: 'Gaming Pro',
+            model: '32" 4K Monitor',
+            size: '32 pulgadas',
+            resolution: '3840x2160 (4K)',
+            refreshRate: '144Hz',
+            panelType: 'IPS',
+            hdr: 'HDR10',
+            connectivity: 'HDMI 2.1, DisplayPort, USB-C',
+            warranty: '3 años',
+            features: 'G-Sync Compatible, FreeSync'
+        }
+    };
+    
+    return comparisonData[productId] || {};
+}
+
+/**
+ * Actualiza el contador de productos seleccionados
+ */
+function updateComparisonCounter() {
+    const counter = document.getElementById('comparisonCounter');
+    if (counter) {
+        const count = window.comparisonProducts.length;
+        counter.textContent = `${count} producto${count !== 1 ? 's' : ''} seleccionado${count !== 1 ? 's' : ''}`;
+        
+        // Cambiar color según la cantidad
+        if (count === 0) {
+            counter.style.color = 'rgba(255, 255, 255, 0.7)';
+        } else if (count < window.maxComparisonProducts) {
+            counter.style.color = '#818cf8';
+        } else {
+            counter.style.color = '#10b981';
+        }
+    }
+}
+
+/**
+ * Actualiza el estado de los botones de comparación
+ */
+function updateComparisonButtons() {
+    const clearBtn = document.getElementById('clearComparisonBtn');
+    const startBtn = document.getElementById('startComparisonBtn');
+    const count = window.comparisonProducts.length;
+    
+    if (clearBtn) {
+        clearBtn.disabled = count === 0;
+    }
+    
+    if (startBtn) {
+        startBtn.disabled = count < 2;
+        if (count >= 2) {
+            startBtn.textContent = `⚖️ Comparar (${count})`;
+        } else {
+            startBtn.textContent = '⚖️ Comparar';
+        }
+    }
+}
+
+/**
+ * Limpia toda la selección de comparación
+ */
+function clearComparison() {
+    // Desmarcar todos los checkboxes
+    const checkboxes = document.querySelectorAll('.product-selector-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
+    });
+    
+    // Remover efectos visuales
+    const selectedCards = document.querySelectorAll('.selector-product-card.selected');
+    selectedCards.forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    // Limpiar array de productos
+    window.comparisonProducts = [];
+    
+    // Actualizar UI
+    updateComparisonCounter();
+    updateComparisonButtons();
+    
+    // Ocultar tabla si está visible
+    closeComparison();
+    
+    // Tracking del evento
+    trackEvent('comparison_cleared', {
+        products_cleared: window.comparisonProducts.length
+    });
+    
+    console.log('🗑️ Comparación limpiada');
+}
+
+/**
+ * Inicia la comparación mostrando la tabla
+ */
+function startComparison() {
+    if (window.comparisonProducts.length < 2) {
+        showComparisonAlert('Selecciona al menos 2 productos para comparar');
+        return;
+    }
+    
+    console.log('⚖️ Iniciando comparación de productos...');
+    
+    // Generar tabla de comparación
+    generateComparisonTable();
+    
+    // Mostrar contenedor de tabla
+    const tableContainer = document.getElementById('comparisonTableContainer');
+    if (tableContainer) {
+        tableContainer.style.display = 'block';
+        tableContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    
+    // Tracking del evento
+    trackEvent('comparison_started', {
+        products_count: window.comparisonProducts.length,
+        product_ids: window.comparisonProducts.map(p => p.id)
+    });
+}
+
+/**
+ * Genera la tabla de comparación
+ */
+function generateComparisonTable() {
+    const table = document.getElementById('comparisonTable');
+    const header = document.getElementById('comparisonTableHeader');
+    const body = document.getElementById('comparisonTableBody');
+    
+    if (!table || !header || !body) return;
+    
+    // Limpiar contenido existente
+    header.innerHTML = '<th class="feature-column">Características</th>';
+    body.innerHTML = '';
+    
+    // Generar headers de productos
+    window.comparisonProducts.forEach(product => {
+        const th = document.createElement('th');
+        th.innerHTML = `
+            <div class="comparison-product-header">
+                <img src="${product.image}" alt="${product.name}" class="comparison-product-image">
+                <div class="comparison-product-name">${product.name}</div>
+                <div class="comparison-product-price">${product.price}</div>
+            </div>
+        `;
+        header.appendChild(th);
+    });
+    
+    // Generar filas de características
+    const features = getComparisonFeatures();
+    features.forEach(feature => {
+        const tr = document.createElement('tr');
+        
+        // Celda de característica
+        const featureTd = document.createElement('td');
+        featureTd.className = 'feature-cell';
+        featureTd.textContent = feature.label;
+        tr.appendChild(featureTd);
+        
+        // Celdas de valores para cada producto
+        window.comparisonProducts.forEach(product => {
+            const valueTd = document.createElement('td');
+            const value = product[feature.key] || 'No especificado';
+            valueTd.textContent = value;
+            
+            // Agregar clase especial para valores destacados
+            if (feature.highlight && value !== 'No especificado') {
+                valueTd.classList.add('highlight-value');
+            }
+            
+            tr.appendChild(valueTd);
+        });
+        
+        body.appendChild(tr);
+    });
+    
+    console.log('📊 Tabla de comparación generada');
+}
+
+/**
+ * Define las características a comparar
+ * @returns {Array} Array de características
+ */
+function getComparisonFeatures() {
+    return [
+        { key: 'category', label: 'Categoría', highlight: false },
+        { key: 'brand', label: 'Marca', highlight: false },
+        { key: 'model', label: 'Modelo', highlight: false },
+        { key: 'price', label: 'Precio', highlight: true },
+        { key: 'memory', label: 'Memoria', highlight: true },
+        { key: 'cpu', label: 'Procesador', highlight: true },
+        { key: 'gpu', label: 'Tarjeta Gráfica', highlight: true },
+        { key: 'storage', label: 'Almacenamiento', highlight: true },
+        { key: 'coreClock', label: 'Frecuencia Base', highlight: true },
+        { key: 'memorySpeed', label: 'Velocidad Memoria', highlight: true },
+        { key: 'powerConsumption', label: 'Consumo Energía', highlight: false },
+        { key: 'rayTracing', label: 'Ray Tracing', highlight: true },
+        { key: 'dlss', label: 'DLSS', highlight: true },
+        { key: 'resolution', label: 'Resolución', highlight: true },
+        { key: 'refreshRate', label: 'Frecuencia Actualización', highlight: true },
+        { key: 'panelType', label: 'Tipo Panel', highlight: false },
+        { key: 'size', label: 'Tamaño', highlight: false },
+        { key: 'material', label: 'Material', highlight: false },
+        { key: 'adjustment', label: 'Ajustes', highlight: false },
+        { key: 'lighting', label: 'Iluminación', highlight: true },
+        { key: 'connectivity', label: 'Conectividad', highlight: false },
+        { key: 'warranty', label: 'Garantía', highlight: false }
+    ];
+}
+
+/**
+ * Cierra la tabla de comparación
+ */
+function closeComparison() {
+    const tableContainer = document.getElementById('comparisonTableContainer');
+    if (tableContainer) {
+        tableContainer.style.display = 'none';
+    }
+    
+    // Tracking del evento
+    trackEvent('comparison_closed', {
+        products_count: window.comparisonProducts.length
+    });
+}
+
+/**
+ * Maneja la búsqueda de productos para comparar
+ */
+function handleComparisonSearch() {
+    const searchInput = document.getElementById('comparisonSearch');
+    if (!searchInput) return;
+    
+    const query = searchInput.value.trim().toLowerCase();
+    const productCards = document.querySelectorAll('.selector-product-card');
+    
+    if (query === '') {
+        // Mostrar todos los productos
+        productCards.forEach(card => {
+            card.style.display = 'block';
+        });
+        return;
+    }
+    
+    // Filtrar productos
+    productCards.forEach(card => {
+        const title = card.querySelector('.selector-title').textContent.toLowerCase();
+        const category = card.querySelector('.selector-category').textContent.toLowerCase();
+        
+        if (title.includes(query) || category.includes(query)) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+    
+    // Tracking del evento
+    trackEvent('comparison_search', {
+        query: query,
+        results_count: document.querySelectorAll('.selector-product-card[style*="block"]').length
+    });
+}
+
+/**
+ * Agrega todos los productos comparados al carrito
+ */
+function addAllComparedToCart() {
+    if (window.comparisonProducts.length === 0) {
+        showComparisonAlert('No hay productos seleccionados');
+        return;
+    }
+    
+    console.log('🛒 Agregando todos los productos comparados al carrito...');
+    
+    window.comparisonProducts.forEach(product => {
+        addToCart(product);
+    });
+    
+    // Mostrar feedback
+    showComparisonSuccess(`${window.comparisonProducts.length} productos agregados al carrito`);
+    
+    // Actualizar contador del carrito
+    updateCartCounter();
+    
+    // Tracking del evento
+    trackEvent('add_all_compared_to_cart', {
+        products_count: window.comparisonProducts.length,
+        product_ids: window.comparisonProducts.map(p => p.id)
+    });
+}
+
+/**
+ * Imprime la comparación
+ */
+function printComparison() {
+    if (window.comparisonProducts.length === 0) {
+        showComparisonAlert('No hay productos para imprimir');
+        return;
+    }
+    
+    // Crear ventana de impresión
+    const printWindow = window.open('', '_blank');
+    const printContent = generatePrintableComparison();
+    
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+    printWindow.print();
+    
+    // Tracking del evento
+    trackEvent('comparison_printed', {
+        products_count: window.comparisonProducts.length
+    });
+    
+    console.log('🖨️ Comparación enviada a imprimir');
+}
+
+/**
+ * Genera contenido imprimible de la comparación
+ * @returns {string} HTML para imprimir
+ */
+function generatePrintableComparison() {
+    return `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Comparación de Productos - Level-Up Gamer</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+                th { background-color: #f2f2f2; font-weight: bold; }
+                .header { text-align: center; margin-bottom: 30px; }
+                .product-image { width: 60px; height: 60px; object-fit: cover; }
+                @media print { body { margin: 0; } }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>🎮 Level-Up Gamer</h1>
+                <h2>Comparación de Productos</h2>
+                <p>Generado el: ${new Date().toLocaleString()}</p>
+            </div>
+            ${document.getElementById('comparisonTable').outerHTML}
+        </body>
+        </html>
+    `;
+}
+
+/**
+ * Comparte la comparación
+ */
+function shareComparison() {
+    if (window.comparisonProducts.length === 0) {
+        showComparisonAlert('No hay productos para compartir');
+        return;
+    }
+    
+    // Generar URL de compartir
+    const productIds = window.comparisonProducts.map(p => p.id).join(',');
+    const shareUrl = `${window.location.origin}${window.location.pathname}?compare=${productIds}`;
+    
+    // Copiar al portapapeles si es posible
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(shareUrl).then(() => {
+            showComparisonSuccess('Enlace copiado al portapapeles');
+        }).catch(() => {
+            showShareModal(shareUrl);
+        });
+    } else {
+        showShareModal(shareUrl);
+    }
+    
+    // Tracking del evento
+    trackEvent('comparison_shared', {
+        products_count: window.comparisonProducts.length,
+        share_method: 'url'
+    });
+}
+
+/**
+ * Muestra modal para compartir
+ * @param {string} url - URL para compartir
+ */
+function showShareModal(url) {
+    const modal = document.createElement('div');
+    modal.className = 'share-modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <h3>📤 Compartir Comparación</h3>
+            <p>Copia este enlace para compartir tu comparación:</p>
+            <input type="text" value="${url}" readonly class="share-url-input">
+            <div class="modal-actions">
+                <button onclick="copyShareUrl(this)" class="copy-btn">📋 Copiar</button>
+                <button onclick="closeShareModal()" class="close-btn">✕ Cerrar</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+/**
+ * Carga datos de productos para comparación
+ */
+function loadComparisonProductData() {
+    // Aquí se cargarían datos reales desde la base de datos
+    console.log('📊 Datos de productos para comparación cargados');
+}
+
+/**
+ * Carga comparación popular predefinida
+ * @param {string} type - Tipo de comparación
+ */
+function loadPopularComparison(type) {
+    console.log(`🔥 Cargando comparación popular: ${type}`);
+    
+    // Limpiar selección actual
+    clearComparison();
+    
+    // Seleccionar productos según el tipo
+    let productIds = [];
+    
+    switch (type) {
+        case 'consoles':
+            productIds = ['comp-3', 'comp-4']; // PS5 vs Xbox
+            break;
+        case 'graphics':
+            productIds = ['comp-1', 'comp-2']; // RTX 4080 vs 4070
+            break;
+        case 'setup':
+            productIds = ['comp-5', 'comp-6']; // Silla + Monitor
+            break;
+    }
+    
+    // Marcar checkboxes
+    productIds.forEach(id => {
+        const checkbox = document.getElementById(`select-${id}`);
+        if (checkbox) {
+            checkbox.checked = true;
+            handleProductSelection({ target: checkbox });
+        }
+    });
+    
+    // Tracking del evento
+    trackEvent('popular_comparison_loaded', {
+        comparison_type: type,
+        products_selected: productIds
+    });
+    
+    // Iniciar comparación automáticamente
+    setTimeout(() => {
+        startComparison();
+    }, 500);
+}
+
+/**
+ * Muestra alerta de comparación
+ * @param {string} message - Mensaje a mostrar
+ */
+function showComparisonAlert(message) {
+    // Crear alerta temporal
+    const alert = document.createElement('div');
+    alert.className = 'comparison-alert alert-warning';
+    alert.textContent = message;
+    alert.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(239, 68, 68, 0.9);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        z-index: 10000;
+        font-weight: bold;
+        animation: slideInAlert 0.3s ease;
+    `;
+    
+    document.body.appendChild(alert);
+    
+    // Remover después de 3 segundos
+    setTimeout(() => {
+        alert.style.animation = 'slideOutAlert 0.3s ease';
+        setTimeout(() => alert.remove(), 300);
+    }, 3000);
+}
+
+/**
+ * Muestra mensaje de éxito
+ * @param {string} message - Mensaje a mostrar
+ */
+function showComparisonSuccess(message) {
+    // Crear mensaje de éxito temporal
+    const success = document.createElement('div');
+    success.className = 'comparison-alert alert-success';
+    success.textContent = message;
+    success.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(16, 185, 129, 0.9);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        z-index: 10000;
+        font-weight: bold;
+        animation: slideInAlert 0.3s ease;
+    `;
+    
+    document.body.appendChild(success);
+    
+    // Remover después de 3 segundos
+    setTimeout(() => {
+        success.style.animation = 'slideOutAlert 0.3s ease';
+        setTimeout(() => success.remove(), 300);
+    }, 3000);
+}
+
+// CSS para alertas y modales del comparador
+const comparisonStyles = document.createElement('style');
+comparisonStyles.textContent = `
+    @keyframes slideInAlert {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOutAlert {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+    
+    .share-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+    }
+    
+    .share-modal .modal-content {
+        background: rgba(20, 20, 35, 0.95);
+        border: 1px solid rgba(129, 140, 248, 0.3);
+        border-radius: 1rem;
+        padding: 2rem;
+        max-width: 500px;
+        width: 90%;
+        text-align: center;
+    }
+    
+    .share-modal h3 {
+        color: white;
+        margin-bottom: 1rem;
+    }
+    
+    .share-modal p {
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 1rem;
+    }
+    
+    .share-url-input {
+        width: 100%;
+        padding: 0.75rem;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(129, 140, 248, 0.3);
+        border-radius: 0.5rem;
+        color: white;
+        margin-bottom: 1.5rem;
+        font-family: monospace;
+    }
+    
+    .modal-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+    }
+    
+    .copy-btn, .close-btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+    
+    .copy-btn {
+        background: linear-gradient(45deg, #10b981, #34d399);
+        color: white;
+    }
+    
+    .close-btn {
+        background: rgba(239, 68, 68, 0.2);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    
+    .copy-btn:hover, .close-btn:hover {
+        transform: translateY(-2px);
+    }
+    
+    .highlight-value {
+        background: rgba(129, 140, 248, 0.1);
+        font-weight: bold;
+        color: #818cf8;
+    }
+`;
+
+document.head.appendChild(comparisonStyles);
+
+/**
+ * Copia la URL de compartir al portapapeles
+ * @param {Element} button - Botón de copiar
+ */
+function copyShareUrl(button) {
+    const input = button.closest('.modal-content').querySelector('.share-url-input');
+    input.select();
+    document.execCommand('copy');
+    
+    // Cambiar texto del botón temporalmente
+    const originalText = button.textContent;
+    button.textContent = '✅ Copiado!';
+    
+    setTimeout(() => {
+        button.textContent = originalText;
+    }, 2000);
+}
+
+/**
+ * Cierra el modal de compartir
+ */
+function closeShareModal() {
+    const modal = document.querySelector('.share-modal');
+    if (modal) {
+        modal.remove();
+    }
+}

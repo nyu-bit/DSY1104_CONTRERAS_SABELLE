@@ -873,6 +873,215 @@
             </div>
         </section>
 
+        <!-- Comparador de Productos - LG-017 -->
+        <section class="section product-comparison-section" id="product-comparison">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">⚖️ Comparador de Productos</h2>
+                    <p class="section-subtitle">Compara características, precios y especificaciones para tomar la mejor decisión</p>
+                </div>
+
+                <!-- Panel de Control del Comparador -->
+                <div class="comparison-controls">
+                    <div class="comparison-search">
+                        <input type="text" 
+                               id="comparisonSearch" 
+                               placeholder="Buscar productos para comparar..."
+                               class="comparison-search-input"
+                               aria-label="Buscar productos para agregar al comparador">
+                        <button class="comparison-search-btn" id="comparisonSearchBtn">
+                            🔍 Buscar
+                        </button>
+                    </div>
+                    <div class="comparison-actions">
+                        <span class="comparison-counter" id="comparisonCounter">0 productos seleccionados</span>
+                        <button class="clear-comparison-btn" id="clearComparisonBtn" disabled>
+                            🗑️ Limpiar
+                        </button>
+                        <button class="start-comparison-btn" id="startComparisonBtn" disabled>
+                            ⚖️ Comparar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Productos Disponibles para Comparar -->
+                <div class="comparison-products-selector">
+                    <h3 class="selector-title">Productos Disponibles</h3>
+                    <div class="products-selector-grid" id="productsSelector">
+                        <!-- Producto 1 -->
+                        <div class="selector-product-card" data-product-id="comp-1">
+                            <input type="checkbox" 
+                                   id="select-comp-1" 
+                                   class="product-selector-checkbox"
+                                   aria-label="Seleccionar NVIDIA RTX 4080 para comparar">
+                            <label for="select-comp-1" class="selector-card-content">
+                                <div class="selector-image">
+                                    <img src="assets/images/rtx-4080.webp" alt="NVIDIA RTX 4080" loading="lazy">
+                                </div>
+                                <div class="selector-info">
+                                    <h4 class="selector-title">NVIDIA RTX 4080 Gaming</h4>
+                                    <span class="selector-price">$1.299.990</span>
+                                    <span class="selector-category">Tarjetas Gráficas</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Producto 2 -->
+                        <div class="selector-product-card" data-product-id="comp-2">
+                            <input type="checkbox" 
+                                   id="select-comp-2" 
+                                   class="product-selector-checkbox"
+                                   aria-label="Seleccionar NVIDIA RTX 4070 para comparar">
+                            <label for="select-comp-2" class="selector-card-content">
+                                <div class="selector-image">
+                                    <img src="assets/images/rtx-4070.webp" alt="NVIDIA RTX 4070" loading="lazy">
+                                </div>
+                                <div class="selector-info">
+                                    <h4 class="selector-title">NVIDIA RTX 4070 Super</h4>
+                                    <span class="selector-price">$899.990</span>
+                                    <span class="selector-category">Tarjetas Gráficas</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Producto 3 -->
+                        <div class="selector-product-card" data-product-id="comp-3">
+                            <input type="checkbox" 
+                                   id="select-comp-3" 
+                                   class="product-selector-checkbox"
+                                   aria-label="Seleccionar PlayStation 5 para comparar">
+                            <label for="select-comp-3" class="selector-card-content">
+                                <div class="selector-image">
+                                    <img src="assets/images/ps5-console.webp" alt="PlayStation 5" loading="lazy">
+                                </div>
+                                <div class="selector-info">
+                                    <h4 class="selector-title">PlayStation 5 Console</h4>
+                                    <span class="selector-price">$649.990</span>
+                                    <span class="selector-category">Consolas</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Producto 4 -->
+                        <div class="selector-product-card" data-product-id="comp-4">
+                            <input type="checkbox" 
+                                   id="select-comp-4" 
+                                   class="product-selector-checkbox"
+                                   aria-label="Seleccionar Xbox Series X para comparar">
+                            <label for="select-comp-4" class="selector-card-content">
+                                <div class="selector-image">
+                                    <img src="assets/images/xbox-series-x.webp" alt="Xbox Series X" loading="lazy">
+                                </div>
+                                <div class="selector-info">
+                                    <h4 class="selector-title">Xbox Series X Console</h4>
+                                    <span class="selector-price">$699.990</span>
+                                    <span class="selector-category">Consolas</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Producto 5 -->
+                        <div class="selector-product-card" data-product-id="comp-5">
+                            <input type="checkbox" 
+                                   id="select-comp-5" 
+                                   class="product-selector-checkbox"
+                                   aria-label="Seleccionar Silla Gaming para comparar">
+                            <label for="select-comp-5" class="selector-card-content">
+                                <div class="selector-image">
+                                    <img src="assets/images/gaming-chair.webp" alt="Silla Gaming" loading="lazy">
+                                </div>
+                                <div class="selector-info">
+                                    <h4 class="selector-title">Silla Gaming Pro RGB</h4>
+                                    <span class="selector-price">$399.990</span>
+                                    <span class="selector-category">Accesorios</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Producto 6 -->
+                        <div class="selector-product-card" data-product-id="comp-6">
+                            <input type="checkbox" 
+                                   id="select-comp-6" 
+                                   class="product-selector-checkbox"
+                                   aria-label="Seleccionar Monitor Gaming para comparar">
+                            <label for="select-comp-6" class="selector-card-content">
+                                <div class="selector-image">
+                                    <img src="assets/images/monitor-gaming.webp" alt="Monitor Gaming" loading="lazy">
+                                </div>
+                                <div class="selector-info">
+                                    <h4 class="selector-title">Monitor Gaming 32" 4K</h4>
+                                    <span class="selector-price">$599.990</span>
+                                    <span class="selector-category">Monitores</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla de Comparación (Inicialmente Oculta) -->
+                <div class="comparison-table-container" id="comparisonTableContainer" style="display: none;">
+                    <div class="comparison-table-header">
+                        <h3 class="comparison-title">📊 Comparación Detallada</h3>
+                        <button class="close-comparison-btn" id="closeComparisonBtn">
+                            ✕ Cerrar Comparación
+                        </button>
+                    </div>
+                    <div class="comparison-table-wrapper">
+                        <table class="comparison-table" id="comparisonTable">
+                            <thead>
+                                <tr id="comparisonTableHeader">
+                                    <th class="feature-column">Características</th>
+                                    <!-- Columnas de productos se generarán dinámicamente -->
+                                </tr>
+                            </thead>
+                            <tbody id="comparisonTableBody">
+                                <!-- Filas de comparación se generarán dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="comparison-actions-bottom">
+                        <button class="add-all-to-cart-btn" id="addAllToCartBtn">
+                            🛒 Agregar Todos al Carrito
+                        </button>
+                        <button class="print-comparison-btn" id="printComparisonBtn">
+                            🖨️ Imprimir Comparación
+                        </button>
+                        <button class="share-comparison-btn" id="shareComparisonBtn">
+                            📤 Compartir Comparación
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sugerencias de Comparación -->
+                <div class="comparison-suggestions">
+                    <h3 class="suggestions-title">💡 Comparaciones Populares</h3>
+                    <div class="suggestions-grid">
+                        <button class="suggestion-card" onclick="loadPopularComparison('consoles')">
+                            <span class="suggestion-icon">🎮</span>
+                            <div class="suggestion-info">
+                                <strong>PS5 vs Xbox Series X</strong>
+                                <span>Compara las consolas más populares</span>
+                            </div>
+                        </button>
+                        <button class="suggestion-card" onclick="loadPopularComparison('graphics')">
+                            <span class="suggestion-icon">🎯</span>
+                            <div class="suggestion-info">
+                                <strong>RTX 4080 vs RTX 4070</strong>
+                                <span>Tarjetas gráficas de alta gama</span>
+                            </div>
+                        </button>
+                        <button class="suggestion-card" onclick="loadPopularComparison('setup')">
+                            <span class="suggestion-icon">⚙️</span>
+                            <div class="suggestion-info">
+                                <strong>Setup Gaming Completo</strong>
+                                <span>Monitor + Silla + Accesorios</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Testimonios -->
         <section class="section testimonials-section">
             <div class="container">
