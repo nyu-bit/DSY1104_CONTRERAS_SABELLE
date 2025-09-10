@@ -106,6 +106,12 @@ function updateCartCounter() {
 }
 
 function addToCart(productId, quantity = 1) {
+    // Usar el nuevo sistema CRUD del carrito
+    if (typeof window.addToCart === 'function' && window.addToCart !== arguments.callee) {
+        return window.addToCart(productId, quantity);
+    }
+    
+    // Fallback para compatibilidad
     const product = PRODUCTS[productId];
     if (!product) {
         showNotification('Producto no encontrado', 'error');
@@ -2752,38 +2758,56 @@ function updateOfferStats(productId, stats) {
 function addToCartOffer(productId) {
     console.log(`🛒 Agregando oferta ${productId} al carrito...`);
     
-    // Tracking del evento
-    trackEvent('add_to_cart_offer', {
-        product_id: productId,
-        section: 'special-offers',
-        offer_type: 'special_discount'
-    });
-    
-    // Obtener datos del producto
-    const productCard = document.querySelector(`[data-product-id="${productId}"]`);
-    if (!productCard) {
-        console.error('Producto no encontrado');
-        return;
+    try {
+        // Verificar que addToCart existe
+        if (typeof addToCart !== 'function') {
+            console.error('Función addToCart no disponible');
+            showNotification('Error: Sistema de carrito no disponible', 'error');
+            return;
+        }
+
+        // Buscar el producto en la base de datos
+        const product = window.PRODUCT_DATABASE ? window.PRODUCT_DATABASE[productId] : null;
+        if (!product) {
+            console.error('Producto no encontrado en la base de datos');
+            showNotification('Error: Producto no encontrado', 'error');
+            return;
+        }
+
+        // Agregar al carrito usando la función del sistema CRUD
+        addToCart(product, 1);
+        
+        // Feedback visual
+        const productCard = document.querySelector(`[data-product-id="${productId}"]`);
+        if (productCard) {
+            showOfferAddedFeedback(productCard);
+        }
+        
+        // Tracking del evento
+        trackEvent('add_to_cart_offer', {
+            product_id: productId,
+            product_name: product.name,
+            price: product.price,
+            section: 'special-offers',
+            offer_type: 'special_discount'
+        });
+        
+        console.log(`✅ Oferta ${productId} agregada al carrito exitosamente`);
+        
+    } catch (error) {
+        console.error('Error al agregar oferta al carrito:', error);
+        showNotification(`Error al agregar producto: ${error.message}`, 'error');
     }
-    
-    const productData = {
-        id: productId,
-        name: productCard.querySelector('.product-title').textContent,
-        price: productCard.querySelector('.price-offer').textContent,
-        originalPrice: productCard.querySelector('.price-original').textContent,
-        image: productCard.querySelector('.product-image img').src,
-        isOffer: true,
-        discount: productCard.querySelector('.discount-badge').textContent
-    };
-    
-    // Simular agregado al carrito
-    addToCart(productData);
-    
-    // Feedback visual
-    showOfferAddedFeedback(productCard);
-    
-    // Actualizar contador de carrito
-    updateCartCounter();
+}
+
+/**
+ * Función auxiliar para parsear precios desde texto
+ * @param {string} priceText - Texto del precio (ej: "$899.990")
+ * @returns {number} - Precio como número
+ */
+function parsePrice(priceText) {
+    if (!priceText) return 0;
+    return parseInt(priceText.replace(/[^\d]/g, '')) || 0;
 }
 
 /**
@@ -4842,4 +4866,111 @@ function exportNewsletterSubscribers() {
     
     console.log('Exported Newsletter Subscribers:', mockData);
     return mockData;
+}
+
+// =====================================
+// SISTEMA DE NOTIFICACIONES
+// =====================================
+
+/**
+ * Muestra una notificación temporal en la pantalla
+ * @param {string} message - Mensaje a mostrar
+ * @param {string} type - Tipo de notificación (success, error, warning, info)
+ * @param {number} duration - Duración en milisegundos
+ */
+function showNotification(message, type = 'info', duration = 3000) {
+    // Crear contenedor de notificaciones si no existe
+    let container = document.getElementById('notification-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'notification-container';
+        container.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            pointer-events: none;
+        `;
+        document.body.appendChild(container);
+    }
+
+    // Crear notificación
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.style.cssText = `
+        background: ${getNotificationColor(type)};
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        transform: translateX(400px);
+        transition: transform 0.3s ease;
+        pointer-events: auto;
+        max-width: 300px;
+        word-wrap: break-word;
+        font-weight: 500;
+        border-left: 4px solid rgba(255, 255, 255, 0.3);
+        position: relative;
+        overflow: hidden;
+    `;
+
+    notification.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <i class="fas ${getNotificationIcon(type)}" style="font-size: 1.2rem;"></i>
+            <span>${message}</span>
+            <button onclick="this.parentElement.parentElement.remove()" 
+                    style="background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; margin-left: auto;">
+                ×
+            </button>
+        </div>
+    `;
+
+    container.appendChild(notification);
+
+    // Animar entrada
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+
+    // Auto-remover
+    setTimeout(() => {
+        notification.style.transform = 'translateX(400px)';
+        setTimeout(() => {
+            if (notification.parentElement) {
+                notification.remove();
+            }
+        }, 300);
+    }, duration);
+
+    // Anunciar a lectores de pantalla
+    announceToScreenReader(message);
+}
+
+/**
+ * Obtiene el color de fondo para el tipo de notificación
+ */
+function getNotificationColor(type) {
+    const colors = {
+        success: 'linear-gradient(45deg, #10b981, #059669)',
+        error: 'linear-gradient(45deg, #ef4444, #dc2626)',
+        warning: 'linear-gradient(45deg, #f59e0b, #d97706)',
+        info: 'linear-gradient(45deg, #3b82f6, #2563eb)',
+        cart: 'linear-gradient(45deg, #a855f7, #ec4899)'
+    };
+    return colors[type] || colors.info;
+}
+
+/**
+ * Obtiene el ícono para el tipo de notificación
+ */
+function getNotificationIcon(type) {
+    const icons = {
+        success: 'fa-check-circle',
+        error: 'fa-exclamation-triangle',
+        warning: 'fa-exclamation-circle',
+        info: 'fa-info-circle',
+        cart: 'fa-shopping-cart'
+    };
+    return icons[type] || icons.info;
 }

@@ -1,53 +1,817 @@
-// ================================
-// LEVEL-UP GAMER - CARRITO DE COMPRAS CON LOCALSTORAGE
-// Funcionalidades específicas del carrito
-// ================================
+// ========================================
+// LG-040: CRUD DE CARRITO EN LOCALSTORAGE
+// Sistema completo de gestión de carrito
+// ========================================
 
-// Variables específicas del carrito
+// Configuración del carrito
+const CART_CONFIG = {
+    storageKey: 'levelup_cart',
+    maxQuantity: 99,
+    minQuantity: 1,
+    shippingThreshold: 50000, // CLP
+    shippingCost: 2990, // CLP
+    autoSaveDelay: 500 // ms
+};
+
+// Estado global del carrito
 let cartState = {
     items: [],
     subtotal: 0,
     shipping: 0,
     discount: 0,
     total: 0,
-    discountCode: null
+    itemCount: 0,
+    discountCode: null,
+    lastUpdated: null
 };
 
 // Códigos de descuento válidos
 const DISCOUNT_CODES = {
-    'LEVELUP10': { percentage: 10, description: 'Descuento Level-Up 10%' },
-    'GAMER20': { percentage: 20, description: 'Descuento Gamer 20%' },
-    'FIRSTBUY': { percentage: 15, description: 'Primera compra 15%' },
-    'DUOCUC': { percentage: 20, description: 'Estudiante Duoc UC 20%' }
+    'LEVELUP10': { percentage: 10, description: 'Descuento Level-Up 10%', minAmount: 20000 },
+    'GAMER20': { percentage: 20, description: 'Descuento Gamer 20%', minAmount: 50000 },
+    'FIRSTBUY': { percentage: 15, description: 'Primera compra 15%', minAmount: 30000 },
+    'DUOCUC': { percentage: 25, description: 'Estudiante Duoc UC 25%', minAmount: 15000 }
 };
 
-// ================================
+// ========================================
 // INICIALIZACIÓN DEL CARRITO
-// ================================
+// ========================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    if (window.location.pathname.includes('/carrito/')) {
-        initializeCart();
-    }
+    initializeCartSystem();
 });
 
-function initializeCart() {
-    // Esperar a que la base de datos esté cargada
-    if (typeof PRODUCT_DATABASE === 'undefined') {
-        // Cargar la base de datos de productos primero
-        loadProductDatabase().then(() => {
-            loadCartFromStorage();
-            updateCartDisplay();
-            setupCartEventListeners();
+/**
+ * Inicializa el sistema completo del carrito
+ */
+function initializeCartSystem() {
+    loadCartFromStorage();
+    setupCartEventListeners();
+    updateAllCartDisplays();
+    
+    // Verificar integridad del carrito periódicamente
+    setInterval(validateCartIntegrity, 30000);
+    
+    console.log('✅ Sistema de carrito inicializado');
+}
+
+/**
+ * Configura los event listeners del carrito
+ */
+function setupCartEventListeners() {
+    // Event listeners para botones de cantidad
+    document.addEventListener('click', function(e) {
+        if (e.target.matches('.quantity-increase')) {
+            const productId = e.target.closest('[data-product-id]')?.dataset.productId;
+            if (productId) increaseQuantity(productId);
+        }
+        
+        if (e.target.matches('.quantity-decrease')) {
+            const productId = e.target.closest('[data-product-id]')?.dataset.productId;
+            if (productId) decreaseQuantity(productId);
+        }
+        
+        if (e.target.matches('.remove-item-btn')) {
+            const productId = e.target.closest('[data-product-id]')?.dataset.productId;
+            if (productId) removeFromCart(productId);
+        }
+        
+        if (e.target.matches('.clear-cart-btn')) {
+            clearCart();
+        }
+    });
+    
+    // Event listeners para campos de cantidad
+    document.addEventListener('change', function(e) {
+        if (e.target.matches('.quantity-input')) {
+            const productId = e.target.closest('[data-product-id]')?.dataset.productId;
+            const newQuantity = parseInt(e.target.value);
+            if (productId && !isNaN(newQuantity)) {
+                updateQuantity(productId, newQuantity);
+            }
+        }
+    });
+    
+    // Event listener para códigos de descuento
+    const discountForm = document.getElementById('discountForm');
+    if (discountForm) {
+        discountForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            applyDiscountCode();
         });
-    } else {
-        loadCartFromStorage();
-        updateCartDisplay();
-        setupCartEventListeners();
     }
 }
 
-function loadProductDatabase() {
+// ========================================
+// OPERACIONES CRUD DEL CARRITO
+// ========================================
+
+/**
+ * CREATE: Agregar producto al carrito
+ * @param {string|object} productData - ID del producto o objeto del producto
+ * @param {number} quantity - Cantidad a agregar
+ * @param {object} options - Opciones adicionales (color, talla, etc.)
+ */
+function addToCart(productData, quantity = 1, options = {}) {
+    try {
+        // Normalizar datos del producto
+        const product = normalizeProductData(productData);
+        if (!product) {
+            throw new Error('Producto no válido');
+        }
+        
+        // Validar cantidad
+        if (!isValidQuantity(quantity)) {
+            throw new Error('Cantidad no válida');
+        }
+        
+        // Verificar stock disponible
+        if (!checkStock(product.id, quantity)) {
+            throw new Error('Stock insuficiente');
+        }
+        
+        // Buscar si el producto ya existe en el carrito
+        const existingItemIndex = findCartItemIndex(product.id, options);
+        
+        if (existingItemIndex !== -1) {
+            // UPDATE: Actualizar cantidad del producto existente
+            const existingItem = cartState.items[existingItemIndex];
+            const newQuantity = existingItem.quantity + quantity;
+            
+            if (newQuantity > CART_CONFIG.maxQuantity) {
+                throw new Error(`Cantidad máxima permitida: ${CART_CONFIG.maxQuantity}`);
+            }
+            
+            existingItem.quantity = newQuantity;
+            existingItem.updatedAt = new Date().toISOString();
+            
+            // Emitir evento de actualización
+            emitCartEvent('updated', {
+                action: 'quantity_updated',
+                product: product,
+                newQuantity: newQuantity
+            });
+        } else {
+            // CREATE: Agregar nuevo producto al carrito
+            const cartItem = createCartItem(product, quantity, options);
+            cartState.items.push(cartItem);
+            
+            // Emitir evento de agregado
+            emitCartEvent('updated', {
+                action: 'added',
+                product: product,
+                quantity: quantity
+            });
+        }
+        
+        // Actualizar carrito
+        updateCartState();
+        saveCartToStorage();
+        updateAllCartDisplays();
+        
+        // Analytics tracking
+        trackCartEvent('add_to_cart', {
+            product_id: product.id,
+            product_name: product.name,
+            quantity: quantity,
+            price: product.price
+        });
+        
+        console.log(`✅ Producto agregado al carrito: ${product.name} (cantidad: ${quantity})`);
+        return true;
+        
+    } catch (error) {
+        console.error('Error al agregar al carrito:', error);
+        
+        // Emitir evento de error
+        emitCartEvent('error', {
+            action: 'add_to_cart',
+            message: error.message,
+            product: productData
+        });
+        
+        return false;
+    }
+}
+
+/**
+ * READ: Obtener productos del carrito
+ * @param {string} productId - ID del producto (opcional)
+ * @returns {array|object} Lista de productos o producto específico
+ */
+function getCartItems(productId = null) {
+    if (productId) {
+        return cartState.items.find(item => item.id === productId) || null;
+    }
+    return [...cartState.items]; // Retornar copia para evitar mutaciones
+}
+
+/**
+ * UPDATE: Actualizar cantidad de un producto
+ * @param {string} productId - ID del producto
+ * @param {number} newQuantity - Nueva cantidad
+ * @param {object} options - Opciones del producto
+ */
+function updateQuantity(productId, newQuantity, options = {}) {
+    try {
+        // Validar cantidad
+        if (!isValidQuantity(newQuantity)) {
+            throw new Error('Cantidad no válida');
+        }
+        
+        // Buscar el producto en el carrito
+        const itemIndex = findCartItemIndex(productId, options);
+        if (itemIndex === -1) {
+            throw new Error('Producto no encontrado en el carrito');
+        }
+        
+        const item = cartState.items[itemIndex];
+        
+        // Verificar stock disponible
+        if (!checkStock(productId, newQuantity)) {
+            throw new Error('Stock insuficiente');
+        }
+        
+        // Si la cantidad es 0, eliminar el producto
+        if (newQuantity === 0) {
+            removeFromCart(productId, options);
+            return;
+        }
+        
+        // Actualizar cantidad
+        const oldQuantity = item.quantity;
+        item.quantity = newQuantity;
+        item.updatedAt = new Date().toISOString();
+        
+        // Actualizar carrito
+        updateCartState();
+        saveCartToStorage();
+        updateAllCartDisplays();
+        
+        // Feedback al usuario
+        const action = newQuantity > oldQuantity ? 'aumentada' : 'reducida';
+        showCartNotification(
+            `Cantidad ${action}: ${item.name} (${newQuantity})`,
+            'info'
+        );
+        
+        // Analytics tracking
+        trackCartEvent('update_quantity', {
+            product_id: productId,
+            old_quantity: oldQuantity,
+            new_quantity: newQuantity
+        });
+        
+        return true;
+        
+    } catch (error) {
+        console.error('Error al actualizar cantidad:', error);
+        showCartNotification(error.message, 'error');
+        return false;
+    }
+}
+
+/**
+ * DELETE: Eliminar producto del carrito
+ * @param {string} productId - ID del producto
+ * @param {object} options - Opciones del producto
+ */
+function removeFromCart(productId, options = {}) {
+    try {
+        // Buscar el producto en el carrito
+        const itemIndex = findCartItemIndex(productId, options);
+        if (itemIndex === -1) {
+            throw new Error('Producto no encontrado en el carrito');
+        }
+        
+        const item = cartState.items[itemIndex];
+        
+        // Eliminar el producto
+        cartState.items.splice(itemIndex, 1);
+        
+        // Actualizar carrito
+        updateCartState();
+        saveCartToStorage();
+        updateAllCartDisplays();
+        
+        // Emitir evento de eliminación
+        emitCartEvent('updated', {
+            action: 'removed',
+            product: item
+        });
+        
+        // Analytics tracking
+        trackCartEvent('remove_from_cart', {
+            product_id: productId,
+            product_name: item.name,
+            quantity: item.quantity
+        });
+        
+        console.log(`🗑️ Producto eliminado del carrito: ${item.name}`);
+        return true;
+        
+    } catch (error) {
+        console.error('Error al eliminar del carrito:', error);
+        
+        // Emitir evento de error
+        emitCartEvent('error', {
+            action: 'remove_from_cart',
+            message: error.message,
+            productId: productId
+        });
+        
+        return false;
+    }
+}
+
+/**
+ * DELETE: Vaciar carrito completo
+ */
+function clearCart() {
+    try {
+        const itemCount = cartState.items.length;
+        
+        if (itemCount === 0) {
+            showCartNotification('El carrito ya está vacío', 'info');
+            return;
+        }
+        
+        // Confirmar acción
+        if (!confirm('¿Estás seguro de que quieres vaciar el carrito?')) {
+            return;
+        }
+        
+        // Limpiar carrito
+        cartState.items = [];
+        
+        // Actualizar carrito
+        updateCartState();
+        saveCartToStorage();
+        updateAllCartDisplays();
+        
+        // Feedback al usuario
+        showCartNotification(
+            `Carrito vaciado (${itemCount} productos eliminados)`,
+            'info'
+        );
+        
+        // Analytics tracking
+        trackCartEvent('clear_cart', {
+            items_removed: itemCount
+        });
+        
+        return true;
+        
+    } catch (error) {
+        console.error('Error al vaciar carrito:', error);
+        showCartNotification('Error al vaciar el carrito', 'error');
+        return false;
+    }
+}
+
+// ========================================
+// OPERACIONES AUXILIARES
+// ========================================
+
+/**
+ * Incrementar cantidad de un producto
+ */
+function increaseQuantity(productId, options = {}) {
+    const item = getCartItems(productId);
+    if (item) {
+        const newQuantity = Math.min(item.quantity + 1, CART_CONFIG.maxQuantity);
+        updateQuantity(productId, newQuantity, options);
+    }
+}
+
+/**
+ * Decrementar cantidad de un producto
+ */
+function decreaseQuantity(productId, options = {}) {
+    const item = getCartItems(productId);
+    if (item) {
+        const newQuantity = Math.max(item.quantity - 1, 0);
+        updateQuantity(productId, newQuantity, options);
+    }
+}
+
+/**
+ * Mover producto a lista de deseos
+ */
+function moveToWishlist(productId, options = {}) {
+    try {
+        const item = getCartItems(productId);
+        if (!item) {
+            throw new Error('Producto no encontrado');
+        }
+        
+        // Agregar a wishlist
+        let wishlist = JSON.parse(localStorage.getItem('levelup_wishlist') || '[]');
+        const wishlistItem = {
+            id: productId,
+            addedAt: new Date().toISOString(),
+            fromCart: true
+        };
+        
+        if (!wishlist.find(w => w.id === productId)) {
+            wishlist.push(wishlistItem);
+            localStorage.setItem('levelup_wishlist', JSON.stringify(wishlist));
+        }
+        
+        // Eliminar del carrito
+        removeFromCart(productId, options);
+        
+        showCartNotification(
+            `${item.name} movido a lista de deseos`,
+            'success'
+        );
+        
+        return true;
+        
+    } catch (error) {
+        console.error('Error al mover a wishlist:', error);
+        showCartNotification(error.message, 'error');
+        return false;
+    }
+}
+
+// ========================================
+// PERSISTENCIA EN LOCALSTORAGE
+// ========================================
+
+/**
+ * Cargar carrito desde localStorage
+ */
+function loadCartFromStorage() {
+    try {
+        const storedCart = localStorage.getItem(CART_CONFIG.storageKey);
+        
+        if (storedCart) {
+            const cartData = JSON.parse(storedCart);
+            
+            // Validar estructura del carrito guardado
+            if (validateCartStructure(cartData)) {
+                cartState.items = cartData.items || [];
+                cartState.discountCode = cartData.discountCode || null;
+                cartState.lastUpdated = cartData.lastUpdated || null;
+                
+                // Limpiar productos que ya no existen
+                cartState.items = cartState.items.filter(item => {
+                    const productExists = checkProductExists(item.id);
+                    if (!productExists) {
+                        console.warn(`Producto ${item.id} ya no existe, eliminando del carrito`);
+                    }
+                    return productExists;
+                });
+                
+                updateCartState();
+                console.log('✅ Carrito cargado desde localStorage');
+            } else {
+                console.warn('⚠️ Estructura de carrito inválida, inicializando nuevo carrito');
+                resetCart();
+            }
+        } else {
+            console.log('📦 Carrito vacío, inicializando nuevo');
+            resetCart();
+        }
+        
+    } catch (error) {
+        console.error('❌ Error al cargar carrito:', error);
+        resetCart();
+    }
+}
+
+/**
+ * Guardar carrito en localStorage
+ */
+function saveCartToStorage() {
+    try {
+        const cartData = {
+            items: cartState.items,
+            discountCode: cartState.discountCode,
+            lastUpdated: new Date().toISOString(),
+            version: '2.0' // Para futuras migraciones
+        };
+        
+        localStorage.setItem(CART_CONFIG.storageKey, JSON.stringify(cartData));
+        cartState.lastUpdated = cartData.lastUpdated;
+        
+        // Validar que se guardó correctamente
+        const saved = localStorage.getItem(CART_CONFIG.storageKey);
+        if (!saved) {
+            throw new Error('No se pudo guardar en localStorage');
+        }
+        
+        console.log('💾 Carrito guardado en localStorage');
+        return true;
+        
+    } catch (error) {
+        console.error('❌ Error al guardar carrito:', error);
+        showCartNotification('Error al guardar cambios', 'error');
+        return false;
+    }
+}
+
+/**
+ * Resetear carrito a estado inicial
+ */
+function resetCart() {
+    cartState = {
+        items: [],
+        subtotal: 0,
+        shipping: 0,
+        discount: 0,
+        total: 0,
+        itemCount: 0,
+        discountCode: null,
+        lastUpdated: null
+    };
+    
+    saveCartToStorage();
+}
+
+// ========================================
+// FUNCIONES DE VALIDACIÓN
+// ========================================
+
+/**
+ * Validar estructura del carrito guardado
+ */
+function validateCartStructure(cartData) {
+    if (!cartData || typeof cartData !== 'object') return false;
+    if (!Array.isArray(cartData.items)) return false;
+    
+    // Validar cada item del carrito
+    return cartData.items.every(item => {
+        return item.id &&
+               typeof item.quantity === 'number' &&
+               item.quantity > 0 &&
+               item.price &&
+               typeof item.price === 'number';
+    });
+}
+
+/**
+ * Validar cantidad
+ */
+function isValidQuantity(quantity) {
+    return Number.isInteger(quantity) &&
+           quantity >= CART_CONFIG.minQuantity &&
+           quantity <= CART_CONFIG.maxQuantity;
+}
+
+/**
+ * Verificar si un producto existe
+ */
+function checkProductExists(productId) {
+    // Verificar en la base de datos de productos
+    if (typeof PRODUCTS !== 'undefined' && PRODUCTS[productId]) {
+        return true;
+    }
+    
+    // Verificar en PRODUCT_DATABASE si está disponible
+    if (typeof PRODUCT_DATABASE !== 'undefined') {
+        return PRODUCT_DATABASE.some(product => product.id === productId);
+    }
+    
+    return false;
+}
+
+/**
+ * Verificar stock disponible
+ */
+function checkStock(productId, requestedQuantity) {
+    // En un sistema real, esto verificaría contra el inventario
+    // Por ahora, asumimos stock ilimitado pero con límite por usuario
+    return requestedQuantity <= CART_CONFIG.maxQuantity;
+}
+
+/**
+ * Validar integridad del carrito
+ */
+function validateCartIntegrity() {
+    let hasChanges = false;
+    
+    // Eliminar productos que ya no existen
+    const validItems = cartState.items.filter(item => {
+        const exists = checkProductExists(item.id);
+        if (!exists) {
+            console.warn(`Eliminando producto inexistente: ${item.id}`);
+            hasChanges = true;
+        }
+        return exists;
+    });
+    
+    // Validar cantidades
+    validItems.forEach(item => {
+        if (!isValidQuantity(item.quantity)) {
+            console.warn(`Corrigiendo cantidad inválida para ${item.id}: ${item.quantity} -> 1`);
+            item.quantity = 1;
+            hasChanges = true;
+        }
+    });
+    
+    if (hasChanges) {
+        cartState.items = validItems;
+        updateCartState();
+        saveCartToStorage();
+        updateAllCartDisplays();
+        showCartNotification('Carrito actualizado automáticamente', 'info');
+    }
+}
+
+// ========================================
+// FUNCIONES AUXILIARES
+// ========================================
+
+/**
+ * Normalizar datos del producto
+ */
+function normalizeProductData(productData) {
+    if (typeof productData === 'string') {
+        // Es un ID, buscar el producto
+        const productId = productData;
+        
+        if (typeof PRODUCTS !== 'undefined' && PRODUCTS[productId]) {
+            return PRODUCTS[productId];
+        }
+        
+        if (typeof PRODUCT_DATABASE !== 'undefined') {
+            const product = PRODUCT_DATABASE.find(p => p.id === productId);
+            if (product) return product;
+        }
+        
+        return null;
+    }
+    
+    if (typeof productData === 'object' && productData.id) {
+        // Es un objeto producto
+        return productData;
+    }
+    
+    return null;
+}
+
+/**
+ * Crear item del carrito
+ */
+function createCartItem(product, quantity, options = {}) {
+    return {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image || '',
+        quantity: quantity,
+        options: options,
+        addedAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        sku: product.sku || null,
+        category: product.category || null
+    };
+}
+
+/**
+ * Encontrar índice de item en el carrito
+ */
+function findCartItemIndex(productId, options = {}) {
+    return cartState.items.findIndex(item => {
+        if (item.id !== productId) return false;
+        
+        // Si hay opciones, compararlas también
+        if (Object.keys(options).length > 0) {
+            return JSON.stringify(item.options) === JSON.stringify(options);
+        }
+        
+        return true;
+    });
+}
+
+/**
+ * Actualizar estado del carrito
+ */
+function updateCartState() {
+    // Calcular subtotal
+    cartState.subtotal = cartState.items.reduce((sum, item) => {
+        return sum + (item.price * item.quantity);
+    }, 0);
+
+    // Calcular envío
+    cartState.shipping = cartState.subtotal >= CART_CONFIG.shippingThreshold ? 
+        0 : CART_CONFIG.shippingCost;
+
+    // Aplicar descuento si existe y es válido
+    cartState.discount = 0;
+    if (cartState.discountCode && isDiscountValid(cartState.discountCode)) {
+        cartState.discount = Math.floor(
+            cartState.subtotal * cartState.discountCode.percentage / 100
+        );
+    }
+
+    // Calcular total
+    cartState.total = cartState.subtotal + cartState.shipping - cartState.discount;
+
+    // Contar items
+    cartState.itemCount = cartState.items.reduce((sum, item) => sum + item.quantity, 0);
+}
+
+/**
+ * Verificar si un descuento es válido
+ */
+function isDiscountValid(discountCode) {
+    if (!discountCode || !discountCode.minAmount) return true;
+    return cartState.subtotal >= discountCode.minAmount;
+}
+
+// ========================================
+// ACTUALIZACIÓN DE INTERFAZ
+// ========================================
+
+/**
+ * Actualizar todas las visualizaciones del carrito
+ */
+function updateAllCartDisplays() {
+    updateCartCounter();
+    updateCartSidebar();
+    updateCartPage();
+    updateCheckoutSummary();
+}
+
+/**
+ * Actualizar contador del carrito en el header
+ */
+function updateCartCounter() {
+    const counters = document.querySelectorAll('.cart-counter, #cartCounter, .cart-badge');
+    counters.forEach(counter => {
+        counter.textContent = cartState.itemCount;
+        counter.style.display = cartState.itemCount > 0 ? 'flex' : 'none';
+        
+        // Animación de actualización
+        counter.classList.add('updated');
+        setTimeout(() => counter.classList.remove('updated'), 300);
+    });
+}
+
+/**
+ * Actualizar sidebar del carrito
+ */
+function updateCartSidebar() {
+    const sidebar = document.getElementById('cartSidebar');
+    if (!sidebar) return;
+    
+    const itemsContainer = sidebar.querySelector('.cart-items');
+    const summaryContainer = sidebar.querySelector('.cart-summary');
+    
+    if (itemsContainer) {
+        updateCartItemsDisplay(itemsContainer);
+    }
+    
+    if (summaryContainer) {
+        updateCartSummaryDisplay(summaryContainer);
+    }
+}
+
+/**
+ * Actualizar página del carrito
+ */
+function updateCartPage() {
+    const cartPage = document.getElementById('cartPage');
+    if (!cartPage) return;
+    
+    const itemsContainer = cartPage.querySelector('.cart-items');
+    const summaryContainer = cartPage.querySelector('.cart-summary');
+    const emptyState = cartPage.querySelector('.empty-cart');
+    
+    if (cartState.items.length === 0) {
+        if (itemsContainer) itemsContainer.style.display = 'none';
+        if (summaryContainer) summaryContainer.style.display = 'none';
+        if (emptyState) emptyState.style.display = 'block';
+    } else {
+        if (itemsContainer) {
+            itemsContainer.style.display = 'block';
+            updateCartItemsDisplay(itemsContainer);
+        }
+        if (summaryContainer) {
+            summaryContainer.style.display = 'block';
+            updateCartSummaryDisplay(summaryContainer);
+        }
+        if (emptyState) emptyState.style.display = 'none';
+    }
+}
+
+/**
+ * Actualizar resumen del checkout
+ */
+function updateCheckoutSummary() {
+    const checkout = document.getElementById('checkoutSummary');
+    if (!checkout) return;
+    
+    updateCartSummaryDisplay(checkout);
+}
+
+/**
+ * Cargar base de datos de productos si no está disponible
+ */
+function ensureProductDatabase() {
     return new Promise((resolve) => {
         if (typeof PRODUCT_DATABASE !== 'undefined') {
             resolve();
@@ -959,3 +1723,523 @@ window.cartManager = {
     removeDiscountCode,
     proceedToCheckout
 };
+
+// ========================================
+// FUNCIONES DE VISUALIZACIÓN
+// ========================================
+
+/**
+ * Actualizar visualización de items del carrito
+ */
+function updateCartItemsDisplay(container) {
+    if (!container) return;
+    
+    if (cartState.items.length === 0) {
+        container.innerHTML = `
+            <div class="empty-cart-message">
+                <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+                <h3>Tu carrito está vacío</h3>
+                <p>Agrega algunos productos increíbles para comenzar</p>
+                <a href="/productos/" class="btn btn-primary">
+                    <i class="fas fa-gamepad" aria-hidden="true"></i>
+                    Explorar Productos
+                </a>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = cartState.items.map(item => `
+        <div class="cart-item" data-product-id="${item.id}">
+            <div class="item-image">
+                <img src="${item.image}" alt="${item.name}" loading="lazy">
+            </div>
+            
+            <div class="item-details">
+                <h3 class="item-name">${item.name}</h3>
+                <p class="item-price">$${formatPrice(item.price)}</p>
+                ${item.sku ? `<p class="item-sku">SKU: ${item.sku}</p>` : ''}
+                ${generateOptionsDisplay(item.options)}
+            </div>
+            
+            <div class="item-quantity">
+                <label for="quantity-${item.id}" class="sr-only">
+                    Cantidad de ${item.name}
+                </label>
+                <div class="quantity-controls">
+                    <button type="button" 
+                            class="quantity-btn quantity-decrease" 
+                            ${item.quantity <= 1 ? 'disabled' : ''}
+                            aria-label="Disminuir cantidad de ${item.name}">
+                        <i class="fas fa-minus" aria-hidden="true"></i>
+                    </button>
+                    <input type="number" 
+                           id="quantity-${item.id}"
+                           class="quantity-input" 
+                           value="${item.quantity}" 
+                           min="1" 
+                           max="${CART_CONFIG.maxQuantity}"
+                           aria-label="Cantidad de ${item.name}">
+                    <button type="button" 
+                            class="quantity-btn quantity-increase"
+                            ${item.quantity >= CART_CONFIG.maxQuantity ? 'disabled' : ''}
+                            aria-label="Aumentar cantidad de ${item.name}">
+                        <i class="fas fa-plus" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <small class="quantity-info">
+                    Máx: ${CART_CONFIG.maxQuantity}
+                </small>
+            </div>
+            
+            <div class="item-total">
+                <span class="total-price">$${formatPrice(item.price * item.quantity)}</span>
+            </div>
+            
+            <div class="item-actions">
+                <button type="button" 
+                        class="remove-item-btn" 
+                        aria-label="Eliminar ${item.name} del carrito">
+                    <i class="fas fa-trash" aria-hidden="true"></i>
+                    Eliminar
+                </button>
+                <button type="button" 
+                        class="wishlist-btn" 
+                        onclick="moveToWishlist('${item.id}')"
+                        aria-label="Mover ${item.name} a lista de deseos">
+                    <i class="fas fa-heart" aria-hidden="true"></i>
+                    Guardar
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+/**
+ * Actualizar visualización del resumen del carrito
+ */
+function updateCartSummaryDisplay(container) {
+    if (!container) return;
+    
+    container.innerHTML = `
+        <div class="cart-summary-content">
+            <h3>Resumen del Pedido</h3>
+            
+            <div class="summary-line">
+                <span>Subtotal (${cartState.itemCount} productos):</span>
+                <span>$${formatPrice(cartState.subtotal)}</span>
+            </div>
+            
+            ${cartState.discount > 0 ? `
+                <div class="summary-line discount">
+                    <span>Descuento (${cartState.discountCode.description}):</span>
+                    <span class="discount-amount">-$${formatPrice(cartState.discount)}</span>
+                </div>
+            ` : ''}
+            
+            <div class="summary-line">
+                <span>Envío:</span>
+                <span class="${cartState.shipping === 0 ? 'free-shipping' : ''}">
+                    ${cartState.shipping === 0 ? 'GRATIS' : '$' + formatPrice(cartState.shipping)}
+                </span>
+            </div>
+            
+            ${cartState.shipping === 0 && cartState.subtotal < CART_CONFIG.shippingThreshold ? `
+                <div class="shipping-info">
+                    <i class="fas fa-info-circle" aria-hidden="true"></i>
+                    Envío gratis por compras sobre $${formatPrice(CART_CONFIG.shippingThreshold)}
+                </div>
+            ` : ''}
+            
+            <div class="summary-line total">
+                <span>Total:</span>
+                <span class="total-amount">$${formatPrice(cartState.total)}</span>
+            </div>
+            
+            ${generateDiscountSection()}
+            
+            <div class="cart-actions">
+                ${cartState.items.length > 0 ? `
+                    <button type="button" class="btn btn-primary checkout-btn" onclick="proceedToCheckout()">
+                        <i class="fas fa-credit-card" aria-hidden="true"></i>
+                        Proceder al Checkout
+                    </button>
+                    <button type="button" class="btn btn-secondary clear-cart-btn">
+                        <i class="fas fa-trash" aria-hidden="true"></i>
+                        Vaciar Carrito
+                    </button>
+                ` : ''}
+            </div>
+        </div>
+    `;
+}
+
+/**
+ * Generar display de opciones del producto
+ */
+function generateOptionsDisplay(options) {
+    if (!options || Object.keys(options).length === 0) return '';
+    
+    return `
+        <div class="item-options">
+            ${Object.entries(options).map(([key, value]) => `
+                <span class="option">${key}: ${value}</span>
+            `).join('')}
+        </div>
+    `;
+}
+
+/**
+ * Generar sección de códigos de descuento
+ */
+function generateDiscountSection() {
+    if (cartState.discountCode) {
+        return `
+            <div class="discount-section applied">
+                <div class="discount-applied">
+                    <i class="fas fa-check-circle" aria-hidden="true"></i>
+                    <span>Código aplicado: ${cartState.discountCode.description}</span>
+                    <button type="button" class="remove-discount-btn" onclick="removeDiscountCode()">
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+    
+    return `
+        <div class="discount-section">
+            <form id="discountForm" class="discount-form">
+                <label for="discountCode" class="sr-only">Código de descuento</label>
+                <div class="discount-input-group">
+                    <input type="text" 
+                           id="discountCode" 
+                           class="discount-input" 
+                           placeholder="Código de descuento"
+                           maxlength="20"
+                           autocomplete="off">
+                    <button type="submit" class="apply-discount-btn">
+                        Aplicar
+                    </button>
+                </div>
+            </form>
+            <div class="available-codes">
+                <small>Códigos disponibles: LEVELUP10, GAMER20, FIRSTBUY, DUOCUC</small>
+            </div>
+        </div>
+    `;
+}
+
+// ========================================
+// CÓDIGOS DE DESCUENTO
+// ========================================
+
+/**
+ * Aplicar código de descuento
+ */
+function applyDiscountCode() {
+    const input = document.getElementById('discountCode');
+    if (!input) return;
+    
+    const code = input.value.trim().toUpperCase();
+    
+    if (!code) {
+        showCartNotification('Ingresa un código de descuento', 'warning');
+        return;
+    }
+    
+    if (cartState.discountCode) {
+        showCartNotification('Ya tienes un código aplicado', 'info');
+        return;
+    }
+    
+    const discountData = DISCOUNT_CODES[code];
+    if (!discountData) {
+        showCartNotification('Código de descuento inválido', 'error');
+        input.classList.add('error');
+        setTimeout(() => input.classList.remove('error'), 3000);
+        return;
+    }
+    
+    if (cartState.subtotal < discountData.minAmount) {
+        showCartNotification(
+            `Compra mínima para este código: $${formatPrice(discountData.minAmount)}`,
+            'warning'
+        );
+        return;
+    }
+    
+    // Aplicar descuento
+    cartState.discountCode = discountData;
+    updateCartState();
+    saveCartToStorage();
+    updateAllCartDisplays();
+    
+    showCartNotification(
+        `¡Código aplicado! ${discountData.description}`,
+        'success'
+    );
+    
+    // Analytics tracking
+    trackCartEvent('apply_discount', {
+        code: code,
+        discount_amount: cartState.discount
+    });
+}
+
+/**
+ * Remover código de descuento
+ */
+function removeDiscountCode() {
+    if (!cartState.discountCode) return;
+    
+    const oldDiscount = cartState.discount;
+    cartState.discountCode = null;
+    
+    updateCartState();
+    saveCartToStorage();
+    updateAllCartDisplays();
+    
+    showCartNotification('Código de descuento removido', 'info');
+    
+    // Analytics tracking
+    trackCartEvent('remove_discount', {
+        discount_removed: oldDiscount
+    });
+}
+
+// ========================================
+// UTILIDADES
+// ========================================
+
+/**
+ * Formatear precio para mostrar
+ */
+function formatPrice(price) {
+    return new Intl.NumberFormat('es-CL', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    }).format(Math.round(price));
+}
+
+/**
+ * Mostrar notificación del carrito
+ */
+function showCartNotification(message, type = 'info') {
+    // Crear notificación
+    const notification = document.createElement('div');
+    notification.className = `cart-notification ${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas fa-${getNotificationIcon(type)}" aria-hidden="true"></i>
+            <span>${message}</span>
+        </div>
+    `;
+    
+    // Agregar al DOM
+    document.body.appendChild(notification);
+    
+    // Mostrar con animación
+    requestAnimationFrame(() => {
+        notification.classList.add('show');
+    });
+    
+    // Remover después de un tiempo
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            if (document.body.contains(notification)) {
+                document.body.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
+    
+    // Anunciar a lectores de pantalla
+    announceToScreenReader(message);
+}
+
+/**
+ * Obtener ícono para notificación
+ */
+function getNotificationIcon(type) {
+    const icons = {
+        success: 'check-circle',
+        error: 'exclamation-triangle',
+        warning: 'exclamation-circle',
+        info: 'info-circle'
+    };
+    return icons[type] || 'info-circle';
+}
+
+/**
+ * Tracking de eventos del carrito
+ */
+function trackCartEvent(eventName, eventData = {}) {
+    // Analytics tracking (Google Analytics, Facebook Pixel, etc.)
+    console.log(`🛒 Cart Event: ${eventName}`, eventData);
+    
+    if (typeof gtag !== 'undefined') {
+        gtag('event', eventName, {
+            event_category: 'ecommerce',
+            ...eventData
+        });
+    }
+    
+    if (typeof fbq !== 'undefined') {
+        fbq('track', 'AddToCart', eventData);
+    }
+}
+
+/**
+ * Anunciar a lectores de pantalla
+ */
+function announceToScreenReader(message) {
+    const announcement = document.createElement('div');
+    announcement.setAttribute('aria-live', 'polite');
+    announcement.setAttribute('aria-atomic', 'true');
+    announcement.className = 'sr-only';
+    announcement.textContent = message;
+    
+    document.body.appendChild(announcement);
+    
+    setTimeout(() => {
+        if (document.body.contains(announcement)) {
+            document.body.removeChild(announcement);
+        }
+    }, 1000);
+}
+
+/**
+ * Proceder al checkout
+ */
+function proceedToCheckout() {
+    if (cartState.items.length === 0) {
+        showCartNotification('El carrito está vacío', 'warning');
+        return;
+    }
+    
+    // Validar stock antes del checkout
+    const stockIssues = cartState.items.filter(item => 
+        !checkStock(item.id, item.quantity)
+    );
+    
+    if (stockIssues.length > 0) {
+        showCartNotification('Algunos productos no tienen stock suficiente', 'error');
+        return;
+    }
+    
+    // Guardar estado del carrito para el checkout
+    localStorage.setItem('levelup_checkout_cart', JSON.stringify(cartState));
+    
+    // Redirigir al checkout
+    window.location.href = '/checkout/';
+    
+    // Analytics tracking
+    trackCartEvent('begin_checkout', {
+        items: cartState.items.length,
+        value: cartState.total
+    });
+}
+
+// ========================================
+// EXPORTAR FUNCIONES GLOBALES
+// ========================================
+
+// Hacer funciones disponibles globalmente para compatibilidad
+window.addToCart = addToCart;
+window.removeFromCart = removeFromCart;
+window.updateQuantity = updateQuantity;
+window.clearCart = clearCart;
+window.increaseQuantity = increaseQuantity;
+window.decreaseQuantity = decreaseQuantity;
+window.moveToWishlist = moveToWishlist;
+window.applyDiscountCode = applyDiscountCode;
+window.removeDiscountCode = removeDiscountCode;
+window.proceedToCheckout = proceedToCheckout;
+
+// Funciones adicionales para obtener estado
+window.getCartItems = getCartItems;
+window.getCartState = function() {
+    return {
+        items: [...cartState.items],
+        subtotal: cartState.subtotal,
+        shipping: cartState.shipping,
+        discount: cartState.discount,
+        total: cartState.total,
+        itemCount: cartState.itemCount,
+        discountCode: cartState.discountCode,
+        lastUpdated: cartState.lastUpdated
+    };
+};
+
+// Estado del carrito accesible globalmente
+window.cartState = cartState;
+
+// ========================================
+// EVENTOS PERSONALIZADOS DE CARRITO
+// ========================================
+
+/**
+ * Emite un evento personalizado de carrito
+ */
+function emitCartEvent(eventType, data = {}) {
+    const event = new CustomEvent('cart:' + eventType, {
+        detail: { ...data, cartState: getCartState() }
+    });
+    document.dispatchEvent(event);
+}
+
+/**
+ * Setup de listeners para eventos de carrito
+ */
+function setupCartEventListeners() {
+    // Listener para actualización del carrito
+    document.addEventListener('cart:updated', function(event) {
+        updateCartBadge();
+        if (typeof showNotification === 'function') {
+            const { action, product } = event.detail;
+            if (action === 'added') {
+                showNotification(`✅ ${product.name} agregado al carrito`, 'cart', 2000);
+            } else if (action === 'removed') {
+                showNotification(`🗑️ ${product.name} eliminado del carrito`, 'warning', 2000);
+            } else if (action === 'quantity_updated') {
+                showNotification(`� Cantidad de ${product.name} actualizada`, 'info', 1500);
+            }
+        }
+    });
+
+    // Listener para errores del carrito
+    document.addEventListener('cart:error', function(event) {
+        if (typeof showNotification === 'function') {
+            showNotification(`❌ ${event.detail.message}`, 'error', 3000);
+        }
+        console.error('Error en carrito:', event.detail);
+    });
+}
+
+/**
+ * Actualiza el badge del carrito en la UI
+ */
+function updateCartBadge() {
+    const badges = document.querySelectorAll('#cartBadge, .cart-badge, .cart-count');
+    const itemCount = cartState.itemCount;
+    
+    badges.forEach(badge => {
+        badge.textContent = itemCount;
+        badge.style.display = itemCount > 0 ? 'flex' : 'none';
+        
+        // Animación de actualización
+        if (itemCount > 0) {
+            badge.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                badge.style.transform = 'scale(1)';
+            }, 200);
+        }
+    });
+}
+
+// Agregar listeners al sistema
+setupCartEventListeners();
+
+console.log('�🛒 Sistema CRUD de carrito inicializado completamente');
+console.log('📊 Estado inicial del carrito:', getCartState());

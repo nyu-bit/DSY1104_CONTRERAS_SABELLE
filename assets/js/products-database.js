@@ -274,6 +274,92 @@ const PRODUCT_DATABASE = {
         customizable: true,
         sizes: ['S', 'M', 'L', 'XL', 'XXL'],
         colors: ['Negro', 'Blanco', 'Gris', 'Verde Neón', 'Azul Eléctrico']
+    },
+
+    // PRODUCTOS DE OFERTAS ESPECIALES
+    'offer-1': {
+        id: 'offer-1',
+        code: 'offer-1',
+        name: 'NVIDIA RTX 4080 Gaming',
+        category: 'componentes',
+        categoryName: 'Componentes',
+        price: 714995,
+        originalPrice: 1299990,
+        currency: 'CLP',
+        image: 'assets/images/rtx-4080.webp',
+        description: 'Tarjeta gráfica de última generación NVIDIA GeForce RTX 4080 para gaming extremo y trabajo profesional. Incluye tecnología ray tracing y DLSS 3.0.',
+        features: [
+            'Ray Tracing en tiempo real',
+            'DLSS 3.0',
+            '16GB GDDR6X',
+            '4K Gaming',
+            'Garantía extendida'
+        ],
+        stock: 8,
+        rating: 4.9,
+        reviews: 127,
+        manufacturer: 'NVIDIA',
+        origin: 'Estados Unidos',
+        tags: ['gpu', 'gaming', '4k', 'ray-tracing'],
+        featured: true,
+        isOffer: true,
+        discount: 45
+    },
+    'offer-2': {
+        id: 'offer-2',
+        code: 'offer-2',
+        name: 'PlayStation 5 Console',
+        category: 'consolas',
+        categoryName: 'Consolas',
+        price: 422494,
+        originalPrice: 649990,
+        currency: 'CLP',
+        image: 'assets/images/ps5-console.webp',
+        description: 'Console PlayStation 5 con tecnología SSD ultra-rápida, gráficos 4K, audio 3D Tempest y compatibilidad con juegos PS4. Incluye control DualSense.',
+        features: [
+            'SSD ultra-rápido',
+            'Gráficos 4K 120fps',
+            'Audio 3D Tempest',
+            'Control DualSense',
+            'Juego incluido'
+        ],
+        stock: 12,
+        rating: 4.8,
+        reviews: 89,
+        manufacturer: 'Sony',
+        origin: 'Japón',
+        tags: ['consola', 'ps5', '4k', 'gaming'],
+        featured: true,
+        isOffer: true,
+        discount: 35
+    },
+    'offer-3': {
+        id: 'offer-3',
+        code: 'offer-3',
+        name: 'Silla Gaming Pro RGB',
+        category: 'muebles',
+        categoryName: 'Muebles Gaming',
+        price: 199995,
+        originalPrice: 399990,
+        currency: 'CLP',
+        image: 'assets/images/gaming-chair.webp',
+        description: 'Silla gaming ergonómica con iluminación RGB personalizable, soporte lumbar ajustable y materiales premium para sesiones de gaming extendidas.',
+        features: [
+            'Iluminación RGB',
+            'Soporte lumbar ajustable',
+            'Material premium',
+            'Reposabrazos 4D',
+            'Base de acero'
+        ],
+        stock: 15,
+        rating: 4.7,
+        reviews: 156,
+        manufacturer: 'GamerChair',
+        origin: 'China',
+        tags: ['silla', 'gaming', 'rgb', 'ergonómica'],
+        featured: true,
+        isOffer: true,
+        discount: 50
     }
 };
 
@@ -326,6 +412,18 @@ const CATEGORIES = {
         name: 'Poleras Personalizadas',
         icon: '👕',
         description: 'Expresa tu estilo gamer'
+    },
+    'muebles': {
+        id: 'muebles',
+        name: 'Muebles Gaming',
+        icon: '🪑',
+        description: 'Mobiliario ergonómico para gamers'
+    },
+    'componentes': {
+        id: 'componentes',
+        name: 'Componentes PC',
+        icon: '🖥️',
+        description: 'Hardware de última generación'
     }
 };
 
