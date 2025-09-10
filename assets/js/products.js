@@ -659,27 +659,14 @@ function formatPrice(price) {
 }
 
 function showNotification(message, type = 'info') {
-    if (window.levelUpGamer && window.levelUpGamer.showNotification) {
-        window.levelUpGamer.showNotification(message, type);
-    } else {
-        console.log(`${type.toUpperCase()}: ${message}`);
-        // Fallback visual
-        const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        notification.textContent = message;
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 12px 20px;
-            background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
-            color: white;
-            border-radius: 4px;
-            z-index: 10000;
-        `;
-        document.body.appendChild(notification);
-        setTimeout(() => notification.remove(), 3000);
+    // Usar función global de main.js si está disponible
+    if (window.showNotification && window.showNotification !== showNotification) {
+        window.showNotification(message, type);
+        return;
     }
+    
+    // Fallback si no está disponible
+    console.log(`${type.toUpperCase()}: ${message}`);
 }
 
 // ================================
