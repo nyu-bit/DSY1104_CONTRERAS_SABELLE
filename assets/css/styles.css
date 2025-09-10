@@ -6544,3 +6544,442 @@ a:hover {
     min-width: auto;
   }
 }
+
+/* ================================================
+   LG-120: CHECKLIST DE ACCESIBILIDAD WCAG 2.1 A/AA
+   Cumplimiento de estándares de accesibilidad web
+   ================================================ */
+
+/* WCAG 2.1 - PRINCIPIO 1: PERCEPTIBLE */
+
+/* 1.1 Texto alternativo */
+img:not([alt]) {
+  border: 2px solid var(--color-error) !important;
+}
+
+img[alt=""],
+img[alt=" "] {
+  border: 2px dashed var(--color-warning) !important;
+}
+
+/* 1.2 Medios con tiempo - Controles accesibles */
+video, audio {
+  outline: 2px solid var(--color-info) when focus;
+}
+
+/* 1.3 Adaptable - Estructura semántica */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.sr-only-focusable:focus {
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+  padding: var(--spacing-sm) !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  clip: auto !important;
+  white-space: normal !important;
+  background: var(--color-secondary);
+  color: var(--color-primary);
+  border-radius: var(--border-radius-sm);
+  z-index: var(--z-tooltip);
+}
+
+/* 1.4 Distinguible - Contraste AA/AAA */
+:root {
+  /* Colores con contraste WCAG AA/AAA */
+  --color-text-contrast-aa: #FFFFFF;     /* Contraste 21:1 en fondo negro */
+  --color-text-contrast-aaa: #FFFFFF;    /* Contraste 21:1 */
+  --color-bg-contrast-aa: #000000;       /* Fondo de alto contraste */
+  --color-link-contrast: #00BFFF;        /* Enlaces con contraste 7:1 */
+  --color-focus-contrast: #39FF14;       /* Foco visible 3:1 */
+}
+
+/* Mejoras de contraste para texto */
+.high-contrast {
+  background: var(--color-bg-contrast-aa) !important;
+  color: var(--color-text-contrast-aa) !important;
+}
+
+.text-contrast-aa {
+  color: var(--color-text-contrast-aa);
+  background: var(--color-bg-contrast-aa);
+}
+
+/* Enlaces con contraste mejorado */
+a {
+  color: var(--color-link-contrast);
+  text-decoration: underline;
+}
+
+a:hover, a:focus {
+  color: var(--color-secondary);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
+
+/* Contraste para botones */
+.btn {
+  min-height: 44px; /* WCAG tamaño mínimo touch target */
+  min-width: 44px;
+  border: 2px solid transparent;
+  position: relative;
+}
+
+.btn:focus {
+  border-color: var(--color-focus-contrast);
+  outline: 2px solid var(--color-focus-contrast);
+  outline-offset: 2px;
+}
+
+/* WCAG 2.1 - PRINCIPIO 2: OPERABLE */
+
+/* 2.1 Teclado accesible */
+*:focus-visible {
+  outline: 3px solid var(--color-secondary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px rgba(57, 255, 20, 0.3);
+  transition: none;
+}
+
+/* Skip navigation mejorado */
+.skip-navigation {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background: var(--color-secondary);
+  color: var(--color-primary);
+  padding: var(--spacing-md);
+  text-decoration: none;
+  z-index: var(--z-tooltip);
+  font-weight: bold;
+  border-radius: 0 0 var(--border-radius-md) 0;
+}
+
+.skip-navigation:focus {
+  top: 0;
+}
+
+/* Navegación por teclado mejorada */
+.keyboard-navigation *:focus {
+  outline: 3px solid var(--color-secondary);
+  outline-offset: 2px;
+}
+
+/* 2.2 Sin límites de tiempo - Pausar animaciones */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .parallax {
+    transform: none !important;
+  }
+}
+
+/* 2.3 Convulsiones - Sin contenido parpadeante */
+.no-flash {
+  animation: none !important;
+}
+
+@keyframes no-flash {
+  to { opacity: 1; }
+}
+
+/* 2.4 Navegable - Landmarks y headings */
+main[role="main"]:focus {
+  outline: none;
+}
+
+/* Indicador de página actual */
+[aria-current="page"] {
+  font-weight: bold;
+  position: relative;
+}
+
+[aria-current="page"]::after {
+  content: " (página actual)";
+  position: absolute;
+  left: -9999px;
+}
+
+/* 2.5 Input Modalities - Target size */
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+.clickable {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* WCAG 2.1 - PRINCIPIO 3: COMPRENSIBLE */
+
+/* 3.1 Legible - Idioma declarado */
+html[lang] {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.lang-indicator::after {
+  content: " (" attr(lang) ")";
+  font-size: 0.8em;
+  opacity: 0.7;
+}
+
+/* 3.2 Predecible - Navegación consistente */
+.navigation-consistent nav {
+  /* Mantener orden consistente de navegación */
+  order: 1;
+}
+
+/* 3.3 Asistencia de entrada - Labels y errores */
+.form-group {
+  position: relative;
+  margin-bottom: var(--spacing-lg);
+}
+
+.form-label {
+  display: block;
+  margin-bottom: var(--spacing-sm);
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.form-input {
+  width: 100%;
+  padding: var(--spacing-md);
+  border: 2px solid var(--color-surface-variant);
+  border-radius: var(--border-radius-md);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  transition: var(--transition-normal);
+}
+
+.form-input:focus {
+  border-color: var(--color-secondary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(57, 255, 20, 0.3);
+}
+
+.form-input:invalid {
+  border-color: var(--color-error);
+}
+
+.form-input[aria-invalid="true"] {
+  border-color: var(--color-error);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23FF073A' viewBox='0 0 16 16'%3E%3Cpath d='M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z'/%3E%3Cpath d='M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--spacing-md) center;
+  padding-right: calc(var(--spacing-md) + 24px);
+}
+
+.error-message {
+  display: block;
+  margin-top: var(--spacing-sm);
+  color: var(--color-error);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+.error-message::before {
+  content: "⚠️ ";
+  margin-right: var(--spacing-xs);
+}
+
+/* Campos requeridos */
+.required::after {
+  content: " *";
+  color: var(--color-error);
+  font-weight: bold;
+}
+
+/* WCAG 2.1 - PRINCIPIO 4: ROBUSTO */
+
+/* 4.1 Compatible - Válido y parseable */
+[role]:not([role=""]) {
+  /* Asegurar que roles ARIA tienen significado */
+  position: relative;
+}
+
+/* Estados ARIA */
+[aria-expanded="false"] .expandable-content {
+  display: none;
+}
+
+[aria-expanded="true"] .expandable-content {
+  display: block;
+}
+
+[aria-hidden="true"] {
+  display: none !important;
+}
+
+/* Live regions mejoradas */
+.aria-live-region {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+[aria-live="polite"] {
+  /* Anuncios corteses para lectores de pantalla */
+  position: relative;
+}
+
+[aria-live="assertive"] {
+  /* Anuncios importantes que interrumpen */
+  position: relative;
+}
+
+/* Estados de carga accesibles */
+.loading[aria-busy="true"]::after {
+  content: "Cargando...";
+  position: absolute;
+  left: -9999px;
+}
+
+/* MEJORAS ESPECÍFICAS PARA HIGH CONTRAST MODE */
+@media (prefers-contrast: high) {
+  :root {
+    --color-primary: #000000;
+    --color-secondary: #FFFFFF;
+    --color-accent: #0000FF;
+    --color-background: #000000;
+    --color-surface: #000000;
+    --color-text-primary: #FFFFFF;
+    --color-border: #FFFFFF;
+  }
+  
+  .btn {
+    border: 2px solid var(--color-text-primary);
+  }
+  
+  .card {
+    border: 2px solid var(--color-text-primary);
+  }
+  
+  img {
+    filter: contrast(1.2);
+  }
+}
+
+/* MEJORAS PARA MODO OSCURO FORZADO */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
+/* INDICADORES DE ESTADO MEJORADOS */
+.status-indicator {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  font-weight: 500;
+  font-size: var(--font-size-sm);
+}
+
+.status-success {
+  background: var(--color-success);
+  color: var(--color-primary);
+}
+
+.status-warning {
+  background: var(--color-warning);
+  color: var(--color-primary);
+}
+
+.status-error {
+  background: var(--color-error);
+  color: var(--color-text-primary);
+}
+
+.status-info {
+  background: var(--color-info);
+  color: var(--color-primary);
+}
+
+/* TOOLTIPS ACCESIBLES */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip[aria-describedby]:hover::after,
+.tooltip[aria-describedby]:focus::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-primary);
+  color: var(--color-text-primary);
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  white-space: nowrap;
+  z-index: var(--z-tooltip);
+  border: 1px solid var(--color-secondary);
+}
+
+/* VALIDACIONES VISUALES DE ACCESIBILIDAD */
+.accessibility-debug {
+  outline: 2px dashed var(--color-warning) !important;
+}
+
+.accessibility-error {
+  outline: 3px solid var(--color-error) !important;
+}
+
+/* Elementos sin etiquetas apropiadas */
+input:not([aria-label]):not([aria-labelledby]):not([id]) {
+  outline: 3px solid var(--color-error) !important;
+}
+
+button:not([aria-label]):empty {
+  outline: 3px solid var(--color-error) !important;
+}
+
+img:not([alt]) {
+  outline: 3px solid var(--color-error) !important;
+}
+
+/* MODO DEBUG PARA DESARROLLADORES */
+.accessibility-debug-mode [tabindex]:not([tabindex="-1"]) {
+  outline: 2px solid var(--color-info) !important;
+}
+
+.accessibility-debug-mode [role] {
+  outline: 2px dotted var(--color-warning) !important;
+}
+
+.accessibility-debug-mode [aria-hidden="true"] {
+  outline: 2px solid var(--color-error) !important;
+}
+
+.accessibility-debug-mode .sr-only {
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+  background: var(--color-warning);
+  color: var(--color-primary);
+  padding: var(--spacing-xs);
+}
