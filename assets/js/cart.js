@@ -74,12 +74,118 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeCartSystem() {
     loadCartFromStorage();
     setupCartEventListeners();
+    setupCartSynchronization(); // LG-044: Sincronización cross-tab
     updateAllCartDisplays();
     
     // Verificar integridad del carrito periódicamente
     setInterval(validateCartIntegrity, 30000);
     
     console.log('✅ Sistema de carrito inicializado');
+}
+
+// ========================================
+// LG-044: SINCRONIZACIÓN CROSS-TAB
+// Sistema de sincronización entre pestañas
+// ========================================
+
+/**
+ * Configura la sincronización del carrito entre pestañas/ventanas
+ */
+function setupCartSynchronization() {
+    // Escuchar cambios en localStorage desde otras pestañas
+    window.addEventListener('storage', function(e) {
+        if (e.key === CART_CONFIG.storageKey && e.newValue !== e.oldValue) {
+            console.log('🔄 Cambio detectado en carrito desde otra pestaña');
+            syncCartFromStorage();
+        }
+    });
+    
+    // Sincronización periódica para mayor robustez
+    setInterval(syncCartIfOutdated, 5000);
+    
+    // Sincronizar al enfocar la ventana
+    window.addEventListener('focus', function() {
+        syncCartIfOutdated();
+    });
+    
+    // Event listener para visibilidad de página
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            syncCartIfOutdated();
+        }
+    });
+    
+    console.log('🔄 Sistema de sincronización cross-tab configurado');
+}
+
+/**
+ * Sincroniza el carrito desde localStorage si hay cambios
+ */
+function syncCartFromStorage() {
+    try {
+        const currentTimestamp = cartState.lastUpdated;
+        loadCartFromStorage();
+        
+        // Solo actualizar si realmente cambió
+        if (cartState.lastUpdated !== currentTimestamp) {
+            updateAllCartDisplays();
+            showCartNotification(
+                'Carrito sincronizado desde otra pestaña',
+                'info',
+                3000
+            );
+            console.log('✅ Carrito sincronizado desde otra pestaña');
+        }
+        
+    } catch (error) {
+        console.error('❌ Error en sincronización:', error);
+    }
+}
+
+/**
+ * Sincroniza solo si el carrito local está desactualizado
+ */
+function syncCartIfOutdated() {
+    try {
+        const storedCart = localStorage.getItem(CART_CONFIG.storageKey);
+        if (storedCart) {
+            const cartData = JSON.parse(storedCart);
+            
+            // Comparar timestamps para ver si hay cambios
+            if (cartData.lastUpdated && cartData.lastUpdated !== cartState.lastUpdated) {
+                console.log('⏰ Carrito desactualizado, sincronizando...');
+                syncCartFromStorage();
+            }
+        }
+    } catch (error) {
+        console.error('❌ Error verificando sincronización:', error);
+    }
+}
+
+/**
+ * Fuerza la sincronización del carrito en todas las pestañas
+ */
+function broadcastCartChange() {
+    // Disparar evento de storage manualmente para esta pestaña
+    window.dispatchEvent(new StorageEvent('storage', {
+        key: CART_CONFIG.storageKey,
+        newValue: localStorage.getItem(CART_CONFIG.storageKey),
+        url: window.location.href
+    }));
+}
+
+/**
+ * Actualiza todas las visualizaciones del carrito en la página actual
+ */
+function updateAllCartDisplays() {
+    updateCartDisplay();
+    updateCartCounter();
+    updateCartBadge();
+    updateMiniCart();
+    updateCartSummary();
+    updateCartPage();
+    
+    console.log('🔄 Todas las visualizaciones del carrito actualizadas');
 }
 
 /**
@@ -556,6 +662,9 @@ function saveCartToStorage() {
             throw new Error('No se pudo guardar en localStorage');
         }
         
+        // LG-044: Disparar sincronización en otras pestañas
+        setTimeout(broadcastCartChange, 100);
+        
         console.log('💾 Carrito guardado en localStorage');
         return true;
         
@@ -860,6 +969,41 @@ function updateCheckoutSummary() {
     if (!checkout) return;
     
     updateCartSummaryDisplay(checkout);
+}
+
+/**
+ * Actualizar mini carrito (dropdown/sidebar)
+ */
+function updateMiniCart() {
+    // Buscar elementos del mini carrito
+    const miniCartItems = document.querySelector('.mini-cart-items');
+    const miniCartTotal = document.querySelector('.mini-cart-total');
+    const miniCartCounter = document.querySelector('.mini-cart-counter');
+    
+    if (miniCartItems) {
+        if (cartState.items.length === 0) {
+            miniCartItems.innerHTML = '<p class="mini-cart-empty">Tu carrito está vacío</p>';
+        } else {
+            miniCartItems.innerHTML = cartState.items.map(item => `
+                <div class="mini-cart-item">
+                    <img src="${item.image}" alt="${item.name}" class="mini-cart-item-image">
+                    <div class="mini-cart-item-info">
+                        <h4>${item.name}</h4>
+                        <span class="mini-cart-item-price">${formatPrice(item.price)} x ${item.quantity}</span>
+                    </div>
+                    <button class="mini-cart-remove" onclick="removeFromCart('${item.id}')" aria-label="Eliminar ${item.name}">×</button>
+                </div>
+            `).join('');
+        }
+    }
+    
+    if (miniCartTotal) {
+        miniCartTotal.textContent = formatPrice(cartState.total);
+    }
+    
+    if (miniCartCounter) {
+        miniCartCounter.textContent = cartState.itemCount;
+    }
 }
 
 /**
@@ -3056,4 +3200,66 @@ window.cartNotifications = {
     notifyCartCleared,
     notifyPurchaseSuccess
 };
+
+// ========================================
+// LG-044: EXPORTAR FUNCIONES DE SINCRONIZACIÓN
+// Funciones globales para sincronización cross-tab
+// ========================================
+
+/**
+ * API pública del sistema de carrito para sincronización
+ */
+window.cartSyncAPI = {
+    // Funciones principales del carrito
+    addToCart,
+    removeFromCart,
+    updateQuantity,
+    clearCartItems,
+    
+    // Funciones de sincronización
+    loadCartFromStorage,
+    saveCartToStorage,
+    syncCartFromStorage,
+    broadcastCartChange,
+    updateAllCartDisplays,
+    
+    // Estado del carrito
+    getCartState: () => cartState,
+    getCartConfig: () => CART_CONFIG,
+    
+    // Funciones de validación
+    validateCartIntegrity,
+    
+    // Utilidades
+    formatPrice,
+    
+    // Eventos de sincronización
+    onCartSync: function(callback) {
+        window.addEventListener('storage', function(e) {
+            if (e.key === CART_CONFIG.storageKey) {
+                callback(e);
+            }
+        });
+    },
+    
+    // Forzar sincronización manual
+    forceSync: function() {
+        syncCartFromStorage();
+        updateAllCartDisplays();
+        return cartState;
+    },
+    
+    // Verificar estado de sincronización
+    getSyncStatus: function() {
+        return {
+            isHealthy: localStorage.getItem(CART_CONFIG.storageKey) !== null,
+            lastUpdated: cartState.lastUpdated,
+            itemCount: cartState.itemCount,
+            total: cartState.total,
+            timestamp: new Date().toISOString()
+        };
+    }
+};
+
+console.log('✅ LG-044: Sistema de sincronización de carrito disponible globalmente');
 
