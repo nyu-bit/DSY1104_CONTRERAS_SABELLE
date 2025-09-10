@@ -260,58 +260,134 @@
             </div>
         </section>
 
-        <!-- Categorías Destacadas -->
+        <!-- LG-012: Categorías Destacadas (tiles) -->
         <section class="section" id="categories">
             <div class="container">
-                <h2 class="section-title">🎯 Categorías Populares</h2>
-                <div class="categories-grid">
-                    <div class="category-card" data-category="juegos-mesa">
-                        <div class="category-icon">�</div>
-                        <h3>Juegos de Mesa</h3>
-                        <p>Diversión analógica para toda la familia</p>
-                        <span class="category-count">2+ productos</span>
+                <div class="section-header" data-aos="fade-up">
+                    <h2 class="section-title">
+                        <i class="fas fa-th-large" aria-hidden="true"></i>
+                        Categorías Gaming
+                    </h2>
+                    <p class="section-subtitle">
+                        Explora nuestras categorías principales y encuentra exactamente lo que necesitas
+                    </p>
+                </div>
+                
+                <div class="categories-grid" data-aos="fade-up" data-aos-delay="200">
+                    <!-- Categoría 1: Consolas -->
+                    <div class="category-tile" 
+                         data-category="consolas" 
+                         tabindex="0" 
+                         role="button" 
+                         aria-label="Explorar categoría de consolas gaming">
+                        <div class="category-background"></div>
+                        <div class="category-content">
+                            <div class="category-icon">
+                                <i class="fas fa-gamepad" aria-hidden="true"></i>
+                            </div>
+                            <h3 class="category-title">Consolas</h3>
+                            <p class="category-description">
+                                PlayStation, Xbox, Nintendo Switch y más. 
+                                Las mejores consolas next-gen.
+                            </p>
+                            <div class="category-meta">
+                                <span class="category-count">
+                                    <i class="fas fa-cube" aria-hidden="true"></i>
+                                    15+ productos
+                                </span>
+                                <div class="category-arrow">
+                                    <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="category-glow"></div>
                     </div>
-                    <div class="category-card" data-category="accesorios">
-                        <div class="category-icon">🎮</div>
-                        <h3>Accesorios</h3>
-                        <p>Complementa tu setup gaming</p>
-                        <span class="category-count">10+ productos</span>
+
+                    <!-- Categoría 2: PC Gaming -->
+                    <div class="category-tile" 
+                         data-category="pc-gaming" 
+                         tabindex="0" 
+                         role="button" 
+                         aria-label="Explorar categoría de PC Gaming">
+                        <div class="category-background"></div>
+                        <div class="category-content">
+                            <div class="category-icon">
+                                <i class="fas fa-desktop" aria-hidden="true"></i>
+                            </div>
+                            <h3 class="category-title">PC Gaming</h3>
+                            <p class="category-description">
+                                Computadores de alto rendimiento, 
+                                componentes y hardware gaming.
+                            </p>
+                            <div class="category-meta">
+                                <span class="category-count">
+                                    <i class="fas fa-cube" aria-hidden="true"></i>
+                                    25+ productos
+                                </span>
+                                <div class="category-arrow">
+                                    <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="category-glow"></div>
                     </div>
-                    <div class="category-card" data-category="consolas">
-                        <div class="category-icon">🕹️</div>
-                        <h3>Consolas</h3>
-                        <p>Las mejores consolas del mercado</p>
-                        <span class="category-count">5+ productos</span>
+
+                    <!-- Categoría 3: Accesorios -->
+                    <div class="category-tile" 
+                         data-category="accesorios" 
+                         tabindex="0" 
+                         role="button" 
+                         aria-label="Explorar categoría de accesorios gaming">
+                        <div class="category-background"></div>
+                        <div class="category-content">
+                            <div class="category-icon">
+                                <i class="fas fa-headset" aria-hidden="true"></i>
+                            </div>
+                            <h3 class="category-title">Accesorios</h3>
+                            <p class="category-description">
+                                Headsets, teclados mecánicos, mouse gaming 
+                                y todo para tu setup.
+                            </p>
+                            <div class="category-meta">
+                                <span class="category-count">
+                                    <i class="fas fa-cube" aria-hidden="true"></i>
+                                    30+ productos
+                                </span>
+                                <div class="category-arrow">
+                                    <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="category-glow"></div>
                     </div>
-                    <div class="category-card" data-category="computadores">
-                        <div class="category-icon">💻</div>
-                        <h3>Computadores Gamers</h3>
-                        <p>PCs de alto rendimiento</p>
-                        <span class="category-count">3+ productos</span>
-                    </div>
-                    <div class="category-card" data-category="sillas">
-                        <div class="category-icon">🪑</div>
-                        <h3>Sillas Gamers</h3>
-                        <p>Confort para largas sesiones</p>
-                        <span class="category-count">4+ productos</span>
-                    </div>
-                    <div class="category-card" data-category="mouse">
-                        <div class="category-icon">🖱️</div>
-                        <h3>Mouse</h3>
-                        <p>Precisión en cada click</p>
-                        <span class="category-count">8+ productos</span>
-                    </div>
-                    <div class="category-card" data-category="mousepad">
-                        <div class="category-icon">🟫</div>
-                        <h3>Mousepad</h3>
-                        <p>La superficie perfecta</p>
-                        <span class="category-count">6+ productos</span>
-                    </div>
-                    <div class="category-card" data-category="poleras">
-                        <div class="category-icon">�</div>
-                        <h3>Poleras Personalizadas</h3>
-                        <p>Expresa tu estilo gamer</p>
-                        <span class="category-count">5+ productos</span>
+
+                    <!-- Categoría 4: Videojuegos -->
+                    <div class="category-tile" 
+                         data-category="videojuegos" 
+                         tabindex="0" 
+                         role="button" 
+                         aria-label="Explorar categoría de videojuegos">
+                        <div class="category-background"></div>
+                        <div class="category-content">
+                            <div class="category-icon">
+                                <i class="fas fa-compact-disc" aria-hidden="true"></i>
+                            </div>
+                            <h3 class="category-title">Videojuegos</h3>
+                            <p class="category-description">
+                                Los últimos lanzamientos, clásicos 
+                                y títulos más populares.
+                            </p>
+                            <div class="category-meta">
+                                <span class="category-count">
+                                    <i class="fas fa-cube" aria-hidden="true"></i>
+                                    50+ productos
+                                </span>
+                                <div class="category-arrow">
+                                    <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="category-glow"></div>
                     </div>
                 </div>
             </div>

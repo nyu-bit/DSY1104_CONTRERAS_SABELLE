@@ -959,11 +959,192 @@ a:hover {
 /* ================================================
    LG-012: CATEGORÍAS DESTACADAS CON TILES INTERACTIVOS
    ================================================ */
+
+/* Grid de categorías - diseño responsive */
 .categories-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-2xl);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-xl);
+  margin-top: var(--spacing-2xl);
+}
+
+/* Categoria Tile - diseño gaming mejorado */
+.category-tile {
+  position: relative;
+  background: var(--gradient-surface);
+  border: 2px solid rgba(57, 255, 20, 0.3);
+  border-radius: var(--border-radius-xl);
+  padding: var(--spacing-2xl);
+  cursor: pointer;
+  transition: var(--transition-normal);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
+}
+
+/* Fondo animado */
+.category-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(25, 25, 35, 0.9) 0%,
+    rgba(35, 35, 45, 0.95) 50%,
+    rgba(25, 25, 35, 0.9) 100%
+  );
+  transition: var(--transition-normal);
+  z-index: 1;
+}
+
+/* Contenido de la categoría */
+.category-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Icono gaming prominente */
+.category-tile .category-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto var(--spacing-lg);
+  background: var(--gradient-glow);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-2xl);
+  color: var(--color-bg);
+  box-shadow: var(--shadow-lg);
+  transition: var(--transition-normal);
+}
+
+/* Título de categoría */
+.category-title {
+  color: var(--color-secondary);
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  margin-bottom: var(--spacing-md);
+  text-align: center;
+}
+
+/* Descripción */
+.category-description {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+  text-align: center;
+  flex-grow: 1;
+  margin-bottom: var(--spacing-lg);
+}
+
+/* Meta información */
+.category-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+/* Contador de productos */
+.category-count {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+}
+
+.category-count i {
+  color: var(--color-secondary);
+}
+
+/* Flecha indicadora */
+.category-arrow {
+  width: 32px;
+  height: 32px;
+  background: rgba(57, 255, 20, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-secondary);
+  transition: var(--transition-normal);
+}
+
+/* Efecto glow */
+.category-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(
+    circle,
+    rgba(57, 255, 20, 0.3) 0%,
+    transparent 70%
+  );
+  transform: translate(-50%, -50%);
+  transition: var(--transition-slow);
+  opacity: 0;
+  z-index: 0;
+}
+
+/* Estados de hover/focus */
+.category-tile:hover,
+.category-tile:focus {
+  transform: translateY(-8px) scale(1.02);
+  border-color: var(--color-secondary);
+  box-shadow: 
+    var(--shadow-xl),
+    0 0 30px rgba(57, 255, 20, 0.3);
+}
+
+.category-tile:hover .category-background {
+  background: linear-gradient(
+    135deg,
+    rgba(35, 35, 45, 0.95) 0%,
+    rgba(45, 45, 55, 0.98) 50%,
+    rgba(35, 35, 45, 0.95) 100%
+  );
+}
+
+.category-tile:hover .category-icon {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 
+    var(--shadow-xl),
+    0 0 20px rgba(57, 255, 20, 0.5);
+}
+
+.category-tile:hover .category-arrow {
+  background: var(--color-secondary);
+  color: var(--color-bg);
+  transform: translateX(4px);
+}
+
+.category-tile:hover .category-glow {
+  opacity: 1;
+  width: 150px;
+  height: 150px;
+}
+
+/* Efecto de click */
+.category-tile:active {
+  transform: translateY(-4px) scale(1.01);
+}
+
+/* Accesibilidad */
+.category-tile:focus {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 4px;
 }
 
 .category-card {
@@ -1708,8 +1889,37 @@ a:hover {
     bottom: var(--spacing-md);
   }
   
+  /* Categorías responsive para mobile */
   .categories-grid {
     grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+  
+  .category-tile {
+    min-height: 180px;
+    padding: var(--spacing-lg);
+  }
+  
+  .category-tile .category-icon {
+    width: 60px;
+    height: 60px;
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .category-title {
+    font-size: var(--font-size-lg);
+  }
+  
+  .category-description {
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .category-meta {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    align-items: center;
   }
   
   .products-grid {
@@ -1788,8 +1998,20 @@ a:hover {
     font-size: var(--font-size-xl);
   }
   
+  /* Categorías responsive para tablet */
   .categories-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+  }
+  
+  .category-tile {
+    min-height: 200px;
+  }
+  
+  .category-tile .category-icon {
+    width: 70px;
+    height: 70px;
+    font-size: var(--font-size-xl);
   }
   
   .products-grid {

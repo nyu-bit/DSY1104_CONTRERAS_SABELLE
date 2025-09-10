@@ -1240,3 +1240,132 @@ function initScrollIndicator() {
     // Verificar inicialmente
     updateScrollIndicatorVisibility();
 }
+
+// ================================================
+// LG-012: CATEGORÍAS DESTACADAS - INTERACCIONES
+// ================================================
+
+/**
+ * Inicializa las funcionalidades de las categorías destacadas
+ */
+function initCategoriesTiles() {
+    const categoryTiles = document.querySelectorAll('.category-tile');
+    
+    if (!categoryTiles.length) return;
+    
+    categoryTiles.forEach(tile => {
+        // Click handler para navegación
+        tile.addEventListener('click', handleCategoryClick);
+        
+        // Soporte para teclado
+        tile.addEventListener('keydown', handleCategoryKeydown);
+        
+        // Efectos de hover mejorados
+        tile.addEventListener('mouseenter', handleCategoryHover);
+        tile.addEventListener('mouseleave', handleCategoryLeave);
+    });
+}
+
+/**
+ * Maneja el click en una categoría
+ * @param {Event} event - Evento de click
+ */
+function handleCategoryClick(event) {
+    const tile = event.currentTarget;
+    const category = tile.dataset.category;
+    
+    // Efecto visual de click
+    tile.style.transform = 'translateY(-4px) scale(1.01)';
+    
+    setTimeout(() => {
+        tile.style.transform = '';
+    }, 150);
+    
+    // Navegación a productos de la categoría
+    if (category) {
+        // Analytics tracking
+        trackCategoryClick(category);
+        
+        // Navegación (puedes personalizar según tu estructura)
+        window.location.href = `productos/?categoria=${category}`;
+    }
+}
+
+/**
+ * Maneja la navegación por teclado
+ * @param {KeyboardEvent} event - Evento de teclado
+ */
+function handleCategoryKeydown(event) {
+    if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        event.currentTarget.click();
+    }
+}
+
+/**
+ * Efectos de hover para categorías
+ * @param {Event} event - Evento de mouse enter
+ */
+function handleCategoryHover(event) {
+    const tile = event.currentTarget;
+    const glow = tile.querySelector('.category-glow');
+    
+    // Animación del glow
+    if (glow) {
+        glow.style.transition = 'all 0.3s ease';
+    }
+    
+    // Sonido hover (opcional - descomenta si tienes audio)
+    // playHoverSound();
+}
+
+/**
+ * Limpia efectos de hover
+ * @param {Event} event - Evento de mouse leave
+ */
+function handleCategoryLeave(event) {
+    const tile = event.currentTarget;
+    // Los efectos de CSS se encargan del resto
+}
+
+/**
+ * Tracking de analytics para categorías
+ * @param {string} category - Nombre de la categoría
+ */
+function trackCategoryClick(category) {
+    // Google Analytics / tracking personalizado
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'category_click', {
+            'category_name': category,
+            'location': 'categories_tiles'
+        });
+    }
+    
+    // Tracking local para estadísticas
+    const categoryStats = JSON.parse(localStorage.getItem('categoryStats') || '{}');
+    categoryStats[category] = (categoryStats[category] || 0) + 1;
+    localStorage.setItem('categoryStats', JSON.stringify(categoryStats));
+}
+
+/**
+ * Animación de entrada para las categorías
+ */
+function animateCategoriesEntrance() {
+    const categoryTiles = document.querySelectorAll('.category-tile');
+    
+    categoryTiles.forEach((tile, index) => {
+        // Animación escalonada
+        setTimeout(() => {
+            tile.style.opacity = '1';
+            tile.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+}
+
+// Inicialización cuando el DOM está listo
+document.addEventListener('DOMContentLoaded', () => {
+    initCategoriesTiles();
+    
+    // Animar entrada de categorías con delay
+    setTimeout(animateCategoriesEntrance, 500);
+});
