@@ -731,28 +731,143 @@
             </div>
         </section>
 
-        <!-- Ofertas Especiales -->
-        <section class="section offers-section">
+        <!-- Sección de Ofertas Destacadas - LG-016 -->
+        <section class="section special-offers-section" id="special-offers">
             <div class="container">
-                <h2 class="section-title">🔥 Ofertas Especiales</h2>
-                <div class="offers-grid">
-                    <div class="offer-card">
-                        <div class="offer-badge">-30%</div>
-                        <h3>Gaming Weekend</h3>
-                        <p>Descuentos en videojuegos seleccionados</p>
-                        <button class="offer-button" onclick="filterByCategory('juegos')">Ver Ofertas</button>
-                    </div>
-                    <div class="offer-card">
-                        <div class="offer-badge">Envío Gratis</div>
-                        <h3>Compras +$50.000</h3>
-                        <p>Envío gratuito en compras sobre $50.000</p>
-                        <button class="offer-button" onclick="goToProducts()">Comprar Ahora</button>
-                    </div>
-                    <div class="offer-card duoc-offer">
-                        <div class="offer-badge">-20%</div>
-                        <h3>Descuento Estudiantes</h3>
-                        <p>Estudiantes Duoc UC obtienen 20% de descuento</p>
-                        <button class="offer-button" onclick="showStudentInfo()">Más Info</button>
+                <div class="section-header">
+                    <h2 class="section-title">🔥 Ofertas Destacadas</h2>
+                    <p class="section-subtitle">Productos gaming con descuentos increíbles por tiempo limitado</p>
+                </div>
+                <div class="special-offers-grid" id="specialOffersGrid">
+                    <!-- Producto en oferta 1 -->
+                    <article class="offer-product-card" data-product-id="offer-1">
+                        <div class="offer-badge-wrapper">
+                            <span class="offer-badge primary">OFERTA</span>
+                            <span class="discount-badge">-45%</span>
+                        </div>
+                        <div class="product-image">
+                            <img src="assets/images/rtx-4080.webp" alt="NVIDIA RTX 4080 Gaming" loading="lazy">
+                            <div class="offer-timer" data-timer="86400">
+                                <span class="timer-label">Termina en:</span>
+                                <span class="timer-value">24:00:00</span>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">NVIDIA RTX 4080 Gaming</h3>
+                            <div class="product-prices">
+                                <span class="price-original">$1.299.990</span>
+                                <span class="price-offer">$714.995</span>
+                            </div>
+                            <div class="product-rating">
+                                <span class="stars">⭐⭐⭐⭐⭐</span>
+                                <span class="rating-count">(127 reseñas)</span>
+                            </div>
+                            <div class="offer-features">
+                                <span class="feature">✓ Envío gratis</span>
+                                <span class="feature">✓ Garantía extendida</span>
+                            </div>
+                        </div>
+                        <div class="product-actions">
+                            <button class="add-to-cart-btn" onclick="addToCartOffer('offer-1')" 
+                                    aria-label="Agregar NVIDIA RTX 4080 Gaming al carrito">
+                                🛒 Agregar al Carrito
+                            </button>
+                            <button class="quick-view-btn" onclick="quickViewOffer('offer-1')"
+                                    aria-label="Vista rápida de NVIDIA RTX 4080 Gaming">
+                                👁️ Vista Rápida
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Producto en oferta 2 -->
+                    <article class="offer-product-card" data-product-id="offer-2">
+                        <div class="offer-badge-wrapper">
+                            <span class="offer-badge primary">OFERTA</span>
+                            <span class="discount-badge">-35%</span>
+                        </div>
+                        <div class="product-image">
+                            <img src="assets/images/ps5-console.webp" alt="PlayStation 5 Console" loading="lazy">
+                            <div class="offer-timer" data-timer="172800">
+                                <span class="timer-label">Termina en:</span>
+                                <span class="timer-value">48:00:00</span>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">PlayStation 5 Console</h3>
+                            <div class="product-prices">
+                                <span class="price-original">$649.990</span>
+                                <span class="price-offer">$422.494</span>
+                            </div>
+                            <div class="product-rating">
+                                <span class="stars">⭐⭐⭐⭐⭐</span>
+                                <span class="rating-count">(89 reseñas)</span>
+                            </div>
+                            <div class="offer-features">
+                                <span class="feature">✓ Juego incluido</span>
+                                <span class="feature">✓ Control extra</span>
+                            </div>
+                        </div>
+                        <div class="product-actions">
+                            <button class="add-to-cart-btn" onclick="addToCartOffer('offer-2')" 
+                                    aria-label="Agregar PlayStation 5 Console al carrito">
+                                🛒 Agregar al Carrito
+                            </button>
+                            <button class="quick-view-btn" onclick="quickViewOffer('offer-2')"
+                                    aria-label="Vista rápida de PlayStation 5 Console">
+                                👁️ Vista Rápida
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Producto en oferta 3 -->
+                    <article class="offer-product-card" data-product-id="offer-3">
+                        <div class="offer-badge-wrapper">
+                            <span class="offer-badge primary">OFERTA</span>
+                            <span class="discount-badge">-50%</span>
+                        </div>
+                        <div class="product-image">
+                            <img src="assets/images/gaming-chair.webp" alt="Silla Gaming Pro" loading="lazy">
+                            <div class="offer-timer" data-timer="259200">
+                                <span class="timer-label">Termina en:</span>
+                                <span class="timer-value">72:00:00</span>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">Silla Gaming Pro RGB</h3>
+                            <div class="product-prices">
+                                <span class="price-original">$399.990</span>
+                                <span class="price-offer">$199.995</span>
+                            </div>
+                            <div class="product-rating">
+                                <span class="stars">⭐⭐⭐⭐⭐</span>
+                                <span class="rating-count">(156 reseñas)</span>
+                            </div>
+                            <div class="offer-features">
+                                <span class="feature">✓ RGB personalizable</span>
+                                <span class="feature">✓ Ergonómica</span>
+                            </div>
+                        </div>
+                        <div class="product-actions">
+                            <button class="add-to-cart-btn" onclick="addToCartOffer('offer-3')" 
+                                    aria-label="Agregar Silla Gaming Pro RGB al carrito">
+                                🛒 Agregar al Carrito
+                            </button>
+                            <button class="quick-view-btn" onclick="quickViewOffer('offer-3')"
+                                    aria-label="Vista rápida de Silla Gaming Pro RGB">
+                                👁️ Vista Rápida
+                            </button>
+                        </div>
+                    </article>
+                </div>
+                
+                <div class="offers-actions">
+                    <button class="view-all-offers-btn" onclick="viewAllOffers()" 
+                            aria-label="Ver todas las ofertas disponibles">
+                        Ver Todas las Ofertas
+                    </button>
+                    <div class="offers-info">
+                        <span class="offers-count">🔥 3 ofertas activas</span>
+                        <span class="offers-timer">⏰ Ofertas por tiempo limitado</span>
                     </div>
                 </div>
             </div>

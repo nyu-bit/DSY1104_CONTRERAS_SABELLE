@@ -445,6 +445,12 @@ function loadHomePage() {
     if (productsGrid) {
         loadProducts(productsGrid);
     }
+    
+    // Inicializar sección de ofertas destacadas
+    const specialOffersSection = document.getElementById('special-offers');
+    if (specialOffersSection) {
+        initSpecialOffers();
+    }
 }
 
 function loadProductsPage() {
@@ -2563,3 +2569,479 @@ function initQuickSearch() {
     // Inicialización
     updateClearButton();
 }
+
+// ================================================
+// LG-016: SECCIÓN DE OFERTAS DESTACADAS
+// ================================================
+
+/**
+ * Inicializa la funcionalidad de ofertas destacadas
+ */
+function initSpecialOffers() {
+    console.log('🔥 Inicializando sección de ofertas destacadas...');
+    
+    // Iniciar contadores de tiempo
+    initOfferTimers();
+    
+    // Configurar interacciones de productos
+    setupOfferProductInteractions();
+    
+    // Cargar datos dinámicos de ofertas
+    loadOfferData();
+    
+    console.log('✅ Ofertas destacadas inicializadas correctamente');
+}
+
+/**
+ * Inicializa los contadores de tiempo para las ofertas
+ */
+function initOfferTimers() {
+    const timers = document.querySelectorAll('.offer-timer');
+    
+    timers.forEach(timer => {
+        const duration = parseInt(timer.dataset.timer) || 86400; // Default 24 horas
+        startOfferCountdown(timer, duration);
+    });
+}
+
+/**
+ * Inicia un countdown para una oferta específica
+ * @param {Element} timerElement - Elemento del timer
+ * @param {number} duration - Duración en segundos
+ */
+function startOfferCountdown(timerElement, duration) {
+    const timerValue = timerElement.querySelector('.timer-value');
+    let remainingTime = duration;
+    
+    function updateTimer() {
+        const hours = Math.floor(remainingTime / 3600);
+        const minutes = Math.floor((remainingTime % 3600) / 60);
+        const seconds = remainingTime % 60;
+        
+        const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        timerValue.textContent = formattedTime;
+        
+        // Cambiar color cuando quede poco tiempo
+        if (remainingTime <= 3600) { // Menos de 1 hora
+            timerValue.style.color = '#ff4444';
+            timerValue.classList.add('urgent');
+        } else if (remainingTime <= 10800) { // Menos de 3 horas
+            timerValue.style.color = '#ffa500';
+            timerValue.classList.add('warning');
+        }
+        
+        remainingTime--;
+        
+        if (remainingTime < 0) {
+            timerValue.textContent = 'EXPIRADO';
+            timerValue.style.color = '#ff4444';
+            clearInterval(interval);
+            
+            // Marcar producto como expirado
+            const productCard = timerElement.closest('.offer-product-card');
+            if (productCard) {
+                productCard.classList.add('expired');
+                const addToCartBtn = productCard.querySelector('.add-to-cart-btn');
+                if (addToCartBtn) {
+                    addToCartBtn.disabled = true;
+                    addToCartBtn.textContent = '⏰ Oferta Expirada';
+                }
+            }
+        }
+    }
+    
+    updateTimer(); // Llamada inicial
+    const interval = setInterval(updateTimer, 1000);
+}
+
+/**
+ * Configura las interacciones de los productos en oferta
+ */
+function setupOfferProductInteractions() {
+    const productCards = document.querySelectorAll('.offer-product-card');
+    
+    productCards.forEach(card => {
+        // Hover effect con tracking
+        card.addEventListener('mouseenter', () => {
+            trackEvent('special_offer_hover', {
+                product_id: card.dataset.productId,
+                section: 'special-offers'
+            });
+        });
+        
+        // Click tracking en la tarjeta
+        card.addEventListener('click', (e) => {
+            if (!e.target.closest('button')) {
+                const productId = card.dataset.productId;
+                quickViewOffer(productId);
+            }
+        });
+    });
+}
+
+/**
+ * Carga datos dinámicos de ofertas desde la base de datos
+ */
+function loadOfferData() {
+    // Aquí se conectaría con la base de datos real
+    // Por ahora usamos datos mock
+    const offerData = {
+        'offer-1': {
+            views: 1247,
+            purchases: 89,
+            stock: 12
+        },
+        'offer-2': {
+            views: 956,
+            purchases: 67,
+            stock: 5
+        },
+        'offer-3': {
+            views: 2103,
+            purchases: 156,
+            stock: 23
+        }
+    };
+    
+    // Actualizar contadores dinámicos
+    Object.keys(offerData).forEach(productId => {
+        updateOfferStats(productId, offerData[productId]);
+    });
+}
+
+/**
+ * Actualiza las estadísticas de una oferta específica
+ * @param {string} productId - ID del producto
+ * @param {Object} stats - Estadísticas del producto
+ */
+function updateOfferStats(productId, stats) {
+    const productCard = document.querySelector(`[data-product-id="${productId}"]`);
+    if (!productCard) return;
+    
+    // Agregar indicador de stock bajo si es necesario
+    if (stats.stock <= 5) {
+        const stockIndicator = document.createElement('div');
+        stockIndicator.className = 'stock-warning';
+        stockIndicator.innerHTML = `⚠️ ¡Solo quedan ${stats.stock} unidades!`;
+        
+        const productInfo = productCard.querySelector('.product-info');
+        productInfo.appendChild(stockIndicator);
+    }
+    
+    // Agregar badge de "Más Vendido" si tiene muchas compras
+    if (stats.purchases > 150) {
+        const bestSellerBadge = document.createElement('span');
+        bestSellerBadge.className = 'best-seller-badge';
+        bestSellerBadge.innerHTML = '🏆 Más Vendido';
+        
+        const badgeWrapper = productCard.querySelector('.offer-badge-wrapper');
+        badgeWrapper.appendChild(bestSellerBadge);
+    }
+}
+
+/**
+ * Maneja el clic en "Agregar al Carrito" para ofertas
+ * @param {string} productId - ID del producto en oferta
+ */
+function addToCartOffer(productId) {
+    console.log(`🛒 Agregando oferta ${productId} al carrito...`);
+    
+    // Tracking del evento
+    trackEvent('add_to_cart_offer', {
+        product_id: productId,
+        section: 'special-offers',
+        offer_type: 'special_discount'
+    });
+    
+    // Obtener datos del producto
+    const productCard = document.querySelector(`[data-product-id="${productId}"]`);
+    if (!productCard) {
+        console.error('Producto no encontrado');
+        return;
+    }
+    
+    const productData = {
+        id: productId,
+        name: productCard.querySelector('.product-title').textContent,
+        price: productCard.querySelector('.price-offer').textContent,
+        originalPrice: productCard.querySelector('.price-original').textContent,
+        image: productCard.querySelector('.product-image img').src,
+        isOffer: true,
+        discount: productCard.querySelector('.discount-badge').textContent
+    };
+    
+    // Simular agregado al carrito
+    addToCart(productData);
+    
+    // Feedback visual
+    showOfferAddedFeedback(productCard);
+    
+    // Actualizar contador de carrito
+    updateCartCounter();
+}
+
+/**
+ * Muestra feedback visual cuando se agrega una oferta al carrito
+ * @param {Element} productCard - Tarjeta del producto
+ */
+function showOfferAddedFeedback(productCard) {
+    const addButton = productCard.querySelector('.add-to-cart-btn');
+    const originalText = addButton.textContent;
+    
+    // Cambiar texto temporalmente
+    addButton.textContent = '✅ ¡Agregado!';
+    addButton.style.background = 'linear-gradient(45deg, #4ade80, #22c55e)';
+    addButton.disabled = true;
+    
+    // Efecto de pulso
+    productCard.style.animation = 'offerAdded 0.6s ease';
+    
+    // Restaurar después de 2 segundos
+    setTimeout(() => {
+        addButton.textContent = originalText;
+        addButton.style.background = '';
+        addButton.disabled = false;
+        productCard.style.animation = '';
+    }, 2000);
+}
+
+/**
+ * Muestra vista rápida de una oferta
+ * @param {string} productId - ID del producto en oferta
+ */
+function quickViewOffer(productId) {
+    console.log(`👁️ Vista rápida de oferta ${productId}`);
+    
+    // Tracking del evento
+    trackEvent('quick_view_offer', {
+        product_id: productId,
+        section: 'special-offers'
+    });
+    
+    // Aquí se implementaría un modal de vista rápida
+    showQuickViewModal(productId);
+}
+
+/**
+ * Muestra un modal de vista rápida para el producto
+ * @param {string} productId - ID del producto
+ */
+function showQuickViewModal(productId) {
+    const productCard = document.querySelector(`[data-product-id="${productId}"]`);
+    if (!productCard) return;
+    
+    // Crear modal
+    const modal = document.createElement('div');
+    modal.className = 'quick-view-modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeQuickViewModal()">&times;</button>
+            <div class="modal-product">
+                <div class="modal-image">
+                    <img src="${productCard.querySelector('.product-image img').src}" 
+                         alt="${productCard.querySelector('.product-title').textContent}">
+                </div>
+                <div class="modal-info">
+                    <h3>${productCard.querySelector('.product-title').textContent}</h3>
+                    <div class="modal-prices">
+                        <span class="price-original">${productCard.querySelector('.price-original').textContent}</span>
+                        <span class="price-offer">${productCard.querySelector('.price-offer').textContent}</span>
+                    </div>
+                    <div class="modal-features">
+                        ${productCard.querySelector('.offer-features').innerHTML}
+                    </div>
+                    <div class="modal-actions">
+                        <button class="add-to-cart-btn" onclick="addToCartOffer('${productId}')">
+                            🛒 Agregar al Carrito
+                        </button>
+                        <button class="view-details-btn" onclick="viewProductDetails('${productId}')">
+                            Ver Detalles Completos
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Agregar estilos del modal si no existen
+    if (!document.getElementById('quick-view-styles')) {
+        const styles = document.createElement('style');
+        styles.id = 'quick-view-styles';
+        styles.textContent = `
+            .quick-view-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+                backdrop-filter: blur(5px);
+            }
+            .modal-content {
+                background: linear-gradient(145deg, rgba(20, 20, 35, 0.95), rgba(30, 30, 50, 0.95));
+                border: 1px solid rgba(57, 255, 20, 0.3);
+                border-radius: var(--border-radius-lg);
+                padding: var(--spacing-xl);
+                max-width: 600px;
+                width: 90%;
+                position: relative;
+            }
+            .modal-close {
+                position: absolute;
+                top: var(--spacing-md);
+                right: var(--spacing-md);
+                background: none;
+                border: none;
+                color: white;
+                font-size: 2rem;
+                cursor: pointer;
+            }
+            .modal-product {
+                display: flex;
+                gap: var(--spacing-lg);
+            }
+            .modal-image img {
+                width: 200px;
+                height: 200px;
+                object-fit: cover;
+                border-radius: var(--border-radius-md);
+            }
+            .modal-info h3 {
+                color: white;
+                font-size: 1.5rem;
+                margin-bottom: var(--spacing-md);
+            }
+            .modal-actions {
+                display: flex;
+                gap: var(--spacing-sm);
+                margin-top: var(--spacing-lg);
+            }
+        `;
+        document.head.appendChild(styles);
+    }
+    
+    // Animación de entrada
+    setTimeout(() => {
+        modal.style.opacity = '1';
+    }, 10);
+}
+
+/**
+ * Cierra el modal de vista rápida
+ */
+function closeQuickViewModal() {
+    const modal = document.querySelector('.quick-view-modal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+/**
+ * Navega a todas las ofertas
+ */
+function viewAllOffers() {
+    console.log('📋 Navegando a todas las ofertas...');
+    
+    // Tracking del evento
+    trackEvent('view_all_offers', {
+        section: 'special-offers',
+        source: 'offers_button'
+    });
+    
+    // Redirigir a página de ofertas o filtrar productos
+    window.location.href = 'productos/?filter=ofertas';
+}
+
+/**
+ * Navega a los detalles completos del producto
+ * @param {string} productId - ID del producto
+ */
+function viewProductDetails(productId) {
+    console.log(`📱 Navegando a detalles del producto ${productId}`);
+    
+    // Tracking del evento
+    trackEvent('view_product_details', {
+        product_id: productId,
+        section: 'special-offers',
+        source: 'quick_view'
+    });
+    
+    // Cerrar modal si está abierto
+    closeQuickViewModal();
+    
+    // Redirigir a página de detalles
+    window.location.href = `productos/detalle.html?id=${productId}`;
+}
+
+// CSS para animaciones específicas de ofertas
+const offerStyles = document.createElement('style');
+offerStyles.textContent = `
+    @keyframes offerAdded {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    .stock-warning {
+        background: linear-gradient(45deg, #ff4444, #ff6666);
+        color: white;
+        padding: var(--spacing-xs);
+        border-radius: var(--border-radius-sm);
+        font-size: 0.8rem;
+        font-weight: bold;
+        text-align: center;
+        margin-top: var(--spacing-xs);
+        animation: pulseWarning 2s infinite;
+    }
+    
+    .best-seller-badge {
+        background: linear-gradient(45deg, #ffd700, #ffed4e);
+        color: #000;
+        padding: var(--spacing-xs);
+        border-radius: var(--border-radius-sm);
+        font-size: 0.75rem;
+        font-weight: bold;
+        text-align: center;
+    }
+    
+    .urgent {
+        animation: urgentBlink 1s infinite;
+    }
+    
+    .warning {
+        animation: warningPulse 2s infinite;
+    }
+    
+    @keyframes pulseWarning {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+    
+    @keyframes urgentBlink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.3; }
+    }
+    
+    @keyframes warningPulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.8; }
+    }
+    
+    .offer-product-card.expired {
+        opacity: 0.6;
+        filter: grayscale(0.5);
+    }
+    
+    .offer-product-card.expired .offer-badge.primary {
+        background: #666;
+        animation: none;
+    }
+`;
+
+document.head.appendChild(offerStyles);
