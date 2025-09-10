@@ -1,4 +1,77 @@
 // ================================
+// FUNCIONES PARA EL NUEVO HERO
+// ================================
+
+function showCommunityModal() {
+    // Crear modal dinámico para la comunidad
+    const modal = document.createElement('div');
+    modal.className = 'modal community-modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>✨ Únete a la Comunidad Level-Up Gamer</h2>
+                <button class="modal-close" onclick="closeCommunityModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>🎮 Conecta con otros gamers, comparte experiencias y recibe ofertas exclusivas.</p>
+                <div class="community-benefits">
+                    <div class="benefit-card">
+                        <span>🎁</span>
+                        <h4>Ofertas Exclusivas</h4>
+                        <p>Descuentos especiales solo para miembros</p>
+                    </div>
+                    <div class="benefit-card">
+                        <span>👥</span>
+                        <h4>Comunidad Activa</h4>
+                        <p>Torneos, eventos y gaming sessions</p>
+                    </div>
+                    <div class="benefit-card">
+                        <span>⚡</span>
+                        <h4>Acceso Anticipado</h4>
+                        <p>Sé el primero en conocer nuevos productos</p>
+                    </div>
+                </div>
+                <div class="community-actions">
+                    <button class="btn-primary-gamer" onclick="joinCommunity()">
+                        Unirme Ahora
+                    </button>
+                    <button class="btn-secondary-gamer" onclick="closeCommunityModal()">
+                        Tal vez después
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    modal.style.display = 'flex';
+    
+    // Focus en el botón de cerrar para accesibilidad
+    setTimeout(() => {
+        const closeBtn = modal.querySelector('.modal-close');
+        if (closeBtn) closeBtn.focus();
+    }, 100);
+}
+
+function closeCommunityModal() {
+    const modal = document.querySelector('.community-modal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+function joinCommunity() {
+    // Aquí iría la lógica de registro a la comunidad
+    showNotification('¡Bienvenido a la comunidad Level-Up Gamer! 🎮', 'success');
+    closeCommunityModal();
+    
+    // Simular registro exitoso
+    if (window.gamificationSystem) {
+        window.gamificationSystem.addPoints('join_community');
+    }
+}
+
+// ================================
 // LEVEL-UP GAMER - JAVASCRIPT PRINCIPAL (LIMPIO)
 // Funcionalidades principales del sitio
 // ================================
@@ -300,3 +373,6 @@ window.closeStudentModal = closeStudentModal;
 window.showTermsModal = showTermsModal;
 window.closeTermsModal = closeTermsModal;
 window.goToCategory = goToCategory;
+window.showCommunityModal = showCommunityModal;
+window.closeCommunityModal = closeCommunityModal;
+window.joinCommunity = joinCommunity;
