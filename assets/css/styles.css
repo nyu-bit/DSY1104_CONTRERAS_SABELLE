@@ -3137,6 +3137,420 @@ a:hover {
   outline-offset: 2px;
 }
 
+/* =====================================
+   LG-018: WIDGET DE REDES SOCIALES
+   ===================================== */
+
+/* Sección principal del widget de redes sociales */
+.social-media-widget {
+  background: linear-gradient(135deg, 
+    rgba(13, 13, 23, 0.95) 0%, 
+    rgba(88, 28, 135, 0.05) 25%,
+    rgba(168, 85, 247, 0.05) 50%,
+    rgba(219, 39, 119, 0.05) 75%,
+    rgba(13, 13, 23, 0.95) 100%);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: var(--border-radius-lg);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: var(--spacing-xl);
+}
+
+.social-media-widget::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent 0%,
+    #a855f7 25%,
+    #ec4899 50%,
+    #8b5cf6 75%,
+    transparent 100%);
+  animation: socialShimmer 4s infinite;
+}
+
+/* Header del widget */
+.social-widget-content {
+  padding: var(--spacing-xl);
+}
+
+.social-widget-header {
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.social-widget-title {
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: var(--spacing-md);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.social-widget-subtitle {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Grid de enlaces sociales */
+.social-links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+/* Enlace social individual */
+.social-link {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  background: linear-gradient(145deg, 
+    rgba(20, 20, 35, 0.8) 0%, 
+    rgba(30, 30, 50, 0.7) 100%);
+  border: 2px solid transparent;
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.social-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%);
+  transition: left 0.5s ease;
+}
+
+.social-link:hover::before {
+  left: 100%;
+}
+
+.social-link:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Contenedor del ícono */
+.social-icon-container {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.social-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: white;
+  position: relative;
+  z-index: 2;
+  transition: transform 0.3s ease;
+}
+
+.social-link:hover .social-icon {
+  transform: scale(1.1);
+}
+
+/* Glow effects específicos para cada plataforma */
+.social-glow {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.social-link:hover .social-glow {
+  opacity: 1;
+}
+
+/* Estilos específicos por plataforma */
+.twitch-link {
+  border-image: linear-gradient(45deg, #9146ff, #772ce8) 1;
+}
+
+.twitch-link:hover {
+  border-image: linear-gradient(45deg, #9146ff, #772ce8) 1;
+  box-shadow: 0 15px 40px rgba(145, 70, 255, 0.3);
+}
+
+.twitch-icon {
+  background: linear-gradient(45deg, #9146ff, #772ce8);
+}
+
+.twitch-glow {
+  background: linear-gradient(45deg, #9146ff, #772ce8);
+  filter: blur(8px);
+}
+
+.discord-link {
+  border-image: linear-gradient(45deg, #5865f2, #4752c4) 1;
+}
+
+.discord-link:hover {
+  border-image: linear-gradient(45deg, #5865f2, #4752c4) 1;
+  box-shadow: 0 15px 40px rgba(88, 101, 242, 0.3);
+}
+
+.discord-icon {
+  background: linear-gradient(45deg, #5865f2, #4752c4);
+}
+
+.discord-glow {
+  background: linear-gradient(45deg, #5865f2, #4752c4);
+  filter: blur(8px);
+}
+
+.instagram-link {
+  border-image: linear-gradient(45deg, #e4405f, #833ab4, #fd1d1d, #fcb045) 1;
+}
+
+.instagram-link:hover {
+  border-image: linear-gradient(45deg, #e4405f, #833ab4, #fd1d1d, #fcb045) 1;
+  box-shadow: 0 15px 40px rgba(228, 64, 95, 0.3);
+}
+
+.instagram-icon {
+  background: linear-gradient(45deg, #e4405f, #833ab4, #fd1d1d, #fcb045);
+}
+
+.instagram-glow {
+  background: linear-gradient(45deg, #e4405f, #833ab4, #fd1d1d, #fcb045);
+  filter: blur(8px);
+}
+
+/* Información del enlace social */
+.social-info {
+  flex: 1;
+}
+
+.social-platform {
+  color: white;
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: var(--spacing-xs);
+}
+
+.social-description {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+  margin-bottom: var(--spacing-xs);
+}
+
+.social-followers {
+  color: #a855f7;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+/* Acción del enlace */
+.social-action {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.social-link:hover .social-action {
+  color: white;
+}
+
+/* Call to Action del widget */
+.social-widget-cta {
+  background: rgba(30, 30, 50, 0.6);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  justify-content: space-between;
+}
+
+.cta-content {
+  flex: 1;
+}
+
+.cta-title {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: var(--spacing-sm);
+}
+
+.cta-description {
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.5;
+}
+
+.enable-notifications-btn {
+  background: linear-gradient(45deg, #a855f7, #ec4899);
+  color: white;
+  border: none;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--border-radius-lg);
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  white-space: nowrap;
+}
+
+.enable-notifications-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(168, 85, 247, 0.3);
+}
+
+/* Estadísticas de la comunidad */
+.community-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--spacing-md);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid rgba(168, 85, 247, 0.2);
+}
+
+.stat-item {
+  text-align: center;
+  padding: var(--spacing-md);
+  background: rgba(20, 20, 35, 0.4);
+  border-radius: var(--border-radius-md);
+  border: 1px solid rgba(168, 85, 247, 0.1);
+}
+
+.stat-number {
+  display: block;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #a855f7;
+  font-family: 'Orbitron', monospace;
+  margin-bottom: var(--spacing-xs);
+}
+
+.stat-label {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Animaciones */
+@keyframes socialShimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stat-item.animate {
+  animation: countUp 0.6s ease;
+}
+
+/* Responsive Design para Widget Social */
+@media (max-width: 768px) {
+  .social-links-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+  
+  .social-widget-cta {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--spacing-md);
+  }
+  
+  .community-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-sm);
+  }
+  
+  .social-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+  }
+  
+  .social-widget-title {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .social-widget-content {
+    padding: var(--spacing-lg);
+  }
+  
+  .social-link {
+    padding: var(--spacing-md);
+  }
+  
+  .community-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .stat-number {
+    font-size: 1.6rem;
+  }
+  
+  .enable-notifications-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Estados de accesibilidad para redes sociales */
+.social-link:focus {
+  outline: 2px solid #a855f7;
+  outline-offset: 2px;
+  border-color: #a855f7;
+}
+
+.enable-notifications-btn:focus {
+  outline: 2px solid #a855f7;
+  outline-offset: 2px;
+}
+
 /* Overlay para mobile */
 .quick-access-overlay {
   position: fixed;

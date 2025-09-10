@@ -4105,3 +4105,303 @@ function announceToScreenReader(message) {
         document.body.removeChild(announcement);
     }, 1000);
 }
+
+// =====================================
+// LG-018: WIDGET DE REDES SOCIALES
+// =====================================
+
+/**
+ * Funcionalidad para el widget de redes sociales
+ * Incluye animaciones, notificaciones y contadores
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    initSocialMediaWidget();
+});
+
+function initSocialMediaWidget() {
+    initNotificationButton();
+    initCommunityStats();
+    initSocialLinksTracking();
+}
+
+/**
+ * Inicializa el botón de notificaciones
+ */
+function initNotificationButton() {
+    const notificationBtn = document.getElementById('enableNotifications');
+    if (!notificationBtn) return;
+    
+    notificationBtn.addEventListener('click', function() {
+        handleNotificationRequest();
+    });
+    
+    // Verificar si las notificaciones ya están habilitadas
+    if ('Notification' in window && Notification.permission === 'granted') {
+        updateNotificationButtonState(true);
+    }
+}
+
+/**
+ * Maneja la solicitud de permisos de notificación
+ */
+async function handleNotificationRequest() {
+    if (!('Notification' in window)) {
+        announceToScreenReader('Las notificaciones no están soportadas en este navegador');
+        return;
+    }
+    
+    const button = document.getElementById('enableNotifications');
+    const originalText = button.innerHTML;
+    
+    // Mostrar estado de carga
+    button.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Habilitando...';
+    button.disabled = true;
+    
+    try {
+        const permission = await Notification.requestPermission();
+        
+        if (permission === 'granted') {
+            updateNotificationButtonState(true);
+            showNotificationSuccessMessage();
+            announceToScreenReader('Notificaciones habilitadas correctamente');
+            
+            // Mostrar notificación de bienvenida
+            setTimeout(() => {
+                showWelcomeNotification();
+            }, 1000);
+        } else {
+            updateNotificationButtonState(false);
+            announceToScreenReader('Permisos de notificación denegados');
+        }
+    } catch (error) {
+        console.error('Error al solicitar permisos de notificación:', error);
+        button.innerHTML = originalText;
+        button.disabled = false;
+        announceToScreenReader('Error al habilitar notificaciones');
+    }
+}
+
+/**
+ * Actualiza el estado visual del botón de notificaciones
+ */
+function updateNotificationButtonState(enabled) {
+    const button = document.getElementById('enableNotifications');
+    if (!button) return;
+    
+    if (enabled) {
+        button.innerHTML = '<i class="fas fa-check" aria-hidden="true"></i> Notificaciones Activas';
+        button.style.background = 'linear-gradient(45deg, #10b981, #059669)';
+        button.disabled = true;
+        button.setAttribute('aria-label', 'Notificaciones ya están habilitadas');
+    } else {
+        button.innerHTML = '<i class="fas fa-bell" aria-hidden="true"></i> Habilitar Notificaciones';
+        button.disabled = false;
+        button.setAttribute('aria-label', 'Habilitar notificaciones de la comunidad');
+    }
+}
+
+/**
+ * Muestra mensaje de éxito para notificaciones
+ */
+function showNotificationSuccessMessage() {
+    const ctaDescription = document.querySelector('.cta-description');
+    if (!ctaDescription) return;
+    
+    const originalText = ctaDescription.textContent;
+    ctaDescription.innerHTML = '<i class="fas fa-check text-green-400" aria-hidden="true"></i> ¡Perfecto! Ahora recibirás notificaciones sobre nuevos lanzamientos, ofertas exclusivas y eventos de la comunidad.';
+    ctaDescription.style.color = '#10b981';
+    
+    // Restaurar texto original después de 5 segundos
+    setTimeout(() => {
+        ctaDescription.textContent = originalText;
+        ctaDescription.style.color = '';
+    }, 5000);
+}
+
+/**
+ * Muestra notificación de bienvenida
+ */
+function showWelcomeNotification() {
+    if (!('Notification' in window) || Notification.permission !== 'granted') return;
+    
+    const notification = new Notification('¡Bienvenido a Level-Up Gamer! 🎮', {
+        body: 'Gracias por unirte a nuestra comunidad. Te notificaremos sobre nuevos juegos, ofertas y eventos especiales.',
+        icon: '/assets/images/logo-icon.png',
+        badge: '/assets/images/logo-icon.png',
+        tag: 'welcome',
+        requireInteraction: false
+    });
+    
+    notification.onclick = function() {
+        window.focus();
+        notification.close();
+    };
+    
+    // Auto cerrar después de 5 segundos
+    setTimeout(() => {
+        notification.close();
+    }, 5000);
+}
+
+/**
+ * Inicializa las estadísticas de la comunidad con animaciones
+ */
+function initCommunityStats() {
+    const stats = [
+        { id: 'stat-followers', target: 125000, suffix: '+' },
+        { id: 'stat-gamers', target: 50000, suffix: '+' },
+        { id: 'stat-reviews', target: 15000, suffix: '+' },
+        { id: 'stat-streams', target: 500, suffix: '/mes' }
+    ];
+    
+    // Usar Intersection Observer para activar animaciones cuando sean visibles
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const stat = stats.find(s => entry.target.id === s.id);
+                if (stat) {
+                    animateCounter(entry.target, stat.target, stat.suffix);
+                    entry.target.classList.add('animate');
+                }
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    stats.forEach(stat => {
+        const element = document.getElementById(stat.id);
+        if (element) {
+            observer.observe(element);
+        }
+    });
+}
+
+/**
+ * Anima un contador numérico
+ */
+function animateCounter(element, target, suffix = '') {
+    const duration = 2000; // 2 segundos
+    const increment = target / (duration / 16); // 60fps
+    let current = 0;
+    
+    const timer = setInterval(() => {
+        current += increment;
+        
+        if (current >= target) {
+            current = target;
+            clearInterval(timer);
+        }
+        
+        const displayValue = Math.floor(current).toLocaleString('es-ES');
+        element.textContent = displayValue + suffix;
+    }, 16);
+    
+    // Anunciar el valor final a lectores de pantalla
+    setTimeout(() => {
+        const finalValue = target.toLocaleString('es-ES') + suffix;
+        const label = element.nextElementSibling?.textContent || 'estadística';
+        announceToScreenReader(`${label}: ${finalValue}`);
+    }, duration + 100);
+}
+
+/**
+ * Inicializa el seguimiento de enlaces sociales
+ */
+function initSocialLinksTracking() {
+    const socialLinks = document.querySelectorAll('.social-link');
+    
+    socialLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            const platform = this.dataset.platform;
+            const url = this.href;
+            
+            // Analytics tracking (simulado)
+            trackSocialClick(platform, url);
+            
+            // Anunciar a lectores de pantalla
+            announceToScreenReader(`Abriendo ${platform} en nueva pestaña`);
+        });
+        
+        // Mejorar la accesibilidad con información adicional
+        link.addEventListener('focus', function() {
+            const platform = this.dataset.platform;
+            announceToScreenReader(`Enlace a ${platform}, se abre en nueva pestaña`);
+        });
+    });
+}
+
+/**
+ * Simula el tracking de clics en redes sociales
+ */
+function trackSocialClick(platform, url) {
+    // En un entorno real, esto enviaría datos a Google Analytics o similar
+    console.log(`Social Click Tracked: ${platform} - ${url}`);
+    
+    // Simular envío de datos de analytics
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'social_click', {
+            platform: platform,
+            url: url,
+            section: 'social_widget'
+        });
+    }
+}
+
+/**
+ * Función utilitaria para anuncios a lectores de pantalla
+ */
+function announceToScreenReader(message) {
+    const announcement = document.createElement('div');
+    announcement.setAttribute('aria-live', 'polite');
+    announcement.setAttribute('aria-atomic', 'true');
+    announcement.className = 'sr-only';
+    announcement.textContent = message;
+    
+    document.body.appendChild(announcement);
+    
+    // Remover después de un momento
+    setTimeout(() => {
+        if (document.body.contains(announcement)) {
+            document.body.removeChild(announcement);
+        }
+    }, 1000);
+}
+
+// Funciones adicionales para mejorar la experiencia del widget
+
+/**
+ * Actualiza dinámicamente las estadísticas (simulado)
+ */
+function updateCommunityStats() {
+    const stats = [
+        { id: 'stat-followers', increment: Math.floor(Math.random() * 10) + 1 },
+        { id: 'stat-gamers', increment: Math.floor(Math.random() * 5) + 1 },
+        { id: 'stat-reviews', increment: Math.floor(Math.random() * 3) + 1 }
+    ];
+    
+    stats.forEach(stat => {
+        const element = document.getElementById(stat.id);
+        if (element) {
+            const currentValue = parseInt(element.textContent.replace(/[^\d]/g, ''));
+            const newValue = currentValue + stat.increment;
+            const suffix = element.textContent.includes('+') ? '+' : '/mes';
+            
+            element.textContent = newValue.toLocaleString('es-ES') + suffix;
+        }
+    });
+}
+
+/**
+ * Inicializa actualizaciones periódicas de estadísticas (opcional)
+ */
+function initPeriodicStatsUpdate() {
+    // Actualizar estadísticas cada 30 segundos (solo como demostración)
+    setInterval(() => {
+        if (document.visibilityState === 'visible') {
+            updateCommunityStats();
+        }
+    }, 30000);
+}
+
+// Inicializar actualizaciones periódicas si se desea (comentado por defecto)
+// document.addEventListener('DOMContentLoaded', initPeriodicStatsUpdate);

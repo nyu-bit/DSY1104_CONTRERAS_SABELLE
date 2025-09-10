@@ -1302,6 +1302,137 @@
         </section>
     </main>
 
+    <!-- Widget de Redes Sociales - LG-018 -->
+    <section class="social-media-widget" 
+             id="social-media-widget"
+             role="region"
+             aria-labelledby="social-widget-title">
+        <div class="container">
+            <div class="social-widget-content">
+                <div class="social-widget-header">
+                    <h3 class="social-widget-title" id="social-widget-title">
+                        🎮 Únete a Nuestra Comunidad Gaming
+                    </h3>
+                    <p class="social-widget-subtitle">
+                        Síguenos en nuestras redes sociales para contenido exclusivo, ofertas especiales y las últimas novedades del mundo gaming
+                    </p>
+                </div>
+                
+                <div class="social-links-grid" 
+                     role="group" 
+                     aria-label="Enlaces a redes sociales de Level-Up Gamer">
+                    
+                    <!-- Twitch -->
+                    <a href="https://twitch.tv/levelupgamer" 
+                       class="social-link twitch-link" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       aria-label="Síguenos en Twitch para streams gaming en vivo">
+                        <div class="social-icon-container">
+                            <div class="social-icon twitch-icon">
+                                <i class="fab fa-twitch" aria-hidden="true"></i>
+                            </div>
+                            <div class="social-glow twitch-glow"></div>
+                        </div>
+                        <div class="social-info">
+                            <h4 class="social-platform">Twitch</h4>
+                            <p class="social-description">Streams en vivo</p>
+                            <span class="social-followers">12.5K seguidores</span>
+                        </div>
+                        <div class="social-action">
+                            <span class="action-text">Seguir</span>
+                            <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+                        </div>
+                    </a>
+
+                    <!-- Discord -->
+                    <a href="https://discord.gg/levelupgamer" 
+                       class="social-link discord-link" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       aria-label="Únete a nuestro servidor de Discord para chat con la comunidad">
+                        <div class="social-icon-container">
+                            <div class="social-icon discord-icon">
+                                <i class="fab fa-discord" aria-hidden="true"></i>
+                            </div>
+                            <div class="social-glow discord-glow"></div>
+                        </div>
+                        <div class="social-info">
+                            <h4 class="social-platform">Discord</h4>
+                            <p class="social-description">Comunidad gamer</p>
+                            <span class="social-followers">8.3K miembros</span>
+                        </div>
+                        <div class="social-action">
+                            <span class="action-text">Unirse</span>
+                            <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+                        </div>
+                    </a>
+
+                    <!-- Instagram -->
+                    <a href="https://instagram.com/levelupgamer" 
+                       class="social-link instagram-link" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       aria-label="Síguenos en Instagram para fotos y videos gaming">
+                        <div class="social-icon-container">
+                            <div class="social-icon instagram-icon">
+                                <i class="fab fa-instagram" aria-hidden="true"></i>
+                            </div>
+                            <div class="social-glow instagram-glow"></div>
+                        </div>
+                        <div class="social-info">
+                            <h4 class="social-platform">Instagram</h4>
+                            <p class="social-description">Fotos y videos</p>
+                            <span class="social-followers">25.7K seguidores</span>
+                        </div>
+                        <div class="social-action">
+                            <span class="action-text">Seguir</span>
+                            <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Call to Action adicional -->
+                <div class="social-widget-cta">
+                    <div class="cta-content">
+                        <h4 class="cta-title">🔔 No te pierdas nada</h4>
+                        <p class="cta-description">
+                            Activa las notificaciones para ser el primero en enterarte de nuevos productos, ofertas flash y eventos especiales
+                        </p>
+                    </div>
+                    <button class="enable-notifications-btn" 
+                            onclick="enableNotifications()"
+                            aria-label="Activar notificaciones push del navegador">
+                        <i class="fas fa-bell" aria-hidden="true"></i>
+                        Activar Notificaciones
+                    </button>
+                </div>
+
+                <!-- Estadísticas de la comunidad -->
+                <div class="community-stats" 
+                     role="region" 
+                     aria-label="Estadísticas de la comunidad Level-Up Gamer">
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="46800">0</span>
+                        <span class="stat-label">Gamers Unidos</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="1247">0</span>
+                        <span class="stat-label">Productos Vendidos</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="98">0</span>
+                        <span class="stat-label">% Satisfacción</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="24">0</span>
+                        <span class="stat-label">Horas Soporte</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -1310,10 +1441,22 @@
                     <h3>Level-Up Gamer</h3>
                     <p>Tu tienda gaming de confianza con los mejores productos y precios del mercado.</p>
                     <div class="social-links">
-                        <a href="#" aria-label="Facebook">📘</a>
-                        <a href="#" aria-label="Twitter">🐦</a>
-                        <a href="#" aria-label="Instagram">📷</a>
-                        <a href="#" aria-label="Twitch">🎮</a>
+                        <a href="https://facebook.com/levelupgamer" 
+                           target="_blank" 
+                           rel="noopener noreferrer" 
+                           aria-label="Visitar página de Facebook de Level-Up Gamer">📘</a>
+                        <a href="https://twitter.com/levelupgamer" 
+                           target="_blank" 
+                           rel="noopener noreferrer" 
+                           aria-label="Seguir en Twitter a Level-Up Gamer">🐦</a>
+                        <a href="https://instagram.com/levelupgamer" 
+                           target="_blank" 
+                           rel="noopener noreferrer" 
+                           aria-label="Ver perfil de Instagram de Level-Up Gamer">📷</a>
+                        <a href="https://twitch.tv/levelupgamer" 
+                           target="_blank" 
+                           rel="noopener noreferrer" 
+                           aria-label="Ver canal de Twitch de Level-Up Gamer">🎮</a>
                     </div>
                 </div>
                 
