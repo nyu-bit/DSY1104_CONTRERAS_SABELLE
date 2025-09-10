@@ -76,11 +76,11 @@
   --transition-normal: 0.3s ease;
   --transition-slow: 0.5s ease;
   
-  /* LG-003: Breakpoints responsive */
-  --breakpoint-mobile: 480px;
-  --breakpoint-tablet: 768px;
-  --breakpoint-desktop: 1024px;
-  --breakpoint-wide: 1280px;
+  /* LG-003: Breakpoints responsive actualizados para LG-121 */
+  --breakpoint-mobile: 480px;       /* Móviles: 320px - 480px */
+  --breakpoint-tablet: 768px;       /* Tablets: 481px - 768px */
+  --breakpoint-desktop: 1024px;     /* Desktop: 769px - 1024px */
+  --breakpoint-wide: 1280px;        /* Wide: 1025px+ */
   
   /* Z-index */
   --z-dropdown: 1000;
@@ -6983,3 +6983,711 @@ img:not([alt]) {
   color: var(--color-primary);
   padding: var(--spacing-xs);
 }
+
+/* ================================================
+   LG-121: SISTEMA RESPONSIVE CON 3 BREAKPOINTS
+   Mobile (320-480px), Tablet (481-768px), Desktop (769px+)
+   ================================================ */
+
+/* ================================================
+   BREAKPOINT 1: MOBILE (320px - 480px)
+   Diseño optimizado para smartphones
+   ================================================ */
+@media (max-width: 480px) {
+    /* Variables específicas para mobile */
+    :root {
+        --container-padding: var(--spacing-sm);
+        --grid-gap: var(--spacing-sm);
+        --font-size-hero: var(--font-size-2xl);
+        --nav-height: 60px;
+    }
+    
+    /* LAYOUT BASE MOBILE */
+    .container {
+        padding: 0 var(--spacing-sm);
+        max-width: 100%;
+    }
+    
+    /* HEADER Y NAVEGACIÓN MOBILE */
+    .header {
+        position: sticky;
+        top: 0;
+        z-index: var(--z-sticky);
+        height: var(--nav-height);
+    }
+    
+    .navbar {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+    
+    .logo {
+        font-size: var(--font-size-lg);
+        margin-bottom: var(--spacing-xs);
+    }
+    
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background: var(--color-surface);
+        border-radius: var(--border-radius-md);
+        padding: var(--spacing-md);
+        gap: var(--spacing-sm);
+        position: absolute;
+        top: 100%;
+        left: 0;
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .nav-links.mobile-open {
+        display: flex;
+    }
+    
+    .nav-links a {
+        padding: var(--spacing-md);
+        text-align: center;
+        border-bottom: 1px solid var(--color-surface-variant);
+    }
+    
+    .nav-links a:last-child {
+        border-bottom: none;
+    }
+    
+    /* Mobile menu toggle */
+    .mobile-menu-toggle {
+        display: flex;
+        flex-direction: column;
+        width: 30px;
+        height: 30px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        justify-content: space-around;
+        z-index: var(--z-dropdown);
+    }
+    
+    .mobile-menu-toggle span {
+        display: block;
+        height: 3px;
+        width: 100%;
+        background: var(--color-secondary);
+        border-radius: 2px;
+        transition: var(--transition-normal);
+    }
+    
+    .mobile-menu-toggle.active span:nth-child(1) {
+        transform: rotate(45deg) translate(6px, 6px);
+    }
+    
+    .mobile-menu-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+    
+    .mobile-menu-toggle.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(6px, -6px);
+    }
+    
+    /* HERO SECTION MOBILE */
+    .hero {
+        min-height: 60vh;
+        padding: var(--spacing-xl) 0;
+    }
+    
+    .hero-content {
+        text-align: center;
+        gap: var(--spacing-md);
+    }
+    
+    .hero-title {
+        font-size: var(--font-size-hero);
+        line-height: 1.2;
+    }
+    
+    .hero-subtitle {
+        font-size: var(--font-size-base);
+        margin: var(--spacing-md) 0;
+    }
+    
+    .hero-actions {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        width: 100%;
+    }
+    
+    .cta-button {
+        width: 100%;
+        min-height: 50px;
+        font-size: var(--font-size-lg);
+    }
+    
+    /* GRID LAYOUTS MOBILE */
+    .products-grid,
+    .categories-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+    
+    /* CARDS MOBILE */
+    .product-card,
+    .category-card {
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .product-card-image {
+        height: 200px;
+    }
+    
+    /* FORMS MOBILE */
+    .form-group {
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .form-input {
+        font-size: 16px; /* Evitar zoom en iOS */
+        padding: var(--spacing-md);
+    }
+    
+    .btn {
+        min-height: 48px;
+        font-size: var(--font-size-base);
+        padding: var(--spacing-md) var(--spacing-lg);
+    }
+    
+    /* CART MOBILE */
+    .cart-items {
+        gap: var(--spacing-sm);
+    }
+    
+    .cart-item {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-sm);
+    }
+    
+    .cart-item-image {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto;
+    }
+    
+    .quantity-controls {
+        justify-content: center;
+        gap: var(--spacing-sm);
+    }
+    
+    /* FOOTER MOBILE */
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-lg);
+    }
+    
+    .footer-section {
+        text-align: center;
+    }
+    
+    /* NOTIFICACIONES MOBILE */
+    .notifications-container {
+        bottom: var(--spacing-sm);
+        left: var(--spacing-sm);
+        right: var(--spacing-sm);
+        top: auto;
+    }
+    
+    .notification {
+        margin-bottom: var(--spacing-sm);
+    }
+    
+    /* OCULTAR ELEMENTOS EN MOBILE */
+    .desktop-only {
+        display: none !important;
+    }
+    
+    /* MOSTRAR ELEMENTOS MOBILE */
+    .mobile-only {
+        display: block !important;
+    }
+}
+
+/* ================================================
+   BREAKPOINT 2: TABLET (481px - 768px)
+   Diseño optimizado para tablets
+   ================================================ */
+@media (min-width: 481px) and (max-width: 768px) {
+    /* Variables específicas para tablet */
+    :root {
+        --container-padding: var(--spacing-md);
+        --grid-gap: var(--spacing-md);
+        --font-size-hero: var(--font-size-3xl);
+        --nav-height: 70px;
+    }
+    
+    /* LAYOUT BASE TABLET */
+    .container {
+        padding: 0 var(--spacing-md);
+        max-width: 100%;
+    }
+    
+    /* HEADER Y NAVEGACIÓN TABLET */
+    .header {
+        height: var(--nav-height);
+    }
+    
+    .navbar {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .logo {
+        font-size: var(--font-size-xl);
+    }
+    
+    .nav-links {
+        display: flex;
+        flex-direction: row;
+        gap: var(--spacing-md);
+        background: transparent;
+        position: static;
+        box-shadow: none;
+        padding: 0;
+    }
+    
+    .nav-links a {
+        padding: var(--spacing-sm) var(--spacing-md);
+        border: none;
+    }
+    
+    .mobile-menu-toggle {
+        display: none;
+    }
+    
+    /* HERO SECTION TABLET */
+    .hero {
+        min-height: 70vh;
+        padding: var(--spacing-2xl) 0;
+    }
+    
+    .hero-content {
+        text-align: center;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .hero-title {
+        font-size: var(--font-size-hero);
+        line-height: 1.1;
+    }
+    
+    .hero-subtitle {
+        font-size: var(--font-size-lg);
+        margin: var(--spacing-lg) 0;
+    }
+    
+    .hero-actions {
+        flex-direction: row;
+        justify-content: center;
+        gap: var(--spacing-lg);
+    }
+    
+    .cta-button {
+        min-width: 200px;
+        min-height: 50px;
+    }
+    
+    /* GRID LAYOUTS TABLET */
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-lg);
+    }
+    
+    .categories-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-lg);
+    }
+    
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-xl);
+    }
+    
+    /* CARDS TABLET */
+    .product-card-image {
+        height: 220px;
+    }
+    
+    /* FORMS TABLET */
+    .form-row {
+        flex-direction: row;
+        gap: var(--spacing-md);
+    }
+    
+    .form-group {
+        flex: 1;
+    }
+    
+    /* CART TABLET */
+    .cart-item {
+        flex-direction: row;
+        align-items: center;
+        text-align: left;
+        gap: var(--spacing-md);
+    }
+    
+    .cart-item-image {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .cart-item-info {
+        flex: 1;
+    }
+    
+    /* FOOTER TABLET */
+    .footer-content {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        text-align: left;
+    }
+    
+    .footer-section {
+        flex: 1;
+        min-width: 200px;
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    /* OCULTAR/MOSTRAR ELEMENTOS TABLET */
+    .mobile-only {
+        display: none !important;
+    }
+    
+    .tablet-only {
+        display: block !important;
+    }
+}
+
+/* ================================================
+   BREAKPOINT 3: DESKTOP (769px+)
+   Diseño optimizado para pantallas grandes
+   ================================================ */
+@media (min-width: 769px) {
+    /* Variables específicas para desktop */
+    :root {
+        --container-padding: var(--spacing-lg);
+        --grid-gap: var(--spacing-lg);
+        --font-size-hero: var(--font-size-5xl);
+        --nav-height: 80px;
+    }
+    
+    /* LAYOUT BASE DESKTOP */
+    .container {
+        padding: 0 var(--spacing-lg);
+        max-width: 1200px;
+    }
+    
+    /* HEADER Y NAVEGACIÓN DESKTOP */
+    .header {
+        height: var(--nav-height);
+    }
+    
+    .navbar {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .logo {
+        font-size: var(--font-size-2xl);
+    }
+    
+    .nav-links {
+        display: flex;
+        flex-direction: row;
+        gap: var(--spacing-lg);
+    }
+    
+    .nav-links a {
+        padding: var(--spacing-md) var(--spacing-lg);
+        font-size: var(--font-size-lg);
+    }
+    
+    .mobile-menu-toggle {
+        display: none;
+    }
+    
+    /* HERO SECTION DESKTOP */
+    .hero {
+        min-height: 80vh;
+        padding: var(--spacing-3xl) 0;
+    }
+    
+    .hero-content {
+        text-align: center;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .hero-title {
+        font-size: var(--font-size-hero);
+        line-height: 1.1;
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    .hero-subtitle {
+        font-size: var(--font-size-xl);
+        margin: var(--spacing-xl) 0;
+    }
+    
+    .hero-actions {
+        flex-direction: row;
+        justify-content: center;
+        gap: var(--spacing-xl);
+    }
+    
+    .cta-button {
+        min-width: 250px;
+        min-height: 60px;
+        font-size: var(--font-size-lg);
+    }
+    
+    /* GRID LAYOUTS DESKTOP */
+    .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--spacing-xl);
+    }
+    
+    .categories-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--spacing-xl);
+    }
+    
+    .features-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--spacing-2xl);
+    }
+    
+    /* CARDS DESKTOP */
+    .product-card-image {
+        height: 250px;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-xl);
+    }
+    
+    /* FORMS DESKTOP */
+    .form-row {
+        flex-direction: row;
+        gap: var(--spacing-lg);
+    }
+    
+    .auth-form {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    /* CART DESKTOP */
+    .cart-layout {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: var(--spacing-2xl);
+    }
+    
+    .cart-item {
+        flex-direction: row;
+        align-items: center;
+        gap: var(--spacing-lg);
+    }
+    
+    .cart-item-image {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .cart-summary {
+        position: sticky;
+        top: var(--spacing-xl);
+    }
+    
+    /* FOOTER DESKTOP */
+    .footer-content {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+    }
+    
+    .footer-section {
+        flex: 1;
+        margin-right: var(--spacing-2xl);
+    }
+    
+    .footer-section:last-child {
+        margin-right: 0;
+    }
+    
+    /* NOTIFICACIONES DESKTOP */
+    .notifications-container {
+        top: var(--spacing-lg);
+        right: var(--spacing-lg);
+        width: 400px;
+        bottom: auto;
+        left: auto;
+    }
+    
+    /* OCULTAR/MOSTRAR ELEMENTOS DESKTOP */
+    .mobile-only,
+    .tablet-only {
+        display: none !important;
+    }
+    
+    .desktop-only {
+        display: block !important;
+    }
+    
+    /* HOVER EFFECTS DESKTOP */
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .category-card:hover {
+        transform: scale(1.05);
+        box-shadow: var(--shadow-xl);
+    }
+}
+
+/* ================================================
+   BREAKPOINT ADICIONAL: WIDE SCREENS (1025px+)
+   Optimización para pantallas muy grandes
+   ================================================ */
+@media (min-width: 1025px) {
+    .container {
+        max-width: 1400px;
+    }
+    
+    .products-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .hero-content {
+        max-width: 1000px;
+    }
+    
+    .hero-title {
+        font-size: 4rem;
+    }
+}
+
+/* ================================================
+   UTILIDADES RESPONSIVE ADICIONALES
+   ================================================ */
+
+/* Ocultar elementos por breakpoint */
+@media (max-width: 480px) {
+    .hide-mobile { display: none !important; }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .hide-tablet { display: none !important; }
+}
+
+@media (min-width: 769px) {
+    .hide-desktop { display: none !important; }
+}
+
+/* Mostrar elementos solo en breakpoints específicos */
+.show-mobile { display: none !important; }
+.show-tablet { display: none !important; }
+.show-desktop { display: none !important; }
+
+@media (max-width: 480px) {
+    .show-mobile { display: block !important; }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .show-tablet { display: block !important; }
+}
+
+@media (min-width: 769px) {
+    .show-desktop { display: block !important; }
+}
+
+/* Flex utilities responsive */
+@media (max-width: 768px) {
+    .flex-mobile-column {
+        flex-direction: column !important;
+    }
+    
+    .text-mobile-center {
+        text-align: center !important;
+    }
+    
+    .w-mobile-full {
+        width: 100% !important;
+    }
+}
+
+/* Grid responsive utilities */
+.grid-responsive {
+    display: grid;
+    gap: var(--spacing-md);
+}
+
+@media (max-width: 480px) {
+    .grid-responsive {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .grid-responsive {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 769px) {
+    .grid-responsive {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* ================================================
+   MEJORAS DE ACCESIBILIDAD RESPONSIVE
+   ================================================ */
+
+/* Touch targets en mobile */
+@media (max-width: 768px) {
+    button,
+    .btn,
+    .clickable {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    .nav-links a {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+/* Foco visible mejorado en diferentes breakpoints */
+@media (max-width: 480px) {
+    *:focus-visible {
+        outline: 3px solid var(--color-secondary);
+        outline-offset: 2px;
+    }
+}
+
+/* ================================================
+   FIN DEL SISTEMA RESPONSIVE LG-121
+   ================================================ */
