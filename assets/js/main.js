@@ -1365,7 +1365,284 @@ function animateCategoriesEntrance() {
 // Inicialización cuando el DOM está listo
 document.addEventListener('DOMContentLoaded', () => {
     initCategoriesTiles();
+    initPromoCarousel();
     
     // Animar entrada de categorías con delay
     setTimeout(animateCategoriesEntrance, 500);
 });
+
+// ================================================
+// LG-013: CARRUSEL DE PROMOCIONES GAMER
+// ================================================
+
+/**
+ * Inicializa el carrusel de promociones con controles accesibles
+ */
+function initPromoCarousel() {
+    const carousel = document.querySelector('.promo-carousel');
+    const slides = document.querySelectorAll('.promo-slide');
+    const prevBtn = document.querySelector('.carousel-prev');
+    const nextBtn = document.querySelector('.carousel-next');
+    const indicators = document.querySelectorAll('.carousel-indicator');
+    const statusElement = document.getElementById('carousel-status');
+    
+    if (!carousel || !slides.length) return;
+    
+    let currentSlide = 0;
+    let autoPlayInterval;
+    let isUserInteracting = false;
+    
+    // Configuración del carrusel
+    const config = {
+        autoPlayDelay: 5000,
+        animationDuration: 600,
+        pauseOnHover: true,
+        pauseOnFocus: true
+    };
+    
+    // Datos de los slides para accesibilidad
+    const slideData = [
+        { title: 'Bundle PS5 Ultimate', description: 'PlayStation 5 con accesorios' },
+        { title: 'PC Gamer RTX 4070', description: 'Computador gaming de alta gama' },
+        { title: 'Setup Gaming Pro', description: 'Kit completo de accesorios' },
+        { title: 'Juegos Triple-A', description: 'Títulos más vendidos con descuento' }
+    ];
+    
+    /**
+     * Cambia al slide especificado
+     * @param {number} index - Índice del slide
+     * @param {string} source - Origen del cambio (auto, manual, keyboard)
+     */
+    function goToSlide(index, source = 'manual') {
+        if (index === currentSlide) return;
+        
+        // Validar índice
+        if (index < 0) index = slides.length - 1;
+        if (index >= slides.length) index = 0;
+        
+        // Actualizar slides
+        slides[currentSlide].classList.remove('active');
+        slides[index].classList.add('active');
+        
+        // Actualizar indicadores
+        indicators[currentSlide].classList.remove('active');
+        indicators[currentSlide].setAttribute('aria-selected', 'false');
+        indicators[index].classList.add('active');
+        indicators[index].setAttribute('aria-selected', 'true');
+        
+        // Actualizar estado para lectores de pantalla
+        const slideInfo = slideData[index];
+        if (statusElement) {
+            statusElement.textContent = `Mostrando promoción ${index + 1} de ${slides.length}: ${slideInfo.title}`;
+        }
+        
+        // Actualizar aria-live del carrusel
+        carousel.setAttribute('aria-label', `Promoción ${index + 1} de ${slides.length}: ${slideInfo.description}`);
+        
+        currentSlide = index;
+        
+        // Tracking de analytics
+        trackCarouselSlide(index, source);
+        
+        // Resetear auto-play si es interacción manual
+        if (source === 'manual' || source === 'keyboard') {
+            isUserInteracting = true;
+            clearAutoPlay();
+            setTimeout(() => {
+                isUserInteracting = false;
+                startAutoPlay();
+            }, 10000); // Pausa 10s después de interacción manual
+        }
+    }
+    
+    /**
+     * Ir al slide anterior
+     */
+    function prevSlide() {
+        goToSlide(currentSlide - 1, 'manual');
+    }
+    
+    /**
+     * Ir al slide siguiente
+     */
+    function nextSlide() {
+        goToSlide(currentSlide + 1, 'manual');
+    }
+    
+    /**
+     * Inicia el auto-play
+     */
+    function startAutoPlay() {
+        if (!config.autoPlayDelay || isUserInteracting) return;
+        
+        clearAutoPlay();
+        autoPlayInterval = setInterval(() => {
+            goToSlide(currentSlide + 1, 'auto');
+        }, config.autoPlayDelay);
+    }
+    
+    /**
+     * Detiene el auto-play
+     */
+    function clearAutoPlay() {
+        if (autoPlayInterval) {
+            clearInterval(autoPlayInterval);
+            autoPlayInterval = null;
+        }
+    }
+    
+    /**
+     * Maneja la navegación por teclado
+     * @param {KeyboardEvent} event
+     */
+    function handleKeyboardNavigation(event) {
+        switch (event.key) {
+            case 'ArrowLeft':
+                event.preventDefault();
+                prevSlide();
+                break;
+            case 'ArrowRight':
+                event.preventDefault();
+                nextSlide();
+                break;
+            case 'Home':
+                event.preventDefault();
+                goToSlide(0, 'keyboard');
+                break;
+            case 'End':
+                event.preventDefault();
+                goToSlide(slides.length - 1, 'keyboard');
+                break;
+        }
+    }
+    
+    /**
+     * Tracking de analytics para carrusel
+     * @param {number} index - Índice del slide
+     * @param {string} source - Origen del cambio
+     */
+    function trackCarouselSlide(index, source) {
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'carousel_slide_view', {
+                'slide_index': index,
+                'slide_title': slideData[index].title,
+                'interaction_source': source,
+                'carousel_section': 'promo_carousel'
+            });
+        }
+        
+        // Tracking local
+        const carouselStats = JSON.parse(localStorage.getItem('carouselStats') || '{}');
+        const slideKey = `slide_${index}`;
+        carouselStats[slideKey] = (carouselStats[slideKey] || 0) + 1;
+        carouselStats.lastViewed = Date.now();
+        localStorage.setItem('carouselStats', JSON.stringify(carouselStats));
+    }
+    
+    // Event Listeners
+    
+    // Botones de navegación
+    if (prevBtn) {
+        prevBtn.addEventListener('click', prevSlide);
+    }
+    
+    if (nextBtn) {
+        nextBtn.addEventListener('click', nextSlide);
+    }
+    
+    // Indicadores
+    indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+            goToSlide(index, 'manual');
+        });
+        
+        // Navegación por teclado en indicadores
+        indicator.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                goToSlide(index, 'keyboard');
+            }
+        });
+    });
+    
+    // Navegación por teclado en el carrusel
+    carousel.addEventListener('keydown', handleKeyboardNavigation);
+    
+    // Pausar auto-play en hover/focus
+    if (config.pauseOnHover) {
+        carousel.addEventListener('mouseenter', clearAutoPlay);
+        carousel.addEventListener('mouseleave', () => {
+            if (!isUserInteracting) startAutoPlay();
+        });
+    }
+    
+    if (config.pauseOnFocus) {
+        carousel.addEventListener('focusin', clearAutoPlay);
+        carousel.addEventListener('focusout', () => {
+            if (!isUserInteracting) {
+                setTimeout(() => startAutoPlay(), 1000);
+            }
+        });
+    }
+    
+    // CTAs de los slides
+    const promoCTAs = document.querySelectorAll('.promo-cta');
+    promoCTAs.forEach((cta, index) => {
+        cta.addEventListener('click', () => {
+            // Tracking de CTA click
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'promo_cta_click', {
+                    'slide_index': index,
+                    'slide_title': slideData[index].title,
+                    'cta_location': 'carousel_slide'
+                });
+            }
+            
+            // Aquí puedes agregar la lógica de navegación específica
+            // Por ejemplo: window.location.href = getPromoURL(index);
+        });
+    });
+    
+    // Swipe/Touch para móvil
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    carousel.addEventListener('touchstart', (event) => {
+        touchStartX = event.changedTouches[0].screenX;
+    });
+    
+    carousel.addEventListener('touchend', (event) => {
+        touchEndX = event.changedTouches[0].screenX;
+        handleSwipe();
+    });
+    
+    function handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = touchStartX - touchEndX;
+        
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+                nextSlide(); // Swipe left = next
+            } else {
+                prevSlide(); // Swipe right = prev
+            }
+        }
+    }
+    
+    // Inicialización
+    goToSlide(0, 'auto');
+    
+    // Iniciar auto-play después de un delay
+    setTimeout(() => {
+        startAutoPlay();
+    }, 2000);
+    
+    // Pausar cuando la página no está visible
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            clearAutoPlay();
+        } else if (!isUserInteracting) {
+            setTimeout(() => startAutoPlay(), 1000);
+        }
+    });
+}

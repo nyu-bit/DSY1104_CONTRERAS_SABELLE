@@ -1147,6 +1147,376 @@ a:hover {
   outline-offset: 4px;
 }
 
+/* ================================================
+   LG-013: CARRUSEL DE PROMOCIONES GAMER
+   ================================================ */
+
+/* Sección del carrusel */
+.promo-carousel-section {
+  background: linear-gradient(135deg, 
+    rgba(15, 15, 25, 0.95) 0%, 
+    rgba(25, 25, 35, 0.98) 50%, 
+    rgba(15, 15, 25, 0.95) 100%);
+  border-top: 1px solid rgba(57, 255, 20, 0.2);
+  border-bottom: 1px solid rgba(57, 255, 20, 0.2);
+}
+
+/* Wrapper principal del carrusel */
+.promo-carousel-wrapper {
+  position: relative;
+  max-width: 100%;
+  margin: var(--spacing-2xl) 0;
+}
+
+/* Contenedor del carrusel */
+.promo-carousel {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--border-radius-xl);
+  background: var(--gradient-surface);
+  min-height: 400px;
+  box-shadow: var(--shadow-xl);
+}
+
+/* Slides individuales */
+.promo-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  min-height: 400px;
+}
+
+.promo-slide.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.promo-slide.prev {
+  transform: translateX(-100%);
+}
+
+/* Fondo del slide */
+.promo-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+.promo-gradient {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, 
+    rgba(57, 255, 20, 0.1) 0%, 
+    rgba(25, 25, 35, 0.9) 30%, 
+    rgba(15, 15, 25, 0.95) 100%);
+}
+
+.promo-gradient-2 {
+  background: linear-gradient(135deg, 
+    rgba(255, 57, 57, 0.1) 0%, 
+    rgba(35, 25, 25, 0.9) 30%, 
+    rgba(25, 15, 15, 0.95) 100%);
+}
+
+.promo-gradient-3 {
+  background: linear-gradient(135deg, 
+    rgba(255, 215, 0, 0.1) 0%, 
+    rgba(35, 30, 15, 0.9) 30%, 
+    rgba(25, 20, 10, 0.95) 100%);
+}
+
+.promo-gradient-4 {
+  background: linear-gradient(135deg, 
+    rgba(138, 43, 226, 0.1) 0%, 
+    rgba(30, 20, 35, 0.9) 30%, 
+    rgba(20, 15, 25, 0.95) 100%);
+}
+
+/* Contenido del slide */
+.promo-content {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-2xl);
+  align-items: center;
+  padding: var(--spacing-2xl);
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Texto promocional */
+.promo-text {
+  padding: var(--spacing-lg);
+}
+
+.promo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  background: var(--gradient-glow);
+  color: var(--color-bg);
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--border-radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  margin-bottom: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.promo-badge-premium {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+}
+
+.promo-badge-combo {
+  background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+}
+
+.promo-badge-hot {
+  background: linear-gradient(135deg, #8A2BE2 0%, #DA70D6 100%);
+}
+
+.promo-title {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: var(--color-secondary);
+  margin-bottom: var(--spacing-md);
+  text-shadow: var(--shadow-text);
+}
+
+.promo-description {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-lg);
+  line-height: 1.6;
+  margin-bottom: var(--spacing-xl);
+}
+
+/* Precios */
+.promo-pricing {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xl);
+  flex-wrap: wrap;
+}
+
+.promo-old-price {
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+  font-size: var(--font-size-lg);
+}
+
+.promo-new-price {
+  color: var(--color-secondary);
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  text-shadow: var(--shadow-glow);
+}
+
+.promo-discount {
+  background: var(--color-accent);
+  color: var(--color-bg);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+}
+
+.promo-label {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
+}
+
+/* CTA del slide */
+.promo-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  background: var(--gradient-glow);
+  color: var(--color-bg);
+  border: none;
+  padding: var(--spacing-md) var(--spacing-xl);
+  border-radius: var(--border-radius-lg);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-normal);
+  box-shadow: var(--shadow-lg);
+}
+
+.promo-cta:hover,
+.promo-cta:focus {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: var(--shadow-xl);
+  filter: brightness(1.1);
+}
+
+/* Visual del slide */
+.promo-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: var(--spacing-xl);
+}
+
+.promo-icon {
+  width: 120px;
+  height: 120px;
+  background: var(--gradient-glow);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-5xl);
+  color: var(--color-bg);
+  box-shadow: var(--shadow-xl);
+  position: relative;
+  z-index: 2;
+}
+
+/* Elementos flotantes */
+.promo-elements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.floating-promo-element {
+  position: absolute;
+  font-size: var(--font-size-2xl);
+  animation: floatPromo 3s ease-in-out infinite;
+}
+
+.floating-promo-element:nth-child(1) {
+  top: 20%;
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.floating-promo-element:nth-child(2) {
+  top: 60%;
+  right: 20%;
+  animation-delay: 1s;
+}
+
+.floating-promo-element:nth-child(3) {
+  bottom: 20%;
+  left: 30%;
+  animation-delay: 2s;
+}
+
+/* Animación de flotación */
+@keyframes floatPromo {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(5deg); }
+}
+
+/* Controles del carrusel */
+.carousel-controls {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Botones de navegación */
+.carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background: rgba(25, 25, 35, 0.8);
+  border: 2px solid rgba(57, 255, 20, 0.3);
+  border-radius: 50%;
+  color: var(--color-secondary);
+  font-size: var(--font-size-lg);
+  cursor: pointer;
+  transition: var(--transition-normal);
+  pointer-events: auto;
+  backdrop-filter: blur(10px);
+}
+
+.carousel-prev {
+  left: var(--spacing-lg);
+}
+
+.carousel-next {
+  right: var(--spacing-lg);
+}
+
+.carousel-nav:hover,
+.carousel-nav:focus {
+  background: rgba(57, 255, 20, 0.2);
+  border-color: var(--color-secondary);
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Indicadores */
+.carousel-indicators {
+  position: absolute;
+  bottom: var(--spacing-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: var(--spacing-sm);
+  pointer-events: auto;
+}
+
+.carousel-indicator {
+  width: 12px;
+  height: 12px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: var(--transition-normal);
+}
+
+.carousel-indicator.active {
+  background: var(--color-secondary);
+  box-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+}
+
+.carousel-indicator:hover,
+.carousel-indicator:focus {
+  background: rgba(57, 255, 20, 0.7);
+  transform: scale(1.2);
+}
+
+/* Accesibilidad */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .category-card {
   background: var(--gradient-surface);
   border: 1px solid rgba(57, 255, 20, 0.2);
@@ -1922,6 +2292,74 @@ a:hover {
     align-items: center;
   }
   
+  /* Carrusel responsive para mobile */
+  .promo-carousel {
+    min-height: 300px;
+  }
+  
+  .promo-slide {
+    min-height: 300px;
+  }
+  
+  .promo-content {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    text-align: center;
+  }
+  
+  .promo-text {
+    padding: var(--spacing-md);
+  }
+  
+  .promo-title {
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .promo-description {
+    font-size: var(--font-size-base);
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .promo-pricing {
+    justify-content: center;
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .promo-visual {
+    order: -1;
+    padding: var(--spacing-md);
+  }
+  
+  .promo-icon {
+    width: 80px;
+    height: 80px;
+    font-size: var(--font-size-3xl);
+  }
+  
+  .carousel-nav {
+    width: 40px;
+    height: 40px;
+    font-size: var(--font-size-base);
+  }
+  
+  .carousel-prev {
+    left: var(--spacing-sm);
+  }
+  
+  .carousel-next {
+    right: var(--spacing-sm);
+  }
+  
+  .carousel-indicators {
+    bottom: var(--spacing-sm);
+  }
+  
+  .floating-promo-element {
+    font-size: var(--font-size-lg);
+  }
+  
   .products-grid {
     grid-template-columns: 1fr;
   }
@@ -2012,6 +2450,40 @@ a:hover {
     width: 70px;
     height: 70px;
     font-size: var(--font-size-xl);
+  }
+  
+  /* Carrusel responsive para tablet */
+  .promo-carousel {
+    min-height: 350px;
+  }
+  
+  .promo-slide {
+    min-height: 350px;
+  }
+  
+  .promo-content {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xl);
+    padding: var(--spacing-xl);
+    text-align: center;
+  }
+  
+  .promo-title {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .promo-description {
+    font-size: var(--font-size-lg);
+  }
+  
+  .promo-visual {
+    order: -1;
+  }
+  
+  .promo-icon {
+    width: 100px;
+    height: 100px;
+    font-size: var(--font-size-4xl);
   }
   
   .products-grid {
