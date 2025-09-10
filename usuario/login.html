@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión | Level-Up Gamer</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="../index.html" class="logo">🎮 LEVEL-UP GAMER</a>
+                <ul class="nav-links">
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="../productos/">Productos</a></li>
+                    <li><a href="../carrito/">Carrito <span class="cart-count" id="cartCount">0</span></a></li>
+                    <li><a href="../usuario/">Usuario</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main class="main">
+        <section class="section">
+            <div class="container">
+                <div class="auth-container">
+                    <div class="auth-form-container">
+                        <div class="auth-header">
+                            <h1>🔑 Iniciar Sesión</h1>
+                            <p>Accede a tu cuenta gamer</p>
+                        </div>
+
+                        <!-- Formulario de login -->
+                        <form class="auth-form" id="loginForm">
+                            <div class="form-group">
+                                <label for="email">Correo Electrónico</label>
+                                <input type="email" id="email" name="email" required 
+                                       placeholder="tu@email.com">
+                                <div class="error-message" id="emailError"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password">Contraseña</label>
+                                <input type="password" id="password" name="password" required 
+                                       placeholder="Tu contraseña">
+                                <div class="error-message" id="passwordError"></div>
+                            </div>
+
+                            <div class="form-options">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="rememberMe" name="rememberMe">
+                                    <span class="checkmark"></span>
+                                    Recordarme
+                                </label>
+                                <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                            </div>
+
+                            <button type="submit" class="cta-button">
+                                Iniciar Sesión
+                            </button>
+
+                            <div class="form-footer">
+                                <p>¿No tienes cuenta? <a href="register.html">Regístrate aquí</a></p>
+                            </div>
+                        </form>
+
+                        <!-- Usuarios de prueba -->
+                        <div class="demo-users">
+                            <h3>👥 Usuarios de Prueba</h3>
+                            <div class="demo-user-grid">
+                                <button class="demo-user-btn" onclick="fillDemoUser('admin@levelup.com', 'admin123')">
+                                    👑 Admin
+                                </button>
+                                <button class="demo-user-btn" onclick="fillDemoUser('user@levelup.com', 'user123')">
+                                    👤 Usuario
+                                </button>
+                                <button class="demo-user-btn" onclick="fillDemoUser('gamer@levelup.com', 'gamer123')">
+                                    🎮 Gamer Pro
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Información adicional -->
+                    <div class="auth-info">
+                        <h3>💡 Beneficios de tu cuenta</h3>
+                        <ul class="benefits-list">
+                            <li>🎯 Acceso a ofertas exclusivas</li>
+                            <li>📦 Seguimiento de pedidos en tiempo real</li>
+                            <li>❤️ Lista de deseos personalizada</li>
+                            <li>🎁 Sistema de puntos y recompensas</li>
+                            <li>🏆 Niveles y logros gaming</li>
+                            <li>📱 Notificaciones de nuevos productos</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 Level-Up Gamer. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../assets/js/products-database.js"></script>
+    <script src="../assets/js/accessibility.js"></script>
+    <script src="../assets/js/cart.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>

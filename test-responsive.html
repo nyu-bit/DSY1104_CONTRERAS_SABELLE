@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Responsive LG-121 - Gaming Zone</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        /* Estilos específicos para la página de prueba */
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+        
+        .test-section {
+            margin-bottom: var(--spacing-2xl);
+            padding: var(--spacing-lg);
+            background: var(--color-surface);
+            border-radius: var(--border-radius-lg);
+            border: 1px solid var(--color-surface-variant);
+        }
+        
+        .test-grid {
+            display: grid;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .test-item {
+            padding: var(--spacing-md);
+            background: var(--color-surface-variant);
+            border-radius: var(--border-radius-md);
+            text-align: center;
+        }
+        
+        .breakpoint-info {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: var(--color-secondary);
+            color: var(--color-primary);
+            padding: var(--spacing-sm);
+            border-radius: var(--border-radius-md);
+            font-weight: bold;
+            z-index: 9999;
+            font-size: 14px;
+        }
+        
+        .responsive-demo {
+            border: 2px dashed var(--color-accent);
+            padding: var(--spacing-lg);
+            text-align: center;
+            margin: var(--spacing-lg) 0;
+        }
+        
+        .card-demo {
+            background: var(--color-surface);
+            border: 1px solid var(--color-surface-variant);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .nav-demo {
+            background: var(--color-surface);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .form-demo {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        /* Demo específico para cada breakpoint */
+        @media (max-width: 480px) {
+            .test-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .mobile-demo {
+                display: block;
+                background: var(--color-accent);
+                color: var(--color-text-primary);
+                padding: var(--spacing-md);
+                border-radius: var(--border-radius-md);
+                margin: var(--spacing-md) 0;
+            }
+            
+            .tablet-demo,
+            .desktop-demo {
+                display: none;
+            }
+        }
+        
+        @media (min-width: 481px) and (max-width: 768px) {
+            .test-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .tablet-demo {
+                display: block;
+                background: var(--color-warning);
+                color: var(--color-primary);
+                padding: var(--spacing-md);
+                border-radius: var(--border-radius-md);
+                margin: var(--spacing-md) 0;
+            }
+            
+            .mobile-demo,
+            .desktop-demo {
+                display: none;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .test-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .desktop-demo {
+                display: block;
+                background: var(--color-success);
+                color: var(--color-text-primary);
+                padding: var(--spacing-md);
+                border-radius: var(--border-radius-md);
+                margin: var(--spacing-md) 0;
+            }
+            
+            .mobile-demo,
+            .tablet-demo {
+                display: none;
+            }
+        }
+        
+        /* Ocultar elementos inicialmente */
+        .mobile-demo,
+        .tablet-demo,
+        .desktop-demo {
+            display: none;
+        }
+    </style>
+</head>
+<body class="debug-responsive">
+    <!-- Indicador de breakpoint -->
+    <div class="breakpoint-info" id="breakpoint-indicator">
+        <span id="current-breakpoint">Cargando...</span>
+        <span id="viewport-size"></span>
+    </div>
+
+    <!-- Header con navegación responsive -->
+    <header class="header">
+        <nav class="navbar container">
+            <div class="logo">
+                <span class="logo-text">Gaming Zone</span>
+            </div>
+            
+            <div class="nav-links">
+                <a href="#inicio">Inicio</a>
+                <a href="#productos">Productos</a>
+                <a href="#categorias">Categorías</a>
+                <a href="#soporte">Soporte</a>
+                <a href="#usuario">Usuario</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="test-container">
+        <h1>LG-121: Test de Sistema Responsive</h1>
+        <p>Esta página permite validar el funcionamiento del sistema responsive en los 3 breakpoints definidos.</p>
+
+        <!-- Indicadores de breakpoint activo -->
+        <div class="mobile-demo">
+            🔱 MODO MOBILE (≤480px) ACTIVO
+        </div>
+        <div class="tablet-demo">
+            📱 MODO TABLET (481-768px) ACTIVO
+        </div>
+        <div class="desktop-demo">
+            💻 MODO DESKTOP (≥769px) ACTIVO
+        </div>
+
+        <!-- Sección 1: Grid Responsive -->
+        <section class="test-section">
+            <h2>1. Grid System Responsive</h2>
+            <p>Grid que se adapta: 1 col (mobile), 2 cols (tablet), 3 cols (desktop)</p>
+            
+            <div class="test-grid">
+                <div class="test-item">Item 1</div>
+                <div class="test-item">Item 2</div>
+                <div class="test-item">Item 3</div>
+                <div class="test-item">Item 4</div>
+                <div class="test-item">Item 5</div>
+                <div class="test-item">Item 6</div>
+            </div>
+        </section>
+
+        <!-- Sección 2: Navegación Mobile -->
+        <section class="test-section">
+            <h2>2. Navegación Mobile</h2>
+            <div class="nav-demo">
+                <p><strong>Mobile:</strong> Menú hamburguesa colapsado</p>
+                <p><strong>Tablet/Desktop:</strong> Navegación horizontal visible</p>
+                <p class="show-mobile">✅ Menú mobile visible - Prueba el botón hamburguesa</p>
+                <p class="show-tablet">✅ Navegación tablet visible</p>
+                <p class="show-desktop">✅ Navegación desktop visible</p>
+            </div>
+        </section>
+
+        <!-- Sección 3: Cards Products -->
+        <section class="test-section">
+            <h2>3. Cards de Productos</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-card-image" style="background: linear-gradient(45deg, var(--color-accent), var(--color-secondary)); display: flex; align-items: center; justify-content: center; color: var(--color-text-primary);">
+                        Imagen Responsive
+                    </div>
+                    <div class="product-card-content">
+                        <h3>Producto Demo 1</h3>
+                        <p>Descripción del producto que se adapta al breakpoint</p>
+                        <div class="product-card-price">$99.99</div>
+                        <button class="btn btn-primary w-mobile-full">Agregar al Carrito</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-card-image" style="background: linear-gradient(45deg, var(--color-warning), var(--color-info)); display: flex; align-items: center; justify-content: center; color: var(--color-text-primary);">
+                        Imagen Responsive
+                    </div>
+                    <div class="product-card-content">
+                        <h3>Producto Demo 2</h3>
+                        <p>Descripción del producto que se adapta al breakpoint</p>
+                        <div class="product-card-price">$149.99</div>
+                        <button class="btn btn-primary w-mobile-full">Agregar al Carrito</button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-card-image" style="background: linear-gradient(45deg, var(--color-error), var(--color-success)); display: flex; align-items: center; justify-content: center; color: var(--color-text-primary);">
+                        Imagen Responsive
+                    </div>
+                    <div class="product-card-content">
+                        <h3>Producto Demo 3</h3>
+                        <p>Descripción del producto que se adapta al breakpoint</p>
+                        <div class="product-card-price">$79.99</div>
+                        <button class="btn btn-primary w-mobile-full">Agregar al Carrito</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 4: Formularios Responsive -->
+        <section class="test-section">
+            <h2>4. Formularios Responsive</h2>
+            <div class="form-demo">
+                <form class="auth-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="test-name">Nombre</label>
+                            <input type="text" id="test-name" class="form-input" placeholder="Tu nombre">
+                        </div>
+                        <div class="form-group">
+                            <label for="test-email">Email</label>
+                            <input type="email" id="test-email" class="form-input" placeholder="tu@email.com">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="test-message">Mensaje</label>
+                        <textarea id="test-message" class="form-input" rows="4" placeholder="Tu mensaje aquí..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-mobile-full">Enviar Formulario</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Sección 5: Utilidades Responsive -->
+        <section class="test-section">
+            <h2>5. Utilidades Responsive</h2>
+            
+            <div class="responsive-demo">
+                <h3>Elementos Condicionales</h3>
+                <p class="show-mobile" style="background: var(--color-accent); padding: var(--spacing-sm); border-radius: var(--border-radius-sm);">
+                    👋 Solo visible en MOBILE
+                </p>
+                <p class="show-tablet" style="background: var(--color-warning); color: var(--color-primary); padding: var(--spacing-sm); border-radius: var(--border-radius-sm);">
+                    👋 Solo visible en TABLET
+                </p>
+                <p class="show-desktop" style="background: var(--color-success); padding: var(--spacing-sm); border-radius: var(--border-radius-sm);">
+                    👋 Solo visible en DESKTOP
+                </p>
+            </div>
+
+            <div class="responsive-demo">
+                <h3>Texto Adaptativo</h3>
+                <p class="text-mobile-center">Este texto se centra en mobile</p>
+                
+                <div class="flex-mobile-column" style="display: flex; gap: var(--spacing-md); justify-content: space-between;">
+                    <div style="background: var(--color-surface-variant); padding: var(--spacing-md); border-radius: var(--border-radius-sm);">Flex Item 1</div>
+                    <div style="background: var(--color-surface-variant); padding: var(--spacing-md); border-radius: var(--border-radius-sm);">Flex Item 2</div>
+                    <div style="background: var(--color-surface-variant); padding: var(--spacing-md); border-radius: var(--border-radius-sm);">Flex Item 3</div>
+                </div>
+                <p><small>👆 Se vuelve columna en mobile</small></p>
+            </div>
+        </section>
+
+        <!-- Sección 6: Touch Gestures (Solo Mobile) -->
+        <section class="test-section show-mobile">
+            <h2>6. Gestos Táctiles (Mobile)</h2>
+            <div class="responsive-demo">
+                <p>📱 En dispositivos móviles puedes:</p>
+                <ul style="text-align: left; margin: var(--spacing-md) 0;">
+                    <li>Deslizar hacia la derecha para abrir el menú</li>
+                    <li>Deslizar hacia la izquierda para cerrar el menú</li>
+                    <li>Tocar botones con targets de 44px mínimo</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Sección 7: Información Técnica -->
+        <section class="test-section">
+            <h2>7. Información Técnica</h2>
+            <div id="tech-info">
+                <p><strong>Viewport actual:</strong> <span id="viewport-width">0</span> x <span id="viewport-height">0</span></p>
+                <p><strong>Breakpoint:</strong> <span id="current-bp">Detectando...</span></p>
+                <p><strong>Dispositivo:</strong> <span id="device-type">Detectando...</span></p>
+                <p><strong>Soporte táctil:</strong> <span id="touch-support">Detectando...</span></p>
+                <p><strong>Orientación:</strong> <span id="orientation">Detectando...</span></p>
+            </div>
+        </section>
+
+        <!-- Botones de Prueba -->
+        <section class="test-section">
+            <h2>8. Controles de Prueba</h2>
+            <div style="display: flex; gap: var(--spacing-md); flex-wrap: wrap; justify-content: center;">
+                <button class="btn btn-secondary" onclick="toggleMobileMenu()">Toggle Menú Mobile</button>
+                <button class="btn btn-secondary" onclick="showBreakpointInfo()">Info Breakpoint</button>
+                <button class="btn btn-secondary" onclick="testNotification()">Test Notificación</button>
+                <button class="btn btn-secondary" onclick="updateLayout()">Actualizar Layout</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Gaming Zone</h3>
+                    <p>Test de sistema responsive LG-121</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Breakpoints</h4>
+                    <ul>
+                        <li>Mobile: ≤480px</li>
+                        <li>Tablet: 481-768px</li>
+                        <li>Desktop: ≥769px</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Funcionalidades</h4>
+                    <ul>
+                        <li>✅ Menú mobile</li>
+                        <li>✅ Grid responsive</li>
+                        <li>✅ Touch gestures</li>
+                        <li>✅ Optimización de imágenes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Contenedor de notificaciones -->
+    <div class="notifications-container" id="notifications-container" aria-live="polite" aria-label="Notificaciones del sistema"></div>
+
+    <!-- Scripts -->
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/responsive.js"></script>
+    <script>
+        // Función para actualizar información en tiempo real
+        function updateViewportInfo() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            
+            document.getElementById('viewport-width').textContent = width;
+            document.getElementById('viewport-height').textContent = height;
+            document.getElementById('viewport-size').textContent = `${width}x${height}`;
+            
+            // Detectar breakpoint
+            let breakpoint = 'desktop';
+            if (width <= 480) breakpoint = 'mobile';
+            else if (width <= 768) breakpoint = 'tablet';
+            
+            document.getElementById('current-breakpoint').textContent = breakpoint.toUpperCase();
+            document.getElementById('current-bp').textContent = breakpoint;
+            
+            // Detectar tipo de dispositivo
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const isTablet = /(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(navigator.userAgent);
+            
+            let deviceType = 'Desktop';
+            if (isMobile && !isTablet) deviceType = 'Mobile';
+            else if (isTablet) deviceType = 'Tablet';
+            
+            document.getElementById('device-type').textContent = deviceType;
+            
+            // Soporte táctil
+            const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            document.getElementById('touch-support').textContent = hasTouch ? 'Sí' : 'No';
+            
+            // Orientación
+            const orientation = window.innerHeight > window.innerWidth ? 'Portrait' : 'Landscape';
+            document.getElementById('orientation').textContent = orientation;
+        }
+
+        // Funciones de prueba
+        function toggleMobileMenu() {
+            if (window.responsiveSystem) {
+                window.responsiveSystem.toggleMobileMenu();
+            }
+        }
+
+        function showBreakpointInfo() {
+            if (window.responsiveSystem) {
+                const bp = window.responsiveSystem.getBreakpoint();
+                alert(`Breakpoint actual: ${bp}\nAncho: ${window.innerWidth}px\nAlto: ${window.innerHeight}px`);
+            }
+        }
+
+        function testNotification() {
+            if (window.cartManager && window.cartManager.showCartNotification) {
+                window.cartManager.showCartNotification('Prueba de notificación responsive', 'info');
+            } else {
+                alert('Notificación de prueba activada');
+            }
+        }
+
+        function updateLayout() {
+            if (window.responsiveSystem) {
+                window.responsiveSystem.updateLayout();
+                alert('Layout actualizado para el breakpoint actual');
+            }
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            updateViewportInfo();
+            
+            // Actualizar info en resize
+            window.addEventListener('resize', updateViewportInfo);
+            
+            // Actualizar cada segundo para capturar cambios
+            setInterval(updateViewportInfo, 1000);
+            
+            console.log('✅ LG-121: Página de prueba responsive cargada');
+        });
+
+        // Precargar imágenes responsive demo
+        const demoImages = [
+            'assets/images/product1_mobile.jpg',
+            'assets/images/product1_tablet.jpg', 
+            'assets/images/product1_desktop.jpg'
+        ];
+
+        demoImages.forEach(src => {
+            const img = new Image();
+            img.src = src;
+        });
+    </script>
+</body>
+</html>

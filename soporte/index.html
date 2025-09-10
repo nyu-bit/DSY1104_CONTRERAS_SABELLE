@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soporte Técnico | Level-Up Gamer</title>
+    <meta name="description" content="Soporte técnico especializado para gamers. Contacta nuestros expertos vía WhatsApp.">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="../index.html" class="logo" aria-label="Level-Up Gamer - Inicio">
+                    🎮 LEVEL-UP GAMER
+                </a>
+                
+                <button class="mobile-menu-toggle" aria-label="Abrir menú móvil" id="mobileMenuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="../productos/">Productos</a></li>
+                    <li><a href="../carrito/">Carrito <span class="cart-count" id="cartCount">0</span></a></li>
+                    <li><a href="../usuario/">Usuario</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Hero Section -->
+        <section class="hero support-hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        🔧 SOPORTE <span class="text-glow">TÉCNICO</span> GAMER
+                    </h1>
+                    <p class="hero-subtitle">
+                        Nuestros expertos están listos para ayudarte con cualquier problema técnico. 
+                        ¡Contacta nuestro soporte especializado vía WhatsApp!
+                    </p>
+                    <div class="hero-actions">
+                        <button class="cta-button" onclick="openWhatsAppSupport()">
+                            📱 Contactar por WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Servicios de Soporte -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">🛠️ Servicios de Soporte</h2>
+                <div class="support-services-grid">
+                    <div class="service-card">
+                        <div class="service-icon">🖥️</div>
+                        <h3>Soporte PC Gaming</h3>
+                        <p>Configuración, optimización y troubleshooting para PCs gaming</p>
+                        <ul class="service-features">
+                            <li>Instalación de hardware</li>
+                            <li>Optimización de rendimiento</li>
+                            <li>Solución de problemas</li>
+                            <li>Actualización de drivers</li>
+                        </ul>
+                        <button class="service-button" onclick="contactSupport('PC Gaming')">
+                            Contactar Especialista
+                        </button>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-icon">🎮</div>
+                        <h3>Soporte Consolas</h3>
+                        <p>Asistencia técnica para PlayStation, Xbox y Nintendo Switch</p>
+                        <ul class="service-features">
+                            <li>Configuración inicial</li>
+                            <li>Problemas de conectividad</li>
+                            <li>Actualizaciones de sistema</li>
+                            <li>Reparaciones menores</li>
+                        </ul>
+                        <button class="service-button" onclick="contactSupport('Consolas')">
+                            Contactar Especialista
+                        </button>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-icon">🎧</div>
+                        <h3>Soporte Periféricos</h3>
+                        <p>Configuración y soporte para mouse, teclados, auriculares y más</p>
+                        <ul class="service-features">
+                            <li>Configuración de software</li>
+                            <li>Macros y perfiles</li>
+                            <li>Calibración de audio</li>
+                            <li>Problemas de compatibilidad</li>
+                        </ul>
+                        <button class="service-button" onclick="contactSupport('Periféricos')">
+                            Contactar Especialista
+                        </button>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-icon">🌐</div>
+                        <h3>Soporte de Red</h3>
+                        <p>Optimización de conexión para gaming online</p>
+                        <ul class="service-features">
+                            <li>Configuración de router</li>
+                            <li>Reducción de latencia</li>
+                            <li>Port forwarding</li>
+                            <li>Problemas de NAT</li>
+                        </ul>
+                        <button class="service-button" onclick="contactSupport('Red Gaming')">
+                            Contactar Especialista
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Horarios de Atención -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">⏰ Horarios de Atención</h2>
+                <div class="schedule-grid">
+                    <div class="schedule-card">
+                        <h3>📱 WhatsApp Support</h3>
+                        <div class="schedule-times">
+                            <div class="schedule-day">
+                                <span class="day">Lunes - Viernes</span>
+                                <span class="time">9:00 - 20:00</span>
+                            </div>
+                            <div class="schedule-day">
+                                <span class="day">Sábados</span>
+                                <span class="time">10:00 - 18:00</span>
+                            </div>
+                            <div class="schedule-day">
+                                <span class="day">Domingos</span>
+                                <span class="time">12:00 - 17:00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="schedule-card">
+                        <h3>🔧 Soporte Técnico Especializado</h3>
+                        <div class="schedule-times">
+                            <div class="schedule-day">
+                                <span class="day">Lunes - Viernes</span>
+                                <span class="time">10:00 - 19:00</span>
+                            </div>
+                            <div class="schedule-day">
+                                <span class="day">Sábados</span>
+                                <span class="time">11:00 - 17:00</span>
+                            </div>
+                            <div class="schedule-day emergency">
+                                <span class="day">🚨 Emergencias</span>
+                                <span class="time">24/7</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Rápido -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">❓ Preguntas Frecuentes</h2>
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>🖥️ ¿Cómo optimizo mi PC para gaming?</h4>
+                            <span class="faq-toggle">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Para optimizar tu PC gaming:</p>
+                            <ul>
+                                <li>Actualiza todos los drivers de GPU</li>
+                                <li>Cierra programas innecesarios</li>
+                                <li>Configura el modo de alto rendimiento</li>
+                                <li>Limpia archivos temporales</li>
+                                <li>Verifica que no haya malware</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>🎮 Mi consola no se conecta a internet</h4>
+                            <span class="faq-toggle">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Soluciones comunes:</p>
+                            <ul>
+                                <li>Reinicia tu router y consola</li>
+                                <li>Verifica la contraseña WiFi</li>
+                                <li>Usa conexión por cable si es posible</li>
+                                <li>Verifica configuración de DNS</li>
+                                <li>Contacta nuestro soporte para ayuda avanzada</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>🎧 Mi headset no tiene audio</h4>
+                            <span class="faq-toggle">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Pasos de solución:</p>
+                            <ul>
+                                <li>Verifica que esté bien conectado</li>
+                                <li>Revisa el volumen del sistema</li>
+                                <li>Configura como dispositivo predeterminado</li>
+                                <li>Actualiza drivers de audio</li>
+                                <li>Prueba en otro dispositivo</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>⚡ Tengo lag en juegos online</h4>
+                            <span class="faq-toggle">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Para reducir el lag:</p>
+                            <ul>
+                                <li>Usa conexión por cable ethernet</li>
+                                <li>Cierra aplicaciones que usen internet</li>
+                                <li>Configura QoS en tu router</li>
+                                <li>Elige servidores más cercanos</li>
+                                <li>Considera actualizar tu plan de internet</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contacto de Emergencia -->
+        <section class="section emergency-support">
+            <div class="container">
+                <div class="emergency-card">
+                    <div class="emergency-icon">🚨</div>
+                    <h2>Soporte de Emergencia 24/7</h2>
+                    <p>¿Tienes un problema crítico que no puede esperar? Nuestro equipo de emergencia está disponible las 24 horas.</p>
+                    <button class="emergency-button" onclick="openEmergencySupport()">
+                        🆘 Contactar Emergencia
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Level-Up Gamer</h3>
+                    <p>Tu tienda gaming de confianza con soporte técnico especializado.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Soporte</h4>
+                    <ul>
+                        <li><a href="#" onclick="openWhatsAppSupport()">WhatsApp Support</a></li>
+                        <li><a href="#" onclick="openEmergencySupport()">Soporte Emergencia</a></li>
+                        <li><a href="#" onclick="showContactModal()">Contacto General</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Level-Up Gamer. Todos los derechos reservados.</p>
+                <p>Soporte técnico especializado para gamers</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../assets/js/support.js"></script>
+    <script src="../assets/js/main.js"></script>
+
+    <script>
+        // Funciones específicas de soporte
+        function openWhatsAppSupport() {
+            const message = encodeURIComponent('¡Hola! Necesito ayuda con soporte técnico de Level-Up Gamer.');
+            const phoneNumber = '56912345678'; // Número de WhatsApp
+            const whatsappURL = `https://wa.me/${phoneNumber}?text=${message}`;
+            window.open(whatsappURL, '_blank');
+        }
+
+        function contactSupport(serviceType) {
+            const message = encodeURIComponent(`¡Hola! Necesito ayuda con ${serviceType}. ¿Pueden asistirme?`);
+            const phoneNumber = '56912345678';
+            const whatsappURL = `https://wa.me/${phoneNumber}?text=${message}`;
+            window.open(whatsappURL, '_blank');
+        }
+
+        function openEmergencySupport() {
+            const message = encodeURIComponent('🚨 EMERGENCIA: Tengo un problema crítico que requiere atención inmediata.');
+            const phoneNumber = '56987654321'; // Número de emergencia
+            const whatsappURL = `https://wa.me/${phoneNumber}?text=${message}`;
+            window.open(whatsappURL, '_blank');
+        }
+
+        function toggleFAQ(element) {
+            const faqItem = element.parentElement;
+            const answer = faqItem.querySelector('.faq-answer');
+            const toggle = element.querySelector('.faq-toggle');
+            
+            if (answer.style.display === 'block') {
+                answer.style.display = 'none';
+                toggle.textContent = '+';
+                faqItem.classList.remove('active');
+            } else {
+                // Cerrar otros FAQs abiertos
+                document.querySelectorAll('.faq-item.active').forEach(item => {
+                    item.querySelector('.faq-answer').style.display = 'none';
+                    item.querySelector('.faq-toggle').textContent = '+';
+                    item.classList.remove('active');
+                });
+                
+                answer.style.display = 'block';
+                toggle.textContent = '-';
+                faqItem.classList.add('active');
+            }
+        }
+    </script>
+
+    <!-- LG-120: Sistema de accesibilidad -->
+    <script src="../assets/js/products-database.js"></script>
+    <script src="../assets/js/accessibility.js"></script>
+    <script src="../assets/js/responsive.js"></script>
+    <script src="../assets/js/cart.js"></script>
+</body>
+</html>

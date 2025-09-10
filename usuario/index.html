@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área de Usuario | Level-Up Gamer</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="../index.html" class="logo">🎮 LEVEL-UP GAMER</a>
+                <ul class="nav-links">
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="../productos/">Productos</a></li>
+                    <li><a href="../carrito/">Carrito <span class="cart-count" id="cartCount">0</span></a></li>
+                    <li><a href="#" class="active">Usuario</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main class="main">
+        <!-- Hero de usuario -->
+        <section class="hero" style="min-height: 40vh;">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Área de Usuario</h1>
+                    <p>Gestiona tu cuenta, pedidos y preferencias gaming</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contenido de usuario -->
+        <section class="section">
+            <div class="container">
+                <!-- Usuario no logueado -->
+                <div class="user-auth" id="userAuth">
+                    <div class="auth-container">
+                        <div class="auth-options">
+                            <div class="auth-card">
+                                <h2>🔑 Iniciar Sesión</h2>
+                                <p>Accede a tu cuenta para ver tus pedidos y preferencias</p>
+                                <a href="login.html" class="cta-button">Iniciar Sesión</a>
+                            </div>
+                            
+                            <div class="auth-card">
+                                <h2>👤 Crear Cuenta</h2>
+                                <p>Únete a la comunidad Level-Up Gamer y obtén beneficios exclusivos</p>
+                                <a href="register.html" class="product-button">Registrarse</a>
+                            </div>
+                        </div>
+                        
+                        <div class="benefits">
+                            <h3>🎁 Beneficios de crear tu cuenta</h3>
+                            <ul class="benefits-list">
+                                <li>✅ Historial de compras</li>
+                                <li>✅ Ofertas exclusivas</li>
+                                <li>✅ Seguimiento de pedidos</li>
+                                <li>✅ Lista de deseos</li>
+                                <li>✅ Puntos de recompensa</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Usuario logueado -->
+                <div class="user-dashboard" id="userDashboard" style="display: none;">
+                    <div class="dashboard-header">
+                        <div class="user-info">
+                            <h2>¡Bienvenido, <span id="userName">Usuario</span>!</h2>
+                            <p>Gestiona tu cuenta y preferencias</p>
+                        </div>
+                        <button class="product-button" onclick="logout()">Cerrar Sesión</button>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <h3>📦 Mis Pedidos</h3>
+                            <p>Ver historial de compras</p>
+                            <a href="#" class="card-link">Ver pedidos</a>
+                        </div>
+
+                        <div class="dashboard-card">
+                            <h3>❤️ Lista de Deseos</h3>
+                            <p>Productos guardados</p>
+                            <a href="#" class="card-link">Ver lista</a>
+                        </div>
+
+                        <div class="dashboard-card">
+                            <h3>⚙️ Configuración</h3>
+                            <p>Editar perfil y preferencias</p>
+                            <a href="#" class="card-link">Configurar</a>
+                        </div>
+
+                        <div class="dashboard-card">
+                            <h3>🎁 Puntos de Recompensa</h3>
+                            <p>Ver puntos acumulados</p>
+                            <a href="#" class="card-link">Ver puntos</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 Level-Up Gamer. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../assets/js/products-database.js"></script>
+    <script src="../assets/js/accessibility.js"></script>
+    <script src="../assets/js/responsive.js"></script>
+    <script src="../assets/js/cart.js"></script>
+    <script src="../assets/js/user.js"></script>
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>
