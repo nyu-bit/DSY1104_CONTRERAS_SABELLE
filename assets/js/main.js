@@ -690,3 +690,395 @@ window.levelUpGamer = {
     filterByCategory,
     goToProducts
 };
+
+// ================================
+// LG-010: FUNCIONALIDADES DEL NAVBAR
+// ================================
+
+// Inicializar navbar
+function initNavbar() {
+    const mobileToggle = document.getElementById('mobileToggle');
+    const navLinks = document.getElementById('navLinks');
+    const userToggle = document.getElementById('userToggle');
+    const userDropdown = document.getElementById('userDropdown');
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const cartLink = document.getElementById('cartLink');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const header = document.querySelector('.header');
+
+    // Toggle menú móvil con accesibilidad mejorada
+    if (mobileToggle && navLinks) {
+        mobileToggle.addEventListener('click', function() {
+            const isActive = navLinks.classList.contains('active');
+            
+            navLinks.classList.toggle('active');
+            mobileToggle.classList.toggle('active');
+            
+            // Actualizar atributos ARIA
+            mobileToggle.setAttribute('aria-expanded', !isActive);
+            navLinks.setAttribute('aria-hidden', isActive);
+            
+            // Gestionar foco y navegación por teclado
+            if (!isActive) {
+                // Menú abierto - foco en primer enlace
+                const firstLink = navLinks.querySelector('a');
+                if (firstLink) firstLink.focus();
+                
+                // Trap focus en el menú móvil
+                trapFocusInMobileMenu();
+            } else {
+                // Menú cerrado - devolver foco al toggle
+                mobileToggle.focus();
+            }
+            
+            // Animar hamburger
+            animateHamburger(!isActive);
+        });
+
+        // Cerrar menú móvil con Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+                closeMobileMenu();
+            }
+        });
+
+        // Cerrar menú móvil al hacer clic fuera
+        document.addEventListener('click', function(e) {
+            if (!mobileToggle.contains(e.target) && !navLinks.contains(e.target)) {
+                closeMobileMenu();
+            }
+        });
+    }
+
+    // Toggle menú de usuario con accesibilidad mejorada
+    if (userToggle && userDropdown) {
+        userToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const isOpen = userDropdown.classList.contains('active');
+            
+            userDropdown.classList.toggle('active');
+            userToggle.setAttribute('aria-expanded', !isOpen);
+            userDropdown.setAttribute('aria-hidden', isOpen);
+            
+            // Gestionar foco
+            if (!isOpen) {
+                const firstItem = userDropdown.querySelector('a[role="menuitem"]');
+                if (firstItem) {
+                    firstItem.setAttribute('tabindex', '0');
+                    firstItem.focus();
+                }
+            } else {
+                userToggle.focus();
+                resetUserDropdownTabindex();
+            }
+        });
+
+        // Navegación por teclado en dropdown
+        userDropdown.addEventListener('keydown', function(e) {
+            handleDropdownKeyNavigation(e, userDropdown);
+        });
+
+        // Cerrar dropdown al hacer click fuera
+        document.addEventListener('click', function(e) {
+            if (!userToggle.contains(e.target) && !userDropdown.contains(e.target)) {
+                closeUserDropdown();
+            }
+        });
+
+        // Cerrar con Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && userDropdown.classList.contains('active')) {
+                closeUserDropdown();
+            }
+        });
+    }
+
+    // Funcionalidad de búsqueda mejorada
+    if (searchInput && searchBtn) {
+        // Búsqueda con Enter
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                performSearch(this.value.trim());
+            }
+        });
+
+        // Búsqueda con botón
+        searchBtn.addEventListener('click', function() {
+            performSearch(searchInput.value.trim());
+        });
+
+        // Auto-sugerencias (implementación básica)
+        let searchTimeout;
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                showSearchSuggestions(this.value.trim());
+            }, 300);
+        });
+    }
+
+    // Actualizar contador del carrito
+    updateCartCounter();
+
+    // Header scroll behavior
+    if (header) {
+        let lastScrollY = window.scrollY;
+        
+        window.addEventListener('scroll', function() {
+            const currentScrollY = window.scrollY;
+            
+            // Agregar clase scrolled cuando se hace scroll
+            if (currentScrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+            
+            // Auto-hide en mobile cuando se hace scroll hacia abajo
+            if (window.innerWidth <= 768) {
+                if (currentScrollY > lastScrollY && currentScrollY > 200) {
+                    header.classList.add('hidden');
+                } else {
+                    header.classList.remove('hidden');
+                }
+            }
+            
+            lastScrollY = currentScrollY;
+        });
+    }
+
+    // Logout functionality
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            handleLogout();
+        });
+    }
+
+    // Inicializar estado del usuario
+    updateUserNavbar();
+}
+
+// Funciones auxiliares para el navbar
+function animateHamburger(isActive) {
+    const lines = document.querySelectorAll('.hamburger-line');
+    lines.forEach((line, index) => {
+        if (isActive) {
+            if (index === 0) line.style.transform = 'rotate(45deg) translate(5px, 5px)';
+            if (index === 1) line.style.opacity = '0';
+            if (index === 2) line.style.transform = 'rotate(-45deg) translate(7px, -6px)';
+        } else {
+            line.style.transform = '';
+            line.style.opacity = '';
+        }
+    });
+}
+
+function trapFocusInMobileMenu() {
+    const navLinks = document.getElementById('navLinks');
+    const focusableElements = navLinks.querySelectorAll('a[href]');
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    navLinks.addEventListener('keydown', function(e) {
+        if (e.key === 'Tab') {
+            if (e.shiftKey) {
+                if (document.activeElement === firstElement) {
+                    e.preventDefault();
+                    lastElement.focus();
+                }
+            } else {
+                if (document.activeElement === lastElement) {
+                    e.preventDefault();
+                    firstElement.focus();
+                }
+            }
+        }
+    });
+}
+
+function closeMobileMenu() {
+    const mobileToggle = document.getElementById('mobileToggle');
+    const navLinks = document.getElementById('navLinks');
+    
+    if (navLinks && navLinks.classList.contains('active')) {
+        navLinks.classList.remove('active');
+        mobileToggle.classList.remove('active');
+        mobileToggle.setAttribute('aria-expanded', 'false');
+        navLinks.setAttribute('aria-hidden', 'true');
+        animateHamburger(false);
+        mobileToggle.focus();
+    }
+}
+
+function closeUserDropdown() {
+    const userToggle = document.getElementById('userToggle');
+    const userDropdown = document.getElementById('userDropdown');
+    
+    if (userDropdown && userDropdown.classList.contains('active')) {
+        userDropdown.classList.remove('active');
+        userToggle.setAttribute('aria-expanded', 'false');
+        userDropdown.setAttribute('aria-hidden', 'true');
+        resetUserDropdownTabindex();
+        userToggle.focus();
+    }
+}
+
+function resetUserDropdownTabindex() {
+    const items = document.querySelectorAll('.user-dropdown a[role="menuitem"]');
+    items.forEach(item => item.setAttribute('tabindex', '-1'));
+}
+
+function handleDropdownKeyNavigation(e, dropdown) {
+    const items = dropdown.querySelectorAll('a[role="menuitem"]:not([style*="display: none"])');
+    const currentIndex = Array.from(items).indexOf(document.activeElement);
+    
+    switch (e.key) {
+        case 'ArrowDown':
+            e.preventDefault();
+            const nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
+            items[nextIndex].focus();
+            break;
+        case 'ArrowUp':
+            e.preventDefault();
+            const prevIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
+            items[prevIndex].focus();
+            break;
+        case 'Home':
+            e.preventDefault();
+            items[0].focus();
+            break;
+        case 'End':
+            e.preventDefault();
+            items[items.length - 1].focus();
+            break;
+    }
+}
+
+function showSearchSuggestions(query) {
+    // Implementación básica de sugerencias
+    if (query.length < 2) return;
+    
+    // Aquí se podría implementar una búsqueda en tiempo real
+    // Por ahora, solo log para desarrollo
+    console.log('Buscando sugerencias para:', query);
+}
+
+// Función de búsqueda unificada
+function performSearch(query) {
+    if (!query) {
+        showNotification('Por favor ingresa un término de búsqueda', 'warning');
+        return;
+    }
+
+    console.log('Buscando:', query);
+    
+    // Si estamos en la página de productos, filtrar directamente
+    if (window.location.pathname.includes('productos')) {
+        if (typeof filterProducts === 'function') {
+            filterProducts(query);
+        }
+    } else {
+        // Redirigir a la página de productos con el término de búsqueda
+        window.location.href = `productos/?search=${encodeURIComponent(query)}`;
+    }
+}
+
+// Función unificada de logout
+function handleLogout() {
+    if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+        user = null;
+        localStorage.removeItem('levelup_user');
+        updateUserNavbar();
+        showNotification('Sesión cerrada exitosamente', 'success');
+        
+        // Redirigir a la página principal si estamos en una página de usuario
+        if (window.location.pathname.includes('usuario')) {
+            window.location.href = '../index.html';
+        }
+    }
+}
+
+// Función unificada para actualizar contador del carrito
+function updateCartCounter() {
+    const cartCountElement = document.getElementById('cartCount');
+    const cartLink = document.getElementById('cartLink');
+    
+    if (cartCountElement) {
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCountElement.textContent = totalItems;
+        
+        // Actualizar aria-label del carrito
+        if (cartLink) {
+            cartLink.setAttribute('aria-label', `Ver carrito de compras - ${totalItems} productos`);
+        }
+        
+        // Agregar animación si hay items
+        if (totalItems > 0) {
+            cartCountElement.classList.add('pulse');
+            setTimeout(() => cartCountElement.classList.remove('pulse'), 1000);
+        }
+    }
+}
+
+// Actualizar estado del usuario en el navbar
+function updateUserNavbar() {
+    const userToggle = document.getElementById('userToggle');
+    const userText = userToggle?.querySelector('.user-text');
+    const userLoggedInElements = document.querySelectorAll('.user-logged-in');
+    const userGuestElements = document.querySelectorAll('.user-dropdown a:not(.user-logged-in)');
+
+    if (user) {
+        // Usuario logueado
+        if (userText) {
+            userText.textContent = user.username || user.email || 'Usuario';
+        }
+        
+        userLoggedInElements.forEach(el => el.style.display = 'block');
+        userGuestElements.forEach(el => el.style.display = 'none');
+    } else {
+        // Usuario no logueado
+        if (userText) {
+            userText.textContent = 'Usuario';
+        }
+        
+        userLoggedInElements.forEach(el => el.style.display = 'none');
+        userGuestElements.forEach(el => el.style.display = 'block');
+    }
+}
+
+// Hacer navbar sticky en scroll
+function initStickyNavbar() {
+    const header = document.querySelector('.header');
+    if (!header) return;
+
+    let lastScrollY = window.scrollY;
+    
+    window.addEventListener('scroll', () => {
+        const currentScrollY = window.scrollY;
+        
+        if (currentScrollY > 100) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+        
+        // Ocultar/mostrar navbar en scroll
+        if (currentScrollY > lastScrollY && currentScrollY > 200) {
+            header.classList.add('hidden');
+        } else {
+            header.classList.remove('hidden');
+        }
+        
+        lastScrollY = currentScrollY;
+    });
+}
+
+// Inicializar todas las funcionalidades cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    initNavbar();
+    initStickyNavbar();
+    updateCartCounter();
+});

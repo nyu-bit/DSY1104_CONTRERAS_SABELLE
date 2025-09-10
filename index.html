@@ -1,68 +1,222 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="gamer">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level-Up Gamer - Tu Tienda Gaming Definitiva</title>
+    <title>LEVEL-UP Gamer - Tu Tienda Gaming Definitiva</title>
     <meta name="description" content="Descubre los mejores productos gaming: consolas, videojuegos, accesorios y más. Precios increíbles y envío gratis.">
-    <link rel="stylesheet" href="assets/css/styles.css">
+    
+    <!-- LG-002: Tipografías Roboto y Orbitron -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Estilos principales -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+    
+    <!-- LG-004: Iconografía gamer -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <!-- Notificaciones -->
     <div class="notifications-container" id="notificationsContainer"></div>
 
-    <!-- Header -->
-    <header class="header">
+    <!-- LG-010: Header - Navbar gamer con logo y carrito -->
+    <header class="header" role="banner">
         <div class="container">
-            <nav class="nav">
-                <a href="index.html" class="logo" aria-label="Level-Up Gamer - Inicio">
-                    🎮 LEVEL-UP GAMER
+            <nav class="navbar" role="navigation" aria-label="Navegación principal">
+                <!-- Logo gamer -->
+                <a href="index.html" class="logo" aria-label="Level-Up Gamer - Ir al inicio">
+                    <i class="fas fa-gamepad" aria-hidden="true"></i>
+                    <span class="logo-text">LEVEL-UP</span>
+                    <span class="logo-accent">GAMER</span>
                 </a>
                 
-                <button class="mobile-menu-toggle" aria-label="Abrir menú móvil" id="mobileMenuToggle">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-
-                <ul class="nav-links" id="navLinks">
-                    <li><a href="index.html" aria-current="page">Inicio</a></li>
-                    <li><a href="productos/">Productos</a></li>
-                    <li><a href="carrito/">Carrito <span class="cart-count" id="cartCount">0</span></a></li>
-                    <li><a href="usuario/">Usuario</a></li>
-                    <li class="user-status" id="userStatus" style="display: none;">
-                        <div class="user-level-info">
-                            <span class="user-level" id="userLevelDisplay">Nivel 1: Noob</span>
-                            <span class="user-points" id="userPointsDisplay">0</span> pts
-                        </div>
+                <!-- Enlaces de navegación principal -->
+                <ul class="nav-links" id="navLinks" role="menubar">
+                    <li role="none">
+                        <a href="index.html" role="menuitem" aria-current="page" tabindex="0">
+                            <i class="fas fa-home" aria-hidden="true"></i>
+                            <span>Inicio</span>
+                        </a>
+                    </li>
+                    <li role="none">
+                        <a href="productos/" role="menuitem" tabindex="0">
+                            <i class="fas fa-box" aria-hidden="true"></i>
+                            <span>Productos</span>
+                        </a>
+                    </li>
+                    <li role="none">
+                        <a href="#categorias" role="menuitem" tabindex="0">
+                            <i class="fas fa-th-large" aria-hidden="true"></i>
+                            <span>Categorías</span>
+                        </a>
+                    </li>
+                    <li role="none">
+                        <a href="soporte/" role="menuitem" tabindex="0">
+                            <i class="fas fa-headset" aria-hidden="true"></i>
+                            <span>Soporte</span>
+                        </a>
                     </li>
                 </ul>
+
+                <!-- Área de acciones: búsqueda, carrito y usuario -->
+                <div class="nav-actions">
+                    <!-- Búsqueda -->
+                    <div class="search-container" role="search">
+                        <label for="searchInput" class="sr-only">Buscar productos</label>
+                        <input type="search" 
+                               class="search-input" 
+                               placeholder="Buscar productos gaming..." 
+                               aria-label="Buscar productos"
+                               id="searchInput"
+                               autocomplete="off"
+                               spellcheck="false">
+                        <button type="button" class="search-btn" aria-label="Realizar búsqueda" id="searchBtn">
+                            <i class="fas fa-search" aria-hidden="true"></i>
+                        </button>
+                    </div>
+
+                    <!-- Carrito de compras -->
+                    <a href="carrito/" class="cart-link" aria-label="Ver carrito de compras - 0 productos" id="cartLink">
+                        <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+                        <span class="cart-text">Carrito</span>
+                        <span class="cart-count" id="cartCount" aria-live="polite">0</span>
+                    </a>
+
+                    <!-- Menú de usuario -->
+                    <div class="user-menu">
+                        <button type="button" 
+                                class="user-toggle" 
+                                aria-label="Menú de usuario" 
+                                aria-expanded="false"
+                                aria-haspopup="true"
+                                id="userToggle">
+                            <i class="fas fa-user" aria-hidden="true"></i>
+                            <span class="user-text">Usuario</span>
+                            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                        </button>
+                        <div class="user-dropdown" 
+                             id="userDropdown" 
+                             role="menu" 
+                             aria-labelledby="userToggle"
+                             aria-hidden="true">
+                            <a href="usuario/login.html" role="menuitem" tabindex="-1">
+                                <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+                                <span>Iniciar Sesión</span>
+                            </a>
+                            <a href="usuario/register.html" role="menuitem" tabindex="-1">
+                                <i class="fas fa-user-plus" aria-hidden="true"></i>
+                                <span>Registrarse</span>
+                            </a>
+                            <div class="dropdown-divider" role="separator"></div>
+                            <a href="usuario/" class="user-logged-in" style="display: none;" role="menuitem" tabindex="-1">
+                                <i class="fas fa-user-circle" aria-hidden="true"></i>
+                                <span>Mi Perfil</span>
+                            </a>
+                            <a href="#" class="user-logged-in" style="display: none;" id="logoutBtn" role="menuitem" tabindex="-1">
+                                <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+                                <span>Cerrar Sesión</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Toggle móvil -->
+                <button class="mobile-toggle" 
+                        aria-label="Menú de navegación móvil" 
+                        aria-expanded="false"
+                        aria-controls="navLinks"
+                        id="mobileToggle">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="sr-only">Menú</span>
+                </button>
             </nav>
         </div>
     </header>
 
     <!-- Main Content -->
     <main class="main">
-        <!-- Hero Section -->
-        <section class="hero">
+        <!-- Hero Section - PC Factory Style -->
+        <section class="hero-pcfactory">
             <div class="container">
-                <div class="hero-content">
-                    <h1 class="hero-title">
-                        LEVEL-UP TU <span class="text-glow">EXPERIENCIA</span> GAMING
-                    </h1>
-                    <p class="hero-subtitle">
-                        Descubre los mejores productos gaming del mercado. Consolas, juegos, accesorios y más con la mejor calidad y precios increíbles.
-                    </p>
-                    <div class="hero-actions">
-                        <a href="productos/" class="cta-button">
-                            Explorar Productos
-                        </a>
-                        <a href="#featured" class="hero-button">
-                            Ver Ofertas
-                        </a>
+                <!-- Banners principales -->
+                <div class="hero-banners">
+                    <!-- Banner principal -->
+                    <div class="main-banner">
+                        <div class="banner-overlay"></div>
+                        <div class="banner-content">
+                            <div class="banner-badge">🎮 NUEVO</div>
+                            <h1 class="banner-title">
+                                LEVEL-UP TU <span class="text-glow">EXPERIENCIA</span> GAMING
+                            </h1>
+                            <p class="banner-subtitle">
+                                Los mejores productos gaming al mejor precio. Consolas, juegos, accesorios y más.
+                            </p>
+                            <div class="banner-actions">
+                                <a href="productos/" class="btn-primary">
+                                    🎯 Explorar Productos
+                                </a>
+                                <a href="#featured" class="btn-secondary">
+                                    🔥 Ver Ofertas
+                                </a>
+                            </div>
+                        </div>
+                        <div class="banner-image">
+                            <div class="floating-elements">
+                                <div class="floating-icon">🎮</div>
+                                <div class="floating-icon">🖱️</div>
+                                <div class="floating-icon">⌨️</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Banners laterales -->
+                    <div class="side-banners">
+                        <!-- Descuento Duoc UC -->
+                        <div class="side-banner duoc-banner">
+                            <div class="side-banner-content">
+                                <div class="discount-badge">20% OFF</div>
+                                <h3>🎓 Estudiantes Duoc UC</h3>
+                                <p>Descuento especial con tu correo @duocuc.cl</p>
+                                <button class="btn-small" onclick="openDuocModal()">
+                                    Obtener Descuento
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Sistema de Referidos -->
+                        <div class="side-banner referral-banner">
+                            <div class="side-banner-content">
+                                <h3>👥 Refiere y Gana</h3>
+                                <p><strong>$5.000</strong> por cada amigo</p>
+                                <button class="btn-small" onclick="openReferralModal()">
+                                    Referir Amigo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Barra de beneficios -->
+                <div class="benefits-bar">
+                    <div class="benefit-item">
+                        <span class="benefit-icon">🚚</span>
+                        <span>Envío gratis sobre $50.000</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-icon">💳</span>
+                        <span>Hasta 12 cuotas sin interés</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-icon">🎮</span>
+                        <span>Sistema de puntos gamer</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-icon">🔒</span>
+                        <span>Compra 100% segura</span>
                     </div>
                 </div>
             </div>
@@ -360,6 +514,48 @@
                     <button class="cta-button" onclick="acceptTerms()">Acepto los Términos</button>
                     <button class="product-button" onclick="closeModal('termsModal')">Cerrar</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Descuento Duoc UC Mejorado -->
+    <div class="modal" id="duocModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeDuocModal()">&times;</span>
+            <h3>🎓 Descuento Estudiantes Duoc UC</h3>
+            <p>Obtén un <strong>20% de descuento</strong> en todos nuestros productos gaming</p>
+            <form class="duoc-form">
+                <input type="email" placeholder="Tu correo @duocuc.cl" required pattern=".*@duocuc\.cl$">
+                <button type="submit" class="btn-primary">Validar Descuento</button>
+            </form>
+            <p class="form-note">* Solo válido para correos institucionales de Duoc UC</p>
+        </div>
+    </div>
+
+    <!-- Modal Sistema de Referidos -->
+    <div class="modal" id="referralModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeReferralModal()">&times;</span>
+            <h3>👥 Sistema de Referidos</h3>
+            <p>Gana <strong>$5.000</strong> por cada amigo que realice su primera compra</p>
+            <div class="referral-info">
+                <div class="referral-step">
+                    <span>1️⃣</span>
+                    <p>Comparte tu código de referido</p>
+                </div>
+                <div class="referral-step">
+                    <span>2️⃣</span>
+                    <p>Tu amigo hace su primera compra</p>
+                </div>
+                <div class="referral-step">
+                    <span>3️⃣</span>
+                    <p>Ambos reciben $5.000 de descuento</p>
+                </div>
+            </div>
+            <div class="referral-code">
+                <label>Tu código de referido:</label>
+                <input type="text" value="GAMER2024" readonly>
+                <button onclick="copyReferralCode()" class="btn-copy">Copiar</button>
             </div>
         </div>
     </div>
