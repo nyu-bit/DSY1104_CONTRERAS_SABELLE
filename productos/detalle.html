@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Producto | Level-Up Gamer</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="../index.html" class="logo">🎮 LEVEL-UP GAMER</a>
+                <ul class="nav-links">
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="../productos/">Productos</a></li>
+                    <li><a href="../carrito/">Carrito</a></li>
+                    <li><a href="../usuario/">Usuario</a></li>
+                </ul>
+                <button class="cart-icon" onclick="window.location.href='../carrito/'">
+                    🛒 Carrito
+                    <span class="cart-counter" id="cartCounter">0</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main class="main">
+        <section class="section">
+            <div class="container">
+                <!-- Breadcrumb -->
+                <nav class="breadcrumb">
+                    <a href="../index.html">Inicio</a> > 
+                    <a href="../productos/">Productos</a> > 
+                    <span id="productBreadcrumb">Producto</span>
+                </nav>
+
+                <!-- Detalle del producto -->
+                <div class="product-detail" id="productDetail">
+                    <div class="product-gallery">
+                        <div class="product-main-image" id="productMainImage">
+                            🎮
+                        </div>
+                        <div class="product-thumbnails" id="productThumbnails">
+                            <!-- Miniaturas se cargarán dinámicamente -->
+                        </div>
+                    </div>
+
+                    <div class="product-info">
+                        <h1 class="product-title" id="productTitle">Cargando...</h1>
+                        <div class="product-price" id="productPrice">$0.00</div>
+                        
+                        <div class="product-rating">
+                            <div class="stars" id="productStars">
+                                <!-- Estrellas se cargarán dinámicamente -->
+                            </div>
+                            <span id="productReviews">(0 reseñas)</span>
+                        </div>
+
+                        <div class="product-description" id="productDescription">
+                            <!-- Descripción se cargará dinámicamente -->
+                        </div>
+
+                        <div class="product-features" id="productFeatures">
+                            <!-- Características se cargarán dinámicamente -->
+                        </div>
+
+                        <div class="product-actions">
+                            <div class="quantity-selector">
+                                <label for="quantity">Cantidad:</label>
+                                <button type="button" onclick="decreaseQuantity()">-</button>
+                                <input type="number" id="quantity" value="1" min="1" max="10">
+                                <button type="button" onclick="increaseQuantity()">+</button>
+                            </div>
+                            
+                            <button class="cta-button" id="addToCartBtn" onclick="addToCartFromDetail()">
+                                Agregar al Carrito
+                            </button>
+                            
+                            <button class="product-button" onclick="addToWishlist()">
+                                ❤️ Lista de Deseos
+                            </button>
+                        </div>
+
+                        <div class="product-meta">
+                            <div class="meta-item">
+                                <strong>SKU:</strong> <span id="productSku">-</span>
+                            </div>
+                            <div class="meta-item">
+                                <strong>Categoría:</strong> <span id="productCategory">-</span>
+                            </div>
+                            <div class="meta-item">
+                                <strong>Stock:</strong> <span id="productStock">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Productos relacionados -->
+                <div class="related-products">
+                    <h2 class="section-title">Productos Relacionados</h2>
+                    <div class="products-grid" id="relatedProducts">
+                        <!-- Productos relacionados se cargarán dinámicamente -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+                        </div>
+                </div>
+
+                <!-- LG-070: Sección de Reseñas y Calificaciones -->
+                <section class="reviews-section" id="reviewsSection">
+                    <div class="container">
+                        <div class="reviews-header">
+                            <h2 class="section-title">
+                                <i class="fas fa-star" aria-hidden="true"></i>
+                                Reseñas y Calificaciones
+                            </h2>
+                            <div class="reviews-summary" id="reviewsSummary">
+                                <div class="average-rating">
+                                    <span class="avg-score" id="avgRating">0.0</span>
+                                    <div class="avg-stars" id="avgStars">
+                                        <!-- Estrellas promedio -->
+                                    </div>
+                                    <span class="total-reviews" id="totalReviews">0 reseñas</span>
+                                </div>
+                                <div class="rating-breakdown">
+                                    <div class="rating-bar" data-stars="5">
+                                        <span>5★</span>
+                                        <div class="bar">
+                                            <div class="fill" style="width: 0%"></div>
+                                        </div>
+                                        <span class="count">0</span>
+                                    </div>
+                                    <div class="rating-bar" data-stars="4">
+                                        <span>4★</span>
+                                        <div class="bar">
+                                            <div class="fill" style="width: 0%"></div>
+                                        </div>
+                                        <span class="count">0</span>
+                                    </div>
+                                    <div class="rating-bar" data-stars="3">
+                                        <span>3★</span>
+                                        <div class="bar">
+                                            <div class="fill" style="width: 0%"></div>
+                                        </div>
+                                        <span class="count">0</span>
+                                    </div>
+                                    <div class="rating-bar" data-stars="2">
+                                        <span>2★</span>
+                                        <div class="bar">
+                                            <div class="fill" style="width: 0%"></div>
+                                        </div>
+                                        <span class="count">0</span>
+                                    </div>
+                                    <div class="rating-bar" data-stars="1">
+                                        <span>1★</span>
+                                        <div class="bar">
+                                            <div class="fill" style="width: 0%"></div>
+                                        </div>
+                                        <span class="count">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Formulario para agregar reseña (solo si está logueado) -->
+                        <div class="review-form-section" id="reviewFormSection" style="display: none;">
+                            <h3>Escribir una Reseña</h3>
+                            <form class="review-form" id="reviewForm">
+                                <div class="form-group">
+                                    <label for="reviewRating">Calificación:</label>
+                                    <div class="rating-input" id="reviewRating">
+                                        <button type="button" class="star-btn" data-rating="1">★</button>
+                                        <button type="button" class="star-btn" data-rating="2">★</button>
+                                        <button type="button" class="star-btn" data-rating="3">★</button>
+                                        <button type="button" class="star-btn" data-rating="4">★</button>
+                                        <button type="button" class="star-btn" data-rating="5">★</button>
+                                    </div>
+                                    <input type="hidden" id="ratingValue" name="rating" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="reviewComment">Comentario (máximo 300 caracteres):</label>
+                                    <textarea 
+                                        id="reviewComment" 
+                                        name="comment" 
+                                        maxlength="300" 
+                                        required
+                                        aria-describedby="commentCounter"
+                                        placeholder="Comparte tu experiencia con este producto..."></textarea>
+                                    <div class="char-counter">
+                                        <span id="commentCounter">0/300</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="submit" class="submit-review-btn">
+                                        <i class="fas fa-paper-plane"></i>
+                                        Publicar Reseña
+                                    </button>
+                                    <button type="button" class="cancel-review-btn" onclick="cancelReview()">
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Mensaje para usuarios no logueados -->
+                        <div class="login-prompt" id="loginPrompt">
+                            <p>
+                                <i class="fas fa-sign-in-alt"></i>
+                                <strong>Inicia sesión</strong> para escribir una reseña
+                            </p>
+                            <a href="../usuario/login.html" class="login-link">Iniciar Sesión</a>
+                        </div>
+
+                        <!-- Lista de reseñas -->
+                        <div class="reviews-list" id="reviewsList">
+                            <!-- Las reseñas se cargarán dinámicamente -->
+                            <div class="no-reviews" id="noReviews" style="display: none;">
+                                <i class="fas fa-comment-slash"></i>
+                                <p>Aún no hay reseñas para este producto.</p>
+                                <p>¡Sé el primero en compartir tu experiencia!</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <div class="container">
+                <p>&copy; 2024 Level-Up Gamer. Todos los derechos reservados.</p>
+            </div>
+        </footer>
+
+        <!-- Scripts -->
+        <script src="../assets/js/products-database.js"></script>
+        <script src="../assets/js/cart.js"></script>
+        <script src="../assets/js/reviews.js"></script>
+        <script src="../assets/js/auth.js"></script>
+        <script>
+            // Cargar producto al cargar la página
+            document.addEventListener('DOMContentLoaded', function() {
+                loadProductDetail();
+            });
+
+            function loadProductDetail() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const productId = urlParams.get('id');
+                
+                if (!productId) {
+                    document.getElementById('productTitle').textContent = 'Producto no encontrado';
+                    return;
+                }
+
+                const product = PRODUCT_DATABASE[productId];
+                if (product) {
+                    displayProduct(product);
+                    // Cargar reseñas del producto
+                    if (window.reviewsManager) {
+                        window.reviewsManager.loadProductReviews(productId);
+                    }
+                } else {
+                    document.getElementById('productTitle').textContent = 'Producto no encontrado';
+                }
+            }
+
+            function displayProduct(product) {
+                document.getElementById('productTitle').textContent = product.nombre;
+                document.getElementById('productPrice').textContent = formatCurrency(product.precio);
+                document.getElementById('productDescription').textContent = product.descripcion;
+                document.getElementById('productSku').textContent = product.codigo;
+                document.getElementById('productCategory').textContent = getCategoryName(product.categoria);
+                document.getElementById('productStock').textContent = product.stock > 0 ? `${product.stock} unidades` : 'Agotado';
+                
+                // Rating inicial
+                displayStars(document.getElementById('productStars'), product.rating || 0);
+                
+                // Características
+                if (product.specs && product.specs.length > 0) {
+                    const featuresDiv = document.getElementById('productFeatures');
+                    featuresDiv.innerHTML = '<h3>Especificaciones:</h3><ul>' + 
+                        product.specs.map(spec => `<li>${spec}</li>`).join('') + 
+                        '</ul>';
+                }
+
+                // Deshabilitar botón si no hay stock
+                if (product.stock <= 0) {
+                    const addBtn = document.getElementById('addToCartBtn');
+                    addBtn.textContent = 'Agotado';
+                    addBtn.disabled = true;
+                    addBtn.classList.add('disabled');
+                }
+            }
+
+            function displayStars(container, rating) {
+                const fullStars = Math.floor(rating);
+                const hasHalfStar = rating % 1 !== 0;
+                let starsHTML = '';
+                
+                for (let i = 0; i < 5; i++) {
+                    if (i < fullStars) {
+                        starsHTML += '⭐';
+                    } else if (i === fullStars && hasHalfStar) {
+                        starsHTML += '⭐';
+                    } else {
+                        starsHTML += '☆';
+                    }
+                }
+                
+                container.innerHTML = starsHTML;
+            }
+
+            function formatCurrency(amount) {
+                return new Intl.NumberFormat('es-CL', {
+                    style: 'currency',
+                    currency: 'CLP',
+                    minimumFractionDigits: 0
+                }).format(amount);
+            }
+
+            function increaseQuantity() {
+                const input = document.getElementById('quantity');
+                const max = parseInt(input.max) || 10;
+                if (parseInt(input.value) < max) {
+                    input.value = parseInt(input.value) + 1;
+                }
+            }
+
+            function decreaseQuantity() {
+                const input = document.getElementById('quantity');
+                if (parseInt(input.value) > 1) {
+                    input.value = parseInt(input.value) - 1;
+                }
+            }
+
+            function addToCartFromDetail() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const productId = urlParams.get('id');
+                const quantity = parseInt(document.getElementById('quantity').value);
+                
+                if (window.cartManager && productId) {
+                    const product = PRODUCT_DATABASE[productId];
+                    if (product && product.stock >= quantity) {
+                        cartManager.add(productId, quantity);
+                        showNotification('Producto agregado al carrito', 'success');
+                    } else {
+                        showNotification('Stock insuficiente', 'error');
+                    }
+                }
+            }
+
+            function addToWishlist() {
+                showNotification('Producto agregado a lista de deseos', 'info');
+            }
+
+            function showNotification(message, type) {
+                // Crear notificación temporal
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 12px 20px;
+                    background: ${type === 'success' ? '#00ff41' : type === 'error' ? '#ff073a' : '#00bfff'};
+                    color: #000;
+                    border-radius: 8px;
+                    z-index: 10000;
+                    font-weight: 500;
+                `;
+                
+                document.body.appendChild(notification);
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }
+        </script>
