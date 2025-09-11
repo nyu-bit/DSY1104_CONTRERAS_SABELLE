@@ -25,28 +25,32 @@ body {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* Navbar Container */
+/* Navbar Container - Ultra compacto */
 .main-navbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 2rem;
-  height: 70px;
-  max-width: 1200px;
+  padding: 0 1rem;
+  height: 60px;
+  width: 100%;
   margin: 0 auto;
 }
 
-/* Logo */
+/* Logo - Más pequeño */
 .navbar-logo {
   flex-shrink: 0;
+  flex: 0 0 auto;
+  min-width: 140px;
 }
 
 .logo-link {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.3rem;
   text-decoration: none;
   color: #39FF14;
+  font-size: 0.9rem;
+  font-weight: 700;
   font-size: 1.5rem;
   font-weight: bold;
   font-family: 'Orbitron', monospace;
@@ -56,25 +60,29 @@ body {
   font-size: 1.2rem;
 }
 
-/* Menú Principal */
+/* Menú Principal - Más compacto */
 .navbar-menu {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1rem;
   list-style: none;
   margin: 0;
   padding: 0;
+  flex: 1;
+  justify-content: center;
 }
 
 .nav-link {
   color: #ffffff;
   text-decoration: none;
-  padding: 0.5rem 1rem;
+  padding: 0.4rem 0.8rem;
   border-radius: 5px;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.3rem;
+  font-size: 0.9rem;
+  white-space: nowrap;
 }
 
 .nav-link:hover,
@@ -126,22 +134,27 @@ body {
   border-bottom: none;
 }
 
-/* Acciones del Usuario */
+/* Acciones del Usuario - Ultra compacto */
 .navbar-actions {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  flex: 0 0 auto;
+  min-width: 160px;
+  justify-content: flex-end;
 }
 
-/* Búsqueda Simple */
+/* Búsqueda Simple - Más pequeña */
 .search-container {
   position: relative;
   display: flex;
   align-items: center;
   background: #1a1a1a;
   border: 1px solid #333;
-  border-radius: 25px;
+  border-radius: 20px;
   overflow: visible;
+  width: 180px;
 }
 
 .search-container:focus-within {
@@ -151,11 +164,12 @@ body {
 .search-input {
   background: transparent;
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 0.4rem 0.8rem;
   color: #ffffff;
   outline: none;
-  width: 200px;
+  width: 140px;
   font-family: 'Roboto', sans-serif;
+  font-size: 0.85rem;
 }
 
 .search-input::placeholder {
@@ -165,28 +179,29 @@ body {
 .search-btn {
   background: #39FF14;
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 0.4rem 0.8rem;
   color: #000000;
   cursor: pointer;
-  border-radius: 0 25px 25px 0;
+  border-radius: 0 20px 20px 0;
   transition: background 0.3s ease;
+  font-size: 0.85rem;
 }
 
 .search-btn:hover {
   background: #2de00f;
 }
 
-/* Carrito */
+/* Carrito - Más compacto */
 .cart-link {
   position: relative;
   color: #ffffff;
   text-decoration: none;
-  padding: 0.5rem;
+  padding: 0.3rem;
   border-radius: 5px;
   transition: color 0.3s ease;
   display: flex;
   align-items: center;
-  font-size: 1.2rem;
+  font-size: 1rem;
 }
 
 .cart-link:hover {
@@ -194,7 +209,7 @@ body {
 }
 
 .cart-link i {
-  font-size: 1.2rem;
+  font-size: 1rem;
 }
 
 .cart-count {
@@ -274,22 +289,22 @@ body {
   border-bottom: none;
 }
 
-/* Menú Móvil */
+/* Menú Móvil - Más compacto */
 .mobile-toggle {
   display: none;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 0.5rem;
+  padding: 0.3rem;
   position: relative;
   z-index: 1001;
 }
 
 .mobile-toggle span {
-  width: 25px;
-  height: 3px;
+  width: 20px;
+  height: 2px;
   background: #ffffff;
   border-radius: 2px;
   transition: all 0.3s ease;
@@ -376,6 +391,20 @@ body {
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  .navbar-menu {
+    gap: 1rem;
+  }
+  
+  .search-input {
+    width: 150px;
+  }
+  
+  .main-navbar {
+    padding: 0 1.5rem;
+  }
+}
+
 @media (max-width: 768px) {
   .navbar-menu,
   .search-container {
@@ -490,22 +519,25 @@ body {
   }
 }
 
+/* NAVBAR COMPACTO Y PROFESIONAL */
 .gamer-navbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 2rem;
-  height: 80px;
-  max-width: 1400px;
+  padding: 0 1.5rem;
+  height: 70px;
+  max-width: 100%;
   margin: 0 auto;
   position: relative;
+  gap: 1rem;
 }
 
-/* SECCIÓN LOGO Y MARCA */
+/* LOGO MÁS COMPACTO */
 .navbar-brand {
   display: flex;
   align-items: center;
   z-index: 1001;
+  flex-shrink: 0;
 }
 
 .brand-link {
@@ -515,24 +547,24 @@ body {
 }
 
 .brand-link:hover {
-  transform: scale(1.05);
+  transform: scale(1.02);
 }
 
 .brand-logo {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.8rem;
 }
 
 .logo-icon {
-  font-size: 2.5rem;
+  font-size: 2rem;
   animation: pulse-glow 2s infinite;
-  filter: drop-shadow(0 0 10px var(--color-secondary, #39FF14));
+  filter: drop-shadow(0 0 8px var(--color-secondary, #39FF14));
 }
 
 @keyframes pulse-glow {
-  0%, 100% { filter: drop-shadow(0 0 10px var(--color-secondary, #39FF14)); }
-  50% { filter: drop-shadow(0 0 20px var(--color-secondary, #39FF14)); }
+  0%, 100% { filter: drop-shadow(0 0 8px var(--color-secondary, #39FF14)); }
+  50% { filter: drop-shadow(0 0 15px var(--color-secondary, #39FF14)); }
 }
 
 .brand-text {
@@ -543,35 +575,35 @@ body {
 
 .brand-name {
   font-family: 'Orbitron', monospace;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 900;
   color: var(--color-secondary, #39FF14);
-  text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
-  letter-spacing: 2px;
+  text-shadow: 0 0 8px rgba(57, 255, 20, 0.4);
+  letter-spacing: 1.5px;
 }
 
 .brand-subtitle {
   font-family: 'Orbitron', monospace;
-  font-size: 0.9rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--color-accent, #1E90FF);
-  text-shadow: 0 0 8px rgba(30, 144, 255, 0.5);
-  letter-spacing: 1px;
+  text-shadow: 0 0 6px rgba(30, 144, 255, 0.4);
+  letter-spacing: 0.8px;
 }
 
-/* NAVEGACIÓN PRINCIPAL */
+/* NAVEGACIÓN PRINCIPAL COMPACTA */
 .navbar-navigation {
   display: flex;
   align-items: center;
   flex: 1;
   justify-content: center;
-  margin: 0 2rem;
+  margin: 0 1rem;
 }
 
 .nav-menu {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1.2rem;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -584,17 +616,18 @@ body {
 .nav-link {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 1rem 1.5rem;
+  gap: 0.4rem;
+  padding: 0.7rem 1rem;
   text-decoration: none;
   color: #ffffff;
   font-family: 'Roboto', sans-serif;
   font-weight: 500;
-  font-size: 1rem;
-  border-radius: 10px;
+  font-size: 0.9rem;
+  border-radius: 8px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
+  white-space: nowrap;
 }
 
 .nav-link::before {
@@ -816,62 +849,65 @@ body {
   font-weight: 400;
 }
 
-/* ACCIONES USUARIO */
+/* ACCIONES USUARIO COMPACTAS */
 .navbar-actions {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.8rem;
+  flex-shrink: 0;
 }
 
 .action-button {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.8rem 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  border: 2px solid transparent;
-  border-radius: 12px;
+  gap: 0.3rem;
+  padding: 0.6rem 0.8rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid transparent;
+  border-radius: 10px;
   color: #ffffff;
   text-decoration: none;
   font-family: 'Roboto', sans-serif;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(8px);
+  font-size: 0.9rem;
 }
 
 .action-button:hover {
   border-color: var(--color-secondary, #39FF14);
-  background: rgba(57, 255, 20, 0.1);
-  transform: translateY(-2px);
-  box-shadow: 0 5px 20px rgba(57, 255, 20, 0.2);
+  background: rgba(57, 255, 20, 0.08);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 15px rgba(57, 255, 20, 0.15);
   color: var(--color-secondary, #39FF14);
 }
 
 .action-counter {
   background: linear-gradient(45deg, #ff4757, #ff6b7a);
   color: white;
-  font-size: 0.8rem;
-  padding: 0.2rem 0.6rem;
-  border-radius: 20px;
+  font-size: 0.7rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 15px;
   font-weight: 700;
-  min-width: 20px;
+  min-width: 18px;
   text-align: center;
   position: absolute;
-  top: -5px;
-  right: -5px;
+  top: -3px;
+  right: -3px;
   animation: pulse 2s infinite;
+  line-height: 1;
 }
 
 @keyframes pulse {
   0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
+  50% { transform: scale(1.08); }
   100% { transform: scale(1); }
 }
 
 .cart-amount {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--color-secondary, #39FF14);
 }
@@ -1334,47 +1370,153 @@ body {
   box-shadow: 0 5px 20px rgba(57, 255, 20, 0.3);
 }
 
-/* RESPONSIVE DESIGN */
+/* NAVBAR ULTRA COMPACTO - Pantallas estándar */
+@media (min-width: 1024px) and (max-width: 1400px) {
+  .main-navbar {
+    padding: 0 0.8rem;
+    height: 55px;
+  }
+  
+  .navbar-logo {
+    min-width: 120px;
+  }
+  
+  .logo-link {
+    font-size: 0.85rem;
+  }
+  
+  .navbar-menu {
+    gap: 0.6rem;
+  }
+  
+  .nav-link {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.85rem;
+  }
+  
+  .navbar-actions {
+    gap: 0.4rem;
+    min-width: 140px;
+  }
+  
+  .search-container {
+    width: 150px;
+  }
+  
+  .search-input {
+    width: 110px;
+    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+  }
+  
+  .search-btn {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* RESPONSIVE DESIGN OPTIMIZADO */
+@media (min-width: 1201px) {
+  /* Pantallas extra grandes - navbar espacioso */
+  .gamer-navbar {
+    padding: 0 2rem;
+    height: 75px;
+    gap: 1.5rem;
+  }
+  
+  .nav-menu {
+    gap: 1.8rem;
+  }
+  
+  .nav-link {
+    padding: 0.8rem 1.3rem;
+    font-size: 0.95rem;
+  }
+  
+  .navbar-actions {
+    gap: 1.2rem;
+  }
+  
+  .brand-name {
+    font-size: 1.4rem;
+  }
+}
+
 @media (max-width: 1200px) {
+  /* Pantallas grandes - navbar balanceado */
   .navbar-search .search-field {
-    width: 250px;
+    width: 220px;
   }
   
   .gamer-navbar {
     padding: 0 1.5rem;
+    gap: 1rem;
   }
   
   .nav-menu {
-    gap: 1.5rem;
+    gap: 1.3rem;
+  }
+  
+  .nav-link {
+    padding: 0.7rem 1.1rem;
+    font-size: 0.9rem;
+  }
+  
+  .navbar-actions {
+    gap: 0.9rem;
   }
 }
 
 @media (max-width: 968px) {
+  /* Activar menú móvil pero mantener algunos elementos visibles */
   .mobile-menu-button {
     display: flex;
   }
   
-  .navbar-navigation,
-  .navbar-search,
-  .navbar-actions {
+  .navbar-navigation {
     display: none;
+  }
+  
+  .navbar-search {
+    display: flex;
+    flex: 0 1 180px;
+  }
+  
+  .navbar-search .search-field {
+    width: 100%;
+    font-size: 0.85rem;
+  }
+  
+  .navbar-actions {
+    display: flex;
+    gap: 0.6rem;
+  }
+  
+  .action-button {
+    padding: 0.5rem 0.6rem;
+    font-size: 0.8rem;
+  }
+  
+  .action-button span {
+    display: none; /* Ocultar texto, solo iconos */
   }
   
   .gamer-navbar {
     padding: 0 1rem;
-    height: 70px;
+    height: 65px;
+    gap: 0.8rem;
   }
   
   .brand-name {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
   
   .brand-subtitle {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
   }
   
   .logo-icon {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
 }
 
