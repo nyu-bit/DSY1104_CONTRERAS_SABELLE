@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="gamer">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventos Gaming - LEVEL-UP Gamer</title>
+    <meta name="description" content="Descubre eventos gaming y torneos en todo Chile. Encuentre eventos cerca de ti con LEVEL-UP Gamer.">
+    
+    <!-- Tipografías Roboto y Orbitron -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Estilos principales -->
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    
+    <!-- Iconografía gamer -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* LG-090: Estilos para mapa de eventos */
+        .events-hero {
+            background: var(--gradient-primary);
+            padding: 6rem 0 4rem;
+            text-align: center;
+            color: var(--color-background);
+        }
+        
+        .events-map-container {
+            padding: 4rem 0;
+            background: var(--color-surface);
+        }
+        
+        .chile-map {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            background: var(--color-surface-variant);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 2px solid var(--color-secondary);
+        }
+        
+        .map-fallback {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, var(--color-surface-variant), var(--color-surface));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .map-marker {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: var(--color-secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-background);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(57, 255, 20, 0.3);
+        }
+        
+        .map-marker:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 20px rgba(57, 255, 20, 0.6);
+        }
+        
+        /* Posiciones aproximadas en el mapa de Chile */
+        .marker-santiago { top: 60%; left: 30%; }
+        .marker-valparaiso { top: 58%; left: 25%; }
+        .marker-concepcion { top: 75%; left: 28%; }
+        .marker-valdivia { top: 82%; left: 28%; }
+        .marker-temuco { top: 78%; left: 30%; }
+        .marker-antofagasta { top: 25%; left: 22%; }
+        .marker-la-serena { top: 45%; left: 25%; }
+        .marker-iquique { top: 15%; left: 20%; }
+        
+        .events-list {
+            padding: 4rem 0;
+        }
+        
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .event-card {
+            background: var(--color-surface);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid var(--color-surface-variant);
+            transition: all 0.3s ease;
+        }
+        
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-glow);
+            border-color: var(--color-secondary);
+        }
+        
+        .event-date {
+            background: var(--color-secondary);
+            color: var(--color-background);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        
+        .event-title {
+            color: var(--color-text-primary);
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .event-location {
+            color: var(--color-accent);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .event-description {
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .event-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .event-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .event-btn-primary {
+            background: var(--gradient-primary);
+            color: var(--color-background);
+        }
+        
+        .event-btn-secondary {
+            background: var(--color-surface-variant);
+            color: var(--color-text-primary);
+            border: 1px solid var(--color-surface-variant);
+        }
+        
+        .event-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .tooltip {
+            position: absolute;
+            background: var(--color-surface);
+            color: var(--color-text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            border: 1px solid var(--color-secondary);
+            z-index: 1000;
+        }
+        
+        .map-marker:hover .tooltip {
+            opacity: 1;
+            transform: translateY(-40px);
+        }
+        
+        @media (max-width: 768px) {
+            .chile-map {
+                padding: 1rem;
+            }
+            
+            .map-fallback {
+                height: 300px;
+            }
+            
+            .map-marker {
+                width: 25px;
+                height: 25px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR LEVEL-UP GAMER -->
+    <header class="main-header" role="banner">
+        <nav class="main-navbar" role="navigation" aria-label="Navegación principal">
+            <div class="navbar-logo">
+                <a href="../index.html" class="logo-link" aria-label="Level-Up Gamer - Inicio">
+                    🎮 <span class="logo-text">LEVEL-UP GAMER</span>
+                </a>
+            </div>
+
+            <ul class="navbar-menu">
+                <li><a href="../index.html" class="nav-link">Inicio</a></li>
+                <li><a href="../productos/" class="nav-link">Productos</a></li>
+                <li><a href="../nosotros/" class="nav-link">Nosotros</a></li>
+                <li><a href="../blog/" class="nav-link">Blog</a></li>
+                <li><a href="../contacto/" class="nav-link">Contacto</a></li>
+                <li><a href="../carrito/" class="nav-link">
+                    <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+                    <span class="cart-badge" id="cartBadge">0</span>
+                </a></li>
+                <li><a href="../usuario/" class="nav-link">
+                    <i class="fas fa-user" aria-hidden="true"></i>
+                </a></li>
+            </ul>
+
+            <button class="mobile-toggle" aria-label="Menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main" id="main">
+        <!-- Hero de Eventos -->
+        <section class="events-hero">
+            <div class="container">
+                <h1 class="section-title">
+                    <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                    Eventos Gaming en Chile
+                </h1>
+                <p class="section-subtitle">
+                    Descubre torneos, competencias y eventos gaming cerca de ti
+                </p>
+            </div>
+        </section>
+
+        <!-- LG-090: Mapa de Eventos Gamer -->
+        <section class="events-map-container">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Mapa de Eventos</h2>
+                    <p class="section-subtitle">Haz clic en los marcadores para ver eventos en cada ciudad</p>
+                </div>
+
+                <div class="chile-map" role="img" aria-label="Mapa de Chile con eventos gaming">
+                    <div class="map-fallback">
+                        <!-- Marcadores de ciudades con eventos -->
+                        <div class="map-marker marker-santiago" 
+                             tabindex="0" 
+                             role="button" 
+                             aria-label="Eventos en Santiago"
+                             title="Santiago - 8 eventos">
+                            <span>8</span>
+                            <div class="tooltip">Santiago: 8 eventos</div>
+                        </div>
+                        
+                        <div class="map-marker marker-valparaiso" 
+                             tabindex="0" 
+                             role="button" 
+                             aria-label="Eventos en Valparaíso"
+                             title="Valparaíso - 3 eventos">
+                            <span>3</span>
+                            <div class="tooltip">Valparaíso: 3 eventos</div>
+                        </div>
+                        
+                        <div class="map-marker marker-concepcion" 
+                             tabindex="0" 
+                             role="button" 
+                             aria-label="Eventos en Concepción"
+                             title="Concepción - 5 eventos">
+                            <span>5</span>
+                            <div class="tooltip">Concepción: 5 eventos</div>
+                        </div>
+                        
+                        <div class="map-marker marker-valdivia" 
+                             tabindex="0" 
+                             role="button" 
+                             aria-label="Eventos en Valdivia"
+                             title="Valdivia - 2 eventos">
+                            <span>2</span>
+                            <div class="tooltip">Valdivia: 2 eventos</div>
+                        </div>
+                        
+                        <div class="map-marker marker-temuco" 
+                             tabindex="0" 
+                             role="button" 
+                             aria-label="Eventos en Temuco"
+                             title="Temuco - 1 evento">
+                            <span>1</span>
+                            <div class="tooltip">Temuco: 1 evento</div>
+                        </div>
+                        
+                        <div class="map-marker marker-antofagasta" 
+                             tabindex="0" 
+                             role="button" 
+                             aria-label="Eventos en Antofagasta"
+                             title="Antofagasta - 2 eventos">
+                            <span>2</span>
+                            <div class="tooltip">Antofagasta: 2 eventos</div>
+                        </div>
+                        
+                        <div class="map-marker marker-la-serena" 
+                             tabindex="0" 
+                             role="button" 
+                             aria-label="Eventos en La Serena"
+                             title="La Serena - 1 evento">
+                            <span>1</span>
+                            <div class="tooltip">La Serena: 1 evento</div>
+                        </div>
+                        
+                        <div class="map-marker marker-iquique" 
+                             tabindex="0" 
+                             role="button" 
+                             aria-label="Eventos en Iquique"
+                             title="Iquique - 1 evento">
+                            <span>1</span>
+                            <div class="tooltip">Iquique: 1 evento</div>
+                        </div>
+                        
+                        <!-- Silueta de Chile (representación visual) -->
+                        <div style="position: absolute; top: 10%; left: 15%; width: 25%; height: 80%; 
+                                   background: linear-gradient(180deg, var(--color-accent) 0%, var(--color-secondary) 100%); 
+                                   opacity: 0.1; 
+                                   clip-path: polygon(20% 0%, 40% 5%, 60% 15%, 80% 25%, 90% 40%, 85% 60%, 75% 80%, 60% 95%, 40% 100%, 20% 95%, 10% 80%, 15% 60%, 10% 40%, 15% 20%); 
+                                   pointer-events: none;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lista Accesible de Eventos -->
+        <section class="events-list">
+            <div class="container">
+                <h2 class="section-title">Próximos Eventos</h2>
+                <div class="events-grid" id="eventsGrid">
+                    
+                    <!-- Evento 1 -->
+                    <article class="event-card">
+                        <div class="event-date">15 Oct 2024</div>
+                        <h3 class="event-title">ChampionShip League of Legends</h3>
+                        <div class="event-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Santiago, Centro Eventos UC
+                        </div>
+                        <p class="event-description">
+                            Torneo nacional de League of Legends con premios de $5.000.000. 
+                            Inscripciones abiertas hasta el 10 de octubre.
+                        </p>
+                        <div class="event-actions">
+                            <a href="#" class="event-btn event-btn-primary">Ver Detalles</a>
+                            <button class="event-btn event-btn-secondary">Inscribirse</button>
+                        </div>
+                    </article>
+
+                    <!-- Evento 2 -->
+                    <article class="event-card">
+                        <div class="event-date">22 Oct 2024</div>
+                        <h3 class="event-title">Torneo FIFA 25 Valparaíso</h3>
+                        <div class="event-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Valparaíso, Gaming Center
+                        </div>
+                        <p class="event-description">
+                            Competencia regional de FIFA 25. Modalidad 1v1 y equipos. 
+                            Premios para los 3 primeros lugares.
+                        </p>
+                        <div class="event-actions">
+                            <a href="#" class="event-btn event-btn-primary">Ver Detalles</a>
+                            <button class="event-btn event-btn-secondary">Inscribirse</button>
+                        </div>
+                    </article>
+
+                    <!-- Evento 3 -->
+                    <article class="event-card">
+                        <div class="event-date">5 Nov 2024</div>
+                        <h3 class="event-title">Counter-Strike 2 Major</h3>
+                        <div class="event-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Concepción, Arena Gaming
+                        </div>
+                        <p class="event-description">
+                            Major de Counter-Strike 2 del sur de Chile. Equipos de 5 jugadores. 
+                            Streaming en vivo para toda Latinoamérica.
+                        </p>
+                        <div class="event-actions">
+                            <a href="#" class="event-btn event-btn-primary">Ver Detalles</a>
+                            <button class="event-btn event-btn-secondary">Inscribirse</button>
+                        </div>
+                    </article>
+
+                    <!-- Evento 4 -->
+                    <article class="event-card">
+                        <div class="event-date">12 Nov 2024</div>
+                        <h3 class="event-title">Retro Gaming Expo</h3>
+                        <div class="event-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Santiago, Estación Mapocho
+                        </div>
+                        <p class="event-description">
+                            Exposición de videojuegos retro, arcade clásicos y consolas vintage. 
+                            Entrada libre para toda la familia.
+                        </p>
+                        <div class="event-actions">
+                            <a href="#" class="event-btn event-btn-primary">Ver Detalles</a>
+                            <button class="event-btn event-btn-secondary">Asistir</button>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2024 Level-Up Gamer. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // LG-090: Funcionalidad del mapa de eventos
+        document.addEventListener('DOMContentLoaded', function() {
+            const markers = document.querySelectorAll('.map-marker');
+            
+            markers.forEach(marker => {
+                marker.addEventListener('click', function() {
+                    const city = this.title.split(' - ')[0];
+                    showCityEvents(city);
+                });
+                
+                // Accesibilidad: activación con Enter o Space
+                marker.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+        });
+
+        function showCityEvents(city) {
+            // Mock de eventos por ciudad
+            const cityEvents = {
+                'Santiago': [
+                    'ChampionShip League of Legends - 15 Oct',
+                    'Retro Gaming Expo - 12 Nov',
+                    'Torneo Valorant Pro - 20 Nov',
+                    'Gaming Meetup Mensual - 25 Nov'
+                ],
+                'Valparaíso': [
+                    'Torneo FIFA 25 - 22 Oct',
+                    'Indie Games Showcase - 30 Oct',
+                    'Gaming Night Social - 15 Nov'
+                ],
+                'Concepción': [
+                    'Counter-Strike 2 Major - 5 Nov',
+                    'Mobile Gaming Tournament - 18 Nov',
+                    'Cosplay Contest - 25 Nov'
+                ]
+            };
+
+            const events = cityEvents[city] || ['No hay eventos programados'];
+            
+            alert(`Eventos en ${city}:\n\n${events.join('\n')}`);
+        }
+
+        // Inicializar badge del carrito
+        if (window.cartManager) {
+            document.getElementById('cartBadge').textContent = cartManager.getItemCount();
+        }
+    </script>
+</body>
+</html>
