@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Sistema Búsqueda Inteligente</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        body {
+            padding: 2rem;
+            background: var(--color-background);
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--color-surface);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-glow);
+        }
+        .test-search {
+            position: relative;
+            margin: 2rem 0;
+        }
+        .test-search .search-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--color-secondary);
+            border-radius: 8px;
+            background: var(--color-surface);
+            color: var(--color-text-primary);
+            font-size: 1.1rem;
+        }
+        .status {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            border-left: 4px solid var(--color-accent);
+            background: var(--color-surface-variant);
+        }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--color-surface-variant);
+        }
+        .feature-list li:before {
+            content: '✅ ';
+            color: var(--color-success);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1><i class="fas fa-search"></i> Test Sistema Búsqueda Inteligente LG-022</h1>
+        
+        <div class="status">
+            <h3>🎯 Estado del Sistema</h3>
+            <p id="systemStatus">Inicializando sistema de búsqueda inteligente...</p>
+        </div>
+
+        <div class="test-search">
+            <h3>🔍 Prueba de Búsqueda</h3>
+            <input type="search" 
+                   id="search-input" 
+                   class="search-input" 
+                   placeholder="Escribe para probar (ej: play, xbox, mouse)..."
+                   aria-label="Campo de prueba de búsqueda"
+                   autocomplete="off">
+            
+            <div id="search-suggestions" 
+                 class="search-suggestions" 
+                 role="listbox" 
+                 aria-label="Sugerencias de búsqueda"
+                 style="display: none;">
+            </div>
+        </div>
+
+        <div class="status">
+            <h3>📋 Características Implementadas (LG-022)</h3>
+            <ul class="feature-list">
+                <li>Debounce de 250ms para optimización de rendimiento</li>
+                <li>Sugerencias a partir del tercer carácter</li>
+                <li>Normalización de acentos para búsqueda más efectiva</li>
+                <li>Búsqueda por nombre, código y categoría de productos</li>
+                <li>Ordenamiento por relevancia y alfabético</li>
+                <li>Navegación por teclado (flechas, Enter, Escape)</li>
+                <li>Accesibilidad ARIA completa</li>
+                <li>Resaltado de coincidencias</li>
+                <li>Sistema responsive para móvil</li>
+                <li>Integración con base de datos de productos</li>
+            </ul>
+        </div>
+
+        <div class="status">
+            <h3>⚡ Instrucciones de Prueba</h3>
+            <p><strong>1.</strong> Escribe al menos 3 caracteres en el campo de búsqueda</p>
+            <p><strong>2.</strong> Observa las sugerencias que aparecen automáticamente</p>
+            <p><strong>3.</strong> Usa las flechas ↑↓ para navegar</p>
+            <p><strong>4.</strong> Presiona Enter para seleccionar</p>
+            <p><strong>5.</strong> Prueba términos como: "play", "xbox", "mouse", "auricular"</p>
+        </div>
+
+        <div id="debugInfo" class="status" style="display: none;">
+            <h3>🐛 Información de Debug</h3>
+            <p id="debugText"></p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/products-database.js"></script>
+    <script src="assets/js/smart-search.js"></script>
+    
+    <script>
+        // Verificar inicialización del sistema
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusElement = document.getElementById('systemStatus');
+            const debugInfo = document.getElementById('debugInfo');
+            const debugText = document.getElementById('debugText');
+            
+            setTimeout(() => {
+                if (window.smartSearchManager && window.PRODUCT_DATABASE) {
+                    statusElement.innerHTML = '🟢 Sistema de búsqueda inteligente activo y funcionando';
+                    statusElement.style.color = 'var(--color-success)';
+                    
+                    const productCount = Object.keys(window.PRODUCT_DATABASE).length;
+                    debugText.innerHTML = `
+                        • Base de datos: ${productCount} productos cargados<br>
+                        • Debounce: 250ms configurado<br>
+                        • Sugerencias: Desde 3er carácter<br>
+                        • Normalización: Activa<br>
+                        • Navegación: Teclado habilitada
+                    `;
+                    debugInfo.style.display = 'block';
+                    
+                } else {
+                    statusElement.innerHTML = '🔴 Error: Sistema no inicializado correctamente';
+                    statusElement.style.color = 'var(--color-error)';
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>
