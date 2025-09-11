@@ -15,128 +15,90 @@
     <link rel="stylesheet" href="assets/css/styles.css">
     
     <!-- LG-004: Iconografía gamer -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
 </head>
 <body>
     <!-- Notificaciones -->
     <div class="notifications-container" id="notificationsContainer"></div>
 
-    <!-- LG-010: Header - Navbar gamer con logo y carrito -->
-    <header class="header" role="banner">
-        <div class="container">
-            <nav class="navbar" role="navigation" aria-label="Navegación principal">
-                <!-- Primera fila en móvil: Logo, Nav y Actions -->
-                <div class="navbar-top">
-                    <!-- Logo gamer -->
-                    <a href="index.html" class="logo" aria-label="Level-Up Gamer - Ir al inicio">
-                        <i class="fas fa-gamepad" aria-hidden="true"></i>
-                        <span class="logo-text">LEVEL-UP</span>
-                        <span class="logo-accent">GAMER</span>
-                    </a>
-                    
-                    <!-- Enlaces de navegación principal -->
-                    <ul class="nav-links" id="navLinks" role="menubar">
-                        <li role="none">
-                            <a href="index.html" role="menuitem" aria-current="page" tabindex="0">
-                                <i class="fas fa-home" aria-hidden="true"></i>
-                                <span>Inicio</span>
-                            </a>
-                        </li>
-                        <li role="none">
-                            <a href="productos/" role="menuitem" tabindex="0">
-                                <i class="fas fa-box" aria-hidden="true"></i>
-                                <span>Productos</span>
-                            </a>
-                        </li>
-                        <li role="none">
-                            <a href="#categorias" role="menuitem" tabindex="0">
-                                <i class="fas fa-th-large" aria-hidden="true"></i>
-                                <span>Categorías</span>
-                            </a>
-                        </li>
-                        <li role="none">
-                            <a href="soporte/" role="menuitem" tabindex="0">
-                                <i class="fas fa-headset" aria-hidden="true"></i>
-                                <span>Soporte</span>
-                            </a>
-                        </li>
-                    </ul>
+    <!-- NAVBAR LEVEL-UP GAMER - DISEÑO LIMPIO Y SIMPLE -->
+    <header class="main-header" role="banner">
+        <nav class="main-navbar" role="navigation" aria-label="Navegación principal">
+            
+            <!-- Logo -->
+            <div class="navbar-logo">
+                <a href="index.html" class="logo-link" aria-label="Level-Up Gamer - Inicio">
+                    🎮 <span class="logo-text">LEVEL-UP GAMER</span>
+                </a>
+            </div>
 
-                    <!-- Área de acciones: carrito y usuario -->
-                    <div class="nav-actions">
-                <div class="nav-actions">
-                    <!-- Carrito de compras -->
-                    <a href="carrito/" class="cart-link" aria-label="Ver carrito de compras - 0 productos" id="cartLink">
-                        <i class="fas fa-shopping-cart" aria-hidden="true"></i>
-                        <span class="cart-text">Carrito</span>
-                        <span class="cart-count" id="cartCount" aria-live="polite">0</span>
-                    </a>
-
-                    <!-- Menú de usuario -->
-                    <div class="user-menu">
-                        <button type="button" 
-                                class="user-toggle" 
-                                aria-label="Menú de usuario" 
-                                aria-expanded="false"
-                                aria-haspopup="true"
-                                id="userToggle">
-                            <i class="fas fa-user" aria-hidden="true"></i>
-                            <span class="user-text">Usuario</span>
-                            <i class="fas fa-chevron-down" aria-hidden="true"></i>
-                        </button>
-                        <div class="user-dropdown" 
-                             id="userDropdown" 
-                             role="menu" 
-                             aria-labelledby="userToggle"
-                             aria-hidden="true">
-                            <a href="usuario/login.html" role="menuitem" tabindex="-1">
-                                <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
-                                <span>Iniciar Sesión</span>
-                            </a>
-                            <a href="usuario/register.html" role="menuitem" tabindex="-1">
-                                <i class="fas fa-user-plus" aria-hidden="true"></i>
-                                <span>Registrarse</span>
-                            </a>
-                            <div class="dropdown-divider" role="separator"></div>
-                            <a href="usuario/" class="user-logged-in" style="display: none;" role="menuitem" tabindex="-1">
-                                <i class="fas fa-user-circle" aria-hidden="true"></i>
-                                <span>Mi Perfil</span>
-                            </a>
-                            <a href="#" class="user-logged-in" style="display: none;" id="logoutBtn" role="menuitem" tabindex="-1">
-                                <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
-                                <span>Cerrar Sesión</span>
-                            </a>
-                        </div>
+            <!-- Navegación Principal -->
+            <ul class="navbar-menu">
+                <li><a href="index.html" class="nav-link active">Inicio</a></li>
+                <li class="dropdown">
+                    <a href="productos/" class="nav-link">Productos <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-menu">
+                        <a href="productos/?category=consolas">Consolas</a>
+                        <a href="productos/?category=pc-gaming">PC Gaming</a>
+                        <a href="productos/?category=accesorios">Accesorios</a>
+                        <a href="productos/?category=videojuegos">Videojuegos</a>
                     </div>
+                </li>
+                <li><a href="#ofertas" class="nav-link">Ofertas</a></li>
+                <li><a href="#comparador" class="nav-link">Comparar</a></li>
+            </ul>
+
+            <!-- Acciones del Usuario -->
+            <div class="navbar-actions">
+                <!-- Búsqueda -->
+                <div class="search-container">
+                    <input type="search" class="search-input" placeholder="Buscar productos...">
+                    <button class="search-btn"><i class="fas fa-search"></i></button>
                 </div>
 
-                <!-- Barra de búsqueda extendida -->
-                <div class="search-extended">
-                    <div class="search-input-wrapper">
-                        <input type="search" 
-                               class="search-input-extended" 
-                               placeholder="Buscar productos gaming..." 
-                               aria-label="Buscar productos gaming"
-                               id="searchInputExtended"
-                               autocomplete="off">
-                        <button type="button" class="search-btn-extended">
-                            <i class="fas fa-search"></i>
-                        </button>
+                <!-- Carrito -->
+                <a href="carrito/" class="cart-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+
+                <!-- Usuario -->
+                <div class="user-menu">
+                    <button class="user-btn">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <div class="user-dropdown">
+                        <a href="usuario/login.html">Iniciar Sesión</a>
+                        <a href="usuario/register.html">Registrarse</a>
+                        <a href="usuario/">Mi Perfil</a>
+                        <a href="#" id="logoutBtn">Cerrar Sesión</a>
                     </div>
                 </div>
+            </div>
 
-                <!-- Toggle móvil -->
-                <button class="mobile-toggle" 
-                        aria-label="Menú de navegación móvil" 
-                        aria-expanded="false"
-                        aria-controls="navLinks"
-                        id="mobileToggle">
-                    <span class="hamburger-line"></span>
-                    <span class="hamburger-line"></span>
-                    <span class="hamburger-line"></span>
-                    <span class="sr-only">Menú</span>
-                </button>
-            </nav>
+            <!-- Menú Móvil -->
+            <button class="mobile-toggle" aria-label="Menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+        </nav>
+
+        <!-- Menú Móvil Completo -->
+        <div class="mobile-menu">
+            <div class="mobile-search">
+                <input type="search" placeholder="Buscar...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+            <ul class="mobile-nav">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="productos/">Productos</a></li>
+                <li><a href="#ofertas">Ofertas</a></li>
+                <li><a href="#comparador">Comparar</a></li>
+                <li><a href="carrito/">Carrito</a></li>
+                <li><a href="usuario/">Mi Cuenta</a></li>
+            </ul>
         </div>
     </header>
 
@@ -1020,6 +982,11 @@
                 </div>
             </div>
         </section>
+        
+        <!-- LG-029: Recomendaciones personalizadas -->
+        <section class="recommendations-section" id="personalizedRecommendations">
+            <!-- El contenido se generará dinámicamente -->
+        </section>
     </main>
 
     <!-- Widget de Redes Sociales - LG-018 -->
@@ -1654,7 +1621,22 @@
                 <div class="quick-item-glow"></div>
             </button>
             
-            <!-- Botón 3: Categorías -->
+            <!-- Botón 3: Favoritos -->
+            <button class="quick-access-item" 
+                    data-action="favorites"
+                    role="menuitem"
+                    aria-label="Ver productos favoritos"
+                    tabindex="-1"
+                    onclick="showFavoritesModal()">
+                <div class="quick-item-icon">
+                    <i class="fas fa-heart" aria-hidden="true"></i>
+                    <span class="favorites-badge favorites-counter" style="display: none;">0</span>
+                </div>
+                <span class="quick-item-text">Favoritos</span>
+                <div class="quick-item-glow"></div>
+            </button>
+            
+            <!-- Botón 4: Categorías -->
             <button class="quick-access-item" 
                     data-action="categories"
                     role="menuitem"
@@ -1667,7 +1649,7 @@
                 <div class="quick-item-glow"></div>
             </button>
             
-            <!-- Botón 4: Ofertas -->
+            <!-- Botón 5: Ofertas -->
             <button class="quick-access-item" 
                     data-action="offers"
                     role="menuitem"
@@ -1684,7 +1666,7 @@
             <!-- Separador -->
             <div class="quick-access-separator" role="separator"></div>
             
-            <!-- Botón 5: Soporte -->
+            <!-- Botón 6: Soporte -->
             <button class="quick-access-item quick-access-secondary" 
                     data-action="support"
                     role="menuitem"
@@ -1719,11 +1701,9 @@
     </nav>
 
     <!-- Scripts esenciales -->
+    <script src="assets/js/navbar-simple.js"></script>
     <script src="assets/js/products-database.js"></script>
-    <script src="assets/js/carousel-pro.js"></script>
-    <script src="assets/js/search.js"></script>
     <script src="assets/js/cart.js"></script>
-    <script src="assets/js/ui-components.js"></script>
     <script src="assets/js/main.js"></script>
     <script src="assets/js/auth.js"></script>
 </body>
