@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="gamer">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras - LEVEL-UP Gamer</title>
+    <meta name="description" content="Revisa y gestiona los productos en tu carrito de compras gaming.">
+    
+    <!-- Fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <nav class="main-navbar">
+            <div class="navbar-logo">
+                <a href="../index.html" class="logo-link">
+                    🎮 <span class="logo-text">LEVEL-UP GAMER</span>
+                </a>
+            </div>
+
+            <ul class="navbar-menu">
+                <li><a href="../index.html" class="nav-link">Inicio</a></li>
+                <li><a href="../productos/" class="nav-link">Productos</a></li>
+                <li><a href="../nosotros/" class="nav-link">Nosotros</a></li>
+                <li><a href="../blog/" class="nav-link">Blog</a></li>
+                <li><a href="../contacto/" class="nav-link">Contacto</a></li>
+            </ul>
+
+            <div class="navbar-actions">
+                <div class="search-container">
+                    <input type="search" id="search-input" class="search-input" 
+                           placeholder="Buscar productos..." autocomplete="off">
+                    <button id="search-btn" class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <div id="search-suggestions" class="search-suggestions" style="display: none;"></div>
+                </div>
+
+                <a href="../carrito/" class="cart-link active">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+
+                <div class="user-menu">
+                    <button class="user-btn">
+                        <i class="fas fa-user"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="cart-hero">
+            <div class="container">
+                <h1 class="hero-title">🛒 Tu Carrito Gaming</h1>
+                <p class="hero-subtitle">Revisa tus productos seleccionados y procede al checkout</p>
+            </div>
+        </section>
+
+        <!-- Carrito Content -->
+        <section class="cart-section">
+            <div class="container">
+                <div class="cart-container">
+                    <!-- Cart Items -->
+                    <div class="cart-items-container">
+                        <div class="section-header">
+                            <h2>Productos en tu carrito</h2>
+                            <button id="clearCartBtn" class="btn btn-secondary" style="display: none;">
+                                <i class="fas fa-trash"></i> Vaciar carrito
+                            </button>
+                        </div>
+                        
+                        <div id="cartItemsContainer" class="cart-items">
+                            <!-- Loading state -->
+                            <div id="cartLoading" class="loading-container">
+                                <div class="loading-spinner"></div>
+                                <p>Cargando carrito...</p>
+                            </div>
+                            
+                            <!-- Empty state -->
+                            <div id="cartEmpty" class="empty-cart" style="display: none;">
+                                <div class="empty-cart-icon">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                                <h3>Tu carrito está vacío</h3>
+                                <p>¡Agrega algunos productos gaming increíbles!</p>
+                                <a href="../productos/" class="btn btn-primary">
+                                    <i class="fas fa-gamepad"></i>
+                                    Explorar productos
+                                </a>
+                            </div>
+                            
+                            <!-- Cart items will be inserted here -->
+                            <div id="cartItemsList"></div>
+                        </div>
+                    </div>
+
+                    <!-- Cart Summary -->
+                    <div class="cart-summary-container">
+                        <div class="cart-summary">
+                            <h3>Resumen del pedido</h3>
+                            
+                            <div class="summary-row">
+                                <span>Subtotal (<span id="totalItems">0</span> productos):</span>
+                                <span id="subtotalPrice">$0</span>
+                            </div>
+                            
+                            <div class="summary-row">
+                                <span>Envío:</span>
+                                <span id="shippingPrice">Gratis</span>
+                            </div>
+                            
+                            <div class="summary-row discount" id="discountRow" style="display: none;">
+                                <span>Descuento:</span>
+                                <span id="discountPrice">-$0</span>
+                            </div>
+                            
+                            <div class="summary-separator"></div>
+                            
+                            <div class="summary-row total">
+                                <span>Total:</span>
+                                <span id="totalPrice">$0</span>
+                            </div>
+                            
+                            <div class="checkout-actions">
+                                <button id="checkoutBtn" class="btn btn-primary btn-full" disabled>
+                                    <i class="fas fa-credit-card"></i>
+                                    Proceder al pago
+                                </button>
+                                
+                                <a href="../productos/" class="btn btn-secondary btn-full">
+                                    <i class="fas fa-arrow-left"></i>
+                                    Seguir comprando
+                                </a>
+                            </div>
+                            
+                            <!-- Payment methods -->
+                            <div class="payment-methods">
+                                <p>Métodos de pago aceptados:</p>
+                                <div class="payment-icons">
+                                    <i class="fab fa-cc-visa"></i>
+                                    <i class="fab fa-cc-mastercard"></i>
+                                    <i class="fab fa-paypal"></i>
+                                    <i class="fas fa-university"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>LEVEL-UP GAMER</h3>
+                    <p>Tu tienda gaming de confianza para llevar tu experiencia al siguiente nivel.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Enlaces rápidos</h4>
+                    <ul>
+                        <li><a href="../productos/">Productos</a></li>
+                        <li><a href="../blog/">Blog</a></li>
+                        <li><a href="../nosotros/">Nosotros</a></li>
+                        <li><a href="../contacto/">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Seguinos</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 LEVEL-UP Gamer. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../assets/js/products-database.js"></script>
+    <script src="../assets/js/smart-search.js"></script>
+    <script src="../assets/js/cart.js"></script>
+    <script src="../assets/js/main.js"></script>
+
+    <script>
+        // Página específica del carrito
+        class CartPage {
+            constructor() {
+                this.init();
+            }
+            
+            init() {
+                console.log('🛒 Inicializando página del carrito...');
+                
+                // Esperar a que el carrito esté listo
+                if (window.shoppingCart) {
+                    this.loadCartItems();
+                } else {
+                    window.addEventListener('shoppingCartReady', () => {
+                        this.loadCartItems();
+                    });
+                }
+                
+                this.setupEventListeners();
+            }
+            
+            setupEventListeners() {
+                // Botón limpiar carrito
+                document.getElementById('clearCartBtn').addEventListener('click', () => {
+                    if (confirm('¿Estás seguro de que quieres vaciar tu carrito?')) {
+                        window.shoppingCart.clearCart();
+                        this.loadCartItems();
+                    }
+                });
+                
+                // Botón checkout (demo)
+                document.getElementById('checkoutBtn').addEventListener('click', () => {
+                    alert('¡Demo! En una tienda real, esto llevaría al proceso de pago.');
+                });
+            }
+            
+            loadCartItems() {
+                console.log('📦 Cargando items del carrito...');
+                
+                const cartSummary = window.shoppingCart.getCartSummary();
+                const loadingElement = document.getElementById('cartLoading');
+                const emptyElement = document.getElementById('cartEmpty');
+                const itemsList = document.getElementById('cartItemsList');
+                const clearBtn = document.getElementById('clearCartBtn');
+                const checkoutBtn = document.getElementById('checkoutBtn');
+                
+                // Ocultar loading
+                loadingElement.style.display = 'none';
+                
+                if (cartSummary.items.length === 0) {
+                    // Mostrar estado vacío
+                    emptyElement.style.display = 'block';
+                    clearBtn.style.display = 'none';
+                    checkoutBtn.disabled = true;
+                } else {
+                    // Mostrar items
+                    emptyElement.style.display = 'none';
+                    clearBtn.style.display = 'inline-flex';
+                    checkoutBtn.disabled = false;
+                    
+                    this.renderCartItems(cartSummary.items);
+                    this.updateCartSummary(cartSummary);
+                }
+            }
+            
+            renderCartItems(items) {
+                const itemsList = document.getElementById('cartItemsList');
+                
+                itemsList.innerHTML = items.map(item => `
+                    <div class="cart-item" data-product-id="${item.codigo}">
+                        <div class="cart-item-image">
+                            <img src="${item.imagen || '../assets/images/placeholder-product.svg'}" 
+                                 alt="${item.nombre}">
+                        </div>
+                        
+                        <div class="cart-item-details">
+                            <h4 class="item-name">${item.nombre}</h4>
+                            <p class="item-category">${item.categoria}</p>
+                            <p class="item-price">${this.formatPrice(item.precio)}</p>
+                            
+                            <div class="item-actions">
+                                <button class="btn-remove" onclick="cartPage.removeItem('${item.codigo}')">
+                                    <i class="fas fa-trash"></i> Eliminar
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="cart-item-quantity">
+                            <div class="quantity-controls">
+                                <button class="quantity-btn" onclick="cartPage.updateQuantity('${item.codigo}', ${item.quantity - 1})">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <span class="quantity-value">${item.quantity}</span>
+                                <button class="quantity-btn" onclick="cartPage.updateQuantity('${item.codigo}', ${item.quantity + 1})">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="item-total">
+                                ${this.formatPrice(item.precio * item.quantity)}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            updateCartSummary(summary) {
+                document.getElementById('totalItems').textContent = summary.totalItems;
+                document.getElementById('subtotalPrice').textContent = this.formatPrice(summary.totalPrice);
+                document.getElementById('totalPrice').textContent = this.formatPrice(summary.totalPrice);
+            }
+            
+            updateQuantity(productId, newQuantity) {
+                if (newQuantity <= 0) {
+                    this.removeItem(productId);
+                    return;
+                }
+                
+                if (window.shoppingCart.updateQuantity(productId, newQuantity)) {
+                    this.loadCartItems();
+                }
+            }
+            
+            removeItem(productId) {
+                window.shoppingCart.removeFromCart(productId);
+                this.loadCartItems();
+            }
+            
+            formatPrice(price) {
+                return new Intl.NumberFormat('es-CL', {
+                    style: 'currency',
+                    currency: 'CLP',
+                    minimumFractionDigits: 0
+                }).format(price);
+            }
+        }
+        
+        // Inicializar página del carrito
+        document.addEventListener('DOMContentLoaded', () => {
+            window.cartPage = new CartPage();
+        });
+    </script>
+
+    <style>
+        /* Estilos específicos del carrito */
+        .cart-hero {
+            background: var(--gradient-primary);
+            padding: 4rem 0 2rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .cart-hero .hero-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            color: var(--color-background);
+            margin-bottom: 1rem;
+        }
+        
+        .cart-hero .hero-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+        }
+        
+        .cart-section {
+            padding: 3rem 0;
+        }
+        
+        .cart-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        .cart-item {
+            display: grid;
+            grid-template-columns: 100px 1fr auto;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: var(--color-surface);
+            border-radius: var(--border-radius-lg);
+            border: 1px solid var(--color-border);
+            margin-bottom: 1rem;
+        }
+        
+        .cart-item-image img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: var(--border-radius-md);
+        }
+        
+        .cart-item-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .item-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .item-category {
+            color: var(--color-text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .item-price {
+            color: var(--color-accent);
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        
+        .btn-remove {
+            background: var(--color-error);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius-md);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-remove:hover {
+            background: #cc3333;
+        }
+        
+        .cart-item-quantity {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--color-surface-variant);
+            border-radius: var(--border-radius-md);
+            padding: 0.25rem;
+        }
+        
+        .quantity-btn {
+            background: var(--color-secondary);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .quantity-value {
+            padding: 0 0.75rem;
+            font-weight: 600;
+            min-width: 2rem;
+            text-align: center;
+        }
+        
+        .item-total {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--color-accent);
+        }
+        
+        .cart-summary {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius-lg);
+            padding: 2rem;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .summary-row.total {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--color-accent);
+        }
+        
+        .summary-separator {
+            height: 1px;
+            background: var(--color-border);
+            margin: 1.5rem 0;
+        }
+        
+        .btn-full {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .payment-methods {
+            margin-top: 2rem;
+            text-align: center;
+        }
+        
+        .payment-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .payment-icons i {
+            font-size: 1.5rem;
+            color: var(--color-text-secondary);
+        }
+        
+        .empty-cart {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--color-text-secondary);
+        }
+        
+        .empty-cart-icon i {
+            font-size: 4rem;
+            color: var(--color-text-muted);
+            margin-bottom: 1rem;
+        }
+        
+        .loading-container {
+            text-align: center;
+            padding: 4rem 0;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--color-border);
+            border-top: 3px solid var(--color-secondary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .cart-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .cart-item {
+                grid-template-columns: 80px 1fr;
+                grid-template-rows: auto auto;
+                gap: 1rem;
+            }
+            
+            .cart-item-quantity {
+                grid-column: 1 / -1;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: start;
+                gap: 1rem;
+            }
+        }
+    </style>
+</body>
+</html>

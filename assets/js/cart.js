@@ -69,6 +69,52 @@ class ShoppingCartManager {
         return true;
     }
 
+    updateQuantity(productId, newQuantity) {
+        if (!this.cart[productId]) {
+            console.error('❌ Producto no encontrado en el carrito:', productId);
+            return false;
+        }
+        
+        if (newQuantity <= 0) {
+            this.removeFromCart(productId);
+            return true;
+        }
+        
+        // Verificar stock disponible
+        const product = window.PRODUCT_DATABASE[productId];
+        if (product && newQuantity > product.stock) {
+            this.showNotification('Stock insuficiente para ' + product.nombre, 'warning');
+            return false;
+        }
+        
+        this.cart[productId].quantity = newQuantity;
+        this.saveCart();
+        this.updateCartCount();
+        console.log('📦 Cantidad actualizada:', productId, 'nueva cantidad:', newQuantity);
+        
+        return true;
+    }
+
+    removeFromCart(productId) {
+        if (this.cart[productId]) {
+            const productName = this.cart[productId].nombre;
+            delete this.cart[productId];
+            this.saveCart();
+            this.updateCartCount();
+            this.showNotification(productName + ' eliminado del carrito', 'info');
+            console.log('🗑️ Producto eliminado:', productId);
+        }
+    }
+
+    clearCart() {
+        const itemCount = Object.keys(this.cart).length;
+        this.cart = {};
+        this.saveCart();
+        this.updateCartCount();
+        this.showNotification('Carrito vaciado (' + itemCount + ' productos eliminados)', 'info');
+        console.log('🧹 Carrito vaciado');
+    }
+
     updateCartCount() {
         const totalItems = Object.values(this.cart).reduce((sum, item) => sum + item.quantity, 0);
         const cartCountElements = document.querySelectorAll('.cart-count');
