@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="gamer">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosotros - LEVEL-UP Gamer</title>
+    <meta name="description" content="Conoce al equipo detrás de LEVEL-UP Gamer, tu tienda gaming definitiva. Nuestra misión es llevar la mejor experiencia gaming a todos los jugadores.">
+    
+    <!-- Tipografías Roboto y Orbitron -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Estilos principales -->
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/search-gamer.css">
+    
+    <!-- Iconografía gamer -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Notificaciones -->
+    <div class="notifications-container" id="notificationsContainer"></div>
+
+    <!-- NAVBAR LEVEL-UP GAMER -->
+    <header class="main-header" role="banner">
+        <nav class="main-navbar" role="navigation" aria-label="Navegación principal">
+            
+            <!-- Logo -->
+            <div class="navbar-logo">
+                <a href="../index.html" class="logo-link" aria-label="Level-Up Gamer - Inicio">
+                    🎮 <span class="logo-text">LEVEL-UP GAMER</span>
+                </a>
+            </div>
+
+            <!-- Navegación Principal -->
+            <ul class="navbar-menu">
+                <li><a href="../index.html" class="nav-link">Inicio</a></li>
+                <li class="dropdown">
+                    <a href="../productos/" class="nav-link">Productos <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-menu">
+                        <a href="../productos/?category=consolas">Consolas</a>
+                        <a href="../productos/?category=pc-gaming">PC Gaming</a>
+                        <a href="../productos/?category=accesorios">Accesorios</a>
+                        <a href="../productos/?category=videojuegos">Videojuegos</a>
+                    </div>
+                </li>
+                <li><a href="../nosotros/" class="nav-link active">Nosotros</a></li>
+                <li><a href="../blog/" class="nav-link">Blog</a></li>
+                <li><a href="../contacto/" class="nav-link">Contacto</a></li>
+            </ul>
+
+            <!-- Acciones del Usuario -->
+            <div class="navbar-actions">
+                <!-- Búsqueda -->
+                <div class="search-container">
+                    <input type="search" 
+                           id="search-input" 
+                           class="search-input" 
+                           placeholder="Buscar productos..."
+                           aria-label="Buscar productos"
+                           aria-describedby="search-suggestions"
+                           autocomplete="off">
+                    <button id="search-btn" class="search-btn" aria-label="Ejecutar búsqueda">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <div id="search-suggestions" 
+                         class="search-suggestions" 
+                         role="listbox" 
+                         aria-label="Sugerencias de búsqueda"
+                         aria-live="polite"
+                         aria-hidden="true"
+                         style="display: none;">
+                    </div>
+                </div>
+
+                <!-- Carrito -->
+                <a href="../carrito/" class="cart-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+
+                <!-- Usuario -->
+                <div class="user-menu">
+                    <button class="user-btn">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <div class="user-dropdown">
+                        <a href="../usuario/login.html">Iniciar Sesión</a>
+                        <a href="../usuario/register.html">Registrarse</a>
+                        <a href="../usuario/">Mi Perfil</a>
+                        <a href="#" id="logoutBtn">Cerrar Sesión</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Menú Móvil -->
+            <button class="mobile-toggle" aria-label="Menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+        </nav>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        
+        <!-- Hero Section -->
+        <section class="hero-about" aria-labelledby="about-hero-title">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 id="about-hero-title" class="hero-title">
+                        Conoce a <span class="text-glow">LEVEL-UP GAMER</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Somos gamers apasionados creando la mejor experiencia de compra gaming en Chile
+                    </p>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">500+</div>
+                            <div class="stat-label">Productos Gaming</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">10K+</div>
+                            <div class="stat-label">Gamers Satisfechos</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label">Soporte Técnico</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="../assets/images/team-gaming.jpg" alt="Equipo Level-Up Gamer trabajando" class="hero-img">
+                </div>
+            </div>
+        </section>
+
+        <!-- Misión y Visión -->
+        <section class="mission-vision" aria-labelledby="mission-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="mission-title" class="section-title">Nuestra Misión</h2>
+                    <p class="section-subtitle">Revolucionando la experiencia gaming en Chile</p>
+                </div>
+                
+                <div class="cards-grid">
+                    <article class="mission-card">
+                        <div class="card-icon">
+                            <i class="fas fa-rocket" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="card-title">Misión</h3>
+                        <p class="card-content">
+                            Democratizar el acceso a la tecnología gaming de última generación, 
+                            ofreciendo productos de calidad con la mejor atención al cliente 
+                            y precios competitivos para toda la comunidad gamer chilena.
+                        </p>
+                    </article>
+                    
+                    <article class="mission-card">
+                        <div class="card-icon">
+                            <i class="fas fa-eye" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="card-title">Visión</h3>
+                        <p class="card-content">
+                            Ser la tienda gaming líder en Latinoamérica, reconocida por nuestra 
+                            innovación, confiabilidad y compromiso con la comunidad gamer, 
+                            conectando jugadores con la tecnología que los impulsa al siguiente nivel.
+                        </p>
+                    </article>
+                    
+                    <article class="mission-card">
+                        <div class="card-icon">
+                            <i class="fas fa-heart" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="card-title">Valores</h3>
+                        <p class="card-content">
+                            Pasión por el gaming, compromiso con la calidad, innovación constante, 
+                            atención personalizada y construcción de una comunidad inclusiva 
+                            donde todos los gamers encuentren su lugar.
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Equipo Desarrollador -->
+        <section class="team-section" aria-labelledby="team-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="team-title" class="section-title">Nuestro Equipo</h2>
+                    <p class="section-subtitle">Los desarrolladores detrás de esta experiencia gaming</p>
+                </div>
+                
+                <div class="team-grid">
+                    <article class="team-member">
+                        <div class="member-avatar">
+                            <img src="../assets/images/developer-1.jpg" alt="Foto de perfil de Sabelle Contreras" class="avatar-img">
+                            <div class="avatar-status online"></div>
+                        </div>
+                        <div class="member-info">
+                            <h3 class="member-name">Sabelle Contreras</h3>
+                            <p class="member-role">Full Stack Developer & Gaming Enthusiast</p>
+                            <p class="member-bio">
+                                Desarrolladora apasionada por crear experiencias web innovadoras. 
+                                Especialista en React, Node.js y tecnologías gaming. 
+                                Gamer desde los 8 años, ama los RPGs y juegos de estrategia.
+                            </p>
+                            <div class="member-skills">
+                                <span class="skill-tag">JavaScript</span>
+                                <span class="skill-tag">React</span>
+                                <span class="skill-tag">Node.js</span>
+                                <span class="skill-tag">CSS3</span>
+                                <span class="skill-tag">Git</span>
+                            </div>
+                            <div class="member-social">
+                                <a href="https://github.com/sabelle-contreras" class="social-link" aria-label="GitHub de Sabelle">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                                <a href="https://linkedin.com/in/sabelle-contreras" class="social-link" aria-label="LinkedIn de Sabelle">
+                                    <i class="fab fa-linkedin"></i>
+                                </a>
+                                <a href="mailto:sabelle@levelupgamer.cl" class="social-link" aria-label="Email de Sabelle">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="member-stats">
+                            <div class="stat">
+                                <div class="stat-value">150+</div>
+                                <div class="stat-label">Commits</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">3+</div>
+                                <div class="stat-label">Años Exp.</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">10+</div>
+                                <div class="stat-label">Proyectos</div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tecnologías Utilizadas -->
+        <section class="tech-stack" aria-labelledby="tech-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="tech-title" class="section-title">Stack Tecnológico</h2>
+                    <p class="section-subtitle">Las herramientas que potencian nuestra plataforma</p>
+                </div>
+                
+                <div class="tech-categories">
+                    <div class="tech-category">
+                        <h3 class="category-title">Frontend</h3>
+                        <div class="tech-items">
+                            <div class="tech-item">
+                                <i class="fab fa-html5" aria-hidden="true"></i>
+                                <span>HTML5 Semántico</span>
+                            </div>
+                            <div class="tech-item">
+                                <i class="fab fa-css3-alt" aria-hidden="true"></i>
+                                <span>CSS3 + Variables</span>
+                            </div>
+                            <div class="tech-item">
+                                <i class="fab fa-js" aria-hidden="true"></i>
+                                <span>JavaScript ES6+</span>
+                            </div>
+                            <div class="tech-item">
+                                <i class="fas fa-mobile-alt" aria-hidden="true"></i>
+                                <span>Responsive Design</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-category">
+                        <h3 class="category-title">Herramientas</h3>
+                        <div class="tech-items">
+                            <div class="tech-item">
+                                <i class="fab fa-git-alt" aria-hidden="true"></i>
+                                <span>Git & GitHub</span>
+                            </div>
+                            <div class="tech-item">
+                                <i class="fas fa-code" aria-hidden="true"></i>
+                                <span>VS Code</span>
+                            </div>
+                            <div class="tech-item">
+                                <i class="fas fa-rocket" aria-hidden="true"></i>
+                                <span>GitHub Pages</span>
+                            </div>
+                            <div class="tech-item">
+                                <i class="fas fa-search" aria-hidden="true"></i>
+                                <span>DevTools</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-category">
+                        <h3 class="category-title">Características</h3>
+                        <div class="tech-items">
+                            <div class="tech-item">
+                                <i class="fas fa-universal-access" aria-hidden="true"></i>
+                                <span>Accesibilidad ARIA</span>
+                            </div>
+                            <div class="tech-item">
+                                <i class="fas fa-tachometer-alt" aria-hidden="true"></i>
+                                <span>Optimizado SEO</span>
+                            </div>
+                            <div class="tech-item">
+                                <i class="fas fa-shield-alt" aria-hidden="true"></i>
+                                <span>Validación Segura</span>
+                            </div>
+                            <div class="tech-item">
+                                <i class="fas fa-database" aria-hidden="true"></i>
+                                <span>LocalStorage</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Historia del Proyecto -->
+        <section class="project-story" aria-labelledby="story-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="story-title" class="section-title">Historia del Proyecto</h2>
+                    <p class="section-subtitle">Desde la idea hasta la realidad</p>
+                </div>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-icon">
+                            <i class="fas fa-lightbulb" aria-hidden="true"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h3 class="timeline-title">Conceptualización</h3>
+                            <p class="timeline-date">Septiembre 2025</p>
+                            <p class="timeline-description">
+                                Identificamos la necesidad de una plataforma gaming moderna en Chile 
+                                que combinara la mejor experiencia de usuario con productos de calidad.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-icon">
+                            <i class="fas fa-pencil-ruler" aria-hidden="true"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h3 class="timeline-title">Diseño y Planificación</h3>
+                            <p class="timeline-date">Septiembre 2025</p>
+                            <p class="timeline-description">
+                                Desarrollo de wireframes, selección de paleta cyber gamer, 
+                                definición de arquitectura y stack tecnológico.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-icon">
+                            <i class="fas fa-code" aria-hidden="true"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h3 class="timeline-title">Desarrollo</h3>
+                            <p class="timeline-date">Septiembre 2025</p>
+                            <p class="timeline-description">
+                                Implementación de funcionalidades core: carrito, búsqueda inteligente, 
+                                sistema de usuarios y diseño responsive con accesibilidad.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-icon">
+                            <i class="fas fa-rocket" aria-hidden="true"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h3 class="timeline-title">Lanzamiento</h3>
+                            <p class="timeline-date">Septiembre 2025</p>
+                            <p class="timeline-description">
+                                Deploy exitoso con todas las funcionalidades implementadas, 
+                                testing completo y optimización para producción.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="main-footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">LEVEL-UP GAMER</h3>
+                    <p class="footer-description">
+                        Tu tienda gaming definitiva. Productos de calidad, 
+                        precios competitivos y la mejor atención al cliente.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="Facebook">
+                            <i class="fab fa-facebook" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <i class="fab fa-twitter" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Instagram">
+                            <i class="fab fa-instagram" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="YouTube">
+                            <i class="fab fa-youtube" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Enlaces Rápidos</h4>
+                    <ul class="footer-links">
+                        <li><a href="../index.html">Inicio</a></li>
+                        <li><a href="../productos/">Productos</a></li>
+                        <li><a href="../nosotros/">Nosotros</a></li>
+                        <li><a href="../blog/">Blog</a></li>
+                        <li><a href="../contacto/">Contacto</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Soporte</h4>
+                    <ul class="footer-links">
+                        <li><a href="../soporte/">Centro de Ayuda</a></li>
+                        <li><a href="../contacto/">Contacto</a></li>
+                        <li><a href="#">Términos y Condiciones</a></li>
+                        <li><a href="#">Política de Privacidad</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Contacto</h4>
+                    <div class="footer-contact">
+                        <p><i class="fas fa-envelope" aria-hidden="true"></i> info@levelupgamer.cl</p>
+                        <p><i class="fas fa-phone" aria-hidden="true"></i> +56 9 1234 5678</p>
+                        <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Santiago, Chile</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 LEVEL-UP GAMER. Todos los derechos reservados.</p>
+                <p>Desarrollado con 💚 por Sabelle Contreras</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/cart.js"></script>
+    <script src="../assets/js/search-gamer.js"></script>
+    <script src="../assets/js/auth.js"></script>
+</body>
+</html>

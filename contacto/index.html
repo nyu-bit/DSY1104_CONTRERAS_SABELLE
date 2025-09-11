@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="gamer">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto - LEVEL-UP Gamer</title>
+    <meta name="description" content="Contáctanos para cualquier consulta, soporte técnico o sugerencias. Estamos aquí para ayudarte con tu experiencia gaming.">
+    
+    <!-- Tipografías Roboto y Orbitron -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Estilos principales -->
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/search-gamer.css">
+    
+    <!-- Iconografía gamer -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Notificaciones -->
+    <div class="notifications-container" id="notificationsContainer"></div>
+
+    <!-- NAVBAR LEVEL-UP GAMER -->
+    <header class="main-header" role="banner">
+        <nav class="main-navbar" role="navigation" aria-label="Navegación principal">
+            
+            <!-- Logo -->
+            <div class="navbar-logo">
+                <a href="../index.html" class="logo-link" aria-label="Level-Up Gamer - Inicio">
+                    🎮 <span class="logo-text">LEVEL-UP GAMER</span>
+                </a>
+            </div>
+
+            <!-- Navegación Principal -->
+            <ul class="navbar-menu">
+                <li><a href="../index.html" class="nav-link">Inicio</a></li>
+                <li class="dropdown">
+                    <a href="../productos/" class="nav-link">Productos <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-menu">
+                        <a href="../productos/?category=consolas">Consolas</a>
+                        <a href="../productos/?category=pc-gaming">PC Gaming</a>
+                        <a href="../productos/?category=accesorios">Accesorios</a>
+                        <a href="../productos/?category=videojuegos">Videojuegos</a>
+                    </div>
+                </li>
+                <li><a href="../nosotros/" class="nav-link">Nosotros</a></li>
+                <li><a href="../blog/" class="nav-link">Blog</a></li>
+                <li><a href="../contacto/" class="nav-link active">Contacto</a></li>
+            </ul>
+
+            <!-- Acciones del Usuario -->
+            <div class="navbar-actions">
+                <!-- Búsqueda -->
+                <div class="search-container">
+                    <input type="search" 
+                           id="search-input" 
+                           class="search-input" 
+                           placeholder="Buscar productos..."
+                           aria-label="Buscar productos"
+                           aria-describedby="search-suggestions"
+                           autocomplete="off">
+                    <button id="search-btn" class="search-btn" aria-label="Ejecutar búsqueda">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <div id="search-suggestions" 
+                         class="search-suggestions" 
+                         role="listbox" 
+                         aria-label="Sugerencias de búsqueda"
+                         aria-live="polite"
+                         aria-hidden="true"
+                         style="display: none;">
+                    </div>
+                </div>
+
+                <!-- Carrito -->
+                <a href="../carrito/" class="cart-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+
+                <!-- Usuario -->
+                <div class="user-menu">
+                    <button class="user-btn">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <div class="user-dropdown">
+                        <a href="../usuario/login.html">Iniciar Sesión</a>
+                        <a href="../usuario/register.html">Registrarse</a>
+                        <a href="../usuario/">Mi Perfil</a>
+                        <a href="#" id="logoutBtn">Cerrar Sesión</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Menú Móvil -->
+            <button class="mobile-toggle" aria-label="Menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+        </nav>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        
+        <!-- Hero Section -->
+        <section class="hero-contact" aria-labelledby="contact-hero-title">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 id="contact-hero-title" class="hero-title">
+                        <span class="text-glow">Contáctanos</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        ¿Tienes alguna pregunta? Estamos aquí para ayudarte con cualquier consulta sobre nuestros productos o servicios
+                    </p>
+                    <div class="hero-features">
+                        <div class="feature-item">
+                            <i class="fas fa-clock" aria-hidden="true"></i>
+                            <span>Respuesta en 24 horas</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-headset" aria-hidden="true"></i>
+                            <span>Soporte especializado</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-shield-alt" aria-hidden="true"></i>
+                            <span>100% confidencial</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Información de Contacto -->
+        <section class="contact-info" aria-labelledby="contact-info-title">
+            <div class="container">
+                <h2 id="contact-info-title" class="section-title">Múltiples Formas de Contactarnos</h2>
+                
+                <div class="contact-methods">
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="contact-title">Email</h3>
+                        <p class="contact-description">
+                            Envíanos un email y te responderemos en menos de 24 horas
+                        </p>
+                        <div class="contact-details">
+                            <a href="mailto:info@levelupgamer.cl" class="contact-link">
+                                info@levelupgamer.cl
+                            </a>
+                            <a href="mailto:soporte@levelupgamer.cl" class="contact-link">
+                                soporte@levelupgamer.cl
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="contact-title">Teléfono</h3>
+                        <p class="contact-description">
+                            Llámanos directamente durante nuestro horario de atención
+                        </p>
+                        <div class="contact-details">
+                            <a href="tel:+56912345678" class="contact-link">
+                                +56 9 1234 5678
+                            </a>
+                            <p class="contact-hours">
+                                Lun - Vie: 9:00 - 18:00<br>
+                                Sáb: 10:00 - 16:00
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="contact-title">Ubicación</h3>
+                        <p class="contact-description">
+                            Visítanos en nuestra tienda física en Santiago
+                        </p>
+                        <div class="contact-details">
+                            <address class="contact-address">
+                                Av. Providencia 1234<br>
+                                Providencia, Santiago<br>
+                                Región Metropolitana, Chile
+                            </address>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-comments" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="contact-title">Chat en Vivo</h3>
+                        <p class="contact-description">
+                            Conversa con nuestro equipo de soporte en tiempo real
+                        </p>
+                        <div class="contact-details">
+                            <button class="btn btn-secondary" id="openChatBtn">
+                                <i class="fas fa-comment-dots" aria-hidden="true"></i>
+                                Iniciar Chat
+                            </button>
+                            <p class="contact-status online">
+                                <i class="fas fa-circle" aria-hidden="true"></i>
+                                En línea ahora
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Formulario de Contacto -->
+        <section class="contact-form-section" aria-labelledby="form-title">
+            <div class="container">
+                <div class="form-layout">
+                    <div class="form-info">
+                        <h2 id="form-title" class="section-title">Envíanos un Mensaje</h2>
+                        <p class="form-description">
+                            Completa el formulario y nos pondremos en contacto contigo lo antes posible. 
+                            Todos los campos marcados con * son obligatorios.
+                        </p>
+                        
+                        <div class="form-benefits">
+                            <div class="benefit-item">
+                                <i class="fas fa-check-circle" aria-hidden="true"></i>
+                                <span>Respuesta garantizada en 24 horas</span>
+                            </div>
+                            <div class="benefit-item">
+                                <i class="fas fa-user-shield" aria-hidden="true"></i>
+                                <span>Tus datos están completamente protegidos</span>
+                            </div>
+                            <div class="benefit-item">
+                                <i class="fas fa-star" aria-hidden="true"></i>
+                                <span>Atención personalizada por expertos gaming</span>
+                            </div>
+                        </div>
+                        
+                        <div class="support-hours">
+                            <h3 class="hours-title">Horarios de Atención</h3>
+                            <div class="hours-list">
+                                <div class="hours-item">
+                                    <span class="day">Lunes a Viernes</span>
+                                    <span class="time">9:00 - 18:00</span>
+                                </div>
+                                <div class="hours-item">
+                                    <span class="day">Sábados</span>
+                                    <span class="time">10:00 - 16:00</span>
+                                </div>
+                                <div class="hours-item">
+                                    <span class="day">Domingos</span>
+                                    <span class="time">Cerrado</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form class="contact-form" id="contactForm" novalidate aria-label="Formulario de contacto">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName" class="form-label">
+                                    Nombre *
+                                </label>
+                                <input type="text" 
+                                       id="firstName" 
+                                       name="firstName" 
+                                       class="form-input" 
+                                       required
+                                       aria-describedby="firstName-error"
+                                       autocomplete="given-name">
+                                <div class="field-error" id="firstName-error" role="alert"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="lastName" class="form-label">
+                                    Apellido *
+                                </label>
+                                <input type="text" 
+                                       id="lastName" 
+                                       name="lastName" 
+                                       class="form-input" 
+                                       required
+                                       aria-describedby="lastName-error"
+                                       autocomplete="family-name">
+                                <div class="field-error" id="lastName-error" role="alert"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email" class="form-label">
+                                    Email *
+                                </label>
+                                <input type="email" 
+                                       id="email" 
+                                       name="email" 
+                                       class="form-input" 
+                                       required
+                                       aria-describedby="email-error"
+                                       autocomplete="email">
+                                <div class="field-error" id="email-error" role="alert"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="phone" class="form-label">
+                                    Teléfono
+                                </label>
+                                <input type="tel" 
+                                       id="phone" 
+                                       name="phone" 
+                                       class="form-input"
+                                       aria-describedby="phone-error"
+                                       autocomplete="tel">
+                                <div class="field-error" id="phone-error" role="alert"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject" class="form-label">
+                                Asunto *
+                            </label>
+                            <select id="subject" 
+                                    name="subject" 
+                                    class="form-select" 
+                                    required
+                                    aria-describedby="subject-error">
+                                <option value="">Selecciona el motivo de tu consulta</option>
+                                <option value="producto">Consulta sobre producto</option>
+                                <option value="pedido">Estado de pedido</option>
+                                <option value="soporte">Soporte técnico</option>
+                                <option value="garantia">Garantía y devoluciones</option>
+                                <option value="sugerencia">Sugerencia</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                            <div class="field-error" id="subject-error" role="alert"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message" class="form-label">
+                                Mensaje *
+                            </label>
+                            <textarea id="message" 
+                                      name="message" 
+                                      class="form-textarea" 
+                                      rows="6" 
+                                      required
+                                      aria-describedby="message-error message-help"
+                                      placeholder="Describe tu consulta con el mayor detalle posible..."></textarea>
+                            <div class="field-help" id="message-help">
+                                Mínimo 20 caracteres. Incluye detalles relevantes para brindarte mejor atención.
+                            </div>
+                            <div class="field-error" id="message-error" role="alert"></div>
+                        </div>
+                        
+                        <div class="form-group checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" 
+                                       id="privacy" 
+                                       name="privacy" 
+                                       class="checkbox-input" 
+                                       required
+                                       aria-describedby="privacy-error">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-text">
+                                    He leído y acepto la 
+                                    <a href="#" class="privacy-link">política de privacidad</a> *
+                                </span>
+                            </label>
+                            <div class="field-error" id="privacy-error" role="alert"></div>
+                        </div>
+                        
+                        <div class="form-group checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" 
+                                       id="newsletter" 
+                                       name="newsletter" 
+                                       class="checkbox-input">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-text">
+                                    Quiero recibir newsletters con ofertas y novedades gaming
+                                </span>
+                            </label>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary submit-btn" aria-describedby="submit-help">
+                                <span class="btn-text">Enviar Mensaje</span>
+                                <i class="fas fa-paper-plane btn-icon" aria-hidden="true"></i>
+                            </button>
+                            <p class="submit-help" id="submit-help">
+                                Al enviar este formulario, un miembro de nuestro equipo se pondrá en contacto contigo.
+                            </p>
+                        </div>
+                        
+                        <div class="submit-status" id="submitStatus" role="alert" aria-live="polite"></div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section" aria-labelledby="faq-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="faq-title" class="section-title">Preguntas Frecuentes</h2>
+                    <p class="section-subtitle">Encuentra respuestas rápidas a las consultas más comunes</p>
+                </div>
+                
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false" aria-controls="faq-1">
+                            <span>¿Cuál es el tiempo de entrega de los productos?</span>
+                            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                        </button>
+                        <div class="faq-answer" id="faq-1">
+                            <p>Los tiempos de entrega varían según la ubicación y el producto:</p>
+                            <ul>
+                                <li><strong>Santiago:</strong> 1-2 días hábiles</li>
+                                <li><strong>Regiones:</strong> 2-5 días hábiles</li>
+                                <li><strong>Productos especiales:</strong> 5-10 días hábiles</li>
+                            </ul>
+                            <p>Todos los envíos incluyen tracking para que puedas seguir tu pedido en tiempo real.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false" aria-controls="faq-2">
+                            <span>¿Qué garantía tienen los productos?</span>
+                            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                        </button>
+                        <div class="faq-answer" id="faq-2">
+                            <p>Todos nuestros productos cuentan con garantía oficial del fabricante:</p>
+                            <ul>
+                                <li><strong>Consolas:</strong> 12 meses</li>
+                                <li><strong>Componentes PC:</strong> 24-36 meses según marca</li>
+                                <li><strong>Periféricos:</strong> 12-24 meses</li>
+                                <li><strong>Juegos:</strong> Garantía por defectos de fabricación</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false" aria-controls="faq-3">
+                            <span>¿Puedo cambiar o devolver un producto?</span>
+                            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                        </button>
+                        <div class="faq-answer" id="faq-3">
+                            <p>Sí, aceptamos cambios y devoluciones bajo las siguientes condiciones:</p>
+                            <ul>
+                                <li>Dentro de los primeros 30 días desde la compra</li>
+                                <li>Producto en perfecto estado y empaque original</li>
+                                <li>Incluir todos los accesorios y documentación</li>
+                                <li>Productos digitales no son reembolsables</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false" aria-controls="faq-4">
+                            <span>¿Qué métodos de pago aceptan?</span>
+                            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                        </button>
+                        <div class="faq-answer" id="faq-4">
+                            <p>Aceptamos múltiples métodos de pago seguros:</p>
+                            <ul>
+                                <li>Tarjetas de crédito (Visa, Mastercard, American Express)</li>
+                                <li>Tarjetas de débito</li>
+                                <li>Transferencia bancaria</li>
+                                <li>WebPay Plus</li>
+                                <li>Mercado Pago</li>
+                                <li>Efectivo en tienda física</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="main-footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">LEVEL-UP GAMER</h3>
+                    <p class="footer-description">
+                        Tu tienda gaming definitiva. Estamos aquí para resolver todas 
+                        tus dudas y brindarte la mejor experiencia de compra.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="Facebook">
+                            <i class="fab fa-facebook" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <i class="fab fa-twitter" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Instagram">
+                            <i class="fab fa-instagram" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="WhatsApp">
+                            <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Contacto Rápido</h4>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-envelope" aria-hidden="true"></i> info@levelupgamer.cl</li>
+                        <li><i class="fas fa-phone" aria-hidden="true"></i> +56 9 1234 5678</li>
+                        <li><i class="fas fa-clock" aria-hidden="true"></i> Lun-Vie 9:00-18:00</li>
+                        <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Santiago, Chile</li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Enlaces Útiles</h4>
+                    <ul class="footer-links">
+                        <li><a href="../index.html">Inicio</a></li>
+                        <li><a href="../productos/">Productos</a></li>
+                        <li><a href="../soporte/">Soporte</a></li>
+                        <li><a href="../blog/">Blog</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Términos y Condiciones</a></li>
+                        <li><a href="#">Política de Privacidad</a></li>
+                        <li><a href="#">Política de Devoluciones</a></li>
+                        <li><a href="#">Garantías</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 LEVEL-UP GAMER. Todos los derechos reservados.</p>
+                <p>Desarrollado con 💚 por Sabelle Contreras</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/cart.js"></script>
+    <script src="../assets/js/search-gamer.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    
+    <!-- Script del formulario de contacto -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const contactForm = document.getElementById('contactForm');
+            const submitStatus = document.getElementById('submitStatus');
+            
+            // Validación en tiempo real
+            const fields = {
+                firstName: {
+                    element: document.getElementById('firstName'),
+                    rules: {
+                        required: true,
+                        minLength: 2,
+                        pattern: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/
+                    },
+                    messages: {
+                        required: 'El nombre es obligatorio',
+                        minLength: 'El nombre debe tener al menos 2 caracteres',
+                        pattern: 'El nombre solo puede contener letras'
+                    }
+                },
+                lastName: {
+                    element: document.getElementById('lastName'),
+                    rules: {
+                        required: true,
+                        minLength: 2,
+                        pattern: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/
+                    },
+                    messages: {
+                        required: 'El apellido es obligatorio',
+                        minLength: 'El apellido debe tener al menos 2 caracteres',
+                        pattern: 'El apellido solo puede contener letras'
+                    }
+                },
+                email: {
+                    element: document.getElementById('email'),
+                    rules: {
+                        required: true,
+                        pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+                    },
+                    messages: {
+                        required: 'El email es obligatorio',
+                        pattern: 'Ingresa un email válido'
+                    }
+                },
+                phone: {
+                    element: document.getElementById('phone'),
+                    rules: {
+                        pattern: /^[+]?[\d\s\-()]+$/
+                    },
+                    messages: {
+                        pattern: 'Ingresa un teléfono válido'
+                    }
+                },
+                subject: {
+                    element: document.getElementById('subject'),
+                    rules: {
+                        required: true
+                    },
+                    messages: {
+                        required: 'Selecciona un asunto'
+                    }
+                },
+                message: {
+                    element: document.getElementById('message'),
+                    rules: {
+                        required: true,
+                        minLength: 20,
+                        maxLength: 1000
+                    },
+                    messages: {
+                        required: 'El mensaje es obligatorio',
+                        minLength: 'El mensaje debe tener al menos 20 caracteres',
+                        maxLength: 'El mensaje no puede exceder 1000 caracteres'
+                    }
+                },
+                privacy: {
+                    element: document.getElementById('privacy'),
+                    rules: {
+                        required: true
+                    },
+                    messages: {
+                        required: 'Debes aceptar la política de privacidad'
+                    }
+                }
+            };
+            
+            // Función de validación
+            function validateField(fieldName) {
+                const field = fields[fieldName];
+                const value = field.element.value.trim();
+                const errorElement = document.getElementById(fieldName + '-error');
+                
+                // Limpiar errores previos
+                errorElement.textContent = '';
+                field.element.classList.remove('error');
+                
+                // Validar requerido
+                if (field.rules.required && !value) {
+                    if (field.element.type === 'checkbox' && !field.element.checked) {
+                        showFieldError(fieldName, field.messages.required);
+                        return false;
+                    } else if (field.element.type !== 'checkbox') {
+                        showFieldError(fieldName, field.messages.required);
+                        return false;
+                    }
+                }
+                
+                // Validar longitud mínima
+                if (field.rules.minLength && value.length < field.rules.minLength) {
+                    showFieldError(fieldName, field.messages.minLength);
+                    return false;
+                }
+                
+                // Validar longitud máxima
+                if (field.rules.maxLength && value.length > field.rules.maxLength) {
+                    showFieldError(fieldName, field.messages.maxLength);
+                    return false;
+                }
+                
+                // Validar patrón
+                if (field.rules.pattern && value && !field.rules.pattern.test(value)) {
+                    showFieldError(fieldName, field.messages.pattern);
+                    return false;
+                }
+                
+                return true;
+            }
+            
+            function showFieldError(fieldName, message) {
+                const field = fields[fieldName];
+                const errorElement = document.getElementById(fieldName + '-error');
+                
+                field.element.classList.add('error');
+                errorElement.textContent = message;
+                errorElement.classList.add('show');
+            }
+            
+            // Eventos de validación en tiempo real
+            Object.keys(fields).forEach(fieldName => {
+                const field = fields[fieldName];
+                
+                if (field.element.type === 'checkbox') {
+                    field.element.addEventListener('change', () => validateField(fieldName));
+                } else {
+                    field.element.addEventListener('blur', () => validateField(fieldName));
+                    field.element.addEventListener('input', () => {
+                        if (field.element.classList.contains('error')) {
+                            setTimeout(() => validateField(fieldName), 500);
+                        }
+                    });
+                }
+            });
+            
+            // Submit del formulario
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Validar todos los campos
+                let isValid = true;
+                Object.keys(fields).forEach(fieldName => {
+                    if (!validateField(fieldName)) {
+                        isValid = false;
+                    }
+                });
+                
+                if (isValid) {
+                    // Simular envío
+                    submitStatus.innerHTML = `
+                        <div class="success-message">
+                            <i class="fas fa-check-circle"></i>
+                            <strong>¡Mensaje enviado exitosamente!</strong>
+                            <p>Gracias por contactarnos. Nos pondremos en contacto contigo dentro de las próximas 24 horas.</p>
+                        </div>
+                    `;
+                    submitStatus.classList.add('show');
+                    
+                    // Limpiar formulario
+                    contactForm.reset();
+                    
+                    // Scroll al mensaje de éxito
+                    submitStatus.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                    submitStatus.innerHTML = `
+                        <div class="error-message">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Por favor corrige los errores en el formulario</strong>
+                        </div>
+                    `;
+                    submitStatus.classList.add('show');
+                }
+            });
+            
+            // FAQ Accordion
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const isExpanded = question.getAttribute('aria-expanded') === 'true';
+                    const answer = question.nextElementSibling;
+                    
+                    // Cerrar todas las otras preguntas
+                    faqQuestions.forEach(q => {
+                        if (q !== question) {
+                            q.setAttribute('aria-expanded', 'false');
+                            q.classList.remove('active');
+                            q.nextElementSibling.style.maxHeight = null;
+                        }
+                    });
+                    
+                    // Toggle la pregunta actual
+                    question.setAttribute('aria-expanded', !isExpanded);
+                    question.classList.toggle('active');
+                    
+                    if (!isExpanded) {
+                        answer.style.maxHeight = answer.scrollHeight + 'px';
+                    } else {
+                        answer.style.maxHeight = null;
+                    }
+                });
+            });
+            
+            // Chat simulado
+            document.getElementById('openChatBtn').addEventListener('click', () => {
+                alert('¡Chat en vivo próximamente! Por ahora puedes usar el formulario de contacto o enviarnos un email.');
+            });
+        });
+    </script>
+</body>
+</html>

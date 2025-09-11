@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="gamer">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil Gamer - LEVEL-UP Gamer</title>
+    <meta name="description" content="Gestiona tu perfil gamer, niveles, logros y preferencias en LEVEL-UP Gamer.">
+    
+    <!-- Tipografías Roboto y Orbitron -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Estilos principales -->
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/gamification.css">
+    <link rel="stylesheet" href="../assets/css/reviews.css">
+    
+    <!-- Iconografía gamer -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Notificaciones -->
+    <div class="notifications-container" id="notificationsContainer"></div>
+
+    <!-- NAVBAR LEVEL-UP GAMER -->
+    <header class="main-header" role="banner">
+        <nav class="main-navbar" role="navigation" aria-label="Navegación principal">
+            
+            <!-- Logo -->
+            <div class="navbar-logo">
+                <a href="../index.html" class="logo-link" aria-label="Level-Up Gamer - Inicio">
+                    🎮 <span class="logo-text">LEVEL-UP GAMER</span>
+                </a>
+            </div>
+
+            <!-- Navegación Principal -->
+            <ul class="navbar-menu">
+                <li><a href="../index.html" class="nav-link">Inicio</a></li>
+                <li class="dropdown">
+                    <a href="../productos/" class="nav-link">Productos <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-menu">
+                        <a href="../productos/?category=consolas">Consolas</a>
+                        <a href="../productos/?category=pc-gaming">PC Gaming</a>
+                        <a href="../productos/?category=accesorios">Accesorios</a>
+                        <a href="../productos/?category=videojuegos">Videojuegos</a>
+                    </div>
+                </li>
+                <li><a href="../nosotros/" class="nav-link">Nosotros</a></li>
+                <li><a href="../blog/" class="nav-link">Blog</a></li>
+                <li><a href="../contacto/" class="nav-link">Contacto</a></li>
+            </ul>
+
+            <!-- Acciones del Usuario -->
+            <div class="navbar-actions">
+                <!-- Carrito -->
+                <a href="../carrito/" class="cart-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+
+                <!-- Indicador de Nivel -->
+                <div class="user-level-indicator" id="userLevelIndicator" style="display: none;">
+                    <!-- Se actualiza dinámicamente -->
+                </div>
+
+                <!-- Usuario -->
+                <div class="user-menu">
+                    <button class="user-btn" id="userBtn">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="../usuario/" class="active">Mi Perfil</a>
+                        <a href="../usuario/login.html" id="loginLink">Iniciar Sesión</a>
+                        <a href="../usuario/register.html" id="registerLink">Registrarse</a>
+                        <a href="#" id="logoutBtn" style="display: none;">Cerrar Sesión</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Menú Móvil -->
+            <button class="mobile-toggle" aria-label="Menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+
+        <!-- Menú Móvil Expandido -->
+        <div class="mobile-menu">
+            <a href="../index.html">Inicio</a>
+            <a href="../productos/">Productos</a>
+            <a href="../nosotros/">Nosotros</a>
+            <a href="../blog/">Blog</a>
+            <a href="../contacto/">Contacto</a>
+            <a href="../carrito/">Carrito (<span class="mobile-cart-count">0</span>)</a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="main" role="main">
+        <!-- Estado No Logueado -->
+        <section class="auth-required" id="authRequired" style="display: none;">
+            <div class="container">
+                <div class="auth-hero">
+                    <div class="auth-content">
+                        <h1>🔐 Área Restringida</h1>
+                        <p>Necesitas iniciar sesión para acceder a tu perfil gamer</p>
+                        <div class="auth-actions">
+                            <a href="login.html" class="btn-primary">
+                                <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                            </a>
+                            <a href="register.html" class="btn-secondary">
+                                <i class="fas fa-user-plus"></i> Registrarse
+                            </a>
+                        </div>
+                    </div>
+                    <div class="auth-benefits">
+                        <h3>🎮 Beneficios de tener cuenta:</h3>
+                        <ul>
+                            <li>✅ Sistema de puntos y niveles</li>
+                            <li>✅ Logros y desafíos gaming</li>
+                            <li>✅ Descuentos exclusivos</li>
+                            <li>✅ Historial de compras</li>
+                            <li>✅ Wishlist personalizada</li>
+                            <li>✅ Reseñas y calificaciones</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Perfil de Usuario -->
+        <section class="profile-section" id="profileSection" style="display: none;">
+            <div class="container">
+                <!-- Header del Perfil -->
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <div class="avatar-circle" id="userAvatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <button class="avatar-edit-btn" title="Cambiar avatar">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="profile-info">
+                        <h1 id="userName">Cargando...</h1>
+                        <p class="user-email" id="userEmail">Cargando...</p>
+                        <div class="user-join-date">
+                            <i class="fas fa-calendar"></i>
+                            <span>Miembro desde <span id="joinDate">2025</span></span>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-level">
+                        <div class="level-info" id="levelInfo">
+                            <!-- Se actualiza dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navegación por Tabs -->
+                <div class="profile-tabs">
+                    <button class="tab-btn active" data-tab="dashboard">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </button>
+                    <button class="tab-btn" data-tab="personal">
+                        <i class="fas fa-user-edit"></i> Datos Personales
+                    </button>
+                    <button class="tab-btn" data-tab="preferences">
+                        <i class="fas fa-cog"></i> Preferencias
+                    </button>
+                    <button class="tab-btn" data-tab="gamification">
+                        <i class="fas fa-trophy"></i> Gamificación
+                    </button>
+                    <button class="tab-btn" data-tab="referrals">
+                        <i class="fas fa-share-alt"></i> Referidos
+                    </button>
+                    <button class="tab-btn" data-tab="reviews">
+                        <i class="fas fa-star"></i> Mis Reseñas
+                    </button>
+                </div>
+
+                <!-- Contenido de los Tabs -->
+                <div class="tab-content">
+                    
+                    <!-- Dashboard Tab -->
+                    <div class="tab-panel active" id="dashboardTab">
+                        <div class="dashboard-grid">
+                            <!-- Estadísticas Rápidas -->
+                            <div class="stats-section">
+                                <h3>📊 Estadísticas</h3>
+                                <div class="user-stats" id="userStats">
+                                    <!-- Se actualiza dinámicamente -->
+                                </div>
+                            </div>
+
+                            <!-- Actividad Reciente -->
+                            <div class="activity-section">
+                                <h3>🕒 Actividad Reciente</h3>
+                                <div class="activity-list" id="activityList">
+                                    <!-- Se actualiza dinámicamente -->
+                                </div>
+                            </div>
+
+                            <!-- Desafíos Activos -->
+                            <div class="challenges-section">
+                                <h3>⚡ Desafíos Activos</h3>
+                                <div class="challenges-list" id="activeChallenges">
+                                    <!-- Se actualiza dinámicamente -->
+                                </div>
+                            </div>
+
+                            <!-- Acciones Rápidas -->
+                            <div class="quick-actions">
+                                <h3>🚀 Acciones Rápidas</h3>
+                                <div class="action-buttons">
+                                    <button class="action-btn" onclick="window.gamificationSystem?.showRedemptionModal()">
+                                        <i class="fas fa-gift"></i>
+                                        Canjear Puntos
+                                    </button>
+                                    <a href="../productos/" class="action-btn">
+                                        <i class="fas fa-shopping-bag"></i>
+                                        Explorar Productos
+                                    </a>
+                                    <button class="action-btn" onclick="shareReferralCode()">
+                                        <i class="fas fa-share"></i>
+                                        Compartir Código
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Datos Personales Tab -->
+                    <div class="tab-panel" id="personalTab">
+                        <div class="form-section">
+                            <h3>👤 Información Personal</h3>
+                            <form class="profile-form" id="personalForm">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="firstName">Nombre *</label>
+                                        <input type="text" id="firstName" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lastName">Apellido *</label>
+                                        <input type="text" id="lastName" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="email">Email *</label>
+                                    <input type="email" id="email" readonly>
+                                    <div class="form-hint">El email no se puede cambiar</div>
+                                </div>
+                                
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="phone">Teléfono</label>
+                                        <input type="tel" id="phone">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="birthDate">Fecha de Nacimiento</label>
+                                        <input type="date" id="birthDate">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="address">Dirección</label>
+                                    <textarea id="address" rows="2" placeholder="Dirección completa"></textarea>
+                                </div>
+                                
+                                <button type="submit" class="btn-primary">
+                                    <i class="fas fa-save"></i> Guardar Cambios
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Preferencias Tab -->
+                    <div class="tab-panel" id="preferencesTab">
+                        <div class="preferences-section">
+                            <h3>⚙️ Preferencias Gaming</h3>
+                            
+                            <div class="preference-group">
+                                <h4>🎮 Plataformas Favoritas</h4>
+                                <div class="checkbox-group" id="platformsGroup">
+                                    <label><input type="checkbox" value="pc"> PC Gaming</label>
+                                    <label><input type="checkbox" value="ps5"> PlayStation 5</label>
+                                    <label><input type="checkbox" value="xbox"> Xbox Series X/S</label>
+                                    <label><input type="checkbox" value="nintendo"> Nintendo Switch</label>
+                                    <label><input type="checkbox" value="mobile"> Gaming Móvil</label>
+                                </div>
+                            </div>
+                            
+                            <div class="preference-group">
+                                <h4>🎯 Géneros Favoritos</h4>
+                                <div class="checkbox-group" id="genresGroup">
+                                    <label><input type="checkbox" value="action"> Acción</label>
+                                    <label><input type="checkbox" value="rpg"> RPG</label>
+                                    <label><input type="checkbox" value="strategy"> Estrategia</label>
+                                    <label><input type="checkbox" value="fps"> FPS</label>
+                                    <label><input type="checkbox" value="moba"> MOBA</label>
+                                    <label><input type="checkbox" value="racing"> Carreras</label>
+                                    <label><input type="checkbox" value="sports"> Deportes</label>
+                                    <label><input type="checkbox" value="indie"> Indie</label>
+                                </div>
+                            </div>
+                            
+                            <div class="preference-group">
+                                <h4>💰 Configuración de Compras</h4>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="currency">Moneda Preferida</label>
+                                        <select id="currency">
+                                            <option value="CLP">Peso Chileno (CLP)</option>
+                                            <option value="USD">Dólar Americano (USD)</option>
+                                            <option value="EUR">Euro (EUR)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="budget">Presupuesto Mensual</label>
+                                        <select id="budget">
+                                            <option value="0-50000">$0 - $50.000</option>
+                                            <option value="50000-100000">$50.000 - $100.000</option>
+                                            <option value="100000-300000">$100.000 - $300.000</option>
+                                            <option value="300000+">Más de $300.000</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="preference-group">
+                                <h4>🔔 Notificaciones</h4>
+                                <div class="toggle-group">
+                                    <label class="toggle-label">
+                                        <input type="checkbox" id="emailNotifications">
+                                        <span class="toggle-slider"></span>
+                                        Notificaciones por email
+                                    </label>
+                                    <label class="toggle-label">
+                                        <input type="checkbox" id="promoNotifications">
+                                        <span class="toggle-slider"></span>
+                                        Ofertas y promociones
+                                    </label>
+                                    <label class="toggle-label">
+                                        <input type="checkbox" id="newProductNotifications">
+                                        <span class="toggle-slider"></span>
+                                        Nuevos productos
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <button class="btn-primary" onclick="savePreferences()">
+                                <i class="fas fa-save"></i> Guardar Preferencias
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Gamificación Tab -->
+                    <div class="tab-panel" id="gamificationTab">
+                        <div class="gamification-content">
+                            <!-- Nivel y Progreso -->
+                            <div class="level-section">
+                                <div class="level-info" id="detailedLevelInfo">
+                                    <!-- Se actualiza dinámicamente -->
+                                </div>
+                            </div>
+                            
+                            <!-- Logros -->
+                            <div class="achievements-section">
+                                <h3>🏆 Logros</h3>
+                                <div class="achievements-grid" id="achievementsGrid">
+                                    <!-- Se actualiza dinámicamente -->
+                                </div>
+                            </div>
+                            
+                            <!-- Desafíos -->
+                            <div class="challenges-section">
+                                <h3>⚡ Desafíos</h3>
+                                <div class="challenges-list" id="challengesList">
+                                    <!-- Se actualiza dinámicamente -->
+                                </div>
+                            </div>
+                            
+                            <!-- Botón de Canje -->
+                            <div class="redemption-section">
+                                <button class="btn-primary btn-large" onclick="window.gamificationSystem?.showRedemptionModal()">
+                                    <i class="fas fa-gift"></i>
+                                    Canjear Puntos
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Referidos Tab -->
+                    <div class="tab-panel" id="referralsTab">
+                        <div class="referrals-content">
+                            <div class="referral-code-section">
+                                <h3>🔗 Tu Código de Referido</h3>
+                                <div class="referral-code-container">
+                                    <div class="referral-code" id="referralCode">
+                                        CARGANDO...
+                                    </div>
+                                    <button class="copy-btn" onclick="copyReferralCode()">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                                <p class="referral-description">
+                                    Comparte tu código y gana <strong>500 puntos</strong> por cada amigo que se registre
+                                </p>
+                            </div>
+                            
+                            <div class="share-section">
+                                <h4>📢 Compartir en Redes Sociales</h4>
+                                <div class="share-buttons">
+                                    <button class="share-btn whatsapp" onclick="shareOnWhatsApp()">
+                                        <i class="fab fa-whatsapp"></i> WhatsApp
+                                    </button>
+                                    <button class="share-btn facebook" onclick="shareOnFacebook()">
+                                        <i class="fab fa-facebook"></i> Facebook
+                                    </button>
+                                    <button class="share-btn twitter" onclick="shareOnTwitter()">
+                                        <i class="fab fa-twitter"></i> Twitter
+                                    </button>
+                                    <button class="share-btn instagram" onclick="shareOnInstagram()">
+                                        <i class="fab fa-instagram"></i> Instagram
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="referral-stats">
+                                <h4>📊 Estadísticas de Referidos</h4>
+                                <div class="stats-grid">
+                                    <div class="stat-card">
+                                        <span class="stat-icon">👥</span>
+                                        <span class="stat-value" id="totalReferrals">0</span>
+                                        <span class="stat-label">Referidos Totales</span>
+                                    </div>
+                                    <div class="stat-card">
+                                        <span class="stat-icon">✅</span>
+                                        <span class="stat-value" id="activeReferrals">0</span>
+                                        <span class="stat-label">Referidos Activos</span>
+                                    </div>
+                                    <div class="stat-card">
+                                        <span class="stat-icon">🎁</span>
+                                        <span class="stat-value" id="referralPoints">0</span>
+                                        <span class="stat-label">Puntos Ganados</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mis Reseñas Tab -->
+                    <div class="tab-panel" id="reviewsTab">
+                        <div class="reviews-content">
+                            <div class="reviews-header">
+                                <h3>⭐ Mis Reseñas</h3>
+                                <div class="reviews-stats">
+                                    <span>Total: <strong id="totalReviews">0</strong></span>
+                                    <span>Promedio: <strong id="averageRating">0.0</strong> ⭐</span>
+                                </div>
+                            </div>
+                            
+                            <div class="user-reviews-list" id="userReviewsList">
+                                <!-- Se actualiza dinámicamente -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 Level-Up Gamer. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../assets/js/products-database.js"></script>
+    <script src="../assets/js/gamification.js"></script>
+    <script src="../assets/js/reviews.js"></script>
+    <script src="../assets/js/cart.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/user-profile.js"></script>
+</body>
+</html>

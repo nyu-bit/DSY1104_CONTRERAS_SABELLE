@@ -84,19 +84,113 @@ var PRODUCTS_LG = [
     tags: ["pc", "asus", "rog"],
     imagen: "assets/products/cg001.jpg"
   },
-  // Sillas Gamers
+  // Mouse Gaming
   {
-    code: "SG001",
-    nombre: "Silla Gamer Secretlab Titan",
-    categoriaId: "SG",
-    precioCLP: 349990,
-    stock: 15,
-    marca: "Secretlab",
+    code: "MG001",
+    nombre: "Mouse Gaming Logitech G502",
+    categoriaId: "MG",
+    precioCLP: 49990,
+    stock: 35,
+    marca: "Logitech",
+    rating: 4.6,
+    specs: ["12000 DPI", "RGB personalizable", "11 botones programables"],
+    descripcion: "Mouse gaming de alta precisión con sensor avanzado, RGB personalizable y botones programables para una experiencia gaming superior.",
+    tags: ["mouse", "logitech", "rgb"],
+    imagen: "assets/products/mg001.jpg"
+  },
+  {
+    code: "MG002",
+    nombre: "Mouse Gaming Razer DeathAdder V3",
+    categoriaId: "MG",
+    precioCLP: 59990,
+    stock: 28,
+    marca: "Razer",
+    rating: 4.7,
+    specs: ["30000 DPI", "Sensor Focus Pro", "Switches ópticos"],
+    descripcion: "El mouse gaming más preciso de Razer con sensor Focus Pro de 30000 DPI y switches ópticos para una respuesta ultrarrápida.",
+    tags: ["mouse", "razer", "precision"],
+    imagen: "assets/products/mg002.jpg"
+  },
+  // Merchandise
+  {
+    code: "ME001",
+    nombre: "Camiseta Gaming Level-Up",
+    categoriaId: "ME",
+    precioCLP: 19990,
+    stock: 50,
+    marca: "Level-Up",
+    rating: 4.3,
+    specs: ["100% Algodón", "Diseño exclusivo", "Tallas S-XXL"],
+    descripcion: "Camiseta oficial Level-Up Gaming con diseño exclusivo y materiales de alta calidad. Perfecta para cualquier gamer.",
+    tags: ["camiseta", "merchandise", "algodon"],
+    imagen: "assets/products/me001.jpg"
+  },
+  {
+    code: "ME002",
+    nombre: "Taza Gaming RGB (Cambia de Color)",
+    categoriaId: "ME",
+    precioCLP: 14990,
+    stock: 40,
+    marca: "Level-Up",
+    rating: 4.5,
+    specs: ["Cerámica", "Cambia de color", "350ml"],
+    descripcion: "Taza mágica que cambia de color al agregar líquidos calientes. Diseño gaming exclusivo para verdaderos gamers.",
+    tags: ["taza", "magica", "gaming"],
+    imagen: "assets/products/me002.jpg"
+  },
+  // Servicios Técnicos
+  {
+    code: "ST001",
+    nombre: "Optimización PC Gaming",
+    categoriaId: "ST",
+    precioCLP: 39990,
+    stock: 100,
+    marca: "Level-Up Tech",
     rating: 4.8,
-    specs: ["Ergonómica", "Personalización ajustable", "Máximo confort"],
-    descripcion: "Diseñada para el máximo confort, esta silla ofrece un soporte ergonómico y personalización ajustable para sesiones de juego prolongadas.",
-    tags: ["silla", "secretlab", "ergonomica"],
-    imagen: "assets/products/sg001.jpg"
+    specs: ["Limpieza", "Optimización", "Actualización drivers"],
+    descripcion: "Servicio técnico especializado en optimización de PCs gaming. Incluye limpieza, optimización de sistema y actualización de drivers.",
+    tags: ["servicio", "optimizacion", "mantenimiento"],
+    imagen: "assets/products/st001.jpg"
+  },
+  {
+    code: "ST002",
+    nombre: "Instalación Setup Gaming Completo",
+    categoriaId: "ST",
+    precioCLP: 79990,
+    stock: 50,
+    marca: "Level-Up Tech",
+    rating: 4.9,
+    specs: ["Instalación completa", "Configuración", "Cable management"],
+    descripcion: "Servicio completo de instalación y configuración de setup gaming. Incluye cable management y optimización de rendimiento.",
+    tags: ["instalacion", "setup", "configuracion"],
+    imagen: "assets/products/st002.jpg"
+  },
+  // Más Consolas
+  {
+    code: "CO002",
+    nombre: "Xbox Series X",
+    categoriaId: "CO",
+    precioCLP: 499990,
+    stock: 12,
+    marca: "Microsoft",
+    rating: 4.8,
+    specs: ["SSD 1TB", "4K/120fps", "Quick Resume", "Smart Delivery"],
+    descripcion: "La consola más potente de Xbox con gráficos 4K, tiempos de carga ultrarrápidos y compatibilidad con miles de juegos.",
+    tags: ["xbox", "consola", "4k"],
+    imagen: "assets/products/co002.jpg"
+  },
+  {
+    code: "CO003",
+    nombre: "Nintendo Switch OLED",
+    categoriaId: "CO",
+    precioCLP: 349990,
+    stock: 20,
+    marca: "Nintendo",
+    rating: 4.7,
+    specs: ["Pantalla OLED 7\"", "64GB almacenamiento", "Dock incluido"],
+    descripcion: "Nintendo Switch con pantalla OLED de 7 pulgadas para una experiencia visual mejorada en modo portátil.",
+    tags: ["nintendo", "switch", "oled"],
+    imagen: "assets/products/co003.jpg"
   },
   // Mouse
   {
@@ -146,13 +240,13 @@ var PRODUCTS_LG = [
 var PRODUCT_DATABASE = {};
 
 // Llenar PRODUCT_DATABASE con formato compatible
-for (var i = 0; i < PRODUCTS_LG.length; i++) {
-  var producto = PRODUCTS_LG[i];
+PRODUCTS_LG.forEach(function(producto) {
   PRODUCT_DATABASE[producto.code] = {
     id: producto.code,
     name: producto.nombre,
     price: producto.precioCLP,
     category: producto.categoriaId.toLowerCase(),
+    categoryName: getCategoryName(producto.categoriaId),
     brand: producto.marca,
     rating: producto.rating,
     image: producto.imagen,
@@ -160,30 +254,26 @@ for (var i = 0; i < PRODUCTS_LG.length; i++) {
     stock: producto.stock,
     description: producto.descripcion,
     specs: producto.specs,
-    tags: producto.tags
+    tags: producto.tags,
+    featured: producto.rating >= 4.5,
+    reviews: Math.floor(Math.random() * 100) + 20, // Simular reviews
+    features: producto.specs || []
   };
-}
+});
 
-// Crear PRODUCT_DATABASE compatible con el código existente
-var PRODUCT_DATABASE = {};
-
-// Llenar PRODUCT_DATABASE con formato compatible
-for (var i = 0; i < PRODUCTS_LG.length; i++) {
-  var producto = PRODUCTS_LG[i];
-  PRODUCT_DATABASE[producto.code] = {
-    id: producto.code,
-    name: producto.nombre,
-    price: producto.precioCLP,
-    category: producto.categoriaId.toLowerCase(),
-    brand: producto.marca,
-    rating: producto.rating,
-    image: producto.imagen,
-    inStock: producto.stock > 0,
-    stock: producto.stock,
-    description: producto.descripcion,
-    specs: producto.specs,
-    tags: producto.tags
+// Función para obtener nombre de categoría
+function getCategoryName(categoriaId) {
+  const categorias = {
+    'JM': 'Juegos de Mesa',
+    'AC': 'Accesorios',
+    'CO': 'Consolas',
+    'CG': 'Computadores Gaming',
+    'SG': 'Sillas Gaming',
+    'MG': 'Mouse Gaming',
+    'ME': 'Merchandise',
+    'ST': 'Servicios Técnicos'
   };
+  return categorias[categoriaId] || 'Productos';
 }
 
 // Funciones de utilidad

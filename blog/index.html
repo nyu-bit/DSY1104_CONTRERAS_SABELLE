@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="gamer">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Gaming - LEVEL-UP Gamer</title>
+    <meta name="description" content="Últimas noticias, reviews y tendencias del mundo gaming. Mantente actualizado con el blog de LEVEL-UP Gamer.">
+    
+    <!-- Tipografías Roboto y Orbitron -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Estilos principales -->
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/search-gamer.css">
+    
+    <!-- Iconografía gamer -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Notificaciones -->
+    <div class="notifications-container" id="notificationsContainer"></div>
+
+    <!-- NAVBAR LEVEL-UP GAMER -->
+    <header class="main-header" role="banner">
+        <nav class="main-navbar" role="navigation" aria-label="Navegación principal">
+            
+            <!-- Logo -->
+            <div class="navbar-logo">
+                <a href="../index.html" class="logo-link" aria-label="Level-Up Gamer - Inicio">
+                    🎮 <span class="logo-text">LEVEL-UP GAMER</span>
+                </a>
+            </div>
+
+            <!-- Navegación Principal -->
+            <ul class="navbar-menu">
+                <li><a href="../index.html" class="nav-link">Inicio</a></li>
+                <li class="dropdown">
+                    <a href="../productos/" class="nav-link">Productos <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-menu">
+                        <a href="../productos/?category=consolas">Consolas</a>
+                        <a href="../productos/?category=pc-gaming">PC Gaming</a>
+                        <a href="../productos/?category=accesorios">Accesorios</a>
+                        <a href="../productos/?category=videojuegos">Videojuegos</a>
+                    </div>
+                </li>
+                <li><a href="../nosotros/" class="nav-link">Nosotros</a></li>
+                <li><a href="../blog/" class="nav-link active">Blog</a></li>
+                <li><a href="../contacto/" class="nav-link">Contacto</a></li>
+            </ul>
+
+            <!-- Acciones del Usuario -->
+            <div class="navbar-actions">
+                <!-- Búsqueda -->
+                <div class="search-container">
+                    <input type="search" 
+                           id="search-input" 
+                           class="search-input" 
+                           placeholder="Buscar artículos..."
+                           aria-label="Buscar artículos"
+                           aria-describedby="search-suggestions"
+                           autocomplete="off">
+                    <button id="search-btn" class="search-btn" aria-label="Ejecutar búsqueda">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <div id="search-suggestions" 
+                         class="search-suggestions" 
+                         role="listbox" 
+                         aria-label="Sugerencias de búsqueda"
+                         aria-live="polite"
+                         aria-hidden="true"
+                         style="display: none;">
+                    </div>
+                </div>
+
+                <!-- Carrito -->
+                <a href="../carrito/" class="cart-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+
+                <!-- Usuario -->
+                <div class="user-menu">
+                    <button class="user-btn">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <div class="user-dropdown">
+                        <a href="../usuario/login.html">Iniciar Sesión</a>
+                        <a href="../usuario/register.html">Registrarse</a>
+                        <a href="../usuario/">Mi Perfil</a>
+                        <a href="#" id="logoutBtn">Cerrar Sesión</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Menú Móvil -->
+            <button class="mobile-toggle" aria-label="Menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+        </nav>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        
+        <!-- Hero Section -->
+        <section class="hero-blog" aria-labelledby="blog-hero-title">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 id="blog-hero-title" class="hero-title">
+                        Blog <span class="text-glow">Gaming</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Últimas noticias, reviews y tendencias del mundo gaming
+                    </p>
+                    <div class="hero-search">
+                        <input type="search" 
+                               class="hero-search-input" 
+                               placeholder="Buscar artículos..."
+                               aria-label="Buscar artículos del blog">
+                        <button class="hero-search-btn" aria-label="Buscar artículos">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Categorías del Blog -->
+        <section class="blog-categories" aria-labelledby="categories-title">
+            <div class="container">
+                <h2 id="categories-title" class="section-title">Categorías</h2>
+                <div class="categories-filter">
+                    <button class="category-btn active" data-category="all">
+                        <i class="fas fa-th-large" aria-hidden="true"></i>
+                        Todos
+                    </button>
+                    <button class="category-btn" data-category="reviews">
+                        <i class="fas fa-star" aria-hidden="true"></i>
+                        Reviews
+                    </button>
+                    <button class="category-btn" data-category="noticias">
+                        <i class="fas fa-newspaper" aria-hidden="true"></i>
+                        Noticias
+                    </button>
+                    <button class="category-btn" data-category="guias">
+                        <i class="fas fa-book" aria-hidden="true"></i>
+                        Guías
+                    </button>
+                    <button class="category-btn" data-category="esports">
+                        <i class="fas fa-trophy" aria-hidden="true"></i>
+                        eSports
+                    </button>
+                    <button class="category-btn" data-category="hardware">
+                        <i class="fas fa-microchip" aria-hidden="true"></i>
+                        Hardware
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Artículo Destacado -->
+        <section class="featured-article" aria-labelledby="featured-title">
+            <div class="container">
+                <h2 id="featured-title" class="section-title">Artículo Destacado</h2>
+                <article class="featured-post">
+                    <div class="featured-image">
+                        <img src="../assets/images/blog/featured-ps5-review.jpg" alt="PlayStation 5 Pro Review Completo" class="post-image">
+                        <div class="featured-badge">
+                            <i class="fas fa-fire" aria-hidden="true"></i>
+                            Destacado
+                        </div>
+                    </div>
+                    <div class="featured-content">
+                        <div class="post-meta">
+                            <span class="post-category reviews">Review</span>
+                            <time datetime="2025-09-10" class="post-date">10 Sept 2025</time>
+                            <span class="post-author">Por Sabelle Contreras</span>
+                        </div>
+                        <h3 class="post-title">
+                            <a href="#" class="post-link">PlayStation 5 Pro: ¿Vale la pena la mejora?</a>
+                        </h3>
+                        <p class="post-excerpt">
+                            Después de semanas de testing intensivo, te traemos el review más completo 
+                            de la PlayStation 5 Pro. Descubre si las mejoras en rendimiento, 
+                            ray tracing mejorado y soporte 8K justifican la inversión.
+                        </p>
+                        <div class="post-stats">
+                            <span class="stat-item">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                                2.5K vistas
+                            </span>
+                            <span class="stat-item">
+                                <i class="fas fa-comment" aria-hidden="true"></i>
+                                127 comentarios
+                            </span>
+                            <span class="stat-item">
+                                <i class="fas fa-heart" aria-hidden="true"></i>
+                                89 likes
+                            </span>
+                        </div>
+                        <a href="#" class="btn btn-primary" aria-label="Leer artículo completo">
+                            Leer Artículo <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Grid de Artículos -->
+        <section class="blog-grid" aria-labelledby="articles-title">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="articles-title" class="section-title">Últimos Artículos</h2>
+                    <div class="sort-controls">
+                        <label for="sort-select" class="sort-label">Ordenar por:</label>
+                        <select id="sort-select" class="sort-select">
+                            <option value="newest">Más recientes</option>
+                            <option value="popular">Más populares</option>
+                            <option value="trending">Trending</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="articles-grid" id="articlesGrid">
+                    <!-- Artículo 1 -->
+                    <article class="blog-card" data-category="noticias">
+                        <div class="card-image">
+                            <img src="../assets/images/blog/rtx-5090-leak.jpg" alt="RTX 5090 Leak" class="article-image">
+                            <div class="card-badge news">Noticia</div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-meta">
+                                <time datetime="2025-09-09" class="meta-date">9 Sept 2025</time>
+                                <span class="meta-read">5 min lectura</span>
+                            </div>
+                            <h3 class="card-title">
+                                <a href="#" class="card-link">NVIDIA RTX 5090: Filtrado el precio oficial</a>
+                            </h3>
+                            <p class="card-excerpt">
+                                Las primeras filtraciones oficiales revelan el precio de la próxima 
+                                generación de tarjetas gráficas gaming de NVIDIA. ¿Será accesible?
+                            </p>
+                            <div class="card-stats">
+                                <span class="stat">
+                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                    1.2K
+                                </span>
+                                <span class="stat">
+                                    <i class="fas fa-heart" aria-hidden="true"></i>
+                                    45
+                                </span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Artículo 2 -->
+                    <article class="blog-card" data-category="guias">
+                        <div class="card-image">
+                            <img src="../assets/images/blog/pc-build-guide.jpg" alt="Guía construcción PC" class="article-image">
+                            <div class="card-badge guide">Guía</div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-meta">
+                                <time datetime="2025-09-08" class="meta-date">8 Sept 2025</time>
+                                <span class="meta-read">12 min lectura</span>
+                            </div>
+                            <h3 class="card-title">
+                                <a href="#" class="card-link">Cómo armar tu primer PC Gaming en 2025</a>
+                            </h3>
+                            <p class="card-excerpt">
+                                Guía completa paso a paso para armar tu primera computadora gaming 
+                                con el mejor rendimiento por peso invertido.
+                            </p>
+                            <div class="card-stats">
+                                <span class="stat">
+                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                    3.1K
+                                </span>
+                                <span class="stat">
+                                    <i class="fas fa-heart" aria-hidden="true"></i>
+                                    156
+                                </span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Artículo 3 -->
+                    <article class="blog-card" data-category="reviews">
+                        <div class="card-image">
+                            <img src="../assets/images/blog/switch-2-rumors.jpg" alt="Nintendo Switch 2 rumores" class="article-image">
+                            <div class="card-badge reviews">Review</div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-meta">
+                                <time datetime="2025-09-07" class="meta-date">7 Sept 2025</time>
+                                <span class="meta-read">8 min lectura</span>
+                            </div>
+                            <h3 class="card-title">
+                                <a href="#" class="card-link">Nintendo Switch 2: Todo lo que sabemos</a>
+                            </h3>
+                            <p class="card-excerpt">
+                                Recopilamos todos los rumores, filtraciones y especificaciones 
+                                oficiales de la próxima consola híbrida de Nintendo.
+                            </p>
+                            <div class="card-stats">
+                                <span class="stat">
+                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                    2.8K
+                                </span>
+                                <span class="stat">
+                                    <i class="fas fa-heart" aria-hidden="true"></i>
+                                    89
+                                </span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Artículo 4 -->
+                    <article class="blog-card" data-category="esports">
+                        <div class="card-image">
+                            <img src="../assets/images/blog/worlds-2025.jpg" alt="Worlds 2025 LoL" class="article-image">
+                            <div class="card-badge esports">eSports</div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-meta">
+                                <time datetime="2025-09-06" class="meta-date">6 Sept 2025</time>
+                                <span class="meta-read">6 min lectura</span>
+                            </div>
+                            <h3 class="card-title">
+                                <a href="#" class="card-link">Worlds 2025: Predicciones y favoritos</a>
+                            </h3>
+                            <p class="card-excerpt">
+                                Análisis completo de los equipos clasificados al Mundial de League of Legends 
+                                2025 y nuestras predicciones para el torneo.
+                            </p>
+                            <div class="card-stats">
+                                <span class="stat">
+                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                    1.9K
+                                </span>
+                                <span class="stat">
+                                    <i class="fas fa-heart" aria-hidden="true"></i>
+                                    72
+                                </span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Artículo 5 -->
+                    <article class="blog-card" data-category="hardware">
+                        <div class="card-image">
+                            <img src="../assets/images/blog/gaming-monitors-2025.jpg" alt="Mejores monitores gaming 2025" class="article-image">
+                            <div class="card-badge hardware">Hardware</div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-meta">
+                                <time datetime="2025-09-05" class="meta-date">5 Sept 2025</time>
+                                <span class="meta-read">10 min lectura</span>
+                            </div>
+                            <h3 class="card-title">
+                                <a href="#" class="card-link">Los 10 mejores monitores gaming 2025</a>
+                            </h3>
+                            <p class="card-excerpt">
+                                Comparativa exhaustiva de los mejores monitores gaming del año, 
+                                desde 1080p hasta 4K, con todas las tecnologías más avanzadas.
+                            </p>
+                            <div class="card-stats">
+                                <span class="stat">
+                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                    4.2K
+                                </span>
+                                <span class="stat">
+                                    <i class="fas fa-heart" aria-hidden="true"></i>
+                                    203
+                                </span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Artículo 6 -->
+                    <article class="blog-card" data-category="noticias">
+                        <div class="card-image">
+                            <img src="../assets/images/blog/cyberpunk-dlc.jpg" alt="Cyberpunk 2077 nuevo DLC" class="article-image">
+                            <div class="card-badge news">Noticia</div>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-meta">
+                                <time datetime="2025-09-04" class="meta-date">4 Sept 2025</time>
+                                <span class="meta-read">4 min lectura</span>
+                            </div>
+                            <h3 class="card-title">
+                                <a href="#" class="card-link">Cyberpunk 2077: Anunciado nuevo DLC gratuito</a>
+                            </h3>
+                            <p class="card-excerpt">
+                                CD Projekt RED sorprende con el anuncio de un nuevo contenido descargable 
+                                gratuito que expandirá la historia de Night City.
+                            </p>
+                            <div class="card-stats">
+                                <span class="stat">
+                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                    3.5K
+                                </span>
+                                <span class="stat">
+                                    <i class="fas fa-heart" aria-hidden="true"></i>
+                                    142
+                                </span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Paginación -->
+                <div class="pagination">
+                    <button class="pagination-btn" disabled aria-label="Página anterior">
+                        <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                    </button>
+                    <button class="pagination-btn active" aria-label="Página 1">1</button>
+                    <button class="pagination-btn" aria-label="Página 2">2</button>
+                    <button class="pagination-btn" aria-label="Página 3">3</button>
+                    <span class="pagination-dots">...</span>
+                    <button class="pagination-btn" aria-label="Página 10">10</button>
+                    <button class="pagination-btn" aria-label="Página siguiente">
+                        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter -->
+        <section class="newsletter-section" aria-labelledby="newsletter-title">
+            <div class="container">
+                <div class="newsletter-content">
+                    <div class="newsletter-info">
+                        <h2 id="newsletter-title" class="newsletter-title">
+                            ¿No te quieres perder nada?
+                        </h2>
+                        <p class="newsletter-description">
+                            Suscríbete a nuestro newsletter y recibe las últimas noticias gaming, 
+                            reviews exclusivos y ofertas especiales directamente en tu email.
+                        </p>
+                        <div class="newsletter-benefits">
+                            <div class="benefit-item">
+                                <i class="fas fa-check" aria-hidden="true"></i>
+                                <span>Reviews exclusivos antes que nadie</span>
+                            </div>
+                            <div class="benefit-item">
+                                <i class="fas fa-check" aria-hidden="true"></i>
+                                <span>Ofertas y descuentos especiales</span>
+                            </div>
+                            <div class="benefit-item">
+                                <i class="fas fa-check" aria-hidden="true"></i>
+                                <span>Sin spam, solo contenido de calidad</span>
+                            </div>
+                        </div>
+                    </div>
+                    <form class="newsletter-form" aria-label="Formulario de suscripción al newsletter">
+                        <div class="form-group">
+                            <input type="email" 
+                                   class="newsletter-input" 
+                                   placeholder="tu@email.com" 
+                                   required
+                                   aria-label="Ingresa tu email">
+                            <button type="submit" class="newsletter-btn" aria-label="Suscribirse al newsletter">
+                                Suscribirse
+                                <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <p class="newsletter-privacy">
+                            Al suscribirte aceptas nuestra 
+                            <a href="#" class="privacy-link">política de privacidad</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="main-footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">LEVEL-UP GAMER</h3>
+                    <p class="footer-description">
+                        Tu fuente definitiva de información gaming. Reviews, noticias y 
+                        los mejores productos para llevar tu experiencia al siguiente nivel.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="Facebook">
+                            <i class="fab fa-facebook" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <i class="fab fa-twitter" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Instagram">
+                            <i class="fab fa-instagram" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="YouTube">
+                            <i class="fab fa-youtube" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Categorías</h4>
+                    <ul class="footer-links">
+                        <li><a href="#reviews">Reviews</a></li>
+                        <li><a href="#noticias">Noticias</a></li>
+                        <li><a href="#guias">Guías</a></li>
+                        <li><a href="#esports">eSports</a></li>
+                        <li><a href="#hardware">Hardware</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Enlaces</h4>
+                    <ul class="footer-links">
+                        <li><a href="../index.html">Inicio</a></li>
+                        <li><a href="../productos/">Tienda</a></li>
+                        <li><a href="../nosotros/">Nosotros</a></li>
+                        <li><a href="../contacto/">Contacto</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Contacto</h4>
+                    <div class="footer-contact">
+                        <p><i class="fas fa-envelope" aria-hidden="true"></i> blog@levelupgamer.cl</p>
+                        <p><i class="fas fa-phone" aria-hidden="true"></i> +56 9 1234 5678</p>
+                        <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Santiago, Chile</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 LEVEL-UP GAMER Blog. Todos los derechos reservados.</p>
+                <p>Desarrollado con 💚 por Sabelle Contreras</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/cart.js"></script>
+    <script src="../assets/js/search-gamer.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    
+    <!-- Script específico del blog -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Filtros de categoría
+            const categoryBtns = document.querySelectorAll('.category-btn');
+            const articles = document.querySelectorAll('.blog-card');
+            
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const category = btn.dataset.category;
+                    
+                    // Actualizar botón activo
+                    categoryBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    // Filtrar artículos
+                    articles.forEach(article => {
+                        if (category === 'all' || article.dataset.category === category) {
+                            article.style.display = 'block';
+                            article.style.animation = 'fadeInUp 0.3s ease';
+                        } else {
+                            article.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Ordenamiento
+            const sortSelect = document.getElementById('sort-select');
+            sortSelect.addEventListener('change', (e) => {
+                const sortType = e.target.value;
+                // Implementar lógica de ordenamiento
+                console.log('Ordenar por:', sortType);
+            });
+            
+            // Newsletter
+            const newsletterForm = document.querySelector('.newsletter-form');
+            newsletterForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = e.target.querySelector('.newsletter-input').value;
+                
+                // Simular suscripción
+                if (email) {
+                    alert(`¡Gracias por suscribirte! Te enviaremos las últimas noticias gaming a ${email}`);
+                    e.target.reset();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
