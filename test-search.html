@@ -116,32 +116,130 @@
     <script src="assets/js/smart-search.js"></script>
     
     <script>
-        // Verificar inicialización del sistema
+        // Verificar inicialización del sistema con debugging mejorado
         document.addEventListener('DOMContentLoaded', function() {
             const statusElement = document.getElementById('systemStatus');
             const debugInfo = document.getElementById('debugInfo');
             const debugText = document.getElementById('debugText');
             
+            console.log('🔍 Iniciando diagnóstico del sistema de búsqueda...');
+            
             setTimeout(() => {
+                let diagnosticInfo = '';
+                
+                // Verificar base de datos
+                if (window.PRODUCT_DATABASE) {
+                    const productCount = Object.keys(window.PRODUCT_DATABASE).length;
+                    console.log('✅ Base de datos cargada:', productCount, 'productos');
+                    diagnosticInfo += `• Base de datos: ${productCount} productos cargados<br>`;
+                    
+                    // Mostrar algunos productos de ejemplo
+                    const sampleProducts = Object.values(window.PRODUCT_DATABASE).slice(0, 3);
+                    console.log('📦 Productos de ejemplo:', sampleProducts.map(p => p.nombre));
+                } else {
+                    console.error('❌ Base de datos NO cargada');
+                    diagnosticInfo += '• ❌ Base de datos: NO CARGADA<br>';
+                }
+                
+                // Verificar SmartSearchManager
+                if (window.SmartSearchManager) {
+                    console.log('✅ Clase SmartSearchManager disponible');
+                    diagnosticInfo += '• SmartSearchManager: Clase disponible<br>';
+                } else {
+                    console.error('❌ SmartSearchManager NO disponible');
+                    diagnosticInfo += '• ❌ SmartSearchManager: NO DISPONIBLE<br>';
+                }
+                
+                // Verificar instancia
+                if (window.smartSearchManager) {
+                    console.log('✅ Instancia smartSearchManager creada');
+                    diagnosticInfo += '• Instancia: smartSearchManager activa<br>';
+                } else {
+                    console.error('❌ Instancia smartSearchManager NO creada');
+                    diagnosticInfo += '• ❌ Instancia: smartSearchManager NO CREADA<br>';
+                }
+                
+                // Verificar elementos DOM
+                const searchInput = document.getElementById('search-input');
+                const searchSuggestions = document.getElementById('search-suggestions');
+                
+                if (searchInput) {
+                    console.log('✅ Campo de búsqueda encontrado');
+                    diagnosticInfo += '• Campo búsqueda: Encontrado<br>';
+                } else {
+                    console.error('❌ Campo de búsqueda NO encontrado');
+                    diagnosticInfo += '• ❌ Campo búsqueda: NO ENCONTRADO<br>';
+                }
+                
+                if (searchSuggestions) {
+                    console.log('✅ Contenedor de sugerencias encontrado');
+                    diagnosticInfo += '• Contenedor sugerencias: Encontrado<br>';
+                } else {
+                    console.error('❌ Contenedor de sugerencias NO encontrado');
+                    diagnosticInfo += '• ❌ Contenedor sugerencias: NO ENCONTRADO<br>';
+                }
+                
+                // Test de búsqueda manual
+                if (window.PRODUCT_DATABASE) {
+                    try {
+                        const testResults = window.searchProducts('play');
+                        console.log('🔍 Test búsqueda "play":', testResults.length, 'resultados');
+                        diagnosticInfo += `• Test búsqueda "play": ${testResults.length} resultados<br>`;
+                        
+                        if (testResults.length > 0) {
+                            console.log('📋 Primeros resultados:', testResults.slice(0, 3).map(p => p.nombre));
+                        }
+                    } catch (error) {
+                        console.error('❌ Error en test de búsqueda:', error);
+                        diagnosticInfo += '• ❌ Test búsqueda: ERROR<br>';
+                    }
+                }
+                
+                // Actualizar estado
                 if (window.smartSearchManager && window.PRODUCT_DATABASE) {
                     statusElement.innerHTML = '🟢 Sistema de búsqueda inteligente activo y funcionando';
                     statusElement.style.color = 'var(--color-success)';
-                    
-                    const productCount = Object.keys(window.PRODUCT_DATABASE).length;
-                    debugText.innerHTML = `
-                        • Base de datos: ${productCount} productos cargados<br>
-                        • Debounce: 250ms configurado<br>
-                        • Sugerencias: Desde 3er carácter<br>
-                        • Normalización: Activa<br>
-                        • Navegación: Teclado habilitada
-                    `;
-                    debugInfo.style.display = 'block';
-                    
                 } else {
                     statusElement.innerHTML = '🔴 Error: Sistema no inicializado correctamente';
                     statusElement.style.color = 'var(--color-error)';
                 }
+                
+                diagnosticInfo += `• Debounce: 250ms configurado<br>`;
+                diagnosticInfo += `• Sugerencias: Desde 3er carácter<br>`;
+                diagnosticInfo += `• Normalización: Activa<br>`;
+                diagnosticInfo += `• Navegación: Teclado habilitada<br>`;
+                
+                debugText.innerHTML = diagnosticInfo;
+                debugInfo.style.display = 'block';
+                
+                // Test de eventos
+                if (searchInput && window.smartSearchManager) {
+                    console.log('🎯 Configurando test de eventos...');
+                    searchInput.addEventListener('input', (e) => {
+                        console.log('� Input detectado:', e.target.value);
+                    });
+                }
+                
             }, 500);
+            
+            // Test adicional después de 2 segundos
+            setTimeout(() => {
+                const searchInput = document.getElementById('search-input');
+                if (searchInput) {
+                    console.log('🧪 Ejecutando test automático...');
+                    searchInput.value = 'play';
+                    searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    
+                    setTimeout(() => {
+                        const suggestions = document.getElementById('search-suggestions');
+                        if (suggestions && suggestions.style.display !== 'none') {
+                            console.log('✅ Test automático exitoso: sugerencias mostradas');
+                        } else {
+                            console.log('⚠️ Test automático: sugerencias no visibles');
+                        }
+                    }, 300);
+                }
+            }, 2000);
         });
     </script>
 </body>

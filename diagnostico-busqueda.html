@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 Test Búsqueda LEVEL-UP</title>
+    <style>
+        body { font-family: Arial; padding: 2rem; background: #1a1a2e; color: #eee; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .search-box { width: 100%; padding: 1rem; font-size: 1.2rem; margin: 1rem 0; }
+        .results { background: #16213e; padding: 1rem; border-radius: 8px; margin: 1rem 0; }
+        .product { padding: 0.5rem; border-bottom: 1px solid #333; }
+        .product:last-child { border-bottom: none; }
+        .status { background: #0f3460; padding: 1rem; border-radius: 8px; margin: 1rem 0; }
+        .success { background: #0d5f2f; }
+        .error { background: #5f0d0d; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 LEVEL-UP GAMER - Test Búsqueda</h1>
+        
+        <div id="status" class="status">
+            <strong>Estado:</strong> <span id="statusText">Inicializando...</span>
+        </div>
+        
+        <div>
+            <label for="searchInput"><strong>Buscar productos:</strong></label>
+            <input type="text" 
+                   id="searchInput" 
+                   class="search-box" 
+                   placeholder="Escribe al menos 3 letras (ej: play, mouse, zelda)..."
+                   autocomplete="off">
+        </div>
+        
+        <div id="results" class="results" style="display: none;">
+            <h3>📋 Resultados:</h3>
+            <div id="productList"></div>
+        </div>
+        
+        <div class="status">
+            <h3>🧪 Términos de prueba sugeridos:</h3>
+            <p><strong>Consolas:</strong> "play", "xbox", "nintendo", "switch"</p>
+            <p><strong>PC Gaming:</strong> "rtx", "4090", "gaming"</p>
+            <p><strong>Accesorios:</strong> "mouse", "teclado", "auricular"</p>
+            <p><strong>Juegos:</strong> "mario", "zelda", "spider", "god"</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/products-database.js"></script>
+    
+    <script>
+        console.log('🚀 Iniciando test de búsqueda...');
+        
+        const statusEl = document.getElementById('statusText');
+        const searchInput = document.getElementById('searchInput');
+        const resultsEl = document.getElementById('results');
+        const productListEl = document.getElementById('productList');
+        
+        let searchTimeout;
+        
+        // Función para actualizar estado
+        function updateStatus(text, type = '') {
+            statusEl.textContent = text;
+            const statusContainer = document.getElementById('status');
+            statusContainer.className = 'status ' + type;
+        }
+        
+        // Función para mostrar productos
+        function displayProducts(products) {
+            if (products.length === 0) {
+                productListEl.innerHTML = '<div class="product">❌ No se encontraron productos</div>';
+            } else {
+                productListEl.innerHTML = products.map(product => `
+                    <div class="product">
+                        <strong>${product.nombre}</strong> - $${product.precio.toLocaleString('es-CL')}
+                        <br><small>📂 ${product.categoria} | 📦 Stock: ${product.stock}</small>
+                        <br><small>🔖 ${product.tags ? product.tags.join(', ') : 'Sin tags'}</small>
+                    </div>
+                `).join('');
+            }
+            resultsEl.style.display = 'block';
+        }
+        
+        // Función de búsqueda
+        function performSearch(query) {
+            console.log('🔍 Buscando:', query);
+            
+            if (!window.PRODUCT_DATABASE) {
+                updateStatus('❌ Base de datos no disponible', 'error');
+                return;
+            }
+            
+            if (query.length < 3) {
+                resultsEl.style.display = 'none';
+                updateStatus('✅ Sistema listo - Escribe al menos 3 caracteres', 'success');
+                return;
+            }
+            
+            try {
+                const results = window.searchProducts(query);
+                console.log('📊 Resultados encontrados:', results.length);
+                
+                displayProducts(results);
+                updateStatus(`✅ Encontrados: ${results.length} productos`, 'success');
+                
+            } catch (error) {
+                console.error('❌ Error en búsqueda:', error);
+                updateStatus('❌ Error en la búsqueda: ' + error.message, 'error');
+            }
+        }
+        
+        // Event listener para el input
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.trim();
+            
+            // Debounce
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                performSearch(query);
+            }, 250);
+        });
+        
+        // Verificar inicialización
+        function checkInitialization() {
+            if (window.PRODUCT_DATABASE) {
+                const count = Object.keys(window.PRODUCT_DATABASE).length;
+                updateStatus(`✅ Sistema listo - ${count} productos cargados`, 'success');
+                
+                console.log('✅ Base de datos disponible:', count, 'productos');
+                console.log('📂 Categorías:', window.getCategories ? window.getCategories() : 'No disponibles');
+                
+                // Test rápido
+                const testResults = window.searchProducts('play');
+                console.log('🧪 Test búsqueda "play":', testResults.length, 'resultados');
+                
+            } else {
+                updateStatus('⏳ Cargando base de datos...', '');
+                setTimeout(checkInitialization, 100);
+            }
+        }
+        
+        // Esperar evento de base de datos
+        window.addEventListener('productDatabaseReady', () => {
+            console.log('🎯 Evento productDatabaseReady recibido');
+            checkInitialization();
+        });
+        
+        // Iniciar verificación
+        setTimeout(checkInitialization, 100);
+    </script>
+</body>
+</html>

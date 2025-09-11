@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="gamer">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos - LEVEL-UP Gamer</title>
+    <meta name="description" content="Explora nuestro catálogo completo de productos gaming: consolas, videojuegos, accesorios y más.">
+    
+    <!-- Fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <nav class="main-navbar">
+            <div class="navbar-logo">
+                <a href="../index.html" class="logo-link">
+                    🎮 <span class="logo-text">LEVEL-UP GAMER</span>
+                </a>
+            </div>
+
+            <ul class="navbar-menu">
+                <li><a href="../index.html" class="nav-link">Inicio</a></li>
+                <li><a href="../productos/" class="nav-link active">Productos</a></li>
+                <li><a href="../nosotros/" class="nav-link">Nosotros</a></li>
+                <li><a href="../blog/" class="nav-link">Blog</a></li>
+                <li><a href="../contacto/" class="nav-link">Contacto</a></li>
+            </ul>
+
+            <div class="navbar-actions">
+                <div class="search-container">
+                    <input type="search" id="search-input" class="search-input" 
+                           placeholder="Buscar productos..." autocomplete="off">
+                    <button id="search-btn" class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <div id="search-suggestions" class="search-suggestions" style="display: none;"></div>
+                </div>
+
+                <a href="../carrito/" class="cart-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+
+                <div class="user-menu">
+                    <button class="user-btn">
+                        <i class="fas fa-user"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="products-hero">
+            <div class="container">
+                <h1 class="hero-title">Catálogo de Productos Gaming</h1>
+                <p class="hero-subtitle">Descubre la mejor selección de productos gaming al mejor precio</p>
+            </div>
+        </section>
+
+        <!-- Filtros -->
+        <section class="filters-section">
+            <div class="container">
+                <div class="filters-container">
+                    <div class="filter-group">
+                        <label for="categoryFilter">Categoría:</label>
+                        <select id="categoryFilter" class="filter-select">
+                            <option value="">Todas las categorías</option>
+                            <option value="Consolas">Consolas</option>
+                            <option value="Accesorios">Accesorios</option>
+                            <option value="Videojuegos">Videojuegos</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="priceFilter">Precio:</label>
+                        <select id="priceFilter" class="filter-select">
+                            <option value="">Todos los precios</option>
+                            <option value="0-50000">Menos de $50.000</option>
+                            <option value="50000-100000">$50.000 - $100.000</option>
+                            <option value="100000-300000">$100.000 - $300.000</option>
+                            <option value="300000-999999">Más de $300.000</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="sortFilter">Ordenar por:</label>
+                        <select id="sortFilter" class="filter-select">
+                            <option value="name-asc">Nombre A-Z</option>
+                            <option value="name-desc">Nombre Z-A</option>
+                            <option value="price-asc">Precio menor a mayor</option>
+                            <option value="price-desc">Precio mayor a menor</option>
+                            <option value="stock">Mayor stock</option>
+                        </select>
+                    </div>
+                    
+                    <button id="clearFilters" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Limpiar Filtros
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Productos Grid -->
+        <section class="products-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 id="resultsTitle">Todos los Productos</h2>
+                    <div class="results-count">
+                        <span id="resultsCount">0</span> productos encontrados
+                    </div>
+                </div>
+
+                <!-- Loading -->
+                <div id="loadingProducts" class="loading-container">
+                    <div class="loading-spinner"></div>
+                    <p>Cargando productos...</p>
+                </div>
+
+                <!-- Productos Grid -->
+                <div id="productsGrid" class="products-grid" style="display: none;">
+                    <!-- Los productos se cargarán aquí -->
+                </div>
+
+                <!-- Sin resultados -->
+                <div id="noResults" class="no-results" style="display: none;">
+                    <i class="fas fa-search"></i>
+                    <h3>No se encontraron productos</h3>
+                    <p>Intenta ajustar los filtros o buscar algo diferente</p>
+                    <button class="btn btn-primary" onclick="clearAllFilters()">
+                        Ver todos los productos
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>LEVEL-UP GAMER</h3>
+                    <p>Tu tienda gaming de confianza</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Enlaces</h4>
+                    <a href="../index.html">Inicio</a>
+                    <a href="../nosotros/">Nosotros</a>
+                    <a href="../contacto/">Contacto</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../assets/js/products-database.js"></script>
+    <script src="../assets/js/smart-search.js"></script>
+    <script src="../assets/js/cart.js"></script>
+    <script src="../assets/js/main.js"></script>
+
+    <script>
+        // Script específico para la página de productos
+        class ProductsPage {
+            constructor() {
+                this.allProducts = [];
+                this.filteredProducts = [];
+                this.filters = {
+                    category: '',
+                    priceRange: '',
+                    sort: 'name-asc'
+                };
+                
+                this.init();
+            }
+            
+            init() {
+                console.log('🛍️ Inicializando página de productos...');
+                
+                // Esperar a que la base de datos esté lista
+                if (window.PRODUCT_DATABASE) {
+                    this.loadProducts();
+                } else {
+                    window.addEventListener('productDatabaseReady', () => {
+                        this.loadProducts();
+                    });
+                }
+                
+                this.setupEventListeners();
+            }
+            
+            loadProducts() {
+                console.log('📦 Cargando productos...');
+                
+                this.allProducts = Object.values(window.PRODUCT_DATABASE);
+                this.filteredProducts = [...this.allProducts];
+                
+                console.log(`✅ ${this.allProducts.length} productos cargados`);
+                
+                this.renderProducts();
+                this.updateResultsCount();
+                
+                // Ocultar loading
+                document.getElementById('loadingProducts').style.display = 'none';
+                document.getElementById('productsGrid').style.display = 'grid';
+            }
+            
+            setupEventListeners() {
+                const categoryFilter = document.getElementById('categoryFilter');
+                const priceFilter = document.getElementById('priceFilter');
+                const sortFilter = document.getElementById('sortFilter');
+                const clearFilters = document.getElementById('clearFilters');
+                
+                categoryFilter?.addEventListener('change', (e) => {
+                    this.filters.category = e.target.value;
+                    this.applyFilters();
+                });
+                
+                priceFilter?.addEventListener('change', (e) => {
+                    this.filters.priceRange = e.target.value;
+                    this.applyFilters();
+                });
+                
+                sortFilter?.addEventListener('change', (e) => {
+                    this.filters.sort = e.target.value;
+                    this.applyFilters();
+                });
+                
+                clearFilters?.addEventListener('click', () => {
+                    this.clearAllFilters();
+                });
+                
+                // Aplicar filtros desde URL
+                this.applyUrlFilters();
+            }
+            
+            applyUrlFilters() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const category = urlParams.get('category');
+                const search = urlParams.get('search');
+                
+                if (category) {
+                    this.filters.category = category;
+                    document.getElementById('categoryFilter').value = category;
+                }
+                
+                if (search) {
+                    // Aplicar filtro de búsqueda
+                    console.log('🔍 Filtro de búsqueda desde URL:', search);
+                    document.getElementById('search-input').value = search;
+                }
+                
+                setTimeout(() => this.applyFilters(), 100);
+            }
+            
+            applyFilters() {
+                console.log('🎯 Aplicando filtros:', this.filters);
+                
+                this.filteredProducts = this.allProducts.filter(product => {
+                    // Filtro de categoría
+                    if (this.filters.category && product.categoria !== this.filters.category) {
+                        return false;
+                    }
+                    
+                    // Filtro de precio
+                    if (this.filters.priceRange) {
+                        const [min, max] = this.filters.priceRange.split('-').map(Number);
+                        if (product.precio < min || (max && product.precio > max)) {
+                            return false;
+                        }
+                    }
+                    
+                    // Filtro de búsqueda
+                    const searchTerm = document.getElementById('search-input')?.value.toLowerCase().trim();
+                    if (searchTerm && searchTerm.length >= 2) {
+                        const searchable = `${product.nombre} ${product.categoria} ${product.tags?.join(' ') || ''}`.toLowerCase();
+                        if (!searchable.includes(searchTerm)) {
+                            return false;
+                        }
+                    }
+                    
+                    return true;
+                });
+                
+                // Aplicar ordenamiento
+                this.sortProducts();
+                this.renderProducts();
+                this.updateResultsCount();
+            }
+            
+            sortProducts() {
+                switch (this.filters.sort) {
+                    case 'name-asc':
+                        this.filteredProducts.sort((a, b) => a.nombre.localeCompare(b.nombre));
+                        break;
+                    case 'name-desc':
+                        this.filteredProducts.sort((a, b) => b.nombre.localeCompare(a.nombre));
+                        break;
+                    case 'price-asc':
+                        this.filteredProducts.sort((a, b) => a.precio - b.precio);
+                        break;
+                    case 'price-desc':
+                        this.filteredProducts.sort((a, b) => b.precio - a.precio);
+                        break;
+                    case 'stock':
+                        this.filteredProducts.sort((a, b) => b.stock - a.stock);
+                        break;
+                }
+            }
+            
+            renderProducts() {
+                const grid = document.getElementById('productsGrid');
+                const noResults = document.getElementById('noResults');
+                
+                if (this.filteredProducts.length === 0) {
+                    grid.style.display = 'none';
+                    noResults.style.display = 'flex';
+                    return;
+                }
+                
+                noResults.style.display = 'none';
+                grid.style.display = 'grid';
+                
+                grid.innerHTML = this.filteredProducts.map(product => `
+                    <article class="product-card" data-product-id="${product.codigo}">
+                        <div class="product-badge">
+                            <span class="badge-category">${product.categoria}</span>
+                        </div>
+                        
+                        <div class="product-image">
+                            <img src="${product.imagen || '../assets/images/placeholder-product.svg'}" 
+                                 alt="${product.nombre}" 
+                                 loading="lazy"
+                                 onerror="this.src='../assets/images/placeholder-product.svg'">
+                            <div class="product-overlay">
+                                <button class="quick-view-btn" onclick="showProductDetails('${product.codigo}')">
+                                    <i class="fas fa-eye"></i> Vista Rápida
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-info">
+                            <h3 class="product-title">${product.nombre}</h3>
+                            <p class="product-description">
+                                ${product.descripcion || 'Producto gaming de alta calidad'}
+                            </p>
+                            
+                            <div class="product-price">
+                                <span class="price-current">${this.formatPrice(product.precio)}</span>
+                            </div>
+                            
+                            <div class="product-stock ${product.stock <= 5 ? 'low-stock' : ''}">
+                                <i class="fas fa-box"></i>
+                                <span>${product.stock > 0 ? `${product.stock} disponibles` : 'Agotado'}</span>
+                            </div>
+                            
+                            <div class="product-tags">
+                                ${(product.tags || []).slice(0, 3).map(tag => 
+                                    `<span class="tag">#${tag}</span>`
+                                ).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="add-to-cart-btn btn-primary" 
+                                    data-product-id="${product.codigo}"
+                                    ${product.stock === 0 ? 'disabled' : ''}>
+                                <i class="fas fa-shopping-cart"></i>
+                                ${product.stock === 0 ? 'Agotado' : 'Agregar al Carrito'}
+                            </button>
+                            
+                            <button class="wishlist-btn btn-secondary" 
+                                    onclick="addToWishlist('${product.codigo}')">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+                    </article>
+                `).join('');
+                
+                // Configurar eventos para botones de agregar al carrito
+                this.setupCartButtons();
+            }
+            
+            setupCartButtons() {
+                const cartButtons = document.querySelectorAll('.add-to-cart-btn');
+                cartButtons.forEach(button => {
+                    if (!button.disabled) {
+                        button.addEventListener('click', (e) => {
+                            const productId = button.dataset.productId;
+                            if (window.shoppingCart) {
+                                window.shoppingCart.addToCart(productId, 1);
+                                
+                                // Efecto visual
+                                button.innerHTML = '<i class="fas fa-check"></i> ¡Agregado!';
+                                setTimeout(() => {
+                                    button.innerHTML = '<i class="fas fa-shopping-cart"></i> Agregar al Carrito';
+                                }, 2000);
+                            }
+                        });
+                    }
+                });
+            }
+            
+            updateResultsCount() {
+                const count = this.filteredProducts.length;
+                document.getElementById('resultsCount').textContent = count;
+                
+                let title = 'Todos los Productos';
+                if (this.filters.category) {
+                    title = `Productos de ${this.filters.category}`;
+                }
+                
+                const searchTerm = document.getElementById('search-input')?.value;
+                if (searchTerm && searchTerm.length >= 2) {
+                    title = `Resultados para "${searchTerm}"`;
+                }
+                
+                document.getElementById('resultsTitle').textContent = title;
+            }
+            
+            clearAllFilters() {
+                this.filters = { category: '', priceRange: '', sort: 'name-asc' };
+                
+                document.getElementById('categoryFilter').value = '';
+                document.getElementById('priceFilter').value = '';
+                document.getElementById('sortFilter').value = 'name-asc';
+                document.getElementById('search-input').value = '';
+                
+                this.applyFilters();
+            }
+            
+            formatPrice(price) {
+                return new Intl.NumberFormat('es-CL', {
+                    style: 'currency',
+                    currency: 'CLP',
+                    minimumFractionDigits: 0
+                }).format(price);
+            }
+        }
+        
+        // Funciones globales
+        window.clearAllFilters = function() {
+            window.productsPage?.clearAllFilters();
+        };
+        
+        // Inicializar cuando esté listo
+        document.addEventListener('DOMContentLoaded', () => {
+            window.productsPage = new ProductsPage();
+        });
+    </script>
+
+    <style>
+        /* Estilos específicos para la página de productos */
+        .products-hero {
+            background: var(--gradient-primary);
+            padding: 4rem 0 2rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .hero-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            color: var(--color-background);
+            margin-bottom: 1rem;
+        }
+        
+        .hero-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+        }
+        
+        .filters-section {
+            background: var(--color-surface-variant);
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        .filters-container {
+            display: flex;
+            gap: 2rem;
+            align-items: end;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .filter-group label {
+            font-weight: 600;
+            color: var(--color-text-primary);
+            font-size: 0.9rem;
+        }
+        
+        .filter-select {
+            padding: 0.75rem;
+            border: 2px solid var(--color-border);
+            border-radius: var(--border-radius-md);
+            background: var(--color-surface);
+            color: var(--color-text-primary);
+            font-size: 0.9rem;
+            min-width: 180px;
+        }
+        
+        .filter-select:focus {
+            border-color: var(--color-secondary);
+            outline: none;
+        }
+        
+        .products-section {
+            padding: 3rem 0;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        .results-count {
+            color: var(--color-text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .loading-container {
+            text-align: center;
+            padding: 4rem 0;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--color-border);
+            border-top: 3px solid var(--color-secondary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 4rem 0;
+            color: var(--color-text-secondary);
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .no-results i {
+            font-size: 4rem;
+            color: var(--color-text-muted);
+        }
+        
+        .badge-category {
+            background: var(--color-secondary);
+            color: var(--color-background);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .low-stock {
+            color: var(--color-warning) !important;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .filters-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-select {
+                min-width: auto;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: start;
+                gap: 1rem;
+            }
+        }
+    </style>
+</body>
+</html>

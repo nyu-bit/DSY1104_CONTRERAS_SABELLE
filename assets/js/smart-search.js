@@ -5,11 +5,21 @@
 
 class SmartSearchManager {
     constructor() {
+        console.log('🚀 Inicializando SmartSearchManager...');
+        
         this.searchInput = document.getElementById('search-input');
         this.searchBtn = document.getElementById('search-btn');
         this.suggestionsContainer = document.getElementById('search-suggestions');
         this.mobileSearchInput = document.getElementById('mobile-search-input');
         this.mobileSuggestions = document.getElementById('mobile-search-suggestions');
+        
+        console.log('🔍 Elementos DOM encontrados:', {
+            searchInput: !!this.searchInput,
+            searchBtn: !!this.searchBtn,
+            suggestionsContainer: !!this.suggestionsContainer,
+            mobileSearchInput: !!this.mobileSearchInput,
+            mobileSuggestions: !!this.mobileSuggestions
+        });
         
         this.debounceTimer = null;
         this.debounceDelay = 250; // LG-022: Debounce 250ms
@@ -17,6 +27,11 @@ class SmartSearchManager {
         this.currentSuggestions = [];
         this.selectedSuggestionIndex = -1;
         this.isOpen = false;
+        
+        console.log('⚙️ Configuración:', {
+            debounceDelay: this.debounceDelay,
+            minSearchLength: this.minSearchLength
+        });
         
         this.init();
     }
@@ -76,16 +91,22 @@ class SmartSearchManager {
 
     // Procesar búsqueda con normalización
     processSearch(query, isMobile = false) {
+        console.log('🔍 processSearch llamado con:', { query, isMobile, length: query.length });
+        
         if (query.length === 0) {
+            console.log('❌ Query vacía, ocultando sugerencias');
             this.hideSuggestions(isMobile);
             return;
         }
 
         if (query.length >= this.minSearchLength) {
+            console.log('✅ Query válida, buscando sugerencias...');
             // LG-022: Búsqueda con normalización de acentos
             const suggestions = this.findSuggestions(query);
+            console.log('📋 Sugerencias encontradas:', suggestions.length, suggestions);
             this.showSuggestions(suggestions, isMobile);
         } else {
+            console.log('⏳ Query muy corta, esperando más caracteres...');
             this.hideSuggestions(isMobile);
         }
     }
@@ -102,15 +123,21 @@ class SmartSearchManager {
 
     // Encontrar sugerencias basadas en productos
     findSuggestions(query) {
+        console.log('🔎 findSuggestions llamado con query:', query);
+        
         if (!window.PRODUCT_DATABASE) {
+            console.error('❌ PRODUCT_DATABASE no disponible');
             return [];
         }
 
+        console.log('✅ PRODUCT_DATABASE disponible con', Object.keys(window.PRODUCT_DATABASE).length, 'productos');
+
         const normalizedQuery = this.normalizeText(query);
+        console.log('🔤 Query normalizada:', normalizedQuery);
         const suggestions = [];
 
         // Buscar en todos los productos
-        Object.values(window.PRODUCT_DATABASE).forEach(product => {
+        Object.values(window.PRODUCT_DATABASE).forEach((product, index) => {
             const normalizedName = this.normalizeText(product.nombre);
             const normalizedCode = this.normalizeText(product.codigo);
             const normalizedCategory = this.normalizeText(product.categoria);
@@ -125,6 +152,7 @@ class SmartSearchManager {
                     relevanceScore = 150; // Coincidencia al inicio
                 }
                 matchType = 'name';
+                console.log(`🎯 Match en nombre: ${product.nombre} (score: ${relevanceScore})`);
             }
             // Coincidencia en código
             else if (normalizedCode.includes(normalizedQuery)) {
@@ -133,17 +161,20 @@ class SmartSearchManager {
                     relevanceScore = 120;
                 }
                 matchType = 'code';
+                console.log(`🔢 Match en código: ${product.codigo} (score: ${relevanceScore})`);
             }
             // Coincidencia en categoría
             else if (normalizedCategory.includes(normalizedQuery)) {
                 relevanceScore = 60;
                 matchType = 'category';
+                console.log(`📂 Match en categoría: ${product.categoria} (score: ${relevanceScore})`);
             }
             // Búsqueda en tags si existen
             else if (product.tags && product.tags.some(tag => 
                 this.normalizeText(tag).includes(normalizedQuery))) {
                 relevanceScore = 40;
                 matchType = 'tag';
+                console.log(`🏷️ Match en tags: ${product.tags} (score: ${relevanceScore})`);
             }
 
             if (relevanceScore > 0) {
@@ -156,8 +187,10 @@ class SmartSearchManager {
             }
         });
 
+        console.log('📊 Total sugerencias encontradas:', suggestions.length);
+
         // LG-022: Ordenamiento por relevancia y luego alfabético
-        return suggestions
+        const sortedSuggestions = suggestions
             .sort((a, b) => {
                 if (b.relevanceScore !== a.relevanceScore) {
                     return b.relevanceScore - a.relevanceScore;
@@ -165,6 +198,9 @@ class SmartSearchManager {
                 return a.nombre.localeCompare(b.nombre);
             })
             .slice(0, 8); // Máximo 8 sugerencias
+            
+        console.log('🎯 Sugerencias finales:', sortedSuggestions.map(s => s.nombre));
+        return sortedSuggestions;
     }
 
     // Obtener texto de display para la sugerencia
@@ -182,18 +218,29 @@ class SmartSearchManager {
     // Mostrar sugerencias
     showSuggestions(suggestions, isMobile = false) {
         const container = isMobile ? this.mobileSuggestions : this.suggestionsContainer;
-        if (!container) return;
+        console.log('🎨 showSuggestions llamado:', {
+            suggestions: suggestions.length,
+            isMobile,
+            container: !!container
+        });
+        
+        if (!container) {
+            console.error('❌ Contenedor de sugerencias no encontrado');
+            return;
+        }
 
         this.currentSuggestions = suggestions;
         this.selectedSuggestionIndex = -1;
 
         if (suggestions.length === 0) {
+            console.log('📝 Mostrando mensaje "no encontrados"');
             container.innerHTML = `
                 <div class="no-suggestions">
                     <i class="fas fa-search"></i>
                     <span>No se encontraron productos</span>
                 </div>`;
         } else {
+            console.log('📝 Generando HTML para', suggestions.length, 'sugerencias');
             container.innerHTML = suggestions.map((suggestion, index) => `
                 <div class="suggestion-item" 
                      data-index="${index}"
@@ -227,9 +274,12 @@ class SmartSearchManager {
             });
         }
 
+        console.log('👀 Mostrando contenedor de sugerencias');
         container.style.display = 'block';
         container.setAttribute('aria-expanded', 'true');
         this.isOpen = true;
+        
+        console.log('✅ Sugerencias mostradas exitosamente');
     }
 
     // Resaltar coincidencias en el texto
@@ -684,13 +734,55 @@ const styleSheet = document.createElement('style');
 styleSheet.textContent = searchStyles;
 document.head.appendChild(styleSheet);
 
-// Inicializar cuando el DOM esté listo
+// Inicializar cuando el DOM esté listo Y la base de datos esté disponible
+function initializeSmartSearch() {
+    console.log('🔄 Intentando inicializar SmartSearch...');
+    
+    if (window.PRODUCT_DATABASE) {
+        console.log('✅ Base de datos disponible, inicializando SmartSearchManager');
+        window.smartSearchManager = new SmartSearchManager();
+        return true;
+    } else {
+        console.log('⏳ Base de datos no disponible aún...');
+        return false;
+    }
+}
+
+// Escuchar evento de base de datos lista
+window.addEventListener('productDatabaseReady', () => {
+    console.log('🎯 Evento productDatabaseReady recibido');
+    if (!window.smartSearchManager) {
+        initializeSmartSearch();
+    }
+});
+
+// Estrategia de inicialización robusta
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-        window.smartSearchManager = new SmartSearchManager();
+        console.log('📄 DOM cargado, verificando base de datos...');
+        
+        // Intentar inicializar inmediatamente
+        if (!initializeSmartSearch()) {
+            // Si no está lista, esperar el evento
+            console.log('⏳ Esperando evento productDatabaseReady...');
+        }
     });
 } else {
-    window.smartSearchManager = new SmartSearchManager();
+    console.log('� DOM ya listo, inicializando...');
+    
+    // Intentar inicializar inmediatamente
+    if (!initializeSmartSearch()) {
+        // Si no está lista, esperar el evento o reintentar
+        console.log('⏳ Esperando base de datos...');
+        
+        // Reintentar después de un delay como backup
+        setTimeout(() => {
+            if (!window.smartSearchManager) {
+                console.log('🔄 Reintento de inicialización...');
+                initializeSmartSearch();
+            }
+        }, 500);
+    }
 }
 
 // Exportar para uso global

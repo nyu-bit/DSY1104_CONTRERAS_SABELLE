@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico LocalStorage - LEVEL-UP GAMER</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        body {
+            padding: 2rem;
+            background: var(--color-background);
+            font-family: 'Roboto', sans-serif;
+        }
+        .diagnostic-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--color-surface);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-glow);
+        }
+        .test-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            border: 2px solid var(--color-secondary);
+            border-radius: 8px;
+            background: var(--color-surface-variant);
+        }
+        .test-result {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+        }
+        .success { background: rgba(46, 204, 113, 0.2); border-left: 4px solid #2ecc71; }
+        .error { background: rgba(231, 76, 60, 0.2); border-left: 4px solid #e74c3c; }
+        .warning { background: rgba(243, 156, 18, 0.2); border-left: 4px solid #f39c12; }
+        .info { background: rgba(52, 152, 219, 0.2); border-left: 4px solid #3498db; }
+        
+        .search-test {
+            position: relative;
+            margin: 1rem 0;
+        }
+        .search-test input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--color-secondary);
+            border-radius: 8px;
+            background: var(--color-surface);
+            color: var(--color-text-primary);
+            font-size: 1.1rem;
+        }
+        
+        .btn {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 0.5rem;
+        }
+        .btn:hover { transform: translateY(-2px); }
+        
+        .storage-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .storage-card {
+            background: var(--color-surface);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--color-surface-variant);
+        }
+    </style>
+</head>
+<body>
+    <div class="diagnostic-container">
+        <h1><i class="fas fa-tools"></i> Diagnóstico Sistema LocalStorage + Búsqueda</h1>
+        
+        <!-- Información del navegador -->
+        <div class="test-section">
+            <h3><i class="fas fa-info-circle"></i> Información del Navegador</h3>
+            <div class="storage-info">
+                <div class="storage-card">
+                    <h4>LocalStorage</h4>
+                    <p id="localStorageInfo">Verificando...</p>
+                </div>
+                <div class="storage-card">
+                    <h4>UserAgent</h4>
+                    <p id="userAgent">-</p>
+                </div>
+                <div class="storage-card">
+                    <h4>Fecha/Hora</h4>
+                    <p id="datetime">-</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estado de la base de datos -->
+        <div class="test-section">
+            <h3><i class="fas fa-database"></i> Estado Base de Datos</h3>
+            <div id="databaseStatus" class="test-result info">Cargando base de datos...</div>
+            
+            <button class="btn" onclick="clearAndReload()">
+                <i class="fas fa-trash"></i> Limpiar LocalStorage
+            </button>
+            <button class="btn" onclick="resetDatabase()">
+                <i class="fas fa-refresh"></i> Resetear BD
+            </button>
+            <button class="btn" onclick="exportData()">
+                <i class="fas fa-download"></i> Exportar Datos
+            </button>
+        </div>
+
+        <!-- Test de búsqueda en vivo -->
+        <div class="test-section">
+            <h3><i class="fas fa-search"></i> Test de Búsqueda en Vivo</h3>
+            <div class="search-test">
+                <input type="search" 
+                       id="search-input" 
+                       class="search-input" 
+                       placeholder="Escribe para probar (ej: play, xbox, mouse)..."
+                       aria-label="Campo de prueba de búsqueda"
+                       autocomplete="off">
+                
+                <div id="search-suggestions" 
+                     class="search-suggestions" 
+                     role="listbox" 
+                     aria-label="Sugerencias de búsqueda"
+                     style="display: none;">
+                </div>
+            </div>
+            
+            <div id="searchResults" class="test-result info">
+                Escriba al menos 3 caracteres para ver sugerencias...
+            </div>
+        </div>
+
+        <!-- Logs en tiempo real -->
+        <div class="test-section">
+            <h3><i class="fas fa-terminal"></i> Logs del Sistema</h3>
+            <div id="systemLogs" class="test-result info">Logs aparecerán aquí...</div>
+            <button class="btn" onclick="clearLogs()">
+                <i class="fas fa-eraser"></i> Limpiar Logs
+            </button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/products-database.js"></script>
+    <script src="assets/js/smart-search.js"></script>
+    
+    <script>
+        // Variables globales para el diagnóstico
+        let logBuffer = [];
+        const maxLogs = 50;
+        
+        // Interceptar console.log para mostrar en pantalla
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+        
+        function addLog(type, message, ...args) {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${type.toUpperCase()}: ${message} ${args.join(' ')}`;
+            
+            logBuffer.push(logEntry);
+            if (logBuffer.length > maxLogs) {
+                logBuffer.shift();
+            }
+            
+            updateLogsDisplay();
+            
+            // Llamar al console original
+            if (type === 'error') originalError(message, ...args);
+            else if (type === 'warn') originalWarn(message, ...args);
+            else originalLog(message, ...args);
+        }
+        
+        console.log = (message, ...args) => addLog('info', message, ...args);
+        console.error = (message, ...args) => addLog('error', message, ...args);
+        console.warn = (message, ...args) => addLog('warn', message, ...args);
+        
+        function updateLogsDisplay() {
+            const logsElement = document.getElementById('systemLogs');
+            logsElement.textContent = logBuffer.join('\n');
+            logsElement.scrollTop = logsElement.scrollHeight;
+        }
+        
+        function clearLogs() {
+            logBuffer = [];
+            updateLogsDisplay();
+        }
+        
+        // Funciones de utilidad
+        function clearAndReload() {
+            if (confirm('¿Estás seguro de que quieres limpiar el LocalStorage? Esto eliminará todos los datos guardados.')) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+        
+        function resetDatabase() {
+            if (window.resetProductDatabase) {
+                window.resetProductDatabase();
+                location.reload();
+            } else {
+                alert('Función resetProductDatabase no disponible');
+            }
+        }
+        
+        function exportData() {
+            const data = {
+                products: window.PRODUCT_DATABASE || {},
+                localStorage: Object.fromEntries(Object.entries(localStorage)),
+                timestamp: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `levelup-gamer-data-${Date.now()}.json`;
+            a.click();
+        }
+        
+        // Inicialización del diagnóstico
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔍 Iniciando diagnóstico completo...');
+            
+            // Información del navegador
+            document.getElementById('userAgent').textContent = navigator.userAgent.substring(0, 80) + '...';
+            document.getElementById('datetime').textContent = new Date().toLocaleString();
+            
+            // Verificar LocalStorage
+            try {
+                localStorage.setItem('test', 'test');
+                localStorage.removeItem('test');
+                document.getElementById('localStorageInfo').innerHTML = 
+                    '<span style="color: #2ecc71;">✅ Disponible</span>';
+            } catch (e) {
+                document.getElementById('localStorageInfo').innerHTML = 
+                    '<span style="color: #e74c3c;">❌ No disponible: ' + e.message + '</span>';
+            }
+            
+            // Verificar base de datos después de un delay
+            setTimeout(() => {
+                const dbStatus = document.getElementById('databaseStatus');
+                
+                if (window.PRODUCT_DATABASE) {
+                    const count = Object.keys(window.PRODUCT_DATABASE).length;
+                    const categories = window.getCategories ? window.getCategories() : [];
+                    
+                    dbStatus.className = 'test-result success';
+                    dbStatus.textContent = `✅ Base de datos cargada correctamente
+📦 Total productos: ${count}
+📂 Categorías: ${categories.length} (${categories.join(', ')})
+💾 En LocalStorage: ${localStorage.getItem('levelup_gamer_products') ? 'Sí' : 'No'}
+🔍 Función de búsqueda: ${window.searchProducts ? 'Disponible' : 'No disponible'}`;
+                } else {
+                    dbStatus.className = 'test-result error';
+                    dbStatus.textContent = '❌ Error: Base de datos no cargada\n\nVerificar:\n- Archivo products-database.js\n- Errores en consola\n- Funciones de inicialización';
+                }
+            }, 1000);
+            
+            // Test de búsqueda en vivo
+            const searchInput = document.getElementById('search-input');
+            const searchResults = document.getElementById('searchResults');
+            
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const query = e.target.value;
+                    console.log(`🔍 Búsqueda: "${query}"`);
+                    
+                    if (query.length >= 3 && window.searchProducts) {
+                        try {
+                            const results = window.searchProducts(query);
+                            console.log(`📋 Resultados encontrados: ${results.length}`);
+                            
+                            searchResults.className = 'test-result ' + (results.length > 0 ? 'success' : 'warning');
+                            searchResults.textContent = results.length > 0 
+                                ? `✅ ${results.length} productos encontrados:\n${results.slice(0, 5).map(p => `• ${p.nombre} (${p.categoria})`).join('\n')}`
+                                : `⚠️ No se encontraron productos para "${query}"`;
+                        } catch (error) {
+                            console.error('❌ Error en búsqueda:', error);
+                            searchResults.className = 'test-result error';
+                            searchResults.textContent = `❌ Error en búsqueda: ${error.message}`;
+                        }
+                    } else if (query.length > 0 && query.length < 3) {
+                        searchResults.className = 'test-result info';
+                        searchResults.textContent = `⏳ Escribe ${3 - query.length} caracteres más...`;
+                    } else {
+                        searchResults.className = 'test-result info';
+                        searchResults.textContent = 'Escriba al menos 3 caracteres para ver sugerencias...';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
