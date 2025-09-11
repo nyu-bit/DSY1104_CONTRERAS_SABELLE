@@ -1,291 +1,144 @@
-/**
- * ===================== CARRUSEL HERO FUNCIONAL =====================
- * Sistema de carrusel automático para el banner principal
- * Level-Up Gamer Store
- * ================================================================
- */
-
+// ===================== CARRUSEL HERO FUNCIONAL =====================
 class HeroCarousel {
-    constructor() {
-        this.slides = document.querySelectorAll('.carousel-slide');
-        this.indicators = document.querySelectorAll('.carousel-indicators .indicator');
-        this.progressBar = document.querySelector('.carousel-progress .progress-bar');
-        this.currentSlide = 0;
-        this.slideInterval = null;
-        this.slideTime = 6000; // 6 segundos por slide
-        this.isPlaying = true;
-        
-        this.init();
+  constructor() {
+    this.currentSlide = 0;
+    this.slides = document.querySelectorAll('.carousel-slide');
+    this.indicators = document.querySelectorAll('.indicator');
+    this.progressBar = document.querySelector('.progress-bar');
+    this.autoSlideInterval = null;
+    this.autoSlideDelay = 6000; // 6 segundos
+    
+    this.init();
+  }
+
+  init() {
+    if (this.slides.length === 0) return;
+    
+    // Ocultar todos los slides excepto el primero
+    this.slides.forEach((slide, index) => {
+      if (index === 0) {
+        slide.classList.add('active');
+      } else {
+        slide.classList.remove('active');
+        slide.style.opacity = '0';
+        slide.style.transform = 'translateX(100%)';
+      }
+    });
+    
+    // Configurar indicadores
+    this.indicators.forEach((indicator, index) => {
+      indicator.addEventListener('click', () => {
+        this.goToSlide(index);
+      });
+    });
+    
+    // Iniciar auto-slide
+    this.startAutoSlide();
+    
+    // Pausar en hover
+    const carouselContainer = document.querySelector('.banner-carousel-pro');
+    if (carouselContainer) {
+      carouselContainer.addEventListener('mouseenter', () => {
+        this.stopAutoSlide();
+      });
+      
+      carouselContainer.addEventListener('mouseleave', () => {
+        this.startAutoSlide();
+      });
     }
+  }
 
-    init() {
-        if (this.slides.length === 0) return;
-        
-        this.bindEvents();
-        this.startAutoplay();
-        this.updateProgress();
-        
-        console.log('🎠 Hero Carousel inicializado con', this.slides.length, 'slides');
+  goToSlide(index) {
+    if (index === this.currentSlide) return;
+    
+    const currentSlideElement = this.slides[this.currentSlide];
+    const nextSlideElement = this.slides[index];
+    
+    // Remover clase active del slide actual
+    currentSlideElement.classList.remove('active');
+    currentSlideElement.style.opacity = '0';
+    currentSlideElement.style.transform = 'translateX(-100%)';
+    
+    // Activar el nuevo slide
+    setTimeout(() => {
+      nextSlideElement.classList.add('active');
+      nextSlideElement.style.opacity = '1';
+      nextSlideElement.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Actualizar indicadores
+    this.indicators[this.currentSlide].classList.remove('active');
+    this.indicators[index].classList.add('active');
+    
+    // Actualizar slide actual
+    this.currentSlide = index;
+    
+    // Reiniciar barra de progreso
+    this.resetProgressBar();
+  }
+
+  nextSlide() {
+    const nextIndex = (this.currentSlide + 1) % this.slides.length;
+    this.goToSlide(nextIndex);
+  }
+
+  prevSlide() {
+    const prevIndex = (this.currentSlide - 1 + this.slides.length) % this.slides.length;
+    this.goToSlide(prevIndex);
+  }
+
+  startAutoSlide() {
+    this.stopAutoSlide(); // Limpiar cualquier intervalo existente
+    
+    this.autoSlideInterval = setInterval(() => {
+      this.nextSlide();
+    }, this.autoSlideDelay);
+    
+    // Iniciar animación de barra de progreso
+    this.animateProgressBar();
+  }
+
+  stopAutoSlide() {
+    if (this.autoSlideInterval) {
+      clearInterval(this.autoSlideInterval);
+      this.autoSlideInterval = null;
     }
-
-    bindEvents() {
-        // Event listeners para indicadores
-        this.indicators.forEach((indicator, index) => {
-            indicator.addEventListener('click', () => {
-                this.goToSlide(index);
-            });
-        });
-
-        // Pause on hover
-        const carouselContainer = document.querySelector('.banner-carousel-pro');
-        if (carouselContainer) {
-            carouselContainer.addEventListener('mouseenter', () => {
-                this.pauseAutoplay();
-            });
-            
-            carouselContainer.addEventListener('mouseleave', () => {
-                this.resumeAutoplay();
-            });
-        }
-
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') {
-                this.previousSlide();
-            } else if (e.key === 'ArrowRight') {
-                this.nextSlide();
-            }
-        });
-
-        // Touch/swipe support
-        let startX = 0;
-        let endX = 0;
-
-        carouselContainer?.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
-        });
-
-        carouselContainer?.addEventListener('touchend', (e) => {
-            endX = e.changedTouches[0].clientX;
-            this.handleSwipe(startX, endX);
-        });
+    
+    // Pausar barra de progreso
+    if (this.progressBar) {
+      this.progressBar.style.animationPlayState = 'paused';
     }
+  }
 
-    handleSwipe(startX, endX) {
-        const threshold = 50;
-        const diff = startX - endX;
-
-        if (Math.abs(diff) > threshold) {
-            if (diff > 0) {
-                this.nextSlide();
-            } else {
-                this.previousSlide();
-            }
-        }
+  resetProgressBar() {
+    if (this.progressBar) {
+      this.progressBar.style.animation = 'none';
+      this.progressBar.offsetHeight; // Trigger reflow
+      this.progressBar.style.animation = null;
     }
+  }
 
-    goToSlide(slideIndex) {
-        // Remove active class from current slide and indicator
-        this.slides[this.currentSlide]?.classList.remove('active');
-        this.indicators[this.currentSlide]?.classList.remove('active');
-
-        // Update current slide index
-        this.currentSlide = slideIndex;
-
-        // Add active class to new slide and indicator
-        this.slides[this.currentSlide]?.classList.add('active');
-        this.indicators[this.currentSlide]?.classList.add('active');
-
-        // Trigger slide transition animation
-        this.animateSlide();
-        
-        // Reset and restart autoplay
-        this.resetAutoplay();
-        
-        console.log('🎯 Slide cambiado a:', this.currentSlide);
+  animateProgressBar() {
+    if (this.progressBar) {
+      this.progressBar.style.animation = `carousel-progress ${this.autoSlideDelay}ms linear infinite`;
     }
-
-    nextSlide() {
-        const nextIndex = (this.currentSlide + 1) % this.slides.length;
-        this.goToSlide(nextIndex);
-    }
-
-    previousSlide() {
-        const prevIndex = (this.currentSlide - 1 + this.slides.length) % this.slides.length;
-        this.goToSlide(prevIndex);
-    }
-
-    animateSlide() {
-        const currentSlideElement = this.slides[this.currentSlide];
-        
-        if (currentSlideElement) {
-            // Add entrance animation
-            currentSlideElement.style.opacity = '0';
-            currentSlideElement.style.transform = 'translateX(30px)';
-            
-            setTimeout(() => {
-                currentSlideElement.style.transition = 'all 0.6s ease-out';
-                currentSlideElement.style.opacity = '1';
-                currentSlideElement.style.transform = 'translateX(0)';
-            }, 50);
-
-            // Animate slide content
-            const slideText = currentSlideElement.querySelector('.slide-text');
-            const slideImage = currentSlideElement.querySelector('.slide-image');
-            
-            if (slideText) {
-                slideText.style.transform = 'translateY(20px)';
-                slideText.style.opacity = '0';
-                
-                setTimeout(() => {
-                    slideText.style.transition = 'all 0.8s ease-out';
-                    slideText.style.transform = 'translateY(0)';
-                    slideText.style.opacity = '1';
-                }, 200);
-            }
-            
-            if (slideImage) {
-                slideImage.style.transform = 'scale(1.1)';
-                
-                setTimeout(() => {
-                    slideImage.style.transition = 'transform 0.8s ease-out';
-                    slideImage.style.transform = 'scale(1)';
-                }, 200);
-            }
-        }
-    }
-
-    startAutoplay() {
-        if (!this.isPlaying) return;
-        
-        this.slideInterval = setInterval(() => {
-            this.nextSlide();
-        }, this.slideTime);
-        
-        console.log('▶️ Autoplay iniciado');
-    }
-
-    pauseAutoplay() {
-        this.isPlaying = false;
-        if (this.slideInterval) {
-            clearInterval(this.slideInterval);
-            this.slideInterval = null;
-        }
-        
-        // Pause progress animation
-        if (this.progressBar) {
-            this.progressBar.style.animationPlayState = 'paused';
-        }
-        
-        console.log('⏸️ Autoplay pausado');
-    }
-
-    resumeAutoplay() {
-        this.isPlaying = true;
-        this.startAutoplay();
-        
-        // Resume progress animation
-        if (this.progressBar) {
-            this.progressBar.style.animationPlayState = 'running';
-        }
-        
-        console.log('▶️ Autoplay reanudado');
-    }
-
-    resetAutoplay() {
-        if (this.slideInterval) {
-            clearInterval(this.slideInterval);
-        }
-        this.startAutoplay();
-        this.updateProgress();
-    }
-
-    updateProgress() {
-        if (this.progressBar) {
-            // Reset animation
-            this.progressBar.style.animation = 'none';
-            this.progressBar.offsetHeight; // Trigger reflow
-            
-            // Start new animation
-            this.progressBar.style.animation = `progressSlide ${this.slideTime}ms linear infinite`;
-        }
-    }
-
-    // Public methods for external control
-    play() {
-        this.resumeAutoplay();
-    }
-
-    pause() {
-        this.pauseAutoplay();
-    }
-
-    getCurrentSlide() {
-        return this.currentSlide;
-    }
-
-    getTotalSlides() {
-        return this.slides.length;
-    }
+  }
 }
 
-// CSS Animation for progress bar
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes progressSlide {
-        0% { width: 0%; }
-        100% { width: 100%; }
-    }
-    
-    .carousel-slide {
-        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-    }
-    
-    .carousel-slide:not(.active) {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-    
-    .carousel-slide.active {
-        opacity: 1;
-        transform: translateX(0);
-    }
-    
-    .slide-text {
-        transition: all 0.8s ease-out;
-    }
-    
-    .slide-image {
-        transition: transform 0.8s ease-out;
-        overflow: hidden;
-    }
-    
-    .carousel-indicators .indicator {
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-    
-    .carousel-indicators .indicator:hover {
-        transform: scale(1.2);
-    }
-    
-    .carousel-indicators .indicator.active {
-        transform: scale(1.3);
-    }
-`;
-document.head.appendChild(style);
-
-// Initialize carousel when DOM is loaded
+// Inicializar carrusel cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
-    const heroCarousel = new HeroCarousel();
-    
-    // Make it globally accessible for debugging
-    window.heroCarousel = heroCarousel;
-    
-    console.log('🎮 Level-Up Gamer Hero Carousel loaded successfully!');
+  const heroCarousel = new HeroCarousel();
+  
+  // Hacer accesible globalmente para debugging
+  window.heroCarousel = heroCarousel;
 });
 
-// Export for module usage
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = HeroCarousel;
-}
+// Agregar estilos CSS para la animación de la barra de progreso
+const progressStyle = document.createElement('style');
+progressStyle.textContent = `
+  @keyframes carousel-progress {
+    from { width: 0%; }
+    to { width: 100%; }
+  }
+`;
+document.head.appendChild(progressStyle);
