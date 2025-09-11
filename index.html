@@ -52,8 +52,25 @@
             <div class="navbar-actions">
                 <!-- Búsqueda -->
                 <div class="search-container">
-                    <input type="search" class="search-input" placeholder="Buscar productos...">
-                    <button class="search-btn"><i class="fas fa-search"></i></button>
+                    <input type="search" 
+                           id="search-input" 
+                           class="search-input" 
+                           placeholder="Buscar productos..."
+                           aria-label="Buscar productos"
+                           aria-describedby="search-suggestions"
+                           autocomplete="off">
+                    <button id="search-btn" class="search-btn" aria-label="Ejecutar búsqueda">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <!-- Panel de Sugerencias -->
+                    <div id="search-suggestions" 
+                         class="search-suggestions" 
+                         role="listbox" 
+                         aria-label="Sugerencias de búsqueda"
+                         aria-live="polite"
+                         style="display: none;">
+                        <!-- Las sugerencias se cargarán dinámicamente -->
+                    </div>
                 </div>
 
                 <!-- Carrito -->
@@ -88,8 +105,23 @@
         <!-- Menú Móvil Completo -->
         <div class="mobile-menu">
             <div class="mobile-search">
-                <input type="search" placeholder="Buscar...">
-                <button><i class="fas fa-search"></i></button>
+                <input type="search" 
+                       id="mobile-search-input"
+                       placeholder="Buscar..."
+                       aria-label="Buscar productos en móvil"
+                       autocomplete="off">
+                <button id="mobile-search-btn" aria-label="Ejecutar búsqueda móvil">
+                    <i class="fas fa-search"></i>
+                </button>
+                <!-- Panel de Sugerencias Móvil -->
+                <div id="mobile-search-suggestions" 
+                     class="search-suggestions mobile-suggestions" 
+                     role="listbox" 
+                     aria-label="Sugerencias de búsqueda móvil"
+                     aria-live="polite"
+                     style="display: none;">
+                    <!-- Las sugerencias se cargarán dinámicamente -->
+                </div>
             </div>
             <ul class="mobile-nav">
                 <li><a href="index.html">Inicio</a></li>
@@ -1702,6 +1734,7 @@
 
     <!-- Scripts esenciales -->
     <script src="assets/js/navbar-simple.js"></script>
+    <script src="assets/js/search-system.js"></script>
     <script src="assets/js/products-database.js"></script>
     <script src="assets/js/cart.js"></script>
     <script src="assets/js/main.js"></script>

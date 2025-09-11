@@ -56,27 +56,28 @@ class SimpleGamerNavbar {
   // Búsqueda
   initSearch() {
     if (this.searchInput && this.searchBtn) {
+      // El sistema de búsqueda se maneja en search-system.js
+      // Solo agregamos funcionalidad básica de respaldo
+      
       // Búsqueda al hacer clic en el botón
       this.searchBtn.addEventListener('click', () => {
-        this.performSearch();
+        this.performBasicSearch();
       });
 
-      // Búsqueda al presionar Enter
+      // Búsqueda al presionar Enter (respaldo)
       this.searchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-          this.performSearch();
+        if (e.key === 'Enter' && !e.defaultPrevented) {
+          this.performBasicSearch();
         }
       });
     }
   }
 
-  performSearch() {
+  performBasicSearch() {
     const query = this.searchInput.value.trim();
-    if (query) {
-      // Aquí iría la lógica de búsqueda
-      console.log('Buscando:', query);
-      // Ejemplo: redirigir a página de resultados
-      // window.location.href = `/productos/?buscar=${encodeURIComponent(query)}`;
+    if (query && query.length >= 3) {
+      // Redirigir a página de resultados
+      window.location.href = `/productos/?search=${encodeURIComponent(query)}`;
     }
   }
 
