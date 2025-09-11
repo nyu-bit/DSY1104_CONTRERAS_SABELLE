@@ -25,143 +25,47 @@
     <header class="header" role="banner">
         <div class="container">
             <nav class="navbar" role="navigation" aria-label="Navegación principal">
-                <!-- Logo gamer -->
-                <a href="index.html" class="logo" aria-label="Level-Up Gamer - Ir al inicio">
-                    <i class="fas fa-gamepad" aria-hidden="true"></i>
-                    <span class="logo-text">LEVEL-UP</span>
-                    <span class="logo-accent">GAMER</span>
-                </a>
-                
-                <!-- Enlaces de navegación principal -->
-                <ul class="nav-links" id="navLinks" role="menubar">
-                    <li role="none">
-                        <a href="index.html" role="menuitem" aria-current="page" tabindex="0">
-                            <i class="fas fa-home" aria-hidden="true"></i>
-                            <span>Inicio</span>
-                        </a>
-                    </li>
-                    <li role="none">
-                        <a href="productos/" role="menuitem" tabindex="0">
-                            <i class="fas fa-box" aria-hidden="true"></i>
-                            <span>Productos</span>
-                        </a>
-                    </li>
-                    <li role="none">
-                        <a href="#categorias" role="menuitem" tabindex="0">
-                            <i class="fas fa-th-large" aria-hidden="true"></i>
-                            <span>Categorías</span>
-                        </a>
-                    </li>
-                    <li role="none">
-                        <a href="soporte/" role="menuitem" tabindex="0">
-                            <i class="fas fa-headset" aria-hidden="true"></i>
-                            <span>Soporte</span>
-                        </a>
-                    </li>
-                </ul>
-
-                <!-- Área de acciones: búsqueda, carrito y usuario -->
-                <div class="nav-actions">
-                <!-- LG-015: Búsqueda rápida con sugerencias dinámicas -->
-                <div class="search-container" role="search">
-                    <label for="searchInput" class="sr-only">Buscar productos gaming</label>
-                    <div class="search-input-wrapper">
-                        <input type="search" 
-                               class="search-input" 
-                               placeholder="Buscar productos gaming..." 
-                               aria-label="Buscar productos gaming"
-                               aria-describedby="searchHelp"
-                               aria-expanded="false"
-                               aria-autocomplete="list"
-                               aria-controls="searchSuggestions"
-                               id="searchInput"
-                               autocomplete="off"
-                               spellcheck="false"
-                               minlength="3"
-                               data-search-active="false">
-                        
-                        <!-- Botón de búsqueda -->
-                        <button type="button" 
-                                class="search-btn" 
-                                aria-label="Realizar búsqueda" 
-                                id="searchBtn">
-                            <i class="fas fa-search" aria-hidden="true"></i>
-                        </button>
-                        
-                        <!-- Botón de limpiar búsqueda -->
-                        <button type="button" 
-                                class="search-clear" 
-                                aria-label="Limpiar búsqueda" 
-                                id="searchClear"
-                                style="display: none;">
-                            <i class="fas fa-times" aria-hidden="true"></i>
-                        </button>
-                        
-                        <!-- Indicador de carga -->
-                        <div class="search-loading" id="searchLoading" aria-hidden="true">
-                            <i class="fas fa-spinner fa-spin" aria-hidden="true"></i>
-                        </div>
-                    </div>
+                <!-- Primera fila en móvil: Logo, Nav y Actions -->
+                <div class="navbar-top">
+                    <!-- Logo gamer -->
+                    <a href="index.html" class="logo" aria-label="Level-Up Gamer - Ir al inicio">
+                        <i class="fas fa-gamepad" aria-hidden="true"></i>
+                        <span class="logo-text">LEVEL-UP</span>
+                        <span class="logo-accent">GAMER</span>
+                    </a>
                     
-                    <!-- Panel de sugerencias -->
-                    <div class="search-suggestions" 
-                         id="searchSuggestions" 
-                         role="listbox" 
-                         aria-label="Sugerencias de búsqueda"
-                         aria-hidden="true">
-                        
-                        <!-- Sugerencias de productos -->
-                        <div class="suggestions-section" id="productSuggestions">
-                            <div class="suggestions-header">
+                    <!-- Enlaces de navegación principal -->
+                    <ul class="nav-links" id="navLinks" role="menubar">
+                        <li role="none">
+                            <a href="index.html" role="menuitem" aria-current="page" tabindex="0">
+                                <i class="fas fa-home" aria-hidden="true"></i>
+                                <span>Inicio</span>
+                            </a>
+                        </li>
+                        <li role="none">
+                            <a href="productos/" role="menuitem" tabindex="0">
                                 <i class="fas fa-box" aria-hidden="true"></i>
                                 <span>Productos</span>
-                            </div>
-                            <div class="suggestions-list" role="group"></div>
-                        </div>
-                        
-                        <!-- Sugerencias de categorías -->
-                        <div class="suggestions-section" id="categorySuggestions">
-                            <div class="suggestions-header">
+                            </a>
+                        </li>
+                        <li role="none">
+                            <a href="#categorias" role="menuitem" tabindex="0">
                                 <i class="fas fa-th-large" aria-hidden="true"></i>
                                 <span>Categorías</span>
-                            </div>
-                            <div class="suggestions-list" role="group"></div>
-                        </div>
-                        
-                        <!-- Búsquedas populares -->
-                        <div class="suggestions-section" id="popularSuggestions">
-                            <div class="suggestions-header">
-                                <i class="fas fa-fire" aria-hidden="true"></i>
-                                <span>Búsquedas populares</span>
-                            </div>
-                            <div class="suggestions-list" role="group"></div>
-                        </div>
-                        
-                        <!-- Sin resultados -->
-                        <div class="suggestions-empty" id="noResults" style="display: none;">
-                            <i class="fas fa-search" aria-hidden="true"></i>
-                            <p>No se encontraron sugerencias</p>
-                            <small>Intenta con otros términos de búsqueda</small>
-                        </div>
-                        
-                        <!-- Footer con acciones -->
-                        <div class="suggestions-footer">
-                            <button type="button" 
-                                    class="search-view-all" 
-                                    id="searchViewAll"
-                                    aria-label="Ver todos los resultados">
-                                <i class="fas fa-arrow-right" aria-hidden="true"></i>
-                                <span>Ver todos los resultados</span>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Texto de ayuda para lectores de pantalla -->
-                    <div id="searchHelp" class="sr-only">
-                        Escribe al menos 3 caracteres para ver sugerencias. 
-                        Usa las flechas para navegar y Enter para seleccionar.
-                    </div>
-                </div>                    <!-- Carrito de compras -->
+                            </a>
+                        </li>
+                        <li role="none">
+                            <a href="soporte/" role="menuitem" tabindex="0">
+                                <i class="fas fa-headset" aria-hidden="true"></i>
+                                <span>Soporte</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Área de acciones: carrito y usuario -->
+                    <div class="nav-actions">
+                <div class="nav-actions">
+                    <!-- Carrito de compras -->
                     <a href="carrito/" class="cart-link" aria-label="Ver carrito de compras - 0 productos" id="cartLink">
                         <i class="fas fa-shopping-cart" aria-hidden="true"></i>
                         <span class="cart-text">Carrito</span>
@@ -206,6 +110,21 @@
                     </div>
                 </div>
 
+                <!-- Barra de búsqueda extendida -->
+                <div class="search-extended">
+                    <div class="search-input-wrapper">
+                        <input type="search" 
+                               class="search-input-extended" 
+                               placeholder="Buscar productos gaming..." 
+                               aria-label="Buscar productos gaming"
+                               id="searchInputExtended"
+                               autocomplete="off">
+                        <button type="button" class="search-btn-extended">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+
                 <!-- Toggle móvil -->
                 <button class="mobile-toggle" 
                         aria-label="Menú de navegación móvil" 
@@ -223,44 +142,141 @@
 
     <!-- Main Content -->
     <main class="main" id="main">
-        <!-- Hero Level-Up Gamer -->
-        <section class="hero-gamer" id="hero" role="banner">
-            <div class="container">
-                <div class="hero-content">
-                    <h1 class="hero-title-gamer" data-aos="fade-up">
-                        LEVEL-UP <span class="neon-glow">GAMER</span>
-                    </h1>
+        <!-- 🎯 BANNER CARRUSEL PROFESIONAL - POSICIÓN HERO -->
+        <section class="banner-carousel-pro" id="banner-principal" aria-label="Banner promocional principal">
+            <div class="carousel-container">
+                <!-- Slides del carrusel -->
+                <div class="carousel-slides" id="carouselSlides">
                     
-                    <p class="hero-subtitle-gamer" data-aos="fade-up" data-aos-delay="200">
-                        Consolas next-gen, accesorios pro, computadores gamer y sillas especializadas. 
-                        Todo lo que necesitas para llevar tu juego al siguiente nivel en Chile.
-                    </p>
+                    <!-- Slide 1: Bienvenida y Oferta de Valor -->
+                    <div class="carousel-slide active" data-slide="0">
+                        <div class="slide-content">
+                            <div class="slide-text">
+                                <span class="slide-badge">Bienvenido a</span>
+                                <h2 class="slide-title">LEVEL-UP GAMER</h2>
+                                <p class="slide-description">Tu tienda gaming definitiva en Chile. Los mejores productos, precios increíbles y envío gratis.</p>
+                                <div class="slide-features">
+                                    <div class="feature-item">
+                                        <i class="fas fa-shipping-fast"></i>
+                                        <span>Envío Gratis +$50k</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="fas fa-credit-card"></i>
+                                        <span>12 Cuotas Sin Interés</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="fas fa-shield-alt"></i>
+                                        <span>Compra Segura</span>
+                                    </div>
+                                </div>
+                                <a href="productos/" class="slide-btn btn-primary">
+                                    <i class="fas fa-shopping-bag" aria-hidden="true"></i>
+                                    Explorar Tienda
+                                </a>
+                            </div>
+                            <div class="slide-image">
+                                <img src="https://images.unsplash.com/photo-1593305841991-05c297ba4575?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1157&q=80" alt="Setup gamer profesional" loading="lazy">
+                                <div class="image-overlay"></div>
+                            </div>
+                        </div>
+                    </div>
                     
-                    <div class="hero-actions-gamer" data-aos="fade-up" data-aos-delay="400">
-                        <button class="btn-primary-gamer" 
-                                onclick="scrollToFeatured()" 
-                                aria-label="Explorar catálogo completo de productos gaming">
-                            🎮 Explorar Catálogo
-                        </button>
-                        
-                        <button class="btn-secondary-gamer" 
-                                onclick="showCommunityModal()" 
-                                aria-label="Únete a nuestra comunidad gamer">
-                            ✨ Únete a la Comunidad
-                        </button>
+                    <!-- Slide 2: Descuento Especial DUOC -->
+                    <div class="carousel-slide" data-slide="1">
+                        <div class="slide-content">
+                            <div class="slide-text">
+                                <span class="slide-badge duoc">Estudiantes DUOC</span>
+                                <h2 class="slide-title">Descuento Especial</h2>
+                                <p class="slide-description">Presenta tu credencial estudiantil DUOC y obtén descuentos exclusivos en toda nuestra tienda.</p>
+                                <div class="slide-price">
+                                    <span class="price-label">Hasta</span>
+                                    <span class="price-now">15% OFF</span>
+                                    <span class="price-discount">Extra</span>
+                                </div>
+                                <div class="slide-info">
+                                    <i class="fas fa-graduation-cap"></i>
+                                    <span>Válido con credencial vigente</span>
+                                </div>
+                                <a href="productos/" class="slide-btn btn-primary">
+                                    <i class="fas fa-percent" aria-hidden="true"></i>
+                                    Ver Descuentos
+                                </a>
+                            </div>
+                            <div class="slide-image">
+                                <img src="https://images.unsplash.com/photo-1616400619175-5beda3a17896?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Descuento estudiantes gaming" loading="lazy">
+                                <div class="image-overlay"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 3: Producto Destacado -->
+                    <div class="carousel-slide" data-slide="2">
+                        <div class="slide-content">
+                            <div class="slide-text">
+                                <span class="slide-badge featured">Producto Destacado</span>
+                                <h2 class="slide-title">PlayStation 5 Bundle</h2>
+                                <p class="slide-description">La experiencia gaming definitiva: Consola PS5 + 2 controles DualSense + 3 juegos AAA incluidos.</p>
+                                <div class="slide-price">
+                                    <span class="price-before">$899.990</span>
+                                    <span class="price-now">$699.990</span>
+                                    <span class="price-discount">22% OFF</span>
+                                </div>
+                                <div class="slide-info">
+                                    <i class="fas fa-star"></i>
+                                    <span>Producto más vendido del mes</span>
+                                </div>
+                                <a href="productos/detalle.html?id=co001" class="slide-btn btn-primary">
+                                    <i class="fas fa-gamepad" aria-hidden="true"></i>
+                                    Ver Producto
+                                </a>
+                            </div>
+                            <div class="slide-image">
+                                <img src="assets/products/co001.jpg" alt="PlayStation 5 Bundle" loading="lazy">
+                                <div class="image-overlay"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 4: Gaming Setup Completo -->
+                    <div class="carousel-slide" data-slide="3">
+                        <div class="slide-content">
+                            <div class="slide-text">
+                                <span class="slide-badge combo">Setup Completo</span>
+                                <h2 class="slide-title">Arma tu Setup Pro</h2>
+                                <p class="slide-description">Todo lo que necesitas para el setup gaming perfecto: PC, periféricos, silla y accesorios premium.</p>
+                                <div class="slide-price">
+                                    <span class="price-label">Desde</span>
+                                    <span class="price-now">$199.990</span>
+                                    <span class="price-discount">Combos disponibles</span>
+                                </div>
+                                <div class="slide-info">
+                                    <i class="fas fa-tools"></i>
+                                    <span>Armado e instalación incluida</span>
+                                </div>
+                                <a href="productos/?category=accesorios" class="slide-btn btn-primary">
+                                    <i class="fas fa-desktop" aria-hidden="true"></i>
+                                    Ver Setup
+                                </a>
+                            </div>
+                            <div class="slide-image">
+                                <img src="assets/products/ac001.jpg" alt="Setup Gaming Completo" loading="lazy">
+                                <div class="image-overlay"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="hero-image-container" data-aos="fade-left" data-aos-delay="300">
-                    <img src="https://images.unsplash.com/photo-1593305841991-05c297ba4575?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1157&q=80" 
-                         alt="Setup gamer futurista con múltiples monitores, luces RGB neón, teclado mecánico retroiluminado y mouse gaming de alta precisión en escritorio moderno" 
-                         class="hero-image-gamer"
-                         loading="eager">
-                    
-                    <!-- Efectos visuales RGB -->
-                    <div class="rgb-glow rgb-glow-1"></div>
-                    <div class="rgb-glow rgb-glow-2"></div>
-                    <div class="rgb-glow rgb-glow-3"></div>
+                <!-- Indicadores (dots) -->
+                <div class="carousel-indicators">
+                    <button class="indicator active" data-slide="0" aria-label="Ir al slide 1"></button>
+                    <button class="indicator" data-slide="1" aria-label="Ir al slide 2"></button>
+                    <button class="indicator" data-slide="2" aria-label="Ir al slide 3"></button>
+                    <button class="indicator" data-slide="3" aria-label="Ir al slide 4"></button>
+                </div>
+                
+                <!-- Progreso automático -->
+                <div class="carousel-progress">
+                    <div class="progress-bar"></div>
                 </div>
             </div>
         </section>
@@ -422,252 +438,11 @@
             </div>
         </section>
 
-        <!-- LG-013: Carrusel de promociones gamer -->
-        <section class="section promo-carousel-section" id="promociones" aria-label="Promociones y ofertas especiales">
-            <div class="container">
-                <div class="section-header" data-aos="fade-up">
-                    <h2 class="section-title">
-                        <i class="fas fa-fire" aria-hidden="true"></i>
-                        Promociones Gaming
-                    </h2>
-                    <p class="section-subtitle">
-                        No te pierdas nuestras ofertas más hot del momento
-                    </p>
-                </div>
-                
-                <div class="promo-carousel-wrapper" data-aos="fade-up" data-aos-delay="200">
-                    <!-- Carrusel principal -->
-                    <div class="promo-carousel" 
-                         role="region" 
-                         aria-label="Carrusel de promociones gaming"
-                         aria-live="polite">
-                        
-                        <!-- Slide 1: Console Bundle -->
-                        <div class="promo-slide active" 
-                             data-slide="0" 
-                             role="group" 
-                             aria-label="Promoción 1 de 4: Bundle PS5 con descuento">
-                            <div class="promo-background">
-                                <div class="promo-gradient"></div>
-                            </div>
-                            <div class="promo-content">
-                                <div class="promo-text">
-                                    <div class="promo-badge">
-                                        <i class="fas fa-bolt" aria-hidden="true"></i>
-                                        Oferta Limitada
-                                    </div>
-                                    <h3 class="promo-title">Bundle PS5 Ultimate</h3>
-                                    <p class="promo-description">
-                                        PlayStation 5 + 2 controles + 3 juegos AAA
-                                    </p>
-                                    <div class="promo-pricing">
-                                        <span class="promo-old-price">$899.990</span>
-                                        <span class="promo-new-price">$699.990</span>
-                                        <span class="promo-discount">-22%</span>
-                                    </div>
-                                    <button class="promo-cta" 
-                                            aria-label="Ver detalles del Bundle PS5 Ultimate">
-                                        <i class="fas fa-gamepad" aria-hidden="true"></i>
-                                        Ver Oferta
-                                    </button>
-                                </div>
-                                <div class="promo-visual">
-                                    <div class="promo-icon">
-                                        <i class="fab fa-playstation" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="promo-elements">
-                                        <div class="floating-promo-element">🎮</div>
-                                        <div class="floating-promo-element">⚡</div>
-                                        <div class="floating-promo-element">🔥</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Slide 2: Gaming PC -->
-                        <div class="promo-slide" 
-                             data-slide="1" 
-                             role="group" 
-                             aria-label="Promoción 2 de 4: PC Gamer RTX serie 40">
-                            <div class="promo-background">
-                                <div class="promo-gradient promo-gradient-2"></div>
-                            </div>
-                            <div class="promo-content">
-                                <div class="promo-text">
-                                    <div class="promo-badge promo-badge-premium">
-                                        <i class="fas fa-crown" aria-hidden="true"></i>
-                                        Premium
-                                    </div>
-                                    <h3 class="promo-title">PC Gamer RTX 4070</h3>
-                                    <p class="promo-description">
-                                        Intel i7 + RTX 4070 + 32GB RAM + SSD 1TB
-                                    </p>
-                                    <div class="promo-pricing">
-                                        <span class="promo-old-price">$1.599.990</span>
-                                        <span class="promo-new-price">$1.299.990</span>
-                                        <span class="promo-discount">-19%</span>
-                                    </div>
-                                    <button class="promo-cta" 
-                                            aria-label="Ver detalles del PC Gamer RTX 4070">
-                                        <i class="fas fa-desktop" aria-hidden="true"></i>
-                                        Ver Specs
-                                    </button>
-                                </div>
-                                <div class="promo-visual">
-                                    <div class="promo-icon">
-                                        <i class="fas fa-microchip" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="promo-elements">
-                                        <div class="floating-promo-element">💻</div>
-                                        <div class="floating-promo-element">⚡</div>
-                                        <div class="floating-promo-element">🚀</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Slide 3: Accesorios -->
-                        <div class="promo-slide" 
-                             data-slide="2" 
-                             role="group" 
-                             aria-label="Promoción 3 de 4: Setup completo gaming">
-                            <div class="promo-background">
-                                <div class="promo-gradient promo-gradient-3"></div>
-                            </div>
-                            <div class="promo-content">
-                                <div class="promo-text">
-                                    <div class="promo-badge promo-badge-combo">
-                                        <i class="fas fa-gift" aria-hidden="true"></i>
-                                        Combo
-                                    </div>
-                                    <h3 class="promo-title">Setup Gaming Pro</h3>
-                                    <p class="promo-description">
-                                        Teclado mecánico + Mouse + Headset + Mousepad
-                                    </p>
-                                    <div class="promo-pricing">
-                                        <span class="promo-old-price">$299.990</span>
-                                        <span class="promo-new-price">$199.990</span>
-                                        <span class="promo-discount">-33%</span>
-                                    </div>
-                                    <button class="promo-cta" 
-                                            aria-label="Ver detalles del Setup Gaming Pro">
-                                        <i class="fas fa-keyboard" aria-hidden="true"></i>
-                                        Ver Combo
-                                    </button>
-                                </div>
-                                <div class="promo-visual">
-                                    <div class="promo-icon">
-                                        <i class="fas fa-headset" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="promo-elements">
-                                        <div class="floating-promo-element">⌨️</div>
-                                        <div class="floating-promo-element">🖱️</div>
-                                        <div class="floating-promo-element">🎧</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Slide 4: Videojuegos -->
-                        <div class="promo-slide" 
-                             data-slide="3" 
-                             role="group" 
-                             aria-label="Promoción 4 de 4: Juegos más vendidos con descuento">
-                            <div class="promo-background">
-                                <div class="promo-gradient promo-gradient-4"></div>
-                            </div>
-                            <div class="promo-content">
-                                <div class="promo-text">
-                                    <div class="promo-badge promo-badge-hot">
-                                        <i class="fas fa-star" aria-hidden="true"></i>
-                                        Top Ventas
-                                    </div>
-                                    <h3 class="promo-title">Juegos Triple-A</h3>
-                                    <p class="promo-description">
-                                        Los títulos más esperados con hasta 50% OFF
-                                    </p>
-                                    <div class="promo-pricing">
-                                        <span class="promo-label">Desde</span>
-                                        <span class="promo-new-price">$29.990</span>
-                                        <span class="promo-discount">-50%</span>
-                                    </div>
-                                    <button class="promo-cta" 
-                                            aria-label="Ver catálogo de juegos en oferta">
-                                        <i class="fas fa-compact-disc" aria-hidden="true"></i>
-                                        Ver Juegos
-                                    </button>
-                                </div>
-                                <div class="promo-visual">
-                                    <div class="promo-icon">
-                                        <i class="fas fa-trophy" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="promo-elements">
-                                        <div class="floating-promo-element">🎯</div>
-                                        <div class="floating-promo-element">🏆</div>
-                                        <div class="floating-promo-element">💿</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Controles del carrusel -->
-                    <div class="carousel-controls">
-                        <!-- Botones de navegación -->
-                        <button class="carousel-nav carousel-prev" 
-                                aria-label="Ir a promoción anterior"
-                                type="button">
-                            <i class="fas fa-chevron-left" aria-hidden="true"></i>
-                        </button>
-                        
-                        <button class="carousel-nav carousel-next" 
-                                aria-label="Ir a siguiente promoción"
-                                type="button">
-                            <i class="fas fa-chevron-right" aria-hidden="true"></i>
-                        </button>
-
-                        <!-- Indicadores de slides -->
-                        <div class="carousel-indicators" role="tablist" aria-label="Seleccionar promoción">
-                            <button class="carousel-indicator active" 
-                                    data-slide="0"
-                                    role="tab"
-                                    aria-label="Ir a promoción 1: Bundle PS5"
-                                    aria-selected="true">
-                            </button>
-                            <button class="carousel-indicator" 
-                                    data-slide="1"
-                                    role="tab"
-                                    aria-label="Ir a promoción 2: PC Gamer RTX"
-                                    aria-selected="false">
-                            </button>
-                            <button class="carousel-indicator" 
-                                    data-slide="2"
-                                    role="tab"
-                                    aria-label="Ir a promoción 3: Setup Gaming"
-                                    aria-selected="false">
-                            </button>
-                            <button class="carousel-indicator" 
-                                    data-slide="3"
-                                    role="tab"
-                                    aria-label="Ir a promoción 4: Juegos Triple-A"
-                                    aria-selected="false">
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Estado actual para lectores de pantalla -->
-                    <div class="sr-only" aria-live="polite" aria-atomic="true" id="carousel-status">
-                        Mostrando promoción 1 de 4: Bundle PS5 Ultimate
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- Productos Destacados -->
         <section class="section" id="featured">
             <div class="container">
                 <h2 class="section-title">⭐ Productos Destacados</h2>
-                <div class="products-grid" id="featuredProducts">
+                <div class="products-grid grid-responsive" id="featuredProducts">
                     <!-- Los productos se cargarán dinámicamente -->
                 </div>
                 <div class="section-actions">
@@ -685,7 +460,7 @@
                 </div>
                 <div class="special-offers-grid" id="specialOffersGrid">
                     <!-- Producto en oferta 1 -->
-                    <article class="offer-product-card" data-product-id="offer-1">
+                    <article class="offer-product-card card-gamer" data-product-id="offer-1">
                         <div class="offer-badge-wrapper">
                             <span class="offer-badge primary">OFERTA</span>
                             <span class="discount-badge">-45%</span>
@@ -725,7 +500,7 @@
                     </article>
 
                     <!-- Producto en oferta 2 -->
-                    <article class="offer-product-card" data-product-id="offer-2">
+                    <article class="offer-product-card card-gamer" data-product-id="offer-2">
                         <div class="offer-badge-wrapper">
                             <span class="offer-badge primary">OFERTA</span>
                             <span class="discount-badge">-35%</span>
@@ -765,7 +540,7 @@
                     </article>
 
                     <!-- Producto en oferta 3 -->
-                    <article class="offer-product-card" data-product-id="offer-3">
+                    <article class="offer-product-card card-gamer" data-product-id="offer-3">
                         <div class="offer-badge-wrapper">
                             <span class="offer-badge primary">OFERTA</span>
                             <span class="discount-badge">-50%</span>
@@ -1590,68 +1365,84 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
+    <!-- LG-007: Footer Gamer -->
+    <footer class="footer-gamer">
+        <div class="layout-container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3>Level-Up Gamer</h3>
-                    <p>Tu tienda gaming de confianza con los mejores productos y precios del mercado.</p>
-                    <div class="social-links">
+                    <h3>🎮 Level-Up Gamer</h3>
+                    <p>Tu tienda gaming de confianza con los mejores productos y precios del mercado. Únete a nuestra comunidad gamer.</p>
+                    <div class="footer-social">
                         <a href="https://facebook.com/levelupgamer" 
                            target="_blank" 
                            rel="noopener noreferrer" 
-                           aria-label="Visitar página de Facebook de Level-Up Gamer">📘</a>
+                           aria-label="Visitar página de Facebook">
+                            <i class="fab fa-facebook-f" aria-hidden="true"></i>
+                        </a>
                         <a href="https://twitter.com/levelupgamer" 
                            target="_blank" 
                            rel="noopener noreferrer" 
-                           aria-label="Seguir en Twitter a Level-Up Gamer">🐦</a>
+                           aria-label="Seguir en Twitter">
+                            <i class="fab fa-twitter" aria-hidden="true"></i>
+                        </a>
                         <a href="https://instagram.com/levelupgamer" 
                            target="_blank" 
                            rel="noopener noreferrer" 
-                           aria-label="Ver perfil de Instagram de Level-Up Gamer">📷</a>
+                           aria-label="Ver perfil de Instagram">
+                            <i class="fab fa-instagram" aria-hidden="true"></i>
+                        </a>
                         <a href="https://twitch.tv/levelupgamer" 
                            target="_blank" 
                            rel="noopener noreferrer" 
-                           aria-label="Ver canal de Twitch de Level-Up Gamer">🎮</a>
+                           aria-label="Ver canal de Twitch">
+                            <i class="fab fa-twitch" aria-hidden="true"></i>
+                        </a>
+                        <a href="https://discord.gg/levelupgamer" 
+                           target="_blank" 
+                           rel="noopener noreferrer" 
+                           aria-label="Unirse a Discord">
+                            <i class="fab fa-discord" aria-hidden="true"></i>
+                        </a>
                     </div>
                 </div>
                 
                 <div class="footer-section">
-                    <h4>Productos</h4>
-                    <ul>
-                        <li><a href="productos/?category=consolas">Consolas</a></li>
-                        <li><a href="productos/?category=juegos">Videojuegos</a></li>
-                        <li><a href="productos/?category=accesorios">Accesorios</a></li>
-                        <li><a href="productos/?category=pc">PC Gaming</a></li>
+                    <h3>🛍️ Productos</h3>
+                    <ul class="footer-links">
+                        <li><a href="productos/?category=consolas">Consolas de Videojuegos</a></li>
+                        <li><a href="productos/?category=juegos">Videojuegos Premium</a></li>
+                        <li><a href="productos/?category=accesorios">Accesorios Gaming</a></li>
+                        <li><a href="productos/?category=pc">PC Gaming Pro</a></li>
+                        <li><a href="productos/?category=ofertas">Ofertas Especiales</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-section">
-                    <h4>Ayuda</h4>
-                    <ul>
-                        <li><a href="#" onclick="showContactModal()">Contacto</a></li>
-                        <li><a href="#" onclick="showShippingInfo()">Envíos</a></li>
-                        <li><a href="#" onclick="showReturnPolicy()">Devoluciones</a></li>
-                        <li><a href="#" onclick="showFAQ()">FAQ</a></li>
+                    <h3>🛡️ Soporte</h3>
+                    <ul class="footer-links">
+                        <li><a href="soporte/" aria-label="Ir a centro de soporte">Centro de Ayuda</a></li>
+                        <li><a href="#" onclick="showContactModal()">Contactar Soporte</a></li>
+                        <li><a href="#" onclick="showShippingInfo()">Información de Envíos</a></li>
+                        <li><a href="#" onclick="showReturnPolicy()">Política de Devoluciones</a></li>
                         <li><a href="#" onclick="showTermsModal()">Términos y Condiciones</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-section">
-                    <h4>Mi Cuenta</h4>
-                    <ul>
+                    <h3>👤 Mi Cuenta</h3>
+                    <ul class="footer-links">
                         <li><a href="usuario/login.html">Iniciar Sesión</a></li>
-                        <li><a href="usuario/register.html">Registrarse</a></li>
-                        <li><a href="usuario/">Mi Perfil</a></li>
-                        <li><a href="carrito/">Mi Carrito</a></li>
+                        <li><a href="usuario/register.html">Crear Cuenta Nueva</a></li>
+                        <li><a href="usuario/">Panel de Usuario</a></li>
+                        <li><a href="carrito/">Ver Mi Carrito</a></li>
+                        <li><a href="#" onclick="showOrderHistory()">Historial de Pedidos</a></li>
                     </ul>
                 </div>
             </div>
             
             <div class="footer-bottom">
                 <p>&copy; 2025 Level-Up Gamer. Todos los derechos reservados.</p>
-                <p>Desarrollado con 💚 para la comunidad gamer</p>
+                <p>Desarrollado con 💚 para la comunidad gamer chilena</p>
             </div>
         </div>
     </footer>
@@ -1927,15 +1718,13 @@
              aria-hidden="true"></div>
     </nav>
 
-    <!-- Scripts -->
+    <!-- Scripts esenciales -->
     <script src="assets/js/products-database.js"></script>
+    <script src="assets/js/carousel-pro.js"></script>
+    <script src="assets/js/search.js"></script>
     <script src="assets/js/cart.js"></script>
-    <script src="assets/js/gamification.js"></script>
-    <script src="assets/js/reviews.js"></script>
-    <script src="assets/js/accessibility.js"></script>
-    <script src="assets/js/responsive.js"></script>
+    <script src="assets/js/ui-components.js"></script>
     <script src="assets/js/main.js"></script>
-    <script src="assets/js/products.js"></script>
     <script src="assets/js/auth.js"></script>
 </body>
 </html>

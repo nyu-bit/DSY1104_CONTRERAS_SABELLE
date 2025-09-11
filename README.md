@@ -1,274 +1,75 @@
-# 🎮 Level-Up Gamer - E-commerce Gamer
+# Level-Up Gamer - E-commerce Gaming
 
-## 🚀 Descripción del Proyecto
+## 📋 Descripción
+Sitio web de e-commerce especializado en productos gaming con diseño profesional y sistema de gestión de carrito avanzado.
 
-**Level-Up Gamer** es una plataforma de e-commerce especializada en productos gaming con un diseño cyber futurista. El proyecto implementa una arquitectura modular y separada por secciones, con una interfaz moderna y funcionalidades completas de comercio electrónico.
+## 🎯 Características Principales
 
-### ✨ Características Principales
+### ✅ Sistema de Diseño LG-001 a LG-009
+- **LG-001**: Tipografía gamer (Orbitron + Roboto)
+- **LG-002**: Paleta de colores gaming profesional
+- **LG-003**: Espaciado y layout responsivo
+- **LG-004**: Componentes de interfaz
+- **LG-005**: Iconografía Font Awesome
+- **LG-006**: Efectos visuales y animaciones
+- **LG-007**: Carousel profesional informativo
+- **LG-008**: Navegación coordinada con búsqueda
+- **LG-009**: Sistema de carrito y usuario
 
-- **🎨 Diseño Cyber Gamer**: Tema futurista con colores neón (#39FF14, #1E90FF)
-- **📱 Responsive Design**: Adaptable a todos los dispositivos
-- **🔐 Sistema de Autenticación**: Login, registro y gestión de usuarios
-- **🛒 Carrito de Compras**: Funcionalidad completa con persistencia
-- **🎯 Gestión de Productos**: Catálogo dinámico con filtros y categorías
-- **♿ Accesibilidad**: Cumple con estándares WCAG 2.1
-- **🌐 Semantic HTML**: Estructura semántica con HTML5
-- **⚡ Modularidad**: Arquitectura separada por secciones
+### 🛍️ Funcionalidades E-commerce
+- **Catálogo**: 10 productos gaming categorizados
+- **Búsqueda**: Sistema de búsqueda extendida con sugerencias
+- **Carrito**: Gestión completa de productos
+- **Usuario**: Sistema de autenticación
+- **Responsive**: Adaptado para todas las pantallas
 
 ## 📁 Estructura del Proyecto
 
 ```
-/workspaces/DSY1104_CONTRERAS_SABELLE/
+DSY1104_CONTRERAS_SABELLE/
 ├── index.html                 # Página principal
-├── assets/                    # Recursos estáticos
+├── assets/
 │   ├── css/
-│   │   └── styles.css        # Estilos principales (Cyber Theme)
+│   │   └── styles.css         # Estilos principales LG
 │   ├── js/
-│   │   ├── main.js           # Funcionalidades principales
-│   │   ├── cart.js           # Gestión del carrito
-│   │   ├── products.js       # Gestión de productos
-│   │   └── auth.js           # Sistema de autenticación
-│   └── images/               # Imágenes y recursos gráficos
-├── carrito/                  # Sección del carrito
-│   └── index.html           # Página del carrito
-├── productos/               # Sección de productos
-│   ├── index.html          # Catálogo de productos
-│   └── detalle.html        # Detalle del producto
-└── usuario/                 # Sección de usuario
-    ├── index.html          # Dashboard del usuario
-    ├── login.html          # Página de login
-    └── register.html       # Página de registro
+│   │   ├── products-database.js    # Base de datos de productos
+│   │   ├── carousel-pro.js         # Carousel profesional
+│   │   ├── search.js              # Sistema de búsqueda
+│   │   ├── cart.js                # Gestión del carrito
+│   │   ├── ui-components.js       # Componentes UI
+│   │   ├── main.js                # Funcionalidad principal
+│   │   ├── auth.js                # Autenticación
+│   │   ├── accessibility.js       # Accesibilidad
+│   │   └── responsive.js          # Responsive
+│   └── products/              # Imágenes de productos
+├── productos/                 # Páginas de productos
+├── carrito/                   # Página del carrito
+├── usuario/                   # Páginas de usuario
+└── soporte/                   # Página de soporte
 ```
 
-## 🎨 Tema de Diseño
-
-### Paleta de Colores
-- **Fondo Principal**: `#0a0a0a` (Negro profundo)
-- **Texto Principal**: `#ffffff` (Blanco)
-- **Primario (Neón Verde)**: `#39FF14`
-- **Secundario (Azul Eléctrico)**: `#1E90FF`
-- **Superficie**: `#1a1a1a` (Gris oscuro)
-- **Bordes**: `#333333`
-
-### Tipografía
-- **Títulos**: `Orbitron` (Futurista)
-- **Texto General**: `Roboto` (Legible)
-
-### Efectos Visuales
-- ✨ Efectos de glow y neón
-- 🎭 Transiciones suaves
-- 💫 Animaciones de hover
-- 🌟 Blur effects para modales
-
-## 🔧 Funcionalidades Técnicas
-
-### 📋 Sistema de Autenticación
-- **Usuarios Demo Incluidos**:
-  - `admin@levelup.com` / `admin123` (Administrador)
-  - `user@levelup.com` / `user123` (Usuario estándar)
-  - `gamer@levelup.com` / `gamer123` (Gamer pro)
-  - `test@duocuc.cl` / `test123` (Estudiante con descuento)
-
-- **Características**:
-  - ✅ Validación en tiempo real
-  - 🔒 Bloqueo por intentos fallidos
-  - 💾 Persistencia de sesión
-  - 🎓 Descuentos especiales para estudiantes Duoc UC
-
-### 🛒 Sistema de Carrito
-- **Funcionalidades**:
-  - ➕ Agregar/quitar productos
-  - 📊 Cálculo automático de totales
-  - 💾 Persistencia local
-  - 🎯 Gestión de cantidades
-  - 💰 Aplicación de descuentos
-
-### 🎮 Catálogo de Productos
-- **Base de Datos de Productos**:
-  - 🎮 Consolas (PlayStation, Xbox, Nintendo)
-  - 🕹️ Videojuegos populares
-  - 🎧 Accesorios gaming
-  - ⌨️ Periféricos especializados
-
-- **Características**:
-  - 🔍 Sistema de filtros
-  - 🏷️ Categorización automática
-  - ⭐ Sistema de valoraciones
-  - 💸 Gestión de precios y ofertas
-
-### 🎯 Interfaz de Usuario
-- **Componentes**:
-  - 📋 Modales responsivos
-  - 🔔 Sistema de notificaciones
-  - 📱 Navegación mobile-first
-  - 🎨 Formularios estilizados
-  - 📊 Grids adaptativos
-
-## 🚀 Instalación y Uso
-
-### Requisitos Previos
-- Navegador web moderno (Chrome, Firefox, Safari, Edge)
-- Servidor local opcional (Live Server, Python SimpleHTTPServer, etc.)
-
-### Instalación
-1. **Clonar o descargar** el proyecto
-2. **Abrir** `index.html` en un navegador
-3. **Opcional**: Usar un servidor local para mejor experiencia
-
-```bash
-# Ejemplo con Python
-cd /workspaces/DSY1104_CONTRERAS_SABELLE
-python -m http.server 8000
-
-# Ejemplo con Node.js (live-server)
-npx live-server
-```
-
-### Navegación
-1. **Página Principal** (`/index.html`): Landing page con productos destacados
-2. **Productos** (`/productos/`): Catálogo completo con filtros
-3. **Carrito** (`/carrito/`): Gestión de compras
-4. **Usuario** (`/usuario/`): Login, registro y dashboard
-
-## 🧪 Testing
-
-### Usuarios de Prueba
-```javascript
-// Administrador
-Email: admin@levelup.com
-Password: admin123
-
-// Usuario estándar
-Email: user@levelup.com
-Password: user123
-
-// Gamer pro
-Email: gamer@levelup.com
-Password: gamer123
-
-// Estudiante Duoc UC (con descuento 20%)
-Email: test@duocuc.cl
-Password: test123
-```
-
-### Flujos de Prueba
-1. **Registro de usuario** → Validaciones → Dashboard
-2. **Login** → Navegación → Logout
-3. **Agregar productos** → Carrito → Checkout
-4. **Filtros de productos** → Búsqueda → Detalle
-5. **Responsive** → Mobile → Tablet → Desktop
+## 🚀 Tecnologías Utilizadas
+- **HTML5**: Estructura semántica
+- **CSS3**: Grid, Flexbox, Custom Properties
+- **JavaScript ES6+**: Módulos, Classes, LocalStorage
+- **Font Awesome**: Iconografía
+- **Google Fonts**: Tipografía Orbitron y Roboto
 
 ## 📱 Responsive Design
+- **Desktop**: Layout completo con navbar de 4 columnas
+- **Tablet**: Diseño adaptado y compacto
+- **Móvil**: Layout apilado optimizado
 
-### Breakpoints
-- **Mobile**: `< 768px`
-- **Tablet**: `768px - 1024px`
-- **Desktop**: `> 1024px`
+## 🎮 Tema Gaming
+Diseño inspirado en la estética gaming moderna con:
+- Colores neón y gradientes
+- Efectos de glow y animaciones
+- Tipografía futurista
+- Interfaz intuitiva y profesional
 
-### Características Responsive
-- 📱 Navegación mobile con hamburger menu
-- 📊 Grids adaptativos (1-2-3-4 columnas)
-- 🎯 Touch-friendly buttons
-- 📝 Formularios optimizados
-- 🖼️ Imágenes responsive
+## 👥 Autores
+- **María Contreras**
+- **Angel Sabelle**
 
-## ♿ Accesibilidad
-
-### Implementaciones WCAG 2.1
-- ✅ **Contraste de colores** adecuado
-- ✅ **Navegación por teclado** completa
-- ✅ **ARIA labels** en elementos interactivos
-- ✅ **Estructura semántica** HTML5
-- ✅ **Alt text** en imágenes
-- ✅ **Focus indicators** visibles
-
-### Elementos Semánticos
-```html
-<header>, <nav>, <main>, <section>, <article>, <aside>, <footer>
-```
-
-## 🔮 Tecnologías Utilizadas
-
-### Frontend
-- **HTML5**: Estructura semántica
-- **CSS3**: Variables, Grid, Flexbox, Animations
-- **JavaScript (ES6+)**: Módulos, Async/Await, LocalStorage
-- **Google Fonts**: Roboto + Orbitron
-
-### Características Avanzadas
-- 🎨 **CSS Custom Properties** (Variables)
-- 📱 **CSS Grid & Flexbox**
-- ✨ **CSS Animations & Transitions**
-- 🔧 **JavaScript Modules**
-- 💾 **LocalStorage API**
-- 🎯 **Event Delegation**
-
-## 📊 Métricas del Proyecto
-
-### Archivos de Código
-- **HTML**: 6 archivos (Estructura completa)
-- **CSS**: 1 archivo principal (1000+ líneas)
-- **JavaScript**: 4 módulos especializados
-- **Total LOC**: ~3000+ líneas
-
-### Componentes Implementados
-- ✅ 15+ Componentes UI
-- ✅ 50+ Productos en BD
-- ✅ 4 Tipos de usuario
-- ✅ 6+ Categorías de productos
-- ✅ 20+ Funciones JavaScript
-
-## 🎯 Características Destacadas
-
-### 🎮 Experiencia Gamer
-- **Tema futurista** con efectos cyber
-- **Productos gaming** especializados
-- **Gamertags** y perfiles de jugador
-- **Sistema de niveles** y puntos
-
-### 💼 E-commerce Profesional
-- **Carrito persistente** con LocalStorage
-- **Sistema de descuentos** automático
-- **Gestión de stock** simulada
-- **Checkout process** completo
-
-### 🔧 Arquitectura Moderna
-- **Separación de responsabilidades**
-- **Código modular** y reutilizable
-- **Patrones de diseño** aplicados
-- **Best practices** de desarrollo
-
-## 🚀 Próximas Mejoras
-
-### Funcionalidades Planeadas
-- 🔔 **Web Push Notifications**
-- 💳 **Integración de pagos** (Stripe/PayPal)
-- 🔍 **Búsqueda avanzada** con filtros
-- ⭐ **Sistema de reviews** y ratings
-- 📱 **PWA** (Progressive Web App)
-- 🌐 **Multi-idioma** (i18n)
-
-### Optimizaciones Técnicas
-- ⚡ **Code splitting** y lazy loading
-- 🗜️ **Minificación** de assets
-- 📊 **Analytics** integration
-- 🔧 **Service Workers**
-- 🎯 **Performance optimization**
-
-## 👥 Información del Desarrollador
-
-**Proyecto Académico - Duoc UC**
-- **Asignatura**: DSY1104
-- **Estudiante**: Contreras Sabelle
-- **Institución**: Duoc UC
-- **Año**: 2024
-
-## 📄 Licencia
-
-Este proyecto es de uso académico y fue desarrollado como parte del programa de estudios de Duoc UC.
-
----
-
-**🎮 ¡Disfruta explorando Level-Up Gamer! 🚀**
-
-*Desarrollado con 💚 para la comunidad gamer*
+## 📚 Curso
+**DSY1104** - Desarrollo Web Frontend
