@@ -396,18 +396,28 @@
                     if (!button.disabled) {
                         button.addEventListener('click', (e) => {
                             const productId = button.dataset.productId;
+                            console.log('🛒 Click en botón carrito, productId:', productId);
+                            console.log('🛒 window.shoppingCart disponible:', !!window.shoppingCart);
+                            
                             if (window.shoppingCart) {
-                                window.shoppingCart.addToCart(productId, 1);
+                                const success = window.shoppingCart.addToCart(productId, 1);
                                 
-                                // Efecto visual
-                                button.innerHTML = '<i class="fas fa-check"></i> ¡Agregado!';
-                                setTimeout(() => {
-                                    button.innerHTML = '<i class="fas fa-shopping-cart"></i> Agregar al Carrito';
-                                }, 2000);
+                                if (success) {
+                                    // Efecto visual
+                                    button.innerHTML = '<i class="fas fa-check"></i> ¡Agregado!';
+                                    setTimeout(() => {
+                                        button.innerHTML = '<i class="fas fa-shopping-cart"></i> Agregar al Carrito';
+                                    }, 2000);
+                                }
+                            } else {
+                                console.error('❌ ShoppingCartManager no está inicializado');
+                                alert('Sistema de carrito no disponible. Por favor, recarga la página.');
                             }
                         });
                     }
                 });
+                
+                console.log(`✅ ${cartButtons.length} botones de carrito configurados`);
             }
             
             updateResultsCount() {
@@ -454,7 +464,18 @@
         
         // Inicializar cuando esté listo
         document.addEventListener('DOMContentLoaded', () => {
-            window.productsPage = new ProductsPage();
+            // Esperar a que el ShoppingCartManager esté disponible
+            const waitForCart = () => {
+                if (window.shoppingCart) {
+                    console.log('✅ ShoppingCartManager disponible, iniciando ProductsPage');
+                    window.productsPage = new ProductsPage();
+                } else {
+                    console.log('⏳ Esperando ShoppingCartManager...');
+                    setTimeout(waitForCart, 100);
+                }
+            };
+            
+            waitForCart();
         });
     </script>
 

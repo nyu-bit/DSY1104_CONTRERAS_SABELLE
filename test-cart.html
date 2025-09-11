@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Carrito - LEVEL-UP Gamer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #0a0a0a;
+            color: white;
+        }
+        .test-button {
+            background: #00ff88;
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+            font-weight: bold;
+        }
+        .test-button:hover {
+            background: #00cc66;
+        }
+        .console-log {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 2px;
+        }
+        .log-success { color: #00ff88; }
+        .log-error { color: #ff4444; }
+        .log-info { color: #4488ff; }
+    </style>
+</head>
+<body>
+    <h1>🛒 Test del Sistema de Carrito</h1>
+    
+    <div>
+        <h2>Estado del Sistema:</h2>
+        <p>Base de datos: <span id="dbStatus">❌</span></p>
+        <p>Shopping Cart: <span id="cartStatus">❌</span></p>
+    </div>
+    
+    <div>
+        <h2>Acciones de Prueba:</h2>
+        <button class="test-button" onclick="testDatabase()">Test Base de Datos</button>
+        <button class="test-button" onclick="testCart()">Test Carrito</button>
+        <button class="test-button" onclick="testAddProduct()">Agregar Producto</button>
+        <button class="test-button" onclick="showCart()">Ver Carrito</button>
+        <button class="test-button" onclick="clearLogs()">Limpiar Logs</button>
+    </div>
+    
+    <div>
+        <h2>Console Logs:</h2>
+        <div id="consoleLog" class="console-log"></div>
+    </div>
+    
+    <script src="assets/js/products-database.js"></script>
+    <script src="assets/js/cart.js"></script>
+    
+    <script>
+        // Override console.log para capturar logs
+        const originalLog = console.log;
+        const originalError = console.error;
+        const logElement = document.getElementById('consoleLog');
+        
+        function addLogEntry(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logElement.appendChild(entry);
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addLogEntry(args.join(' '), 'info');
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addLogEntry(args.join(' '), 'error');
+        };
+        
+        // Funciones de test
+        function testDatabase() {
+            addLogEntry('🔍 Testeando base de datos...', 'info');
+            
+            if (window.PRODUCT_DATABASE) {
+                const products = Object.keys(window.PRODUCT_DATABASE);
+                addLogEntry(`✅ Base de datos cargada: ${products.length} productos`, 'success');
+                addLogEntry(`Productos: ${products.join(', ')}`, 'info');
+                document.getElementById('dbStatus').textContent = '✅';
+            } else {
+                addLogEntry('❌ Base de datos no encontrada', 'error');
+            }
+        }
+        
+        function testCart() {
+            addLogEntry('🛒 Testeando carrito...', 'info');
+            
+            if (window.shoppingCart) {
+                addLogEntry('✅ ShoppingCartManager encontrado', 'success');
+                document.getElementById('cartStatus').textContent = '✅';
+                
+                // Test métodos
+                try {
+                    const summary = window.shoppingCart.getCartSummary();
+                    addLogEntry(`📊 Resumen del carrito: ${JSON.stringify(summary)}`, 'info');
+                } catch (e) {
+                    addLogEntry(`❌ Error al obtener resumen: ${e.message}`, 'error');
+                }
+            } else {
+                addLogEntry('❌ ShoppingCartManager no encontrado', 'error');
+            }
+        }
+        
+        function testAddProduct() {
+            if (!window.shoppingCart) {
+                addLogEntry('❌ Carrito no disponible', 'error');
+                return;
+            }
+            
+            if (!window.PRODUCT_DATABASE) {
+                addLogEntry('❌ Base de datos no disponible', 'error');
+                return;
+            }
+            
+            const productIds = Object.keys(window.PRODUCT_DATABASE);
+            if (productIds.length === 0) {
+                addLogEntry('❌ No hay productos en la base de datos', 'error');
+                return;
+            }
+            
+            const productId = productIds[0];
+            addLogEntry(`🛒 Intentando agregar producto: ${productId}`, 'info');
+            
+            try {
+                const result = window.shoppingCart.addToCart(productId, 1);
+                if (result) {
+                    addLogEntry(`✅ Producto agregado exitosamente: ${productId}`, 'success');
+                } else {
+                    addLogEntry(`❌ No se pudo agregar el producto: ${productId}`, 'error');
+                }
+            } catch (e) {
+                addLogEntry(`❌ Error al agregar producto: ${e.message}`, 'error');
+            }
+        }
+        
+        function showCart() {
+            if (!window.shoppingCart) {
+                addLogEntry('❌ Carrito no disponible', 'error');
+                return;
+            }
+            
+            try {
+                const cart = window.shoppingCart.cart;
+                const cartItems = Object.keys(cart);
+                
+                if (cartItems.length === 0) {
+                    addLogEntry('🛒 El carrito está vacío', 'info');
+                } else {
+                    addLogEntry(`🛒 Carrito tiene ${cartItems.length} productos:`, 'info');
+                    cartItems.forEach(productId => {
+                        const item = cart[productId];
+                        addLogEntry(`  - ${item.nombre}: ${item.quantity}x $${item.precio}`, 'info');
+                    });
+                }
+            } catch (e) {
+                addLogEntry(`❌ Error al mostrar carrito: ${e.message}`, 'error');
+            }
+        }
+        
+        function clearLogs() {
+            logElement.innerHTML = '';
+        }
+        
+        // Auto-test al cargar
+        setTimeout(() => {
+            addLogEntry('🚀 Iniciando tests automáticos...', 'info');
+            testDatabase();
+            testCart();
+        }, 1000);
+    </script>
+</body>
+</html>
